@@ -25,3 +25,5 @@ tools/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 experiments/p0-preview-contract/Cargo.toml -text whitespace=blank-at-eol,space-before-tab,cr-at-eol,-blank-at-eof
 tools/check_repository.py text eol=lf
 tools/test_check_repository.py text eol=lf
+tools/check_core*.py text eol=lf
+tools/test_check_core*.py text eol=lf

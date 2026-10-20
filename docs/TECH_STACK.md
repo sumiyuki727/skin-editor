@@ -1,6 +1,6 @@
 # 技术栈评估与性能验证
 
-状态：2026-10-20 采纳 Rust 无窗口核心，egui／eframe＋wgpu 为 P2 集成基线；生产低延迟音频后端仍待验收。P1 已具备准入条件，正式工程尚未创建。当前决定见 [P0 收口评审](p0/P0_EXIT_REVIEW.md)，数值与口径以 [资源预算 v1](p0/RESOURCE_BUDGET.md)为准。版本来自本机已锁定实验，不宣称是上游最新版本或产品最低系统要求。
+状态：2026-10-20 采纳 Rust 无窗口核心，egui／eframe＋wgpu 为 P2 集成基线；生产低延迟音频后端仍待验收。[P1-0](P1_PROGRESS.md)已建立独立工作区、锁定工具链及检查，无第三方核心依赖。当前选型决定见 [P0 收口评审](p0/P0_EXIT_REVIEW.md)，数值与口径以 [资源预算 v1](p0/RESOURCE_BUDGET.md)为准。版本来自本机已锁定实验，不宣称是上游最新版本或产品最低系统要求。
 
 ## 本次选型结论
 
@@ -21,7 +21,7 @@
 
 Linux 实测按用户要求延期，macOS 待设备；P1 核心不接平台对象，保留适配边界。[egui／eframe](https://github.com/emilk/egui)与 [wgpu](https://github.com/gfx-rs/wgpu)的官方平台覆盖只说明候选路线，不替代本项目实机验收。
 
-本机 eframe 0.37.0 manifest 声明 Rust 1.95，wgpu 30.0.1 声明 1.87，image 0.25.10 声明 1.88，Symphonia 0.6.1 声明 1.85；沿用已可用的 1.95.0 避免未经验证降版。Cargo 的 [`rust-version`](https://doc.rust-lang.org/cargo/reference/rust-version.html)与锁文件分别控制编译器要求和包解析；P1 建立自己的锁和工具链文件，不让 `.p0-tools` 或实验目录成为产品依赖。
+本机 eframe 0.37.0 manifest 声明 Rust 1.95，wgpu 30.0.1 声明 1.87，image 0.25.10 声明 1.88，Symphonia 0.6.1 声明 1.85；沿用已可用的 1.95.0 避免未经验证降版。Cargo 的 [`rust-version`](https://doc.rust-lang.org/cargo/reference/rust-version.html)与锁文件分别控制编译器要求和包解析；P1 已建立自己的锁和工具链文件，不让 `.p0-tools` 或实验目录成为产品依赖。当前本机仅将已存在的 1.95.0 二进制目录作为显式工具参数使用，来源路径不写入产品源码、锁文件或构建配置。
 
 P0 当前 Windows／compressed feature 可达元数据为 186 包，其中 182 个 registry 包，其余四个是 publish=false 的本地实验包；这不是正式产品依赖清单。直接组件 eframe／egui／wgpu／image／windows 的本机元数据为 MIT OR Apache-2.0，Symphonia 为 MPL-2.0（亦见[上游](https://github.com/pdeljanov/Symphonia)）。正式引入时按实际 feature 重查传递依赖、平台条件、字体／默认素材及 notices。产品自身许可尚未指定，本轮不添加 LICENSE 或作发布合规结论；本地无窗口核心可继续，首次分发前须决定并核对实际产物。
 

@@ -1,6 +1,6 @@
 # 架构设计
 
-状态：产品架构设计基线，尚未实现。2026-10-20 已收口 P1 准入、范围及核心技术决策；[P1 计划](P1_PLAN.md)尚未实施。独立 P0 实验不属于正式模块，本文中的模块名、类型名和调用为设计约定。技术方案见 [TECH_STACK.md](TECH_STACK.md)。
+状态：产品架构设计基线。2026-10-20 已完成 [P1-0](P1_PROGRESS.md) 的 domain／application 工作区、项目身份及只读查询基础；完整 SkinProject、Command／事务与历史尚未实现。独立 P0 实验不属于正式模块，除进度中明确列出的内容外，本文中的模块名、类型名和调用仍为设计约定。技术方案见 [TECH_STACK.md](TECH_STACK.md)。
 
 ## 设计出发点
 
@@ -49,6 +49,8 @@ flowchart TD
 infrastructure 通过依赖倒置实现 application / preview 声明的端口，desktop 注入实例。application 不导入 infrastructure。preview 通过自身输入契约接收只读投影或素材句柄，不反向查询 application。UI 不持有预览内核或渲染器的可变引用。
 
 先按逻辑模块限制公开面；不要求每个概念独立成包。首个语言工程必须提供可检查的包依赖或导入规则，禁止跨模块访问内部存储。无需为每个类创建一个接口，端口只用于真实边界或实现替换点。
+
+P1-0 的实际工作区只含 `crates/domain` 与 `crates/application`，依赖为 application→domain；当前无第三方包，P0 工程明确排除。`tools/check_core.py` 通过实际 Cargo 元数据、保守源码规则、独立禁止依赖 canary 及编译拒绝测试检查边界，后续引入依赖／feature 必须显式扩展规则。查询值为副本，不提供可变会话引用；目前尚无内容编辑入口。核心禁止 unsafe，工作区与工具链独立锁定。
 
 ## 核心模型与所有权
 

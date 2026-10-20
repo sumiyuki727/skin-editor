@@ -1,6 +1,6 @@
 # 架构设计
 
-状态：产品架构设计基线。2026-10-20 已完成 [P1-0](P1_PROGRESS.md) 的 domain／application 工作区、项目身份及只读查询基础；完整 SkinProject、Command／事务与历史尚未实现。独立 P0 实验不属于正式模块，除进度中明确列出的内容外，本文中的模块名、类型名和调用仍为设计约定。技术方案见 [TECH_STACK.md](TECH_STACK.md)。
+状态：产品架构设计基线。2026-10-20 已完成 [P1-0／1](P1_PROGRESS.md) 的 domain／application 工作区、经校验项目模型、嵌套图层／组件及自有查询副本；Command／事务、历史、渲染与预览尚未实现。独立 P0 实验不属于正式模块，除进度中明确列出的内容外，本文中的模块名、类型名和调用仍为设计约定。技术方案见 [TECH_STACK.md](TECH_STACK.md)。
 
 ## 设计出发点
 
@@ -54,7 +54,7 @@ UI 只获取 FrameDescriptor 的不透明 FrameKey、来源与状态；desktop �
 
 先按逻辑模块限制公开面；不要求每个概念独立成包。首个语言工程必须提供可检查的包依赖或导入规则，禁止跨模块访问内部存储。无需为每个类创建一个接口，端口只用于真实边界或实现替换点。
 
-P1-0 的实际工作区只含 `crates/domain` 与 `crates/application`，依赖为 application→domain；当前无第三方包，P0 工程明确排除。`tools/check_core.py` 通过实际 Cargo 元数据、保守源码规则、独立禁止依赖 canary 及编译拒绝测试检查边界，后续引入依赖／feature 必须显式扩展规则。查询值为副本，不提供可变会话引用；目前尚无内容编辑入口。核心禁止 unsafe，工作区与工具链独立锁定。
+当前实际工作区只含 `crates/domain` 与 `crates/application`，依赖为 application→domain；当前无第三方包，P0 工程明确排除。`tools/check_core.py` 通过实际 Cargo 元数据、保守源码规则、独立禁止依赖 canary 及编译拒绝测试检查边界，后续引入依赖／feature 必须显式扩展规则。查询值为副本，不提供可变会话引用；目前尚无内容编辑入口。核心禁止 unsafe，工作区与工具链独立锁定。
 
 ## 核心模型与所有权
 
@@ -65,7 +65,7 @@ P1-0 的实际工作区只含 `crates/domain` 与 `crates/application`，依赖�
 | SkinProject | ProjectId、SchemaVersion、AssetLibrary、文档集合、ComponentTree、SkinConfiguration、输出映射 | 不包含选择、历史树、窗口和游戏运行状态 |
 | AssetLibrary | AssetId → 元数据与不可变 BlobRef；资源标签及组织信息 | AssetId 代表资源身份，内容摘要用于共享字节，文件名不是主键 |
 | Asset | 类型、显示名称、尺寸/格式等已知元数据、BlobRef、导入来源说明 | 原始字节不就地覆写；外部来源路径只是信息 |
-| ElementDocument | DocumentId、画布像素范围、LayerTree、元素语义绑定 | 可独立编辑；stable 输出命名由单独映射决定 |
+| ElementDocument | DocumentId、画布像素范围、LayerTree；语义绑定由 OutputMapping 关联 | 可独立编辑；stable 输出命名由单独映射决定 |
 | LayerTree | 有序根列表；图层/组节点的稳定 ID、父子关系与本地参数 | 单父节点、无环、有序；根序列及组内序列共同确定绘制顺序 |
 | ComponentTree／ComponentGroup | 跨元素的文档引用及可嵌套组件组，带自身变换和显式共同坐标映射 | 单父、无环；一个文档只有一条权威组件变换链，独立输出边界保留 |
 | 图像图层 | AssetId、局部变换、透明度、显隐及支持的效果参数 | 共享 Asset 不共享图层参数 |
@@ -74,6 +74,10 @@ P1-0 的实际工作区只含 `crates/domain` 与 `crates/application`，依赖�
 | OutputMapping | 文档与目标元素/变体/导出文件的关联 | 输出冲突显式报错；元素、文档和路径不是同一 ID |
 
 所有对象 ID 使用类型区分，例如 AssetId / LayerId / HistoryNodeId。具体生成算法在实现时选择；身份不随排序、重命名或历史检出变化。删除后新建对象不得复用旧 ID。
+
+P1-1 实际采用非零 u128 项目／资源／文档／图层／组件／输出 ID，历史 ID 仍按独立寻址设计待实现。`ProjectDefinition` 是带 MODEL_VERSION 的分离输入，`SkinProject::from_definition` 只构造经校验的不可变值，不取得活动项目写权限。application 拥有活动 SkinProject，当前只能创建空根和查询自有副本，不开放整体替换／加载捷径。MODEL_VERSION 是内存契约版本，项目文件 schema 在 P3 另行冻结。
+
+图层与组件树使用平坦节点表、显式有序子 ID、派生父索引和世界变换；校验、遍历、克隆及释放不递归持有子对象。仅共用内部的关系校验函数，不建立公共通用树框架。BlobRef 只携带不可变摘要和字节长度，真实字节及摘要核对由后续字节存储端口负责；配置保留有序原始字节与可选字段范围，不冒充 skin.ini 解析器。输出路径目前只做词法、大小写及文件／目录前缀冲突检查，P3 仍须验证具体文件系统、保留名、Unicode 等价与安全发布。
 
 画布坐标是编辑器自身的像素空间，UI 缩放、场景逻辑坐标、窗口 DPI 与输出倍率是四个不同变换。它们的转换在边界显式完成。不能把某个 stable 元素的锚点当成全局文档原点。
 
@@ -191,6 +195,8 @@ application 负责从项目生成只读投影，经其定义的端口请求合�
 ### 设置、区域与自动输入边界
 
 [预览设置设计](PREVIEW_SETTINGS.md)明确独立设置用例：UI／AI 调用 application 的设置或预览入口，平台存储与字节读取留在 infrastructure；不把用户头像、用户名、设备／路径和测试偏好登记为皮肤 Asset。原版设置页由编辑器设置界面替代，SkinConfiguration 的修改仍走项目 Command。
+
+实际谱面通过用户配置的本机 stable／Songs 来源受限只读获取，按选中谱面读取必要媒体。来源设置和谱面选择属于本机偏好／PreviewState，音乐／谱面不自动登记到 SkinProject；解析与路径边界检查经 compatibility／infrastructure 接入 application 的专用用例，不依赖个人安装目录或真实资源完成核心测试。详见 [实际谱面设置](PREVIEW_SETTINGS.md#实际-stable-谱面与必要媒体)。
 
 嵌入预览默认自动打图，提供开／关覆盖，独立于 Auto Mod；全屏按明确的测试设置解析有效输入来源。自动控制器由 preview 拥有，输入携带场景／时间代次，受冻结、定位、故障和就绪状态门控。不能通过 UI 伪造按键或修改 Mods 来实现默认策略，也不能把自动输入记入项目历史。
 

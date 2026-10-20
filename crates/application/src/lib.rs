@@ -1,7 +1,7 @@
-//! Headless application entry foundation; project editing is not implemented yet.
+//! Headless project owner and owned queries. Commands arrive in P1-2.
 #![forbid(unsafe_code)]
 
-use skin_editor_domain::ProjectId;
+use skin_editor_domain::{ProjectId, SkinProject};
 
 /// Current version of the owned application query values.
 pub const API_VERSION: u16 = 1;
@@ -22,30 +22,46 @@ pub struct ProjectInfo {
     pub project_id: u128,
 }
 
-/// Owns the active project identity. P1-1 will add validated project content.
+/// An owned, validated snapshot; this is not a project-replacement request.
+#[derive(Clone, Debug, PartialEq)]
+pub struct ProjectSnapshot {
+    pub api_version: u16,
+    pub project: SkinProject,
+}
+
+/// Owns the active validated project. No whole-state replacement is exposed.
 ///
 /// Adapters cannot obtain or replace its internal storage:
 /// ```compile_fail
 /// use skin_editor_application::ProjectSession;
 /// let mut session = ProjectSession::new(7).unwrap();
-/// session.identity = session.identity;
+/// session.project = session.project;
 /// ```
 pub struct ProjectSession {
-    identity: ProjectId,
+    project: SkinProject,
 }
 
 impl ProjectSession {
-    /// Starts a new identity-only session; this does not load or edit a project.
+    /// Creates an empty project root; this does not load external content.
     pub fn new(resolved_project_id: u128) -> Result<Self, SessionError> {
         let identity = ProjectId::new(resolved_project_id).ok_or(SessionError::InvalidProjectId)?;
-        Ok(Self { identity })
+        Ok(Self {
+            project: SkinProject::empty(identity),
+        })
     }
 
     /// Returns a detached value; editing the returned value cannot change state.
     pub fn project_info(&self) -> ProjectInfo {
         ProjectInfo {
             api_version: API_VERSION,
-            project_id: self.identity.get(),
+            project_id: self.project.id().get(),
+        }
+    }
+
+    pub fn snapshot(&self) -> ProjectSnapshot {
+        ProjectSnapshot {
+            api_version: API_VERSION,
+            project: self.project.clone(),
         }
     }
 }
@@ -81,5 +97,52 @@ mod tests {
         assert_ne!(view, session.project_info());
         assert_eq!(session.project_info().project_id, 7);
         assert_eq!(session.project_info().api_version, API_VERSION);
+    }
+
+    #[test]
+    fn new_session_owns_a_valid_empty_project() {
+        let session = ProjectSession::new(7).unwrap();
+        let snapshot = session.snapshot();
+        assert_eq!(snapshot.api_version, API_VERSION);
+        assert_eq!(snapshot.project.id().get(), 7);
+        assert_eq!(snapshot.project.documents().len(), 0);
+        assert_eq!(snapshot.project.assets().iter().len(), 0);
+    }
+
+    #[test]
+    fn snapshot_values_are_detached_even_for_populated_project_content() {
+        use skin_editor_domain::{
+            ConfigInterpretation, ConfigRecord, DocumentId, ElementDocument, LayerTree, PixelSize,
+            ProjectDefinition, ProjectId, SkinConfiguration, SkinProject,
+        };
+        let mut definition = ProjectDefinition::empty(ProjectId::new(7).unwrap());
+        definition.documents.push(ElementDocument::new(
+            DocumentId::new(10).unwrap(),
+            PixelSize::new(8, 8).unwrap(),
+            LayerTree::default(),
+        ));
+        definition.configuration = SkinConfiguration::new(vec![
+            ConfigRecord::new(
+                b"unknown: preserve\r\n".to_vec(),
+                ConfigInterpretation::Opaque,
+            )
+            .unwrap(),
+        ]);
+        // A unit fixture inside the owner, not a public restoration/write API.
+        let session = ProjectSession {
+            project: SkinProject::from_definition(definition).unwrap(),
+        };
+        let mut snapshot = session.snapshot();
+        assert_eq!(snapshot.project.documents().len(), 1);
+        snapshot.api_version = 999;
+        snapshot.project = SkinProject::empty(ProjectId::new(99).unwrap());
+        let actual = session.snapshot();
+        assert_eq!(actual.api_version, API_VERSION);
+        assert_eq!(actual.project.id().get(), 7);
+        assert_eq!(actual.project.documents().len(), 1);
+        assert_eq!(
+            actual.project.configuration().to_bytes(),
+            b"unknown: preserve\r\n"
+        );
     }
 }

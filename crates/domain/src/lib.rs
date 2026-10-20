@@ -1,7 +1,58 @@
-//! Pure domain value foundations. The editable project model comes in P1-1.
+//! Pure, validated project values. Active-state writes belong to application.
+//!
+//! Resource and document identities cannot be interchanged:
+//! ```compile_fail
+//! use skin_editor_domain::{AssetId, DocumentId};
+//! let document = DocumentId::new(1).unwrap();
+//! let _: AssetId = document;
+//! ```
 #![forbid(unsafe_code)]
 
+mod assets;
+mod components;
+mod configuration;
+mod forest;
+mod geometry;
+mod identity;
+mod layers;
+mod output;
+mod project;
+
+pub use assets::{Asset, AssetKind, AssetLibrary, BlobRef};
+pub use components::{ComponentKind, ComponentNode, ComponentTree};
+pub use configuration::{ConfigInterpretation, ConfigRecord, SkinConfiguration};
+pub use geometry::{Affine2, Bounds, Opacity, PixelSize};
+pub use identity::{AssetId, ComponentId, DocumentId, LayerId, OutputId};
+pub use layers::{ElementDocument, LayerKind, LayerNode, LayerTree};
+pub use output::{OutputMapping, OutputPath};
+pub use project::{MODEL_VERSION, ProjectDefinition, SkinProject};
+
 use core::num::NonZeroU128;
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum ObjectId {
+    Asset(AssetId),
+    Document(DocumentId),
+    Layer(LayerId),
+    Component(ComponentId),
+    Output(OutputId),
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum ModelError {
+    InvalidValue(&'static str),
+    DuplicateId(ObjectId),
+    MissingReference(ObjectId),
+    MultipleParents(ObjectId),
+    Unreachable(ObjectId),
+    Cycle,
+    DuplicateMembership(DocumentId),
+    OutputConflict(String),
+    InvalidOutputPath(String),
+    UnsupportedVersion(u16),
+    NotInvertible,
+    NumericOverflow,
+}
 
 /// A project identity supplied by the application; zero is never a valid ID.
 ///

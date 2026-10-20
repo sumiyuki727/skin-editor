@@ -1,0 +1,79 @@
+[package]
+name = "p0-egui"
+version = "0.0.0"
+edition = "2024"
+rust-version = "1.95"
+publish = false
+
+[workspace]
+
+[features]
+heap-profile = ["dep:stats_alloc"]
+device-audio = ["dep:p0-wasapi"]
+media-proof = ["device-audio", "dep:p0-media"]
+compressed-proof = ["media-proof", "p0-media/compressed"]
+
+[dependencies]
+eframe = { version = "=0.37.0", default-features = false, features = ["default_fonts", "wgpu", "x11", "wayland", "system_fonts", "clipboard"] }
+image = { version = "=0.25.10", default-features = false, features = ["png"] }
+p0-preview-contract = { path = "../p0-preview-contract" }
+p0-media = { path = "../p0-media", optional = true }
+serde_json = "1.0"
+pollster = "=1.0.1"
+stats_alloc = { version = "=0.1.10", optional = true }
+
+[target.'cfg(windows)'.dependencies]
+p0-wasapi = { path = "../p0-wasapi", optional = true }
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[[bin]]
+name = "transport-proof"
+path = "src/bin/transport-proof.rs"
+required-features = ["device-audio"]
+
+[[bin]]
+name = "media-proof"
+path = "src/bin/media-proof.rs"
+required-features = ["media-proof"]
+
+[[bin]]
+name = "stream-output-proof"
+path = "src/bin/stream-output-proof.rs"
+required-features = ["media-proof"]
+
+[[bin]]
+name = "combined-soak"
+path = "src/bin/combined-soak.rs"
+required-features = ["media-proof"]
+
+[[bin]]
+name = "resource-cycle-proof"
+path = "src/bin/resource-cycle-proof.rs"
+required-features = ["media-proof"]
+
+[[bin]]
+name = "format-device-proof"
+path = "src/bin/format-device-proof.rs"
+required-features = ["compressed-proof"]
+
+[[bin]]
+name = "compressed-output-proof"
+path = "src/bin/compressed-output-proof.rs"
+required-features = ["compressed-proof"]
+
+[[bin]]
+name = "switch-audio-proof"
+path = "src/bin/switch-audio-proof.rs"
+required-features = ["device-audio"]
+
+[[bin]]
+name = "recovery-proof"
+path = "src/bin/recovery-proof.rs"
+required-features = ["device-audio"]
+
+[[bin]]
+name = "pcm-proof"
+path = "src/bin/pcm-proof.rs"
+required-features = ["device-audio"]

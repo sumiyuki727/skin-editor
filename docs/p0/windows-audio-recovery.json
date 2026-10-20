@@ -1,0 +1,382 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "status": "passed",
+  "platform": "Windows x64 / Vulkan / WASAPI shared silent output",
+  "linux_status": "actual testing deferred; neutral Output port only, no Linux audio backend",
+  "macos_status": "deferred until hardware is available",
+  "fixture": "artifacts/p0/standard-fixture-2cb51994",
+  "runs": [
+    {
+      "directory": "artifacts/p0/recovery-957fb533",
+      "status": "passed",
+      "result_sha256": "03bc43d457e6f53997bfb1e4397f23199bb6faf74fa57894fd7e5360dad17bf6",
+      "evidence_sha256": "7be8de436d69d98cec7c2d13ad6fe3000e6c9a4e1bed7e79c2e56c7d470857e2",
+      "executable_sha256": "2e094e45695a87f987c60f0aa60c6953448d17273219912f39b88e6a6cdaac2d",
+      "frozen_us": [
+        339020,
+        686665
+      ],
+      "recovered_us": [
+        339020,
+        686665
+      ],
+      "final_simulation_us": 1046665,
+      "accepted_inputs": 2,
+      "edit_count": 30,
+      "nodes": 2,
+      "stale_rejected": 2,
+      "proofs": [
+        {
+          "diagnostic_wall_ms": 1724.8463000000002,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 0
+        },
+        {
+          "diagnostic_wall_ms": 1713.2051999999999,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 1
+        },
+        {
+          "diagnostic_wall_ms": 1702.9798,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 2
+        },
+        {
+          "diagnostic_wall_ms": 1689.9551999999999,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 3
+        }
+      ],
+      "fresh_paused_samples_per_rebuilt_stream": [
+        3,
+        3
+      ],
+      "checkpoints": [
+        {
+          "epoch": 0,
+          "inputs": 1,
+          "nodes": 1,
+          "phase": "Faulted",
+          "position": [
+            40.0,
+            40.0
+          ],
+          "simulation_us": 339020,
+          "stage": 0
+        },
+        {
+          "epoch": 0,
+          "inputs": 1,
+          "nodes": 2,
+          "phase": "Faulted",
+          "position": [
+            99.99999618530273,
+            70.0
+          ],
+          "simulation_us": 339020,
+          "stage": 1
+        },
+        {
+          "epoch": 1,
+          "inputs": 1,
+          "nodes": 2,
+          "phase": "Paused",
+          "position": [
+            99.99999618530273,
+            70.0
+          ],
+          "simulation_us": 339020,
+          "stage": 2
+        },
+        {
+          "epoch": 2,
+          "inputs": 2,
+          "nodes": 2,
+          "phase": "Paused",
+          "position": [
+            99.99999618530273,
+            70.0
+          ],
+          "simulation_us": 686665,
+          "stage": 3
+        }
+      ]
+    },
+    {
+      "directory": "artifacts/p0/recovery-59f02dca",
+      "status": "passed",
+      "result_sha256": "84ddb056060c47feee241d02431a4f12391d4342731ed03d7c042a3fb50a05a1",
+      "evidence_sha256": "f9cf115fb66e04c513727dc180578bd647f5f2a048f9382cb5c250cea3adb81b",
+      "executable_sha256": "2e094e45695a87f987c60f0aa60c6953448d17273219912f39b88e6a6cdaac2d",
+      "frozen_us": [
+        342166,
+        684666
+      ],
+      "recovered_us": [
+        342166,
+        684666
+      ],
+      "final_simulation_us": 1044666,
+      "accepted_inputs": 2,
+      "edit_count": 30,
+      "nodes": 2,
+      "stale_rejected": 2,
+      "proofs": [
+        {
+          "diagnostic_wall_ms": 1723.2007,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 0
+        },
+        {
+          "diagnostic_wall_ms": 1686.0898,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 1
+        },
+        {
+          "diagnostic_wall_ms": 1703.5655,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 2
+        },
+        {
+          "diagnostic_wall_ms": 1687.5093,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 3
+        }
+      ],
+      "fresh_paused_samples_per_rebuilt_stream": [
+        3,
+        3
+      ],
+      "checkpoints": [
+        {
+          "epoch": 0,
+          "inputs": 1,
+          "nodes": 1,
+          "phase": "Faulted",
+          "position": [
+            40.0,
+            40.0
+          ],
+          "simulation_us": 342166,
+          "stage": 0
+        },
+        {
+          "epoch": 0,
+          "inputs": 1,
+          "nodes": 2,
+          "phase": "Faulted",
+          "position": [
+            99.99999618530273,
+            70.0
+          ],
+          "simulation_us": 342166,
+          "stage": 1
+        },
+        {
+          "epoch": 1,
+          "inputs": 1,
+          "nodes": 2,
+          "phase": "Paused",
+          "position": [
+            99.99999618530273,
+            70.0
+          ],
+          "simulation_us": 342166,
+          "stage": 2
+        },
+        {
+          "epoch": 2,
+          "inputs": 2,
+          "nodes": 2,
+          "phase": "Paused",
+          "position": [
+            99.99999618530273,
+            70.0
+          ],
+          "simulation_us": 684666,
+          "stage": 3
+        }
+      ]
+    },
+    {
+      "directory": "artifacts/p0/recovery-c78be3e3",
+      "status": "passed",
+      "result_sha256": "036e51f6f42cfccab8bff8b67a074523f5ebed4ae3b8f461f866f8649b79d2e9",
+      "evidence_sha256": "085cef75d457aec2648d39fc7f9c7f81c2343d9ae785a68590336089818c4792",
+      "executable_sha256": "2e094e45695a87f987c60f0aa60c6953448d17273219912f39b88e6a6cdaac2d",
+      "frozen_us": [
+        347020,
+        694624
+      ],
+      "recovered_us": [
+        347020,
+        694624
+      ],
+      "final_simulation_us": 1054624,
+      "accepted_inputs": 2,
+      "edit_count": 30,
+      "nodes": 2,
+      "stale_rejected": 2,
+      "proofs": [
+        {
+          "diagnostic_wall_ms": 1733.7974000000002,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 0
+        },
+        {
+          "diagnostic_wall_ms": 1776.422,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 1
+        },
+        {
+          "diagnostic_wall_ms": 1700.8863000000001,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 2
+        },
+        {
+          "diagnostic_wall_ms": 1711.4357,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 3
+        }
+      ],
+      "fresh_paused_samples_per_rebuilt_stream": [
+        3,
+        3
+      ],
+      "checkpoints": [
+        {
+          "epoch": 0,
+          "inputs": 1,
+          "nodes": 1,
+          "phase": "Faulted",
+          "position": [
+            40.0,
+            40.0
+          ],
+          "simulation_us": 347020,
+          "stage": 0
+        },
+        {
+          "epoch": 0,
+          "inputs": 1,
+          "nodes": 2,
+          "phase": "Faulted",
+          "position": [
+            99.99999618530273,
+            70.0
+          ],
+          "simulation_us": 347020,
+          "stage": 1
+        },
+        {
+          "epoch": 1,
+          "inputs": 1,
+          "nodes": 2,
+          "phase": "Paused",
+          "position": [
+            99.99999618530273,
+            70.0
+          ],
+          "simulation_us": 347020,
+          "stage": 2
+        },
+        {
+          "epoch": 2,
+          "inputs": 2,
+          "nodes": 2,
+          "phase": "Paused",
+          "position": [
+            99.99999618530273,
+            70.0
+          ],
+          "simulation_us": 694624,
+          "stage": 3
+        }
+      ]
+    }
+  ],
+  "headless_tests": {
+    "native_candidate": 60,
+    "contract": 10,
+    "python": 45,
+    "optional_windows_adapter": 4
+  },
+  "limits": [
+    "Explicit retirement of our own stream, not physical unplug or a fabricated driver HRESULT",
+    "Real PCM positioning and audible latency are unimplemented",
+    "Native cleanup/open calls can block; final shutdown join bound is unverified",
+    "Diagnostic paused/faulted CPU pixel checks are not frame, idle or memory budgets",
+    "No stable compatibility, gameplay or Linux/macOS support claim"
+  ],
+  "inventory_sha256": "84be921941507c7ae3c6c8d805a33ddd79e2c5dfeba1e6c782d855bf08485c40",
+  "environment": {
+    "os": "Windows-10-10.0.19045-SP0",
+    "architecture": "AMD64",
+    "logical_processors": 16,
+    "cpu": "AMD Ryzen 7 4800H with Radeon Graphics",
+    "physical_memory_bytes": 17042837504
+  },
+  "regressions": [
+    {
+      "directory": "artifacts/p0/switch-audio-201a4ec2",
+      "status": "passed",
+      "result_sha256": "57b2809eb60c1f9539a2b5c215dc39e20700eaa80e164d8d704ad2ec660b21ad",
+      "evidence_sha256": "38d3dd8ad854e3500c60b4cc345d6e0d051dcda2dbf9a4b08630c39a7415fca5"
+    },
+    {
+      "directory": "artifacts/p0/transport-826feac1",
+      "status": "passed",
+      "result_sha256": "4a285e701c30eae9c424a4939d75c569e81c087f5631c7226c66d4f578706a96",
+      "evidence_sha256": "91edb5ff2ffbe29df7e8143c3e17d8461cd21e951bd98c764243836c345ce0e0"
+    }
+  ]
+}

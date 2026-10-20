@@ -1,0 +1,324 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "status": "passed",
+  "platform": "Windows x64 Vulkan only",
+  "runs": [
+    {
+      "directory": "artifacts/p0/edit-composition-39532df4",
+      "result_sha256": "ed06023952e2ee40afdb175aca14ca06167cd08ba13dff47b2c0be7e43a12cf6",
+      "evidence_sha256": "95473727df99816f71e40321c0afb83946fbc31ebf4a445c2e7342c8f0a6d7b3",
+      "executable_sha256": "a18b6b5ae87aa057ee0eb20bf9bbef1ac6eb7db4d76e61d2a0ac4fce3e2a1a39",
+      "status": "passed",
+      "per_edit_readback": false,
+      "edit_count": 300,
+      "edit_ui_host_ms": {
+        "count": 300,
+        "p50": 0.311,
+        "p95": 0.5619000000000001,
+        "max": 0.7284
+      },
+      "edit_readback_ms": null,
+      "composition": {
+        "adapter": "AdapterInfo { name: \"NVIDIA GeForce RTX 2060\", vendor: 4318, device: 7957, device_type: DiscreteGpu, device_pci_bus_id: \"0000:01:00.0\", driver: \"NVIDIA\", driver_info: \"560.94\", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }",
+        "display_texture_bytes": 4194304,
+        "normal_path_cpu_pixel_readbacks": 0,
+        "normal_path_cpu_texture_uploads": 0,
+        "operation_upload_bytes": 1357440,
+        "resident_buffer_bytes": 50336144,
+        "source_upload_batches": 1,
+        "source_upload_bytes": 41943040,
+        "updates": 303
+      },
+      "pixel_checks": [
+        {
+          "diagnostic_wall_ms": 1706.9705,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 0
+        },
+        {
+          "diagnostic_wall_ms": 1707.4534999999998,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 1
+        },
+        {
+          "diagnostic_wall_ms": 1706.8228,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 2
+        },
+        {
+          "diagnostic_wall_ms": 1715.4734,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 3
+        }
+      ],
+      "process_peaks_bytes": {
+        "working_set_bytes": 189628416,
+        "private_bytes": 276992000,
+        "peak_commit_bytes": 288620544,
+        "gpu_dedicated_bytes": 92344320
+      }
+    },
+    {
+      "directory": "artifacts/p0/edit-composition-0aa7a6af",
+      "result_sha256": "be61e1f1003513152fb4c591b81e83db411d7b200c478ac1310e1743975d7a97",
+      "evidence_sha256": "93a2075035a787258b5c7108e725eb1eaf9b8208a6dfd28bc7ee22cc44339717",
+      "executable_sha256": "a18b6b5ae87aa057ee0eb20bf9bbef1ac6eb7db4d76e61d2a0ac4fce3e2a1a39",
+      "status": "passed",
+      "per_edit_readback": true,
+      "edit_count": 300,
+      "edit_ui_host_ms": {
+        "count": 300,
+        "p50": 0.2086,
+        "p95": 0.31310000000000004,
+        "max": 0.44680000000000003
+      },
+      "edit_readback_ms": {
+        "count": 300,
+        "p50": 7.1705,
+        "p95": 9.3773,
+        "max": 12.1076
+      },
+      "composition": {
+        "adapter": "AdapterInfo { name: \"NVIDIA GeForce RTX 2060\", vendor: 4318, device: 7957, device_type: DiscreteGpu, device_pci_bus_id: \"0000:01:00.0\", driver: \"NVIDIA\", driver_info: \"560.94\", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }",
+        "display_texture_bytes": 4194304,
+        "normal_path_cpu_pixel_readbacks": 0,
+        "normal_path_cpu_texture_uploads": 0,
+        "operation_upload_bytes": 1357440,
+        "resident_buffer_bytes": 50336144,
+        "source_upload_batches": 1,
+        "source_upload_bytes": 41943040,
+        "updates": 303
+      },
+      "pixel_checks": [
+        {
+          "diagnostic_wall_ms": 1709.873,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 0
+        },
+        {
+          "diagnostic_wall_ms": 1724.6784,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 1
+        },
+        {
+          "diagnostic_wall_ms": 1718.4034000000001,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 2
+        },
+        {
+          "diagnostic_wall_ms": 1732.71,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 3
+        }
+      ],
+      "process_peaks_bytes": {
+        "working_set_bytes": 190394368,
+        "private_bytes": 273100800,
+        "peak_commit_bytes": 290734080,
+        "gpu_dedicated_bytes": 92360704
+      }
+    },
+    {
+      "directory": "artifacts/p0/edit-composition-f119fd05",
+      "result_sha256": "ecbc2035935e83f72d7cef9d7c20e9c4c02cce48cbafda0529ccf08f1b17c0b8",
+      "evidence_sha256": "bb1099076df946dbcddf40d3ba01c7fc81a7c9ad1debadc555bd6b6a15c8bb95",
+      "executable_sha256": "a18b6b5ae87aa057ee0eb20bf9bbef1ac6eb7db4d76e61d2a0ac4fce3e2a1a39",
+      "status": "passed",
+      "per_edit_readback": false,
+      "edit_count": 300,
+      "edit_ui_host_ms": {
+        "count": 300,
+        "p50": 0.30019999999999997,
+        "p95": 0.5754,
+        "max": 0.8115
+      },
+      "edit_readback_ms": null,
+      "composition": {
+        "adapter": "AdapterInfo { name: \"NVIDIA GeForce RTX 2060\", vendor: 4318, device: 7957, device_type: DiscreteGpu, device_pci_bus_id: \"0000:01:00.0\", driver: \"NVIDIA\", driver_info: \"560.94\", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }",
+        "display_texture_bytes": 4194304,
+        "normal_path_cpu_pixel_readbacks": 0,
+        "normal_path_cpu_texture_uploads": 0,
+        "operation_upload_bytes": 1357440,
+        "resident_buffer_bytes": 50336144,
+        "source_upload_batches": 1,
+        "source_upload_bytes": 41943040,
+        "updates": 303
+      },
+      "pixel_checks": [
+        {
+          "diagnostic_wall_ms": 1744.8436000000002,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 0
+        },
+        {
+          "diagnostic_wall_ms": 1703.2604000000001,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 1
+        },
+        {
+          "diagnostic_wall_ms": 1680.8290000000002,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 2
+        },
+        {
+          "diagnostic_wall_ms": 1676.2566,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 3
+        }
+      ],
+      "process_peaks_bytes": {
+        "working_set_bytes": 190377984,
+        "private_bytes": 271183872,
+        "peak_commit_bytes": 288395264,
+        "gpu_dedicated_bytes": 128786432
+      }
+    },
+    {
+      "directory": "artifacts/p0/edit-composition-3318cf15",
+      "result_sha256": "3a45df0fc76f4133b877ef12ee4d58417027bf42e3f1b7fe4da87fe95039bc9c",
+      "evidence_sha256": "d46e522b174e6c2e421883d9b916f2b5f8602ce331c6fd56a7e17b03b8d2f34e",
+      "executable_sha256": "a18b6b5ae87aa057ee0eb20bf9bbef1ac6eb7db4d76e61d2a0ac4fce3e2a1a39",
+      "status": "passed",
+      "per_edit_readback": true,
+      "edit_count": 300,
+      "edit_ui_host_ms": {
+        "count": 300,
+        "p50": 0.18430000000000002,
+        "p95": 0.2762,
+        "max": 0.45830000000000004
+      },
+      "edit_readback_ms": {
+        "count": 300,
+        "p50": 7.1319,
+        "p95": 9.7242,
+        "max": 11.446
+      },
+      "composition": {
+        "adapter": "AdapterInfo { name: \"NVIDIA GeForce RTX 2060\", vendor: 4318, device: 7957, device_type: DiscreteGpu, device_pci_bus_id: \"0000:01:00.0\", driver: \"NVIDIA\", driver_info: \"560.94\", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }",
+        "display_texture_bytes": 4194304,
+        "normal_path_cpu_pixel_readbacks": 0,
+        "normal_path_cpu_texture_uploads": 0,
+        "operation_upload_bytes": 1357440,
+        "resident_buffer_bytes": 50336144,
+        "source_upload_batches": 1,
+        "source_upload_bytes": 41943040,
+        "updates": 303
+      },
+      "pixel_checks": [
+        {
+          "diagnostic_wall_ms": 1715.4503000000002,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 0
+        },
+        {
+          "diagnostic_wall_ms": 1704.3789,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 1
+        },
+        {
+          "diagnostic_wall_ms": 1692.5805999999998,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 2
+        },
+        {
+          "diagnostic_wall_ms": 1688.4364999999998,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 3
+        }
+      ],
+      "process_peaks_bytes": {
+        "working_set_bytes": 190058496,
+        "private_bytes": 272846848,
+        "peak_commit_bytes": 290541568,
+        "gpu_dedicated_bytes": 92360704
+      }
+    }
+  ],
+  "position_tolerance_document_pixels": 0.0001,
+  "rgba_channel_tolerance": 2,
+  "scope": "One 1024x1024 document, 50 layers, 10 isolated groups, 10 original PNGs from the existing 100-source standard fixture; first leaf only",
+  "limits": [
+    "Synthetic egui input, not physical mouse/keyboard",
+    "Host UI time excludes GPU execution and remaining eframe frame work",
+    "Readback latency includes native rendering but not physical display/input delay",
+    "Four CPU/GPU/display pixel spot checks outside each 300-edit phase",
+    "Normal path has no CPU pixel transfer; diagnostics do",
+    "No 60-second idle or complete application budget validation",
+    "Independent from audio probe; no actual stable game or macOS/Linux tests"
+  ],
+  "exploratory_failures": [
+    {
+      "directory": "artifacts/p0/edit-composition-f2dfcd7d",
+      "reason": "WGSL reserved identifier target; renamed before passing runs"
+    },
+    {
+      "directory": "artifacts/p0/edit-composition-a86b17b7",
+      "reason": "UI f32 coordinate subtraction differs by about 0.000004 document pixels; explicit 0.0001 coordinate tolerance added without changing RGBA tolerance"
+    }
+  ]
+}

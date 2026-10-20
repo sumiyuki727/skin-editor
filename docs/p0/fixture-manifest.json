@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "kind": "self_authored_fixture",
+  "source": "independently_generated",
+  "files": [
+    {
+      "path": "beatmap/P0 Circles.osu",
+      "sha256": "399b5fcc043d7e86ce8cd0a64b285c0e0e78eddbf89064219f88ea319b748558"
+    },
+    {
+      "path": "beatmap/silence.wav",
+      "sha256": "f24029e05d10c95e43a210695d1539d21b2c07e7df6269ba099ac7f400559874"
+    },
+    {
+      "path": "skin/approachcircle.png",
+      "sha256": "c1d2acc1ec09dc2162bbec5bb43b21bb312bc01fe0b7794511bd5816eb21fadd"
+    },
+    {
+      "path": "skin/cursor.png",
+      "sha256": "c1d2acc1ec09dc2162bbec5bb43b21bb312bc01fe0b7794511bd5816eb21fadd"
+    },
+    {
+      "path": "skin/default-0.png",
+      "sha256": "42784e411292917d23b541c97ce0b350bc24db09c1b9d493a510388bfa312409"
+    },
+    {
+      "path": "skin/default-1.png",
+      "sha256": "43fe6f5fb31607ed9958077f5a93a5cda5abecb871e042c0593d770b6d61e9b0"
+    },
+    {
+      "path": "skin/default-2.png",
+      "sha256": "a6160c20eec2f949eff8ae6f06fec4fc5d1004c92df73a9207107ec26850776b"
+    },
+    {
+      "path": "skin/default-3.png",
+      "sha256": "238c9a10f3f1a402b52ce3cd2b467e5afc8c54a4ffb8f2bbfc5eee545576b0e6"
+    },
+    {
+      "path": "skin/default-4.png",
+      "sha256": "14d25ba73a9d26c8c25d31bf0627cbcda1ecb2ba0db7cd03cf94f499420c5ec5"
+    },
+    {
+      "path": "skin/default-5.png",
+      "sha256": "52c28359be4651ec4c92a32cfc2ccbe1f962e18c4cf69e7c8d00c592bd18c23b"
+    },
+    {
+      "path": "skin/default-6.png",
+      "sha256": "b6723558b1902329542ecde88a14d1f661ae7a212bd74f6feca5f16f6fc045cc"
+    },
+    {
+      "path": "skin/default-7.png",
+      "sha256": "02c49ebd14eaa4cf4fa3abbbf50309dd49be39e5733dd72642da9a6536b16335"
+    },
+    {
+      "path": "skin/default-8.png",
+      "sha256": "3f15d71dd827567d1da62677b2e668a00c3c94e273511ae3025ad00d01fb22a5"
+    },
+    {
+      "path": "skin/default-9.png",
+      "sha256": "335e9a65964af6cad8fb56e0ff23091347f24155bf7bd6fd50541f9e822bf1eb"
+    },
+    {
+      "path": "skin/hitcircle.png",
+      "sha256": "1e4db29c1f37da9711c2286ae4db289b36e07f91a73e61bc6a5f87af9ca81f15"
+    },
+    {
+      "path": "skin/hitcircleoverlay.png",
+      "sha256": "c1d2acc1ec09dc2162bbec5bb43b21bb312bc01fe0b7794511bd5816eb21fadd"
+    },
+    {
+      "path": "skin/skin.ini",
+      "sha256": "d4f56b320c13edd88a59e873950a9b0cfbe792939aa336d89e7784bd57dedb26"
+    }
+  ],
+  "client_execution_verified": false,
+  "note": "Public format test inputs; dimensions and timing are test choices, not compatibility rules"
+}

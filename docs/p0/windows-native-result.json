@@ -1,0 +1,44 @@
+{
+  "adapter": {
+    "backend": "Vulkan",
+    "device_type": "DiscreteGpu",
+    "driver": "NVIDIA",
+    "name": "NVIDIA GeForce RTX 2060"
+  },
+  "content_revision": 1,
+  "cpu_sample_count": 127,
+  "eframe_version": "0.37.0",
+  "error": null,
+  "experiment": "p0-egui",
+  "final_simulation_ms": 894,
+  "frozen_simulation_ms": 894,
+  "not_tested": [
+    "stable compatibility",
+    "real audio",
+    "physical input",
+    "IME",
+    "full project memory budget",
+    "macOS",
+    "Linux"
+  ],
+  "render_target_readbacks": [
+    "render-0.png",
+    "render-1.png"
+  ],
+  "schema_version": 1,
+  "status": "passed",
+  "system_window_capture_used": false,
+  "ui_cpu_ms_p95": 1.1658999137580395,
+  "ui_frames": 128,
+  "wall_seconds": 0.9451932,
+  "workload": "50 synthetic textured quads using one 32x32 source; not the standard project benchmark",
+  "recorded_date": "2026-10-18",
+  "artifact_directory": "artifacts/p0/egui-c7c6095b",
+  "executable_sha256": "44e7b0ba564dd25b635a2c8b3c45f59e36d33a5ca83580be12bcc78df5e0c334",
+  "process_sample_count": 1,
+  "process_samples_are_peak_or_budget_results": false,
+  "artifact_sha256": {
+    "render-0.png": "670d45daead550f936243fcefd5c1cdd094e09d99f55c4ed32e5c8d0c4926e95",
+    "render-1.png": "b433b398cb7929b5dbd0a0f1ded2477f201689d6019a5aa4572201ae82e9aed1"
+  }
+}

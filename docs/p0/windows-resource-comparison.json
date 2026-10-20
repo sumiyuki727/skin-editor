@@ -1,0 +1,4421 @@
+{
+  "schema_version": 1,
+  "recorded_date": "2026-10-18",
+  "comparison_source": "artifacts\\p0\\comparison-998e86f1.json",
+  "comparison_source_sha256": "66abc5c26e8f306e2d68ffe4d0485b340e7ca5dface00488a2d4c94fe1a5b353",
+  "same_executable_and_fixture_verified": true,
+  "fixture_inputs_verified_unchanged": 201,
+  "all_platforms_verified": false,
+  "stable_compatibility_verified": false,
+  "overall_stack_selected": false,
+  "cases": [
+    {
+      "label": "compare-performance-none",
+      "artifact_directory": "artifacts\\p0\\compare-performance-none-203fb034",
+      "result": {
+        "adapter": {
+          "backend": "Vulkan",
+          "driver": "NVIDIA",
+          "driver_info": "560.94",
+          "name": "NVIDIA GeForce RTX 2060"
+        },
+        "closed_seconds": 60.0,
+        "cpu_cache_budget_bytes": 134217728,
+        "cpu_cache_peak_bytes": 134217728,
+        "cycles_completed": 20,
+        "decode_ms": {
+          "count": 2010,
+          "max": 8.622599999999998,
+          "mean": 4.876897512437811,
+          "min": 4.1493,
+          "p50": 4.7641,
+          "p95": 5.6753
+        },
+        "diagnostic": false,
+        "document_load_cpu_ms": {
+          "count": 201,
+          "max": 59.8307,
+          "mean": 50.98400746268659,
+          "min": 44.0964,
+          "p50": 50.816,
+          "p95": 55.0906
+        },
+        "edit_count": 300,
+        "edit_interval_ms": {
+          "count": 299,
+          "max": 17.8825,
+          "mean": 17.092157859531774,
+          "min": 16.7976,
+          "p50": 17.013299999999997,
+          "p95": 17.566
+        },
+        "edit_to_gpu_readback_ms": null,
+        "eframe_cpu_frame_ms_during_edits": {
+          "count": 300,
+          "max": 4.260599613189697,
+          "mean": 0.8168559694119418,
+          "min": 0.5435000057332218,
+          "p50": 0.7101999362930655,
+          "p95": 1.2525999918580055
+        },
+        "error": null,
+        "experiment": "p0-egui-standard-load",
+        "extra_frozen_override_texture_bytes": 4194304,
+        "first_document_original_decode_count": 10,
+        "frozen_simulation_ms": 9959,
+        "gpu_memory_note": "Payload excludes driver residency, staging, targets, fonts and thumbnails; OS process GPU counters are recorded separately by runner",
+        "gpu_readback_requests": 0,
+        "gpu_readbacks_enabled": false,
+        "gpu_texture_cache_budget_bytes": 134217728,
+        "gpu_texture_payload_peak_bytes": 134217728,
+        "gpu_timestamp_ms": null,
+        "gpu_timestamp_note": "eframe frame CPU excludes vsync; no GPU timestamp queries in this experiment",
+        "idle_seconds": 60.0,
+        "idle_ui_frames": 1,
+        "memory_hint": "Performance",
+        "not_tested": [
+          "stable behavior",
+          "physical drag or input latency",
+          "IME/high DPI",
+          "GPU execution timestamps",
+          "isolated group compositing/effects",
+          "real audio/gameplay",
+          "history",
+          "macOS/Linux"
+        ],
+        "original_decode_count": 2010,
+        "pause_png_refresh_verified": null,
+        "per_edit_gpu_readback": false,
+        "phase_frame_bins_100ms": {
+          "Closed": {
+            "0": 1
+          },
+          "ClosedSettle": {
+            "0": 3
+          },
+          "Idle": {
+            "0": 1
+          }
+        },
+        "phases": [
+          {
+            "cpu_cache_bytes": 0,
+            "cycle": 0,
+            "elapsed_seconds": 0.0012867,
+            "gpu_texture_payload_bytes": 0,
+            "original_decoded_images_live": 0,
+            "owned_texture_ids_issued": 0,
+            "owned_textures_in_renderer": 0,
+            "phase": "Empty",
+            "ui_frames": 0,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 558160,
+              "allocation_count": 20,
+              "block_count": 2,
+              "reserved_bytes": 201326592
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 0,
+              "textures_kept": 0,
+              "textures_released": 0
+            }
+          },
+          {
+            "cpu_cache_bytes": 0,
+            "cycle": 0,
+            "elapsed_seconds": 3.0006254,
+            "gpu_texture_payload_bytes": 0,
+            "original_decoded_images_live": 0,
+            "owned_texture_ids_issued": 0,
+            "owned_textures_in_renderer": 0,
+            "phase": "InitialLoadStart",
+            "ui_frames": 4,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 1626160,
+              "allocation_count": 15,
+              "block_count": 2,
+              "reserved_bytes": 201326592
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 0,
+              "textures_kept": 1,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 41943040,
+            "cycle": 0,
+            "elapsed_seconds": 3.8190608,
+            "gpu_texture_payload_bytes": 41943040,
+            "original_decoded_images_live": 10,
+            "owned_texture_ids_issued": 22,
+            "owned_textures_in_renderer": 0,
+            "phase": "Warm",
+            "ui_frames": 4,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 1626160,
+              "allocation_count": 15,
+              "block_count": 2,
+              "reserved_bytes": 201326592
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 0,
+              "textures_kept": 1,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 41943040,
+            "cycle": 0,
+            "elapsed_seconds": 4.828369,
+            "gpu_texture_payload_bytes": 41943040,
+            "original_decoded_images_live": 10,
+            "owned_texture_ids_issued": 22,
+            "owned_textures_in_renderer": 22,
+            "phase": "Edit",
+            "ui_frames": 64,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 43898896,
+              "allocation_count": 37,
+              "block_count": 2,
+              "reserved_bytes": 201326592
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 23,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 41943040,
+            "cycle": 0,
+            "elapsed_seconds": 9.9594878,
+            "gpu_texture_payload_bytes": 41943040,
+            "original_decoded_images_live": 10,
+            "owned_texture_ids_issued": 22,
+            "owned_textures_in_renderer": 22,
+            "phase": "Before",
+            "ui_frames": 364,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 43968384,
+              "allocation_count": 37,
+              "block_count": 2,
+              "reserved_bytes": 201326592
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 23,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 41943040,
+            "cycle": 0,
+            "elapsed_seconds": 9.9710486,
+            "gpu_texture_payload_bytes": 41943040,
+            "original_decoded_images_live": 10,
+            "owned_texture_ids_issued": 23,
+            "owned_textures_in_renderer": 22,
+            "phase": "After",
+            "ui_frames": 365,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 43969028,
+              "allocation_count": 38,
+              "block_count": 2,
+              "reserved_bytes": 201326592
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 23,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 41943040,
+            "cycle": 0,
+            "elapsed_seconds": 9.9768224,
+            "gpu_texture_payload_bytes": 41943040,
+            "original_decoded_images_live": 10,
+            "owned_texture_ids_issued": 23,
+            "owned_textures_in_renderer": 23,
+            "phase": "IdleSettle",
+            "ui_frames": 366,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 52357316,
+              "allocation_count": 40,
+              "block_count": 2,
+              "reserved_bytes": 201326592
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 24,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 41943040,
+            "cycle": 0,
+            "elapsed_seconds": 11.9774069,
+            "gpu_texture_payload_bytes": 41943040,
+            "original_decoded_images_live": 10,
+            "owned_texture_ids_issued": 23,
+            "owned_textures_in_renderer": 23,
+            "phase": "Idle",
+            "ui_frames": 367,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 48163568,
+              "allocation_count": 39,
+              "block_count": 2,
+              "reserved_bytes": 201326592
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 24,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 41943040,
+            "cycle": 0,
+            "elapsed_seconds": 71.9780195,
+            "gpu_texture_payload_bytes": 41943040,
+            "original_decoded_images_live": 10,
+            "owned_texture_ids_issued": 23,
+            "owned_textures_in_renderer": 23,
+            "phase": "Cycle",
+            "ui_frames": 368,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 48162584,
+              "allocation_count": 38,
+              "block_count": 2,
+              "reserved_bytes": 201326592
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 24,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 10,
+            "elapsed_seconds": 72.9606174,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 123,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 378,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 3,
+              "reserved_bytes": 536870912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 20,
+            "elapsed_seconds": 73.9956194,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 223,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 388,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 3,
+              "reserved_bytes": 536870912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 30,
+            "elapsed_seconds": 75.0400836,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 323,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 398,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 3,
+              "reserved_bytes": 536870912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 40,
+            "elapsed_seconds": 76.0740635,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 423,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 408,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 3,
+              "reserved_bytes": 536870912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 50,
+            "elapsed_seconds": 77.1069383,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 523,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 418,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 3,
+              "reserved_bytes": 536870912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 60,
+            "elapsed_seconds": 78.14567,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 623,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 428,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 3,
+              "reserved_bytes": 536870912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 70,
+            "elapsed_seconds": 79.1714085,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 723,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 438,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 3,
+              "reserved_bytes": 536870912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 80,
+            "elapsed_seconds": 80.1872919,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 823,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 448,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 3,
+              "reserved_bytes": 536870912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 90,
+            "elapsed_seconds": 81.2123397,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 923,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 458,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 3,
+              "reserved_bytes": 536870912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 100,
+            "elapsed_seconds": 82.2401726,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1023,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 468,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 3,
+              "reserved_bytes": 536870912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 110,
+            "elapsed_seconds": 83.2543017,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1123,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 478,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 3,
+              "reserved_bytes": 536870912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 120,
+            "elapsed_seconds": 84.2775984,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1223,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 488,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 3,
+              "reserved_bytes": 536870912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 130,
+            "elapsed_seconds": 85.2939271,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1323,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 498,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 3,
+              "reserved_bytes": 536870912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 140,
+            "elapsed_seconds": 86.3121478,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1423,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 508,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 3,
+              "reserved_bytes": 536870912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 150,
+            "elapsed_seconds": 87.3398755,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1523,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 518,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 3,
+              "reserved_bytes": 536870912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 160,
+            "elapsed_seconds": 88.3571552,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1623,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 528,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 3,
+              "reserved_bytes": 536870912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 170,
+            "elapsed_seconds": 89.374335,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1723,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 538,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 3,
+              "reserved_bytes": 536870912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 180,
+            "elapsed_seconds": 90.3972122,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1823,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 548,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 3,
+              "reserved_bytes": 536870912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 190,
+            "elapsed_seconds": 91.42101,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1923,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 558,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 3,
+              "reserved_bytes": 536870912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 200,
+            "elapsed_seconds": 92.4375339,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 2023,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 568,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 3,
+              "reserved_bytes": 536870912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 0,
+            "cycle": 200,
+            "elapsed_seconds": 92.4967971,
+            "gpu_texture_payload_bytes": 0,
+            "original_decoded_images_live": 0,
+            "owned_texture_ids_issued": 2023,
+            "owned_textures_in_renderer": 44,
+            "phase": "ClosedSettle",
+            "ui_frames": 569,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 3,
+              "reserved_bytes": 536870912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 0,
+            "cycle": 200,
+            "elapsed_seconds": 94.4974854,
+            "gpu_texture_payload_bytes": 0,
+            "original_decoded_images_live": 0,
+            "owned_texture_ids_issued": 2023,
+            "owned_textures_in_renderer": 0,
+            "phase": "Closed",
+            "ui_frames": 572,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 1757360,
+              "allocation_count": 15,
+              "block_count": 2,
+              "reserved_bytes": 268435456
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 1,
+              "textures_released": 55
+            }
+          },
+          {
+            "cpu_cache_bytes": 0,
+            "cycle": 200,
+            "elapsed_seconds": 154.4979902,
+            "gpu_texture_payload_bytes": 0,
+            "original_decoded_images_live": 0,
+            "owned_texture_ids_issued": 2023,
+            "owned_textures_in_renderer": 0,
+            "phase": "Done",
+            "ui_frames": 573,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 1757024,
+              "allocation_count": 16,
+              "block_count": 2,
+              "reserved_bytes": 268435456
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 1,
+              "textures_released": 55
+            }
+          }
+        ],
+        "render_target_readbacks": [],
+        "repaint_causes_by_phase": {
+          "After": {
+            "src/bin/standard-load.rs:688 ": 1
+          },
+          "Before": {
+            "src/bin/standard-load.rs:688 ": 1
+          },
+          "Closed": {
+            "src/bin/standard-load.rs:543 ": 1
+          },
+          "ClosedSettle": {
+            "src/bin/standard-load.rs:446 ": 1,
+            "src/bin/standard-load.rs:543 ": 2,
+            "src/bin/standard-load.rs:688 ": 1
+          },
+          "Cycle": {
+            "src/bin/standard-load.rs:543 ": 1,
+            "src/bin/standard-load.rs:688 ": 200
+          },
+          "Edit": {
+            "src/bin/standard-load.rs:688 ": 300
+          },
+          "Empty": {
+            "context.rs:4570 ": 2,
+            "context.rs:871 ": 1,
+            "src/bin/standard-load.rs:543 ": 3
+          },
+          "Idle": {
+            "src/bin/standard-load.rs:543 ": 1
+          },
+          "IdleSettle": {
+            "src/bin/standard-load.rs:688 ": 1
+          },
+          "Warm": {
+            "containers/scroll_area.rs:1394 ": 1,
+            "containers/scroll_area.rs:1662 ": 1,
+            "src/bin/standard-load.rs:543 ": 1,
+            "src/bin/standard-load.rs:688 ": 59
+          }
+        },
+        "schema_version": 2,
+        "status": "passed",
+        "system_window_capture_used": false,
+        "target_hz": 60,
+        "thumbnail_texture_payload_bytes": 196608,
+        "ui_frames": 573,
+        "ui_passes": 573,
+        "viewport_points": [
+          1100,
+          720
+        ],
+        "viewport_visibility_counts": {
+          "occluded_or_minimized": 0,
+          "unknown": 573,
+          "visible": 0
+        },
+        "vsync": false,
+        "wall_seconds": 154.5014743,
+        "window": "visible native wgpu viewport; timed edit script, own render-target readback",
+        "workload": {
+          "active_unique_originals": 10,
+          "assets": 100,
+          "current_layers": 50,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "documents": 10,
+          "layers": 500,
+          "nested_group_depth": 2,
+          "visible_thumbnails": 12
+        }
+      },
+      "metrics": {
+        "schema_version": 2,
+        "environment": {
+          "os": "Windows-10-10.0.19045-SP0",
+          "architecture": "AMD64",
+          "logical_processors": 16,
+          "cpu": "AMD Ryzen 7 4800H with Radeon Graphics",
+          "physical_memory_bytes": 17042837504
+        },
+        "process_id": 9552,
+        "arguments": [
+          "--no-readback"
+        ],
+        "executable_sha256": "e8623ae6e5aed8ff643a15523f9538f725b2f079b89d5ad077bd6d13a8d1a56b",
+        "fixture_inventory_sha256": "84be921941507c7ae3c6c8d805a33ddd79e2c5dfeba1e6c782d855bf08485c40",
+        "fixture": "artifacts\\p0\\comparison-fixture-998e86f1",
+        "fixture_file_count": 201,
+        "sample_interval_seconds": 0.1,
+        "phase_summary": [
+          {
+            "phase": "Empty",
+            "cycle": 0,
+            "sample_count": 27,
+            "duration_seconds": 2.9993387,
+            "working_set_bytes_max": 158937088,
+            "working_set_bytes_last": 158937088,
+            "private_bytes_max": 362233856,
+            "private_bytes_last": 362233856,
+            "gpu_dedicated_bytes_max": 230187008,
+            "gpu_dedicated_bytes_last": 230187008,
+            "gpu_shared_bytes_max": 24252416,
+            "gpu_shared_bytes_last": 24252416,
+            "sample_span_seconds": 2.844000000000051,
+            "cpu_one_logical_core_percent": 14.284458509141798
+          },
+          {
+            "phase": "InitialLoadStart",
+            "cycle": 0,
+            "sample_count": 8,
+            "duration_seconds": 0.8184353999999998,
+            "working_set_bytes_max": 181374976,
+            "working_set_bytes_last": 181374976,
+            "private_bytes_max": 384892928,
+            "private_bytes_last": 384892928,
+            "gpu_dedicated_bytes_max": 230187008,
+            "gpu_dedicated_bytes_last": 230187008,
+            "gpu_shared_bytes_max": 24252416,
+            "gpu_shared_bytes_last": 24252416,
+            "sample_span_seconds": 0.7659999999996217,
+            "cpu_one_logical_core_percent": 8.159268929507947
+          },
+          {
+            "phase": "Warm",
+            "cycle": 0,
+            "sample_count": 9,
+            "duration_seconds": 1.0093082000000004,
+            "working_set_bytes_max": 205025280,
+            "working_set_bytes_last": 205025280,
+            "private_bytes_max": 411111424,
+            "private_bytes_last": 411111424,
+            "gpu_dedicated_bytes_max": 232288256,
+            "gpu_dedicated_bytes_last": 232288256,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.8909999999996217,
+            "cpu_one_logical_core_percent": 7.014590347926659
+          },
+          {
+            "phase": "Edit",
+            "cycle": 0,
+            "sample_count": 47,
+            "duration_seconds": 5.131118799999999,
+            "working_set_bytes_max": 205590528,
+            "working_set_bytes_last": 205590528,
+            "private_bytes_max": 411516928,
+            "private_bytes_last": 411516928,
+            "gpu_dedicated_bytes_max": 232288256,
+            "gpu_dedicated_bytes_last": 232288256,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 5.030999999999949,
+            "cpu_one_logical_core_percent": 6.211488769628367
+          },
+          {
+            "phase": "Before",
+            "cycle": 0,
+            "sample_count": 0,
+            "duration_seconds": 0.011560799999999816,
+            "working_set_bytes_max": null,
+            "working_set_bytes_last": null,
+            "private_bytes_max": null,
+            "private_bytes_last": null,
+            "gpu_dedicated_bytes_max": null,
+            "gpu_dedicated_bytes_last": null,
+            "gpu_shared_bytes_max": null,
+            "gpu_shared_bytes_last": null
+          },
+          {
+            "phase": "After",
+            "cycle": 0,
+            "sample_count": 0,
+            "duration_seconds": 0.005773800000000051,
+            "working_set_bytes_max": null,
+            "working_set_bytes_last": null,
+            "private_bytes_max": null,
+            "private_bytes_last": null,
+            "gpu_dedicated_bytes_max": null,
+            "gpu_dedicated_bytes_last": null,
+            "gpu_shared_bytes_max": null,
+            "gpu_shared_bytes_last": null
+          },
+          {
+            "phase": "IdleSettle",
+            "cycle": 0,
+            "sample_count": 18,
+            "duration_seconds": 2.0005845000000004,
+            "working_set_bytes_max": 205918208,
+            "working_set_bytes_last": 205918208,
+            "private_bytes_max": 411951104,
+            "private_bytes_last": 411951104,
+            "gpu_dedicated_bytes_max": 232288256,
+            "gpu_dedicated_bytes_last": 232288256,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 1.875,
+            "cpu_one_logical_core_percent": 0.0
+          },
+          {
+            "phase": "Idle",
+            "cycle": 0,
+            "sample_count": 547,
+            "duration_seconds": 60.000612600000004,
+            "working_set_bytes_max": 205918208,
+            "working_set_bytes_last": 205832192,
+            "private_bytes_max": 411951104,
+            "private_bytes_last": 411791360,
+            "gpu_dedicated_bytes_max": 232288256,
+            "gpu_dedicated_bytes_last": 232288256,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 59.90599999999995,
+            "cpu_one_logical_core_percent": 0.026082529295896925
+          },
+          {
+            "phase": "Cycle",
+            "cycle": 0,
+            "sample_count": 9,
+            "duration_seconds": 0.9825979000000018,
+            "working_set_bytes_max": 306663424,
+            "working_set_bytes_last": 304185344,
+            "private_bytes_max": 883515392,
+            "private_bytes_last": 883515392,
+            "gpu_dedicated_bytes_max": 568102912,
+            "gpu_dedicated_bytes_last": 568102912,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 58.92857142857143
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 10,
+            "sample_count": 9,
+            "duration_seconds": 1.0350019999999915,
+            "working_set_bytes_max": 305008640,
+            "working_set_bytes_last": 299143168,
+            "private_bytes_max": 883507200,
+            "private_bytes_last": 875102208,
+            "gpu_dedicated_bytes_max": 568102912,
+            "gpu_dedicated_bytes_last": 568102912,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 64.28571428571429
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 20,
+            "sample_count": 10,
+            "duration_seconds": 1.0444642000000073,
+            "working_set_bytes_max": 306475008,
+            "working_set_bytes_last": 300486656,
+            "private_bytes_max": 883777536,
+            "private_bytes_last": 879570944,
+            "gpu_dedicated_bytes_max": 568102912,
+            "gpu_dedicated_bytes_last": 568102912,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.9840000000003783,
+            "cpu_one_logical_core_percent": 60.34044715444834
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 30,
+            "sample_count": 9,
+            "duration_seconds": 1.0339798999999914,
+            "working_set_bytes_max": 307793920,
+            "working_set_bytes_last": 299454464,
+            "private_bytes_max": 850227200,
+            "private_bytes_last": 841822208,
+            "gpu_dedicated_bytes_max": 568102912,
+            "gpu_dedicated_bytes_last": 568102912,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 64.28571428571429
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 40,
+            "sample_count": 10,
+            "duration_seconds": 1.0328748000000019,
+            "working_set_bytes_max": 306638848,
+            "working_set_bytes_last": 300101632,
+            "private_bytes_max": 850505728,
+            "private_bytes_last": 846295040,
+            "gpu_dedicated_bytes_max": 568102912,
+            "gpu_dedicated_bytes_last": 568102912,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 1.0,
+            "cpu_one_logical_core_percent": 60.9375
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 50,
+            "sample_count": 9,
+            "duration_seconds": 1.0387316999999996,
+            "working_set_bytes_max": 305967104,
+            "working_set_bytes_last": 299720704,
+            "private_bytes_max": 850497536,
+            "private_bytes_last": 842092544,
+            "gpu_dedicated_bytes_max": 568102912,
+            "gpu_dedicated_bytes_last": 568102912,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.8590000000003783,
+            "cpu_one_logical_core_percent": 60.02619324793631
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 60,
+            "sample_count": 10,
+            "duration_seconds": 1.0257385000000028,
+            "working_set_bytes_max": 307634176,
+            "working_set_bytes_last": 301277184,
+            "private_bytes_max": 850497536,
+            "private_bytes_last": 846696448,
+            "gpu_dedicated_bytes_max": 568102912,
+            "gpu_dedicated_bytes_last": 568102912,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 1.0,
+            "cpu_one_logical_core_percent": 59.375
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 70,
+            "sample_count": 9,
+            "duration_seconds": 1.015883400000007,
+            "working_set_bytes_max": 308494336,
+            "working_set_bytes_last": 304295936,
+            "private_bytes_max": 850903040,
+            "private_bytes_last": 846696448,
+            "gpu_dedicated_bytes_max": 568102912,
+            "gpu_dedicated_bytes_last": 568102912,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 58.92857142857143
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 80,
+            "sample_count": 9,
+            "duration_seconds": 1.0250477999999958,
+            "working_set_bytes_max": 307781632,
+            "working_set_bytes_last": 300154880,
+            "private_bytes_max": 850898944,
+            "private_bytes_last": 842498048,
+            "gpu_dedicated_bytes_max": 568102912,
+            "gpu_dedicated_bytes_last": 568102912,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 62.5
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 90,
+            "sample_count": 10,
+            "duration_seconds": 1.0278328999999928,
+            "working_set_bytes_max": 307048448,
+            "working_set_bytes_last": 300355584,
+            "private_bytes_max": 850898944,
+            "private_bytes_last": 846700544,
+            "gpu_dedicated_bytes_max": 568102912,
+            "gpu_dedicated_bytes_last": 568102912,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 1.0,
+            "cpu_one_logical_core_percent": 62.5
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 100,
+            "sample_count": 9,
+            "duration_seconds": 1.0141291000000052,
+            "working_set_bytes_max": 303398912,
+            "working_set_bytes_last": 303398912,
+            "private_bytes_max": 846970880,
+            "private_bytes_last": 846970880,
+            "gpu_dedicated_bytes_max": 568102912,
+            "gpu_dedicated_bytes_last": 568102912,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 55.35714285714286
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 110,
+            "sample_count": 9,
+            "duration_seconds": 1.023296700000003,
+            "working_set_bytes_max": 302526464,
+            "working_set_bytes_last": 300470272,
+            "private_bytes_max": 846958592,
+            "private_bytes_last": 842760192,
+            "gpu_dedicated_bytes_max": 568102912,
+            "gpu_dedicated_bytes_last": 568102912,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 58.92857142857143
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 120,
+            "sample_count": 9,
+            "duration_seconds": 1.0163287000000025,
+            "working_set_bytes_max": 308858880,
+            "working_set_bytes_last": 300670976,
+            "private_bytes_max": 851435520,
+            "private_bytes_last": 843022336,
+            "gpu_dedicated_bytes_max": 568102912,
+            "gpu_dedicated_bytes_last": 568102912,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 66.07142857142857
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 130,
+            "sample_count": 10,
+            "duration_seconds": 1.0182207000000005,
+            "working_set_bytes_max": 308150272,
+            "working_set_bytes_last": 302505984,
+            "private_bytes_max": 851431424,
+            "private_bytes_last": 847224832,
+            "gpu_dedicated_bytes_max": 568102912,
+            "gpu_dedicated_bytes_last": 568102912,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.9849999999996726,
+            "cpu_one_logical_core_percent": 58.69289340103474
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 140,
+            "sample_count": 9,
+            "duration_seconds": 1.0277276999999998,
+            "working_set_bytes_max": 300941312,
+            "working_set_bytes_last": 300941312,
+            "private_bytes_max": 843288576,
+            "private_bytes_last": 843284480,
+            "gpu_dedicated_bytes_max": 568102912,
+            "gpu_dedicated_bytes_last": 568102912,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.8909999999996217,
+            "cpu_one_logical_core_percent": 59.62401795737661
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 150,
+            "sample_count": 9,
+            "duration_seconds": 1.017279699999989,
+            "working_set_bytes_max": 309051392,
+            "working_set_bytes_last": 300945408,
+            "private_bytes_max": 851697664,
+            "private_bytes_last": 843284480,
+            "gpu_dedicated_bytes_max": 568102912,
+            "gpu_dedicated_bytes_last": 568102912,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 60.71428571428571
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 160,
+            "sample_count": 10,
+            "duration_seconds": 1.017179800000008,
+            "working_set_bytes_max": 308199424,
+            "working_set_bytes_last": 303923200,
+            "private_bytes_max": 851963904,
+            "private_bytes_last": 847757312,
+            "gpu_dedicated_bytes_max": 568102912,
+            "gpu_dedicated_bytes_last": 568102912,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.9840000000003783,
+            "cpu_one_logical_core_percent": 61.92835365851277
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 170,
+            "sample_count": 9,
+            "duration_seconds": 1.0228771999999964,
+            "working_set_bytes_max": 308740096,
+            "working_set_bytes_last": 308580352,
+            "private_bytes_max": 851968000,
+            "private_bytes_last": 851968000,
+            "gpu_dedicated_bytes_max": 568102912,
+            "gpu_dedicated_bytes_last": 568102912,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 57.14285714285714
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 180,
+            "sample_count": 9,
+            "duration_seconds": 1.023797799999997,
+            "working_set_bytes_max": 307527680,
+            "working_set_bytes_last": 301256704,
+            "private_bytes_max": 851959808,
+            "private_bytes_last": 843550720,
+            "gpu_dedicated_bytes_max": 568102912,
+            "gpu_dedicated_bytes_last": 568102912,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.8899999999994179,
+            "cpu_one_logical_core_percent": 57.93539325846486
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 190,
+            "sample_count": 10,
+            "duration_seconds": 1.01652390000001,
+            "working_set_bytes_max": 309194752,
+            "working_set_bytes_last": 301260800,
+            "private_bytes_max": 851963904,
+            "private_bytes_last": 843550720,
+            "gpu_dedicated_bytes_max": 568102912,
+            "gpu_dedicated_bytes_last": 568102912,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.9679999999998472,
+            "cpu_one_logical_core_percent": 59.72365702480281
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 200,
+            "sample_count": 0,
+            "duration_seconds": 0.059263199999989524,
+            "working_set_bytes_max": null,
+            "working_set_bytes_last": null,
+            "private_bytes_max": null,
+            "private_bytes_last": null,
+            "gpu_dedicated_bytes_max": null,
+            "gpu_dedicated_bytes_last": null,
+            "gpu_shared_bytes_max": null,
+            "gpu_shared_bytes_last": null
+          },
+          {
+            "phase": "ClosedSettle",
+            "cycle": 200,
+            "sample_count": 18,
+            "duration_seconds": 2.0006883000000073,
+            "working_set_bytes_max": 166916096,
+            "working_set_bytes_last": 166916096,
+            "private_bytes_max": 675311616,
+            "private_bytes_last": 675311616,
+            "gpu_dedicated_bytes_max": 299667456,
+            "gpu_dedicated_bytes_last": 299667456,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 1.875,
+            "cpu_one_logical_core_percent": 0.0
+          },
+          {
+            "phase": "Closed",
+            "cycle": 200,
+            "sample_count": 545,
+            "duration_seconds": 60.0005048,
+            "working_set_bytes_max": 166916096,
+            "working_set_bytes_last": 166813696,
+            "private_bytes_max": 675311616,
+            "private_bytes_last": 439701504,
+            "gpu_dedicated_bytes_max": 299667456,
+            "gpu_dedicated_bytes_last": 299667456,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 59.89099999999962,
+            "cpu_one_logical_core_percent": 0.0
+          }
+        ],
+        "budget_checks": {
+          "empty_working_set_le_200_mib": true,
+          "standard_working_set_le_512_mib": true,
+          "paused_cpu_le_2_percent_one_core": true,
+          "paused_observation_at_least_60_seconds": true,
+          "paused_no_continuous_redraw": true,
+          "frame_cpu_p95_le_16_7_ms": true,
+          "edit_readback_p95_le_50_ms": null,
+          "at_least_300_edit_samples": true,
+          "at_least_300_readback_samples": null,
+          "pause_png_refresh_verified": null,
+          "twenty_resource_rounds": true,
+          "only_active_originals_initially_decoded": true,
+          "closed_observation_at_least_60_seconds": true,
+          "closed_cpu_le_2_percent_one_core": true,
+          "closed_no_continuous_redraw": true,
+          "original_decoded_images_released": true,
+          "owned_textures_released_from_renderer": true
+        },
+        "gpu_counter_errors": [],
+        "cargo_lock_sha256": "7cc1c007e6eff9768c48d69f20374fa5d570b713026fa1faf77add8a92622247",
+        "source_sha256": {
+          "experiments\\p0-egui\\src\\bin\\standard-load.rs": "1070253089577fcfbdce4efd510cd921c4664ea457e606d8cfef6c661fc9bd26",
+          "experiments\\p0-egui\\src\\lib.rs": "6b6cbfcecb8401fe40012677d52d7cda1f54ea4b6a0f1dbc2ab8b5cac716a33f",
+          "experiments\\p0-egui\\src\\main.rs": "7fa519b9ef852393d1b25332406eb190712a3d073a7b42699be0c827fe59049f",
+          "experiments\\p0-egui\\src\\view.rs": "a3bb9fde09259c33885b167e87750702cc7dcbb2127d41e0613296e0c9d7f712"
+        },
+        "harness_sha256": {
+          "tools\\check_p0_gui.py": "6678b9f1b3661d33d456a25c7d4cfd19a32007893e0e2ffddf7c59bb1145b4cd",
+          "tools\\p0_process_metrics.py": "d9f985f79f106b353c6aa0bda29f4a5b9273f42b2acfeae28a124c669f81a3b1",
+          "tools\\p0_workload.py": "fc9f03661781b5964c5bba90c3ea752a85e92a40a41cbfcbd6e7f8e6898e7a5f"
+        },
+        "measurement": "GetProcessMemoryInfo/GetProcessTimes for runner-owned PID; PDH GPU Process Memory per PID across adapters; no window capture. Working set and private bytes are different metrics. GPU counters are OS accounting, not allocation payload.",
+        "limits": [
+          "Visible native test window, vsync disabled; script targets 60 Hz. Edit-to-readback includes queue, GPU execution, copy and callback; not physical input/display latency",
+          "GPU execution timestamps unavailable",
+          "Single run on one Windows machine; no cross-platform or full-product budget conclusion"
+        ]
+      },
+      "process_sample_count": 1409,
+      "sampled_process_peaks": {
+        "working_set_bytes": 309194752,
+        "private_bytes": 883777536,
+        "gpu_dedicated_bytes": 568102912,
+        "gpu_shared_bytes": 26349568
+      },
+      "artifact_sha256": {
+        "clock-anchor.json": "9fccffc01762d648a42d07b3cdeb9989b8ab05476ea84e36ddf5bcf27a7c38e8",
+        "phases.jsonl": "a293ab422515cdbd8d6521142c5d03195064da99db6fbff91f11a991494fbcca",
+        "process-samples.json": "4f759fc02ce45ca5bd8e356ef86237f41fd5656609af97dd8b604c2426423697",
+        "result.json": "16ac62f9f2e5557f003c62f34b1a0ef15af62ec317118808e460fd81c079a28e"
+      }
+    },
+    {
+      "label": "compare-memory-none",
+      "artifact_directory": "artifacts\\p0\\compare-memory-none-52114d57",
+      "result": {
+        "adapter": {
+          "backend": "Vulkan",
+          "driver": "NVIDIA",
+          "driver_info": "560.94",
+          "name": "NVIDIA GeForce RTX 2060"
+        },
+        "closed_seconds": 60.0,
+        "cpu_cache_budget_bytes": 134217728,
+        "cpu_cache_peak_bytes": 134217728,
+        "cycles_completed": 20,
+        "decode_ms": {
+          "count": 2010,
+          "max": 9.345300000000002,
+          "mean": 4.867783731343292,
+          "min": 3.9554000000000005,
+          "p50": 4.7148,
+          "p95": 6.079700000000001
+        },
+        "diagnostic": false,
+        "document_load_cpu_ms": {
+          "count": 201,
+          "max": 66.9207,
+          "mean": 50.84202537313432,
+          "min": 43.0189,
+          "p50": 50.431999999999995,
+          "p95": 57.1933
+        },
+        "edit_count": 300,
+        "edit_interval_ms": {
+          "count": 299,
+          "max": 18.356399999999997,
+          "mean": 17.13717224080267,
+          "min": 16.8064,
+          "p50": 17.0401,
+          "p95": 17.729499999999998
+        },
+        "edit_to_gpu_readback_ms": null,
+        "eframe_cpu_frame_ms_during_edits": {
+          "count": 300,
+          "max": 4.673799499869347,
+          "mean": 0.8573092958734682,
+          "min": 0.5669999518431723,
+          "p50": 0.8349000127054751,
+          "p95": 1.2135999277234077
+        },
+        "error": null,
+        "experiment": "p0-egui-standard-load",
+        "extra_frozen_override_texture_bytes": 4194304,
+        "first_document_original_decode_count": 10,
+        "frozen_simulation_ms": 9273,
+        "gpu_memory_note": "Payload excludes driver residency, staging, targets, fonts and thumbnails; OS process GPU counters are recorded separately by runner",
+        "gpu_readback_requests": 0,
+        "gpu_readbacks_enabled": false,
+        "gpu_texture_cache_budget_bytes": 134217728,
+        "gpu_texture_payload_peak_bytes": 134217728,
+        "gpu_timestamp_ms": null,
+        "gpu_timestamp_note": "eframe frame CPU excludes vsync; no GPU timestamp queries in this experiment",
+        "idle_seconds": 60.0,
+        "idle_ui_frames": 1,
+        "memory_hint": "MemoryUsage",
+        "not_tested": [
+          "stable behavior",
+          "physical drag or input latency",
+          "IME/high DPI",
+          "GPU execution timestamps",
+          "isolated group compositing/effects",
+          "real audio/gameplay",
+          "history",
+          "macOS/Linux"
+        ],
+        "original_decode_count": 2010,
+        "pause_png_refresh_verified": null,
+        "per_edit_gpu_readback": false,
+        "phase_frame_bins_100ms": {
+          "Closed": {
+            "0": 1
+          },
+          "ClosedSettle": {
+            "0": 3
+          },
+          "Idle": {
+            "0": 1
+          }
+        },
+        "phases": [
+          {
+            "cpu_cache_bytes": 0,
+            "cycle": 0,
+            "elapsed_seconds": 0.0012113,
+            "gpu_texture_payload_bytes": 0,
+            "original_decoded_images_live": 0,
+            "owned_texture_ids_issued": 0,
+            "owned_textures_in_renderer": 0,
+            "phase": "Empty",
+            "ui_frames": 0,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 558160,
+              "allocation_count": 20,
+              "block_count": 2,
+              "reserved_bytes": 12582912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 0,
+              "textures_kept": 0,
+              "textures_released": 0
+            }
+          },
+          {
+            "cpu_cache_bytes": 0,
+            "cycle": 0,
+            "elapsed_seconds": 3.0011409,
+            "gpu_texture_payload_bytes": 0,
+            "original_decoded_images_live": 0,
+            "owned_texture_ids_issued": 0,
+            "owned_textures_in_renderer": 0,
+            "phase": "InitialLoadStart",
+            "ui_frames": 4,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 1626160,
+              "allocation_count": 15,
+              "block_count": 2,
+              "reserved_bytes": 12582912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 0,
+              "textures_kept": 1,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 41943040,
+            "cycle": 0,
+            "elapsed_seconds": 3.1201813,
+            "gpu_texture_payload_bytes": 41943040,
+            "original_decoded_images_live": 10,
+            "owned_texture_ids_issued": 22,
+            "owned_textures_in_renderer": 0,
+            "phase": "Warm",
+            "ui_frames": 4,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 1626160,
+              "allocation_count": 15,
+              "block_count": 2,
+              "reserved_bytes": 12582912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 0,
+              "textures_kept": 1,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 41943040,
+            "cycle": 0,
+            "elapsed_seconds": 4.1291254,
+            "gpu_texture_payload_bytes": 41943040,
+            "original_decoded_images_live": 10,
+            "owned_texture_ids_issued": 22,
+            "owned_textures_in_renderer": 22,
+            "phase": "Edit",
+            "ui_frames": 87,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 43898896,
+              "allocation_count": 37,
+              "block_count": 4,
+              "reserved_bytes": 92274688
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 23,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 41943040,
+            "cycle": 0,
+            "elapsed_seconds": 9.2739781,
+            "gpu_texture_payload_bytes": 41943040,
+            "original_decoded_images_live": 10,
+            "owned_texture_ids_issued": 22,
+            "owned_textures_in_renderer": 22,
+            "phase": "Before",
+            "ui_frames": 387,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 43968384,
+              "allocation_count": 37,
+              "block_count": 4,
+              "reserved_bytes": 92274688
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 23,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 41943040,
+            "cycle": 0,
+            "elapsed_seconds": 9.2836169,
+            "gpu_texture_payload_bytes": 41943040,
+            "original_decoded_images_live": 10,
+            "owned_texture_ids_issued": 23,
+            "owned_textures_in_renderer": 22,
+            "phase": "After",
+            "ui_frames": 388,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 43969028,
+              "allocation_count": 38,
+              "block_count": 4,
+              "reserved_bytes": 92274688
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 23,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 41943040,
+            "cycle": 0,
+            "elapsed_seconds": 9.289198,
+            "gpu_texture_payload_bytes": 41943040,
+            "original_decoded_images_live": 10,
+            "owned_texture_ids_issued": 23,
+            "owned_textures_in_renderer": 23,
+            "phase": "IdleSettle",
+            "ui_frames": 389,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 52357316,
+              "allocation_count": 40,
+              "block_count": 4,
+              "reserved_bytes": 92274688
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 24,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 41943040,
+            "cycle": 0,
+            "elapsed_seconds": 11.2900037,
+            "gpu_texture_payload_bytes": 41943040,
+            "original_decoded_images_live": 10,
+            "owned_texture_ids_issued": 23,
+            "owned_textures_in_renderer": 23,
+            "phase": "Idle",
+            "ui_frames": 390,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 48163568,
+              "allocation_count": 39,
+              "block_count": 4,
+              "reserved_bytes": 92274688
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 24,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 41943040,
+            "cycle": 0,
+            "elapsed_seconds": 71.2909591,
+            "gpu_texture_payload_bytes": 41943040,
+            "original_decoded_images_live": 10,
+            "owned_texture_ids_issued": 23,
+            "owned_textures_in_renderer": 23,
+            "phase": "Cycle",
+            "ui_frames": 391,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 48162584,
+              "allocation_count": 38,
+              "block_count": 4,
+              "reserved_bytes": 92274688
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 24,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 10,
+            "elapsed_seconds": 72.2317425,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 123,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 401,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 9,
+              "reserved_bytes": 310378496
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 20,
+            "elapsed_seconds": 73.2578051,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 223,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 411,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 9,
+              "reserved_bytes": 310378496
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 30,
+            "elapsed_seconds": 74.2839338,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 323,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 421,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 9,
+              "reserved_bytes": 310378496
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 40,
+            "elapsed_seconds": 75.3083118,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 423,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 431,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 9,
+              "reserved_bytes": 310378496
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 50,
+            "elapsed_seconds": 76.3347241,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 523,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 441,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 9,
+              "reserved_bytes": 310378496
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 60,
+            "elapsed_seconds": 77.3633564,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 623,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 451,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 9,
+              "reserved_bytes": 310378496
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 70,
+            "elapsed_seconds": 78.3906132,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 723,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 461,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 9,
+              "reserved_bytes": 310378496
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 80,
+            "elapsed_seconds": 79.4074048,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 823,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 471,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 9,
+              "reserved_bytes": 310378496
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 90,
+            "elapsed_seconds": 80.4365841,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 923,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 481,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 9,
+              "reserved_bytes": 310378496
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 100,
+            "elapsed_seconds": 81.4638323,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1023,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 491,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 9,
+              "reserved_bytes": 310378496
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 110,
+            "elapsed_seconds": 82.4717065,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1123,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 501,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 9,
+              "reserved_bytes": 310378496
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 120,
+            "elapsed_seconds": 83.472191,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1223,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 511,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 9,
+              "reserved_bytes": 310378496
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 130,
+            "elapsed_seconds": 84.4937372,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1323,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 521,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 9,
+              "reserved_bytes": 310378496
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 140,
+            "elapsed_seconds": 85.5062024,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1423,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 531,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 9,
+              "reserved_bytes": 310378496
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 150,
+            "elapsed_seconds": 86.521005,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1523,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 541,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 9,
+              "reserved_bytes": 310378496
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 160,
+            "elapsed_seconds": 87.5555031,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1623,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 551,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 9,
+              "reserved_bytes": 310378496
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 170,
+            "elapsed_seconds": 88.5892651,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1723,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 561,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 9,
+              "reserved_bytes": 310378496
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 180,
+            "elapsed_seconds": 89.6463965,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1823,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 571,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 9,
+              "reserved_bytes": 310378496
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 190,
+            "elapsed_seconds": 90.6819545,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1923,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 581,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 9,
+              "reserved_bytes": 310378496
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 200,
+            "elapsed_seconds": 91.732854,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 2023,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 591,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 9,
+              "reserved_bytes": 310378496
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 0,
+            "cycle": 200,
+            "elapsed_seconds": 91.7925255,
+            "gpu_texture_payload_bytes": 0,
+            "original_decoded_images_live": 0,
+            "owned_texture_ids_issued": 2023,
+            "owned_textures_in_renderer": 44,
+            "phase": "ClosedSettle",
+            "ui_frames": 592,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 178189960,
+              "allocation_count": 69,
+              "block_count": 8,
+              "reserved_bytes": 276824064
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 45,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 0,
+            "cycle": 200,
+            "elapsed_seconds": 93.7935507,
+            "gpu_texture_payload_bytes": 0,
+            "original_decoded_images_live": 0,
+            "owned_texture_ids_issued": 2023,
+            "owned_textures_in_renderer": 0,
+            "phase": "Closed",
+            "ui_frames": 595,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 1757360,
+              "allocation_count": 15,
+              "block_count": 3,
+              "reserved_bytes": 75497472
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 1,
+              "textures_released": 55
+            }
+          },
+          {
+            "cpu_cache_bytes": 0,
+            "cycle": 200,
+            "elapsed_seconds": 153.7939322,
+            "gpu_texture_payload_bytes": 0,
+            "original_decoded_images_live": 0,
+            "owned_texture_ids_issued": 2023,
+            "owned_textures_in_renderer": 0,
+            "phase": "Done",
+            "ui_frames": 596,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 1757024,
+              "allocation_count": 16,
+              "block_count": 3,
+              "reserved_bytes": 75497472
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 1,
+              "textures_released": 55
+            }
+          }
+        ],
+        "render_target_readbacks": [],
+        "repaint_causes_by_phase": {
+          "After": {
+            "src/bin/standard-load.rs:688 ": 1
+          },
+          "Before": {
+            "src/bin/standard-load.rs:688 ": 1
+          },
+          "Closed": {
+            "src/bin/standard-load.rs:543 ": 1
+          },
+          "ClosedSettle": {
+            "src/bin/standard-load.rs:446 ": 1,
+            "src/bin/standard-load.rs:543 ": 2,
+            "src/bin/standard-load.rs:688 ": 1
+          },
+          "Cycle": {
+            "src/bin/standard-load.rs:543 ": 1,
+            "src/bin/standard-load.rs:688 ": 200
+          },
+          "Edit": {
+            "src/bin/standard-load.rs:688 ": 300
+          },
+          "Empty": {
+            "context.rs:4570 ": 2,
+            "context.rs:871 ": 1,
+            "src/bin/standard-load.rs:543 ": 3
+          },
+          "Idle": {
+            "src/bin/standard-load.rs:543 ": 1
+          },
+          "IdleSettle": {
+            "src/bin/standard-load.rs:688 ": 1
+          },
+          "Warm": {
+            "containers/scroll_area.rs:1394 ": 1,
+            "containers/scroll_area.rs:1662 ": 1,
+            "containers/scroll_area.rs:833 ": 26,
+            "src/bin/standard-load.rs:543 ": 1,
+            "src/bin/standard-load.rs:688 ": 82
+          }
+        },
+        "schema_version": 2,
+        "status": "passed",
+        "system_window_capture_used": false,
+        "target_hz": 60,
+        "thumbnail_texture_payload_bytes": 196608,
+        "ui_frames": 596,
+        "ui_passes": 596,
+        "viewport_points": [
+          1100,
+          720
+        ],
+        "viewport_visibility_counts": {
+          "occluded_or_minimized": 0,
+          "unknown": 596,
+          "visible": 0
+        },
+        "vsync": false,
+        "wall_seconds": 153.7968657,
+        "window": "visible native wgpu viewport; timed edit script, own render-target readback",
+        "workload": {
+          "active_unique_originals": 10,
+          "assets": 100,
+          "current_layers": 50,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "documents": 10,
+          "layers": 500,
+          "nested_group_depth": 2,
+          "visible_thumbnails": 12
+        }
+      },
+      "metrics": {
+        "schema_version": 2,
+        "environment": {
+          "os": "Windows-10-10.0.19045-SP0",
+          "architecture": "AMD64",
+          "logical_processors": 16,
+          "cpu": "AMD Ryzen 7 4800H with Radeon Graphics",
+          "physical_memory_bytes": 17042837504
+        },
+        "process_id": 24248,
+        "arguments": [
+          "--memory-usage",
+          "--no-readback"
+        ],
+        "executable_sha256": "e8623ae6e5aed8ff643a15523f9538f725b2f079b89d5ad077bd6d13a8d1a56b",
+        "fixture_inventory_sha256": "84be921941507c7ae3c6c8d805a33ddd79e2c5dfeba1e6c782d855bf08485c40",
+        "fixture": "artifacts\\p0\\comparison-fixture-998e86f1",
+        "fixture_file_count": 201,
+        "sample_interval_seconds": 0.1,
+        "phase_summary": [
+          {
+            "phase": "Empty",
+            "cycle": 0,
+            "sample_count": 27,
+            "duration_seconds": 2.9999295999999998,
+            "working_set_bytes_max": 158875648,
+            "working_set_bytes_last": 158875648,
+            "private_bytes_max": 173711360,
+            "private_bytes_last": 173711360,
+            "gpu_dedicated_bytes_max": 41476096,
+            "gpu_dedicated_bytes_last": 41476096,
+            "gpu_shared_bytes_max": 24252416,
+            "gpu_shared_bytes_last": 24252416,
+            "sample_span_seconds": 2.875,
+            "cpu_one_logical_core_percent": 14.673913043478262
+          },
+          {
+            "phase": "InitialLoadStart",
+            "cycle": 0,
+            "sample_count": 1,
+            "duration_seconds": 0.11904040000000027,
+            "working_set_bytes_max": 159756288,
+            "working_set_bytes_last": 159756288,
+            "private_bytes_max": 174731264,
+            "private_bytes_last": 174731264,
+            "gpu_dedicated_bytes_max": 41476096,
+            "gpu_dedicated_bytes_last": 41476096,
+            "gpu_shared_bytes_max": 24252416,
+            "gpu_shared_bytes_last": 24252416
+          },
+          {
+            "phase": "Warm",
+            "cycle": 0,
+            "sample_count": 10,
+            "duration_seconds": 1.0089441000000003,
+            "working_set_bytes_max": 204959744,
+            "working_set_bytes_last": 204959744,
+            "private_bytes_max": 327565312,
+            "private_bytes_last": 327565312,
+            "gpu_dedicated_bytes_max": 121335808,
+            "gpu_dedicated_bytes_last": 121335808,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.9850000000005821,
+            "cpu_one_logical_core_percent": 12.690355329941738
+          },
+          {
+            "phase": "Edit",
+            "cycle": 0,
+            "sample_count": 46,
+            "duration_seconds": 5.1448527,
+            "working_set_bytes_max": 205250560,
+            "working_set_bytes_last": 205250560,
+            "private_bytes_max": 327712768,
+            "private_bytes_last": 300412928,
+            "gpu_dedicated_bytes_max": 121335808,
+            "gpu_dedicated_bytes_last": 121335808,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 4.95299999999952,
+            "cpu_one_logical_core_percent": 6.624772864930987
+          },
+          {
+            "phase": "Before",
+            "cycle": 0,
+            "sample_count": 0,
+            "duration_seconds": 0.009638799999999392,
+            "working_set_bytes_max": null,
+            "working_set_bytes_last": null,
+            "private_bytes_max": null,
+            "private_bytes_last": null,
+            "gpu_dedicated_bytes_max": null,
+            "gpu_dedicated_bytes_last": null,
+            "gpu_shared_bytes_max": null,
+            "gpu_shared_bytes_last": null
+          },
+          {
+            "phase": "After",
+            "cycle": 0,
+            "sample_count": 0,
+            "duration_seconds": 0.005581100000000561,
+            "working_set_bytes_max": null,
+            "working_set_bytes_last": null,
+            "private_bytes_max": null,
+            "private_bytes_last": null,
+            "gpu_dedicated_bytes_max": null,
+            "gpu_dedicated_bytes_last": null,
+            "gpu_shared_bytes_max": null,
+            "gpu_shared_bytes_last": null
+          },
+          {
+            "phase": "IdleSettle",
+            "cycle": 0,
+            "sample_count": 18,
+            "duration_seconds": 2.000805699999999,
+            "working_set_bytes_max": 205574144,
+            "working_set_bytes_last": 205574144,
+            "private_bytes_max": 300814336,
+            "private_bytes_last": 300814336,
+            "gpu_dedicated_bytes_max": 121335808,
+            "gpu_dedicated_bytes_last": 121335808,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 1.8909999999996217,
+            "cpu_one_logical_core_percent": 0.0
+          },
+          {
+            "phase": "Idle",
+            "cycle": 0,
+            "sample_count": 543,
+            "duration_seconds": 60.000955399999995,
+            "working_set_bytes_max": 205574144,
+            "working_set_bytes_last": 205484032,
+            "private_bytes_max": 300814336,
+            "private_bytes_last": 300650496,
+            "gpu_dedicated_bytes_max": 121335808,
+            "gpu_dedicated_bytes_last": 121335808,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 59.9380000000001,
+            "cpu_one_logical_core_percent": 0.0
+          },
+          {
+            "phase": "Cycle",
+            "cycle": 0,
+            "sample_count": 8,
+            "duration_seconds": 0.9407834000000008,
+            "working_set_bytes_max": 305975296,
+            "working_set_bytes_last": 305045504,
+            "private_bytes_max": 696332288,
+            "private_bytes_last": 696332288,
+            "gpu_dedicated_bytes_max": 339542016,
+            "gpu_dedicated_bytes_last": 305987584,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.7809999999999491,
+            "cpu_one_logical_core_percent": 56.01792573623925
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 10,
+            "sample_count": 10,
+            "duration_seconds": 1.026062600000003,
+            "working_set_bytes_max": 302878720,
+            "working_set_bytes_last": 302878720,
+            "private_bytes_max": 856281088,
+            "private_bytes_last": 852090880,
+            "gpu_dedicated_bytes_max": 339542016,
+            "gpu_dedicated_bytes_last": 339542016,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.9839999999994689,
+            "cpu_one_logical_core_percent": 61.92835365857001
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 20,
+            "sample_count": 9,
+            "duration_seconds": 1.026128700000001,
+            "working_set_bytes_max": 307077120,
+            "working_set_bytes_last": 298958848,
+            "private_bytes_max": 856559616,
+            "private_bytes_last": 848158720,
+            "gpu_dedicated_bytes_max": 339542016,
+            "gpu_dedicated_bytes_last": 339542016,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.8909999999996217,
+            "cpu_one_logical_core_percent": 59.62401795737661
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 30,
+            "sample_count": 9,
+            "duration_seconds": 1.0243779999999987,
+            "working_set_bytes_max": 322953216,
+            "working_set_bytes_last": 322953216,
+            "private_bytes_max": 856555520,
+            "private_bytes_last": 848158720,
+            "gpu_dedicated_bytes_max": 339542016,
+            "gpu_dedicated_bytes_last": 305987584,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.8909999999996217,
+            "cpu_one_logical_core_percent": 61.37766554435827
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 40,
+            "sample_count": 10,
+            "duration_seconds": 1.026412300000004,
+            "working_set_bytes_max": 306810880,
+            "working_set_bytes_last": 306753536,
+            "private_bytes_max": 856834048,
+            "private_bytes_last": 856834048,
+            "gpu_dedicated_bytes_max": 339542016,
+            "gpu_dedicated_bytes_last": 339542016,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.9849999999996726,
+            "cpu_one_logical_core_percent": 63.45177664976729
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 50,
+            "sample_count": 9,
+            "duration_seconds": 1.0286322999999982,
+            "working_set_bytes_max": 307367936,
+            "working_set_bytes_last": 307367936,
+            "private_bytes_max": 856834048,
+            "private_bytes_last": 856834048,
+            "gpu_dedicated_bytes_max": 339542016,
+            "gpu_dedicated_bytes_last": 339542016,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.8909999999996217,
+            "cpu_one_logical_core_percent": 59.62401795737661
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 60,
+            "sample_count": 9,
+            "duration_seconds": 1.0272568000000035,
+            "working_set_bytes_max": 303566848,
+            "working_set_bytes_last": 299515904,
+            "private_bytes_max": 852893696,
+            "private_bytes_last": 848687104,
+            "gpu_dedicated_bytes_max": 339542016,
+            "gpu_dedicated_bytes_last": 339542016,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.8909999999996217,
+            "cpu_one_logical_core_percent": 61.37766554435827
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 70,
+            "sample_count": 9,
+            "duration_seconds": 1.0167915999999906,
+            "working_set_bytes_max": 307412992,
+            "working_set_bytes_last": 299515904,
+            "private_bytes_max": 857104384,
+            "private_bytes_last": 815067136,
+            "gpu_dedicated_bytes_max": 339542016,
+            "gpu_dedicated_bytes_last": 305987584,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 62.5
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 80,
+            "sample_count": 10,
+            "duration_seconds": 1.0291793000000098,
+            "working_set_bytes_max": 307130368,
+            "working_set_bytes_last": 307130368,
+            "private_bytes_max": 857104384,
+            "private_bytes_last": 857104384,
+            "gpu_dedicated_bytes_max": 339542016,
+            "gpu_dedicated_bytes_last": 339542016,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 1.0,
+            "cpu_one_logical_core_percent": 62.5
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 90,
+            "sample_count": 9,
+            "duration_seconds": 1.0272482000000025,
+            "working_set_bytes_max": 307023872,
+            "working_set_bytes_last": 299614208,
+            "private_bytes_max": 857092096,
+            "private_bytes_last": 848691200,
+            "gpu_dedicated_bytes_max": 339542016,
+            "gpu_dedicated_bytes_last": 339542016,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 62.5
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 100,
+            "sample_count": 9,
+            "duration_seconds": 1.0078741999999892,
+            "working_set_bytes_max": 307650560,
+            "working_set_bytes_last": 300171264,
+            "private_bytes_max": 857628672,
+            "private_bytes_last": 849227776,
+            "gpu_dedicated_bytes_max": 339542016,
+            "gpu_dedicated_bytes_last": 305987584,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 62.5
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 110,
+            "sample_count": 9,
+            "duration_seconds": 1.0004844999999989,
+            "working_set_bytes_max": 306872320,
+            "working_set_bytes_last": 300564480,
+            "private_bytes_max": 857632768,
+            "private_bytes_last": 849227776,
+            "gpu_dedicated_bytes_max": 339542016,
+            "gpu_dedicated_bytes_last": 305987584,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.8899999999994179,
+            "cpu_one_logical_core_percent": 59.6910112359941
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 120,
+            "sample_count": 10,
+            "duration_seconds": 1.021546200000003,
+            "working_set_bytes_max": 308645888,
+            "working_set_bytes_last": 307310592,
+            "private_bytes_max": 857907200,
+            "private_bytes_last": 857907200,
+            "gpu_dedicated_bytes_max": 339542016,
+            "gpu_dedicated_bytes_last": 339542016,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.9839999999994689,
+            "cpu_one_logical_core_percent": 58.75254065043822
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 130,
+            "sample_count": 9,
+            "duration_seconds": 1.0124652000000083,
+            "working_set_bytes_max": 307359744,
+            "working_set_bytes_last": 307359744,
+            "private_bytes_max": 857903104,
+            "private_bytes_last": 857903104,
+            "gpu_dedicated_bytes_max": 339542016,
+            "gpu_dedicated_bytes_last": 339542016,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.8909999999996217,
+            "cpu_one_logical_core_percent": 63.13131313133994
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 140,
+            "sample_count": 9,
+            "duration_seconds": 1.014802599999996,
+            "working_set_bytes_max": 305664000,
+            "working_set_bytes_last": 302768128,
+            "private_bytes_max": 853962752,
+            "private_bytes_last": 853962752,
+            "gpu_dedicated_bytes_max": 339542016,
+            "gpu_dedicated_bytes_last": 339542016,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.8909999999996217,
+            "cpu_one_logical_core_percent": 61.37766554435827
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 150,
+            "sample_count": 9,
+            "duration_seconds": 1.0344980999999933,
+            "working_set_bytes_max": 307458048,
+            "working_set_bytes_last": 300789760,
+            "private_bytes_max": 858157056,
+            "private_bytes_last": 816132096,
+            "gpu_dedicated_bytes_max": 339542016,
+            "gpu_dedicated_bytes_last": 305987584,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 67.85714285714286
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 160,
+            "sample_count": 10,
+            "duration_seconds": 1.03376200000001,
+            "working_set_bytes_max": 309338112,
+            "working_set_bytes_last": 305971200,
+            "private_bytes_max": 858439680,
+            "private_bytes_last": 858431488,
+            "gpu_dedicated_bytes_max": 339542016,
+            "gpu_dedicated_bytes_last": 339542016,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 1.0,
+            "cpu_one_logical_core_percent": 64.0625
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 170,
+            "sample_count": 9,
+            "duration_seconds": 1.0571313999999887,
+            "working_set_bytes_max": 317140992,
+            "working_set_bytes_last": 317140992,
+            "private_bytes_max": 850030592,
+            "private_bytes_last": 850026496,
+            "gpu_dedicated_bytes_max": 339542016,
+            "gpu_dedicated_bytes_last": 305987584,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 67.85714285714286
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 180,
+            "sample_count": 10,
+            "duration_seconds": 1.0355580000000089,
+            "working_set_bytes_max": 308498432,
+            "working_set_bytes_last": 308256768,
+            "private_bytes_max": 858439680,
+            "private_bytes_last": 858435584,
+            "gpu_dedicated_bytes_max": 339542016,
+            "gpu_dedicated_bytes_last": 339542016,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 1.0,
+            "cpu_one_logical_core_percent": 59.375
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 190,
+            "sample_count": 9,
+            "duration_seconds": 1.0508994999999999,
+            "working_set_bytes_max": 308830208,
+            "working_set_bytes_last": 300965888,
+            "private_bytes_max": 858439680,
+            "private_bytes_last": 850026496,
+            "gpu_dedicated_bytes_max": 339542016,
+            "gpu_dedicated_bytes_last": 339542016,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 62.5
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 200,
+            "sample_count": 1,
+            "duration_seconds": 0.059671499999993216,
+            "working_set_bytes_max": 300965888,
+            "working_set_bytes_last": 300965888,
+            "private_bytes_max": 816406528,
+            "private_bytes_last": 816406528,
+            "gpu_dedicated_bytes_max": 305987584,
+            "gpu_dedicated_bytes_last": 305987584,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568
+          },
+          {
+            "phase": "ClosedSettle",
+            "cycle": 200,
+            "sample_count": 18,
+            "duration_seconds": 2.001025200000001,
+            "working_set_bytes_max": 166621184,
+            "working_set_bytes_last": 166621184,
+            "private_bytes_max": 480059392,
+            "private_bytes_last": 480059392,
+            "gpu_dedicated_bytes_max": 104521728,
+            "gpu_dedicated_bytes_last": 104521728,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 1.889999999999418,
+            "cpu_one_logical_core_percent": 0.0
+          },
+          {
+            "phase": "Closed",
+            "cycle": 200,
+            "sample_count": 544,
+            "duration_seconds": 60.0003815,
+            "working_set_bytes_max": 166621184,
+            "working_set_bytes_last": 166535168,
+            "private_bytes_max": 480059392,
+            "private_bytes_last": 243736576,
+            "gpu_dedicated_bytes_max": 104521728,
+            "gpu_dedicated_bytes_last": 104521728,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 59.84400000000005,
+            "cpu_one_logical_core_percent": 0.0
+          }
+        ],
+        "budget_checks": {
+          "empty_working_set_le_200_mib": true,
+          "standard_working_set_le_512_mib": true,
+          "paused_cpu_le_2_percent_one_core": true,
+          "paused_observation_at_least_60_seconds": true,
+          "paused_no_continuous_redraw": true,
+          "frame_cpu_p95_le_16_7_ms": true,
+          "edit_readback_p95_le_50_ms": null,
+          "at_least_300_edit_samples": true,
+          "at_least_300_readback_samples": null,
+          "pause_png_refresh_verified": null,
+          "twenty_resource_rounds": true,
+          "only_active_originals_initially_decoded": true,
+          "closed_observation_at_least_60_seconds": true,
+          "closed_cpu_le_2_percent_one_core": true,
+          "closed_no_continuous_redraw": true,
+          "original_decoded_images_released": true,
+          "owned_textures_released_from_renderer": true
+        },
+        "gpu_counter_errors": [],
+        "cargo_lock_sha256": "7cc1c007e6eff9768c48d69f20374fa5d570b713026fa1faf77add8a92622247",
+        "source_sha256": {
+          "experiments\\p0-egui\\src\\bin\\standard-load.rs": "1070253089577fcfbdce4efd510cd921c4664ea457e606d8cfef6c661fc9bd26",
+          "experiments\\p0-egui\\src\\lib.rs": "6b6cbfcecb8401fe40012677d52d7cda1f54ea4b6a0f1dbc2ab8b5cac716a33f",
+          "experiments\\p0-egui\\src\\main.rs": "7fa519b9ef852393d1b25332406eb190712a3d073a7b42699be0c827fe59049f",
+          "experiments\\p0-egui\\src\\view.rs": "a3bb9fde09259c33885b167e87750702cc7dcbb2127d41e0613296e0c9d7f712"
+        },
+        "harness_sha256": {
+          "tools\\check_p0_gui.py": "6678b9f1b3661d33d456a25c7d4cfd19a32007893e0e2ffddf7c59bb1145b4cd",
+          "tools\\p0_process_metrics.py": "d9f985f79f106b353c6aa0bda29f4a5b9273f42b2acfeae28a124c669f81a3b1",
+          "tools\\p0_workload.py": "fc9f03661781b5964c5bba90c3ea752a85e92a40a41cbfcbd6e7f8e6898e7a5f"
+        },
+        "measurement": "GetProcessMemoryInfo/GetProcessTimes for runner-owned PID; PDH GPU Process Memory per PID across adapters; no window capture. Working set and private bytes are different metrics. GPU counters are OS accounting, not allocation payload.",
+        "limits": [
+          "Visible native test window, vsync disabled; script targets 60 Hz. Edit-to-readback includes queue, GPU execution, copy and callback; not physical input/display latency",
+          "GPU execution timestamps unavailable",
+          "Single run on one Windows machine; no cross-platform or full-product budget conclusion"
+        ]
+      },
+      "process_sample_count": 1401,
+      "sampled_process_peaks": {
+        "working_set_bytes": 322953216,
+        "private_bytes": 858439680,
+        "gpu_dedicated_bytes": 339542016,
+        "gpu_shared_bytes": 26349568
+      },
+      "artifact_sha256": {
+        "clock-anchor.json": "c635580ddffc008c23f53e8e78ebfa65090cd132c0ae1e534024d5a664138531",
+        "phases.jsonl": "d26cb899ad084917082ca7cc0dc2f45e283b7fe73cdbf1fcb3dc91ce0df34342",
+        "process-samples.json": "7797b8f2216ee0fd5c6f8503739bf461c5c496a30d3f9ae8a45b441300d1a62d",
+        "result.json": "ba22039d371a31fe1282aa917b2f6e94d2f76f9a053be6a2bb837e9e809962df"
+      }
+    },
+    {
+      "label": "compare-memory-readback",
+      "artifact_directory": "artifacts\\p0\\compare-memory-readback-273dd512",
+      "result": {
+        "adapter": {
+          "backend": "Vulkan",
+          "driver": "NVIDIA",
+          "driver_info": "560.94",
+          "name": "NVIDIA GeForce RTX 2060"
+        },
+        "closed_seconds": 60.0,
+        "cpu_cache_budget_bytes": 134217728,
+        "cpu_cache_peak_bytes": 134217728,
+        "cycles_completed": 20,
+        "decode_ms": {
+          "count": 2010,
+          "max": 14.4902,
+          "mean": 4.711047363184074,
+          "min": 3.9227999999999996,
+          "p50": 4.5035,
+          "p95": 6.0472
+        },
+        "diagnostic": false,
+        "document_load_cpu_ms": {
+          "count": 201,
+          "max": 88.3899,
+          "mean": 49.484334825870654,
+          "min": 41.826299999999996,
+          "p50": 47.9301,
+          "p95": 60.7004
+        },
+        "edit_count": 300,
+        "edit_interval_ms": {
+          "count": 299,
+          "max": 17.9103,
+          "mean": 17.093734448160525,
+          "min": 16.7955,
+          "p50": 17.0182,
+          "p95": 17.612
+        },
+        "edit_to_gpu_readback_ms": {
+          "count": 300,
+          "max": 16.6651,
+          "mean": 5.932930000000002,
+          "min": 4.8183,
+          "p50": 5.7889,
+          "p95": 7.0618
+        },
+        "eframe_cpu_frame_ms_during_edits": {
+          "count": 1496,
+          "max": 9.6992002800107,
+          "mean": 0.6775264931137034,
+          "min": 0.4075999604538083,
+          "p50": 0.6164999795146286,
+          "p95": 1.0720000136643648
+        },
+        "error": null,
+        "experiment": "p0-egui-standard-load",
+        "extra_frozen_override_texture_bytes": 4194304,
+        "first_document_original_decode_count": 10,
+        "frozen_simulation_ms": 9248,
+        "gpu_memory_note": "Payload excludes driver residency, staging, targets, fonts and thumbnails; OS process GPU counters are recorded separately by runner",
+        "gpu_readback_requests": 302,
+        "gpu_readbacks_enabled": true,
+        "gpu_texture_cache_budget_bytes": 134217728,
+        "gpu_texture_payload_peak_bytes": 134217728,
+        "gpu_timestamp_ms": null,
+        "gpu_timestamp_note": "eframe frame CPU excludes vsync; no GPU timestamp queries in this experiment",
+        "idle_seconds": 60.0,
+        "idle_ui_frames": 1,
+        "memory_hint": "MemoryUsage",
+        "not_tested": [
+          "stable behavior",
+          "physical drag or input latency",
+          "IME/high DPI",
+          "GPU execution timestamps",
+          "isolated group compositing/effects",
+          "real audio/gameplay",
+          "history",
+          "macOS/Linux"
+        ],
+        "original_decode_count": 2010,
+        "pause_png_refresh_verified": true,
+        "per_edit_gpu_readback": true,
+        "phase_frame_bins_100ms": {
+          "Closed": {
+            "0": 1
+          },
+          "ClosedSettle": {
+            "0": 3
+          },
+          "Idle": {
+            "0": 1
+          }
+        },
+        "phases": [
+          {
+            "cpu_cache_bytes": 0,
+            "cycle": 0,
+            "elapsed_seconds": 0.0013962,
+            "gpu_texture_payload_bytes": 0,
+            "original_decoded_images_live": 0,
+            "owned_texture_ids_issued": 0,
+            "owned_textures_in_renderer": 0,
+            "phase": "Empty",
+            "ui_frames": 0,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 558160,
+              "allocation_count": 20,
+              "block_count": 2,
+              "reserved_bytes": 12582912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 0,
+              "textures_kept": 0,
+              "textures_released": 0
+            }
+          },
+          {
+            "cpu_cache_bytes": 0,
+            "cycle": 0,
+            "elapsed_seconds": 3.0005647,
+            "gpu_texture_payload_bytes": 0,
+            "original_decoded_images_live": 0,
+            "owned_texture_ids_issued": 0,
+            "owned_textures_in_renderer": 0,
+            "phase": "InitialLoadStart",
+            "ui_frames": 4,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 1626160,
+              "allocation_count": 15,
+              "block_count": 2,
+              "reserved_bytes": 12582912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 0,
+              "textures_kept": 1,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 41943040,
+            "cycle": 0,
+            "elapsed_seconds": 3.1156076,
+            "gpu_texture_payload_bytes": 41943040,
+            "original_decoded_images_live": 10,
+            "owned_texture_ids_issued": 22,
+            "owned_textures_in_renderer": 0,
+            "phase": "Warm",
+            "ui_frames": 4,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 1626160,
+              "allocation_count": 15,
+              "block_count": 2,
+              "reserved_bytes": 12582912
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 0,
+              "textures_kept": 1,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 41943040,
+            "cycle": 0,
+            "elapsed_seconds": 4.1257212,
+            "gpu_texture_payload_bytes": 41943040,
+            "original_decoded_images_live": 10,
+            "owned_texture_ids_issued": 22,
+            "owned_textures_in_renderer": 22,
+            "phase": "Edit",
+            "ui_frames": 91,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 43898896,
+              "allocation_count": 37,
+              "block_count": 4,
+              "reserved_bytes": 92274688
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 23,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 41943040,
+            "cycle": 0,
+            "elapsed_seconds": 9.2484816,
+            "gpu_texture_payload_bytes": 41943040,
+            "original_decoded_images_live": 10,
+            "owned_texture_ids_issued": 22,
+            "owned_textures_in_renderer": 22,
+            "phase": "Before",
+            "ui_frames": 1587,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 47360208,
+              "allocation_count": 38,
+              "block_count": 5,
+              "reserved_bytes": 96468992
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 24,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 41943040,
+            "cycle": 0,
+            "elapsed_seconds": 9.2723225,
+            "gpu_texture_payload_bytes": 41943040,
+            "original_decoded_images_live": 10,
+            "owned_texture_ids_issued": 23,
+            "owned_textures_in_renderer": 22,
+            "phase": "After",
+            "ui_frames": 1590,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 47360312,
+              "allocation_count": 38,
+              "block_count": 5,
+              "reserved_bytes": 96468992
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 24,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 41943040,
+            "cycle": 0,
+            "elapsed_seconds": 9.2932352,
+            "gpu_texture_payload_bytes": 41943040,
+            "original_decoded_images_live": 10,
+            "owned_texture_ids_issued": 23,
+            "owned_textures_in_renderer": 23,
+            "phase": "IdleSettle",
+            "ui_frames": 1593,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 51555200,
+              "allocation_count": 39,
+              "block_count": 5,
+              "reserved_bytes": 96468992
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 25,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 41943040,
+            "cycle": 0,
+            "elapsed_seconds": 11.2939586,
+            "gpu_texture_payload_bytes": 41943040,
+            "original_decoded_images_live": 10,
+            "owned_texture_ids_issued": 23,
+            "owned_textures_in_renderer": 23,
+            "phase": "Idle",
+            "ui_frames": 1595,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 51555720,
+              "allocation_count": 39,
+              "block_count": 5,
+              "reserved_bytes": 96468992
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 25,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 41943040,
+            "cycle": 0,
+            "elapsed_seconds": 71.2948799,
+            "gpu_texture_payload_bytes": 41943040,
+            "original_decoded_images_live": 10,
+            "owned_texture_ids_issued": 23,
+            "owned_textures_in_renderer": 23,
+            "phase": "Cycle",
+            "ui_frames": 1596,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 51555096,
+              "allocation_count": 39,
+              "block_count": 5,
+              "reserved_bytes": 96468992
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 25,
+              "textures_released": 1
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 10,
+            "elapsed_seconds": 72.2430538,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 123,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 1606,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 181582472,
+              "allocation_count": 70,
+              "block_count": 10,
+              "reserved_bytes": 314572800
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 46,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 20,
+            "elapsed_seconds": 73.2554565,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 223,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 1616,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 181582472,
+              "allocation_count": 70,
+              "block_count": 10,
+              "reserved_bytes": 314572800
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 46,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 30,
+            "elapsed_seconds": 74.245361,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 323,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 1626,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 181582472,
+              "allocation_count": 70,
+              "block_count": 10,
+              "reserved_bytes": 314572800
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 46,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 40,
+            "elapsed_seconds": 75.2384003,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 423,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 1636,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 181582472,
+              "allocation_count": 70,
+              "block_count": 10,
+              "reserved_bytes": 314572800
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 46,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 50,
+            "elapsed_seconds": 76.262206,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 523,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 1646,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 181582472,
+              "allocation_count": 70,
+              "block_count": 10,
+              "reserved_bytes": 314572800
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 46,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 60,
+            "elapsed_seconds": 77.2429881,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 623,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 1656,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 181582472,
+              "allocation_count": 70,
+              "block_count": 10,
+              "reserved_bytes": 314572800
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 46,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 70,
+            "elapsed_seconds": 78.244446,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 723,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 1666,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 181582472,
+              "allocation_count": 70,
+              "block_count": 10,
+              "reserved_bytes": 314572800
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 46,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 80,
+            "elapsed_seconds": 79.2432886,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 823,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 1676,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 181582472,
+              "allocation_count": 70,
+              "block_count": 10,
+              "reserved_bytes": 314572800
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 46,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 90,
+            "elapsed_seconds": 80.2337873,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 923,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 1686,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 181582472,
+              "allocation_count": 70,
+              "block_count": 10,
+              "reserved_bytes": 314572800
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 46,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 100,
+            "elapsed_seconds": 81.2304996,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1023,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 1696,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 181582472,
+              "allocation_count": 70,
+              "block_count": 10,
+              "reserved_bytes": 314572800
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 46,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 110,
+            "elapsed_seconds": 82.2440162,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1123,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 1706,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 181582472,
+              "allocation_count": 70,
+              "block_count": 10,
+              "reserved_bytes": 314572800
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 46,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 120,
+            "elapsed_seconds": 83.2349565,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1223,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 1716,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 181582472,
+              "allocation_count": 70,
+              "block_count": 10,
+              "reserved_bytes": 314572800
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 46,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 130,
+            "elapsed_seconds": 84.268,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1323,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 1726,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 181582472,
+              "allocation_count": 70,
+              "block_count": 10,
+              "reserved_bytes": 314572800
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 46,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 140,
+            "elapsed_seconds": 85.4286033,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1423,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 1736,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 181582472,
+              "allocation_count": 70,
+              "block_count": 10,
+              "reserved_bytes": 314572800
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 46,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 150,
+            "elapsed_seconds": 86.4874523,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1523,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 1746,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 181582472,
+              "allocation_count": 70,
+              "block_count": 10,
+              "reserved_bytes": 314572800
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 46,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 160,
+            "elapsed_seconds": 87.4885924,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1623,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 1756,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 181582472,
+              "allocation_count": 70,
+              "block_count": 10,
+              "reserved_bytes": 314572800
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 46,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 170,
+            "elapsed_seconds": 88.4741918,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1723,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 1766,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 181582472,
+              "allocation_count": 70,
+              "block_count": 10,
+              "reserved_bytes": 314572800
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 46,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 180,
+            "elapsed_seconds": 89.4792919,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1823,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 1776,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 181582472,
+              "allocation_count": 70,
+              "block_count": 10,
+              "reserved_bytes": 314572800
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 46,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 190,
+            "elapsed_seconds": 90.4707469,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 1923,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 1786,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 181582472,
+              "allocation_count": 70,
+              "block_count": 10,
+              "reserved_bytes": 314572800
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 46,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 134217728,
+            "cycle": 200,
+            "elapsed_seconds": 91.4796468,
+            "gpu_texture_payload_bytes": 134217728,
+            "original_decoded_images_live": 32,
+            "owned_texture_ids_issued": 2023,
+            "owned_textures_in_renderer": 44,
+            "phase": "RoundEnd",
+            "ui_frames": 1796,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 181582472,
+              "allocation_count": 70,
+              "block_count": 10,
+              "reserved_bytes": 314572800
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 46,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 0,
+            "cycle": 200,
+            "elapsed_seconds": 91.5409973,
+            "gpu_texture_payload_bytes": 0,
+            "original_decoded_images_live": 0,
+            "owned_texture_ids_issued": 2023,
+            "owned_textures_in_renderer": 44,
+            "phase": "ClosedSettle",
+            "ui_frames": 1797,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 181582472,
+              "allocation_count": 70,
+              "block_count": 9,
+              "reserved_bytes": 281018368
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 46,
+              "textures_released": 11
+            }
+          },
+          {
+            "cpu_cache_bytes": 0,
+            "cycle": 200,
+            "elapsed_seconds": 93.5417874,
+            "gpu_texture_payload_bytes": 0,
+            "original_decoded_images_live": 0,
+            "owned_texture_ids_issued": 2023,
+            "owned_textures_in_renderer": 0,
+            "phase": "Closed",
+            "ui_frames": 1800,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 5149184,
+              "allocation_count": 16,
+              "block_count": 4,
+              "reserved_bytes": 79691776
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 2,
+              "textures_released": 55
+            }
+          },
+          {
+            "cpu_cache_bytes": 0,
+            "cycle": 200,
+            "elapsed_seconds": 153.5424939,
+            "gpu_texture_payload_bytes": 0,
+            "original_decoded_images_live": 0,
+            "owned_texture_ids_issued": 2023,
+            "owned_textures_in_renderer": 0,
+            "phase": "Done",
+            "ui_frames": 1801,
+            "wgpu_allocator_before_current_frame": {
+              "allocated_bytes": 5148848,
+              "allocation_count": 17,
+              "block_count": 4,
+              "reserved_bytes": 79691776
+            },
+            "wgpu_resources_before_current_frame": {
+              "buffers_kept": 9,
+              "buffers_released": 1,
+              "textures_kept": 2,
+              "textures_released": 55
+            }
+          }
+        ],
+        "render_target_readbacks": [
+          "frozen-0.png",
+          "frozen-1.png"
+        ],
+        "repaint_causes_by_phase": {
+          "After": {
+            "context.rs:4570 ": 1,
+            "src/bin/standard-load.rs:257 ": 1,
+            "src/bin/standard-load.rs:688 ": 3
+          },
+          "Before": {
+            "context.rs:4570 ": 1,
+            "src/bin/standard-load.rs:257 ": 1,
+            "src/bin/standard-load.rs:688 ": 3
+          },
+          "Closed": {
+            "src/bin/standard-load.rs:543 ": 1
+          },
+          "ClosedSettle": {
+            "src/bin/standard-load.rs:446 ": 1,
+            "src/bin/standard-load.rs:543 ": 2,
+            "src/bin/standard-load.rs:688 ": 1
+          },
+          "Cycle": {
+            "src/bin/standard-load.rs:543 ": 1,
+            "src/bin/standard-load.rs:688 ": 200
+          },
+          "Edit": {
+            "context.rs:4570 ": 300,
+            "src/bin/standard-load.rs:257 ": 299,
+            "src/bin/standard-load.rs:688 ": 1496
+          },
+          "Empty": {
+            "context.rs:4570 ": 2,
+            "context.rs:871 ": 1,
+            "src/bin/standard-load.rs:543 ": 3
+          },
+          "Idle": {
+            "src/bin/standard-load.rs:543 ": 1
+          },
+          "IdleSettle": {
+            "src/bin/standard-load.rs:257 ": 1,
+            "src/bin/standard-load.rs:543 ": 1,
+            "src/bin/standard-load.rs:688 ": 1
+          },
+          "Warm": {
+            "containers/scroll_area.rs:1394 ": 1,
+            "containers/scroll_area.rs:1662 ": 1,
+            "containers/scroll_area.rs:833 ": 30,
+            "src/bin/standard-load.rs:543 ": 1,
+            "src/bin/standard-load.rs:688 ": 86
+          }
+        },
+        "schema_version": 2,
+        "status": "passed",
+        "system_window_capture_used": false,
+        "target_hz": 60,
+        "thumbnail_texture_payload_bytes": 196608,
+        "ui_frames": 1801,
+        "ui_passes": 1801,
+        "viewport_points": [
+          1100,
+          720
+        ],
+        "viewport_visibility_counts": {
+          "occluded_or_minimized": 0,
+          "unknown": 1801,
+          "visible": 0
+        },
+        "vsync": false,
+        "wall_seconds": 153.5458959,
+        "window": "visible native wgpu viewport; timed edit script, own render-target readback",
+        "workload": {
+          "active_unique_originals": 10,
+          "assets": 100,
+          "current_layers": 50,
+          "dimensions": [
+            1024,
+            1024
+          ],
+          "documents": 10,
+          "layers": 500,
+          "nested_group_depth": 2,
+          "visible_thumbnails": 12
+        }
+      },
+      "metrics": {
+        "schema_version": 2,
+        "environment": {
+          "os": "Windows-10-10.0.19045-SP0",
+          "architecture": "AMD64",
+          "logical_processors": 16,
+          "cpu": "AMD Ryzen 7 4800H with Radeon Graphics",
+          "physical_memory_bytes": 17042837504
+        },
+        "process_id": 23964,
+        "arguments": [
+          "--memory-usage"
+        ],
+        "executable_sha256": "e8623ae6e5aed8ff643a15523f9538f725b2f079b89d5ad077bd6d13a8d1a56b",
+        "fixture_inventory_sha256": "84be921941507c7ae3c6c8d805a33ddd79e2c5dfeba1e6c782d855bf08485c40",
+        "fixture": "artifacts\\p0\\comparison-fixture-998e86f1",
+        "fixture_file_count": 201,
+        "sample_interval_seconds": 0.1,
+        "phase_summary": [
+          {
+            "phase": "Empty",
+            "cycle": 0,
+            "sample_count": 27,
+            "duration_seconds": 2.9991685,
+            "working_set_bytes_max": 159068160,
+            "working_set_bytes_last": 159068160,
+            "private_bytes_max": 175730688,
+            "private_bytes_last": 175730688,
+            "gpu_dedicated_bytes_max": 41476096,
+            "gpu_dedicated_bytes_last": 41476096,
+            "gpu_shared_bytes_max": 24252416,
+            "gpu_shared_bytes_last": 24252416,
+            "sample_span_seconds": 2.875,
+            "cpu_one_logical_core_percent": 11.41304347826087
+          },
+          {
+            "phase": "InitialLoadStart",
+            "cycle": 0,
+            "sample_count": 1,
+            "duration_seconds": 0.11504290000000017,
+            "working_set_bytes_max": 159977472,
+            "working_set_bytes_last": 159977472,
+            "private_bytes_max": 176734208,
+            "private_bytes_last": 176734208,
+            "gpu_dedicated_bytes_max": 41476096,
+            "gpu_dedicated_bytes_last": 41476096,
+            "gpu_shared_bytes_max": 24252416,
+            "gpu_shared_bytes_last": 24252416
+          },
+          {
+            "phase": "Warm",
+            "cycle": 0,
+            "sample_count": 9,
+            "duration_seconds": 1.0101136,
+            "working_set_bytes_max": 205180928,
+            "working_set_bytes_last": 205180928,
+            "private_bytes_max": 329494528,
+            "private_bytes_last": 329494528,
+            "gpu_dedicated_bytes_max": 121335808,
+            "gpu_dedicated_bytes_last": 121335808,
+            "gpu_shared_bytes_max": 26349568,
+            "gpu_shared_bytes_last": 26349568,
+            "sample_span_seconds": 0.8909999999996217,
+            "cpu_one_logical_core_percent": 8.768237934908326
+          },
+          {
+            "phase": "Edit",
+            "cycle": 0,
+            "sample_count": 47,
+            "duration_seconds": 5.1227604,
+            "working_set_bytes_max": 213479424,
+            "working_set_bytes_last": 210350080,
+            "private_bytes_max": 337428480,
+            "private_bytes_last": 307019776,
+            "gpu_dedicated_bytes_max": 121348096,
+            "gpu_dedicated_bytes_last": 121348096,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 5.046999999999571,
+            "cpu_one_logical_core_percent": 41.1754507628329
+          },
+          {
+            "phase": "Before",
+            "cycle": 0,
+            "sample_count": 0,
+            "duration_seconds": 0.02384089999999972,
+            "working_set_bytes_max": null,
+            "working_set_bytes_last": null,
+            "private_bytes_max": null,
+            "private_bytes_last": null,
+            "gpu_dedicated_bytes_max": null,
+            "gpu_dedicated_bytes_last": null,
+            "gpu_shared_bytes_max": null,
+            "gpu_shared_bytes_last": null
+          },
+          {
+            "phase": "After",
+            "cycle": 0,
+            "sample_count": 0,
+            "duration_seconds": 0.02091270000000023,
+            "working_set_bytes_max": null,
+            "working_set_bytes_last": null,
+            "private_bytes_max": null,
+            "private_bytes_last": null,
+            "gpu_dedicated_bytes_max": null,
+            "gpu_dedicated_bytes_last": null,
+            "gpu_shared_bytes_max": null,
+            "gpu_shared_bytes_last": null
+          },
+          {
+            "phase": "IdleSettle",
+            "cycle": 0,
+            "sample_count": 18,
+            "duration_seconds": 2.0007234,
+            "working_set_bytes_max": 213585920,
+            "working_set_bytes_last": 213585920,
+            "private_bytes_max": 310231040,
+            "private_bytes_last": 310231040,
+            "gpu_dedicated_bytes_max": 121348096,
+            "gpu_dedicated_bytes_last": 121348096,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 1.875,
+            "cpu_one_logical_core_percent": 0.0
+          },
+          {
+            "phase": "Idle",
+            "cycle": 0,
+            "sample_count": 544,
+            "duration_seconds": 60.0009213,
+            "working_set_bytes_max": 213585920,
+            "working_set_bytes_last": 213491712,
+            "private_bytes_max": 310231040,
+            "private_bytes_last": 310063104,
+            "gpu_dedicated_bytes_max": 121348096,
+            "gpu_dedicated_bytes_last": 121348096,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 59.96900000000005,
+            "cpu_one_logical_core_percent": 0.0
+          },
+          {
+            "phase": "Cycle",
+            "cycle": 0,
+            "sample_count": 8,
+            "duration_seconds": 0.9481739000000005,
+            "working_set_bytes_max": 313438208,
+            "working_set_bytes_last": 305958912,
+            "private_bytes_max": 730419200,
+            "private_bytes_last": 730419200,
+            "gpu_dedicated_bytes_max": 339525632,
+            "gpu_dedicated_bytes_last": 305901568,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 0.7809999999999491,
+            "cpu_one_logical_core_percent": 64.02048655570199
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 10,
+            "sample_count": 9,
+            "duration_seconds": 1.0124026999999955,
+            "working_set_bytes_max": 312332288,
+            "working_set_bytes_last": 305963008,
+            "private_bytes_max": 864899072,
+            "private_bytes_last": 822882304,
+            "gpu_dedicated_bytes_max": 339525632,
+            "gpu_dedicated_bytes_last": 305901568,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 0.8900000000003274,
+            "cpu_one_logical_core_percent": 61.44662921346055
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 20,
+            "sample_count": 9,
+            "duration_seconds": 0.9899045000000086,
+            "working_set_bytes_max": 329252864,
+            "working_set_bytes_last": 329252864,
+            "private_bytes_max": 864919552,
+            "private_bytes_last": 856510464,
+            "gpu_dedicated_bytes_max": 339525632,
+            "gpu_dedicated_bytes_last": 305901568,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 60.71428571428571
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 30,
+            "sample_count": 9,
+            "duration_seconds": 0.9930392999999924,
+            "working_set_bytes_max": 312606720,
+            "working_set_bytes_last": 305987584,
+            "private_bytes_max": 864915456,
+            "private_bytes_last": 856514560,
+            "gpu_dedicated_bytes_max": 339525632,
+            "gpu_dedicated_bytes_last": 305901568,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 0.8909999999996217,
+            "cpu_one_logical_core_percent": 56.11672278341327
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 40,
+            "sample_count": 10,
+            "duration_seconds": 1.0238057000000111,
+            "working_set_bytes_max": 314486784,
+            "working_set_bytes_last": 311947264,
+            "private_bytes_max": 865329152,
+            "private_bytes_last": 865329152,
+            "gpu_dedicated_bytes_max": 339525632,
+            "gpu_dedicated_bytes_last": 339525632,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 0.9849999999996726,
+            "cpu_one_logical_core_percent": 63.45177664976729
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 50,
+            "sample_count": 8,
+            "duration_seconds": 0.980782099999999,
+            "working_set_bytes_max": 314245120,
+            "working_set_bytes_last": 311721984,
+            "private_bytes_max": 865329152,
+            "private_bytes_last": 831700992,
+            "gpu_dedicated_bytes_max": 339525632,
+            "gpu_dedicated_bytes_last": 305901568,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 0.7809999999999491,
+            "cpu_one_logical_core_percent": 58.01856594110494
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 60,
+            "sample_count": 9,
+            "duration_seconds": 1.0014578999999912,
+            "working_set_bytes_max": 314871808,
+            "working_set_bytes_last": 314871808,
+            "private_bytes_max": 865595392,
+            "private_bytes_last": 831975424,
+            "gpu_dedicated_bytes_max": 339525632,
+            "gpu_dedicated_bytes_last": 305901568,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 0.8900000000003274,
+            "cpu_one_logical_core_percent": 57.935393258405654
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 70,
+            "sample_count": 10,
+            "duration_seconds": 0.9988426000000032,
+            "working_set_bytes_max": 313143296,
+            "working_set_bytes_last": 313143296,
+            "private_bytes_max": 865599488,
+            "private_bytes_last": 865591296,
+            "gpu_dedicated_bytes_max": 339525632,
+            "gpu_dedicated_bytes_last": 339525632,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 0.9840000000003783,
+            "cpu_one_logical_core_percent": 61.92835365851277
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 80,
+            "sample_count": 8,
+            "duration_seconds": 0.9904987000000034,
+            "working_set_bytes_max": 313593856,
+            "working_set_bytes_last": 313593856,
+            "private_bytes_max": 865587200,
+            "private_bytes_last": 831975424,
+            "gpu_dedicated_bytes_max": 339525632,
+            "gpu_dedicated_bytes_last": 305901568,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 0.7820000000001528,
+            "cpu_one_logical_core_percent": 57.94437340152321
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 90,
+            "sample_count": 9,
+            "duration_seconds": 0.9967122999999987,
+            "working_set_bytes_max": 314748928,
+            "working_set_bytes_last": 312197120,
+            "private_bytes_max": 865591296,
+            "private_bytes_last": 831971328,
+            "gpu_dedicated_bytes_max": 339525632,
+            "gpu_dedicated_bytes_last": 305901568,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 60.71428571428571
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 100,
+            "sample_count": 10,
+            "duration_seconds": 1.0135166000000027,
+            "working_set_bytes_max": 314310656,
+            "working_set_bytes_last": 311119872,
+            "private_bytes_max": 865869824,
+            "private_bytes_last": 865869824,
+            "gpu_dedicated_bytes_max": 339525632,
+            "gpu_dedicated_bytes_last": 339525632,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 0.9839999999994689,
+            "cpu_one_logical_core_percent": 60.34044715450412
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 110,
+            "sample_count": 9,
+            "duration_seconds": 0.9909402999999912,
+            "working_set_bytes_max": 310034432,
+            "working_set_bytes_last": 306921472,
+            "private_bytes_max": 861659136,
+            "private_bytes_last": 857448448,
+            "gpu_dedicated_bytes_max": 339525632,
+            "gpu_dedicated_bytes_last": 339525632,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 55.35714285714286
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 120,
+            "sample_count": 9,
+            "duration_seconds": 1.033043500000005,
+            "working_set_bytes_max": 307359744,
+            "working_set_bytes_last": 307359744,
+            "private_bytes_max": 857985024,
+            "private_bytes_last": 857980928,
+            "gpu_dedicated_bytes_max": 339525632,
+            "gpu_dedicated_bytes_last": 339525632,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 62.5
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 130,
+            "sample_count": 11,
+            "duration_seconds": 1.1606033000000053,
+            "working_set_bytes_max": 315666432,
+            "working_set_bytes_last": 311582720,
+            "private_bytes_max": 866402304,
+            "private_bytes_last": 866394112,
+            "gpu_dedicated_bytes_max": 339525632,
+            "gpu_dedicated_bytes_last": 339525632,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 1.1099999999996726,
+            "cpu_one_logical_core_percent": 66.15990990992942
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 140,
+            "sample_count": 9,
+            "duration_seconds": 1.058848999999995,
+            "working_set_bytes_max": 314793984,
+            "working_set_bytes_last": 307363840,
+            "private_bytes_max": 866398208,
+            "private_bytes_last": 824369152,
+            "gpu_dedicated_bytes_max": 339525632,
+            "gpu_dedicated_bytes_last": 305901568,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 66.07142857142857
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 150,
+            "sample_count": 10,
+            "duration_seconds": 1.0011401000000006,
+            "working_set_bytes_max": 312897536,
+            "working_set_bytes_last": 309342208,
+            "private_bytes_max": 866390016,
+            "private_bytes_last": 862187520,
+            "gpu_dedicated_bytes_max": 339525632,
+            "gpu_dedicated_bytes_last": 339525632,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 0.9840000000003783,
+            "cpu_one_logical_core_percent": 60.34044715444834
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 160,
+            "sample_count": 8,
+            "duration_seconds": 0.9855993999999981,
+            "working_set_bytes_max": 312156160,
+            "working_set_bytes_last": 310890496,
+            "private_bytes_max": 866656256,
+            "private_bytes_last": 828837888,
+            "gpu_dedicated_bytes_max": 339525632,
+            "gpu_dedicated_bytes_last": 305901568,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 0.7820000000001528,
+            "cpu_one_logical_core_percent": 61.94053708438687
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 170,
+            "sample_count": 10,
+            "duration_seconds": 1.005100100000007,
+            "working_set_bytes_max": 313909248,
+            "working_set_bytes_last": 313909248,
+            "private_bytes_max": 866664448,
+            "private_bytes_last": 866660352,
+            "gpu_dedicated_bytes_max": 339525632,
+            "gpu_dedicated_bytes_last": 339525632,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 0.9839999999994689,
+            "cpu_one_logical_core_percent": 58.75254065043822
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 180,
+            "sample_count": 9,
+            "duration_seconds": 0.9914549999999878,
+            "working_set_bytes_max": 314417152,
+            "working_set_bytes_last": 314417152,
+            "private_bytes_max": 866926592,
+            "private_bytes_last": 866926592,
+            "gpu_dedicated_bytes_max": 339525632,
+            "gpu_dedicated_bytes_last": 339525632,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 0.8899999999994179,
+            "cpu_one_logical_core_percent": 57.93539325846486
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 190,
+            "sample_count": 9,
+            "duration_seconds": 1.008899900000003,
+            "working_set_bytes_max": 314736640,
+            "working_set_bytes_last": 308666368,
+            "private_bytes_max": 862724096,
+            "private_bytes_last": 862724096,
+            "gpu_dedicated_bytes_max": 339525632,
+            "gpu_dedicated_bytes_last": 339525632,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 0.875,
+            "cpu_one_logical_core_percent": 58.92857142857143
+          },
+          {
+            "phase": "RoundEnd",
+            "cycle": 200,
+            "sample_count": 0,
+            "duration_seconds": 0.061350500000003194,
+            "working_set_bytes_max": null,
+            "working_set_bytes_last": null,
+            "private_bytes_max": null,
+            "private_bytes_last": null,
+            "gpu_dedicated_bytes_max": null,
+            "gpu_dedicated_bytes_last": null,
+            "gpu_shared_bytes_max": null,
+            "gpu_shared_bytes_last": null
+          },
+          {
+            "phase": "ClosedSettle",
+            "cycle": 200,
+            "sample_count": 19,
+            "duration_seconds": 2.0007901000000032,
+            "working_set_bytes_max": 171409408,
+            "working_set_bytes_last": 171409408,
+            "private_bytes_max": 486490112,
+            "private_bytes_last": 486490112,
+            "gpu_dedicated_bytes_max": 104534016,
+            "gpu_dedicated_bytes_last": 104534016,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 1.969000000000051,
+            "cpu_one_logical_core_percent": 0.0
+          },
+          {
+            "phase": "Closed",
+            "cycle": 200,
+            "sample_count": 542,
+            "duration_seconds": 60.00070650000001,
+            "working_set_bytes_max": 171409408,
+            "working_set_bytes_last": 171315200,
+            "private_bytes_max": 486490112,
+            "private_bytes_last": 250175488,
+            "gpu_dedicated_bytes_max": 104534016,
+            "gpu_dedicated_bytes_last": 104534016,
+            "gpu_shared_bytes_max": 30543872,
+            "gpu_shared_bytes_last": 30543872,
+            "sample_span_seconds": 59.79699999999957,
+            "cpu_one_logical_core_percent": 0.0
+          }
+        ],
+        "budget_checks": {
+          "empty_working_set_le_200_mib": true,
+          "standard_working_set_le_512_mib": true,
+          "paused_cpu_le_2_percent_one_core": true,
+          "paused_observation_at_least_60_seconds": true,
+          "paused_no_continuous_redraw": true,
+          "frame_cpu_p95_le_16_7_ms": true,
+          "edit_readback_p95_le_50_ms": true,
+          "at_least_300_edit_samples": true,
+          "at_least_300_readback_samples": true,
+          "pause_png_refresh_verified": true,
+          "twenty_resource_rounds": true,
+          "only_active_originals_initially_decoded": true,
+          "closed_observation_at_least_60_seconds": true,
+          "closed_cpu_le_2_percent_one_core": true,
+          "closed_no_continuous_redraw": true,
+          "original_decoded_images_released": true,
+          "owned_textures_released_from_renderer": true
+        },
+        "gpu_counter_errors": [],
+        "cargo_lock_sha256": "7cc1c007e6eff9768c48d69f20374fa5d570b713026fa1faf77add8a92622247",
+        "source_sha256": {
+          "experiments\\p0-egui\\src\\bin\\standard-load.rs": "1070253089577fcfbdce4efd510cd921c4664ea457e606d8cfef6c661fc9bd26",
+          "experiments\\p0-egui\\src\\lib.rs": "6b6cbfcecb8401fe40012677d52d7cda1f54ea4b6a0f1dbc2ab8b5cac716a33f",
+          "experiments\\p0-egui\\src\\main.rs": "7fa519b9ef852393d1b25332406eb190712a3d073a7b42699be0c827fe59049f",
+          "experiments\\p0-egui\\src\\view.rs": "a3bb9fde09259c33885b167e87750702cc7dcbb2127d41e0613296e0c9d7f712"
+        },
+        "harness_sha256": {
+          "tools\\check_p0_gui.py": "6678b9f1b3661d33d456a25c7d4cfd19a32007893e0e2ffddf7c59bb1145b4cd",
+          "tools\\p0_process_metrics.py": "d9f985f79f106b353c6aa0bda29f4a5b9273f42b2acfeae28a124c669f81a3b1",
+          "tools\\p0_workload.py": "fc9f03661781b5964c5bba90c3ea752a85e92a40a41cbfcbd6e7f8e6898e7a5f"
+        },
+        "measurement": "GetProcessMemoryInfo/GetProcessTimes for runner-owned PID; PDH GPU Process Memory per PID across adapters; no window capture. Working set and private bytes are different metrics. GPU counters are OS accounting, not allocation payload.",
+        "limits": [
+          "Visible native test window, vsync disabled; script targets 60 Hz. Edit-to-readback includes queue, GPU execution, copy and callback; not physical input/display latency",
+          "GPU execution timestamps unavailable",
+          "Single run on one Windows machine; no cross-platform or full-product budget conclusion"
+        ]
+      },
+      "process_sample_count": 1398,
+      "sampled_process_peaks": {
+        "working_set_bytes": 329252864,
+        "private_bytes": 866926592,
+        "gpu_dedicated_bytes": 339525632,
+        "gpu_shared_bytes": 30543872
+      },
+      "artifact_sha256": {
+        "clock-anchor.json": "d748b93a5eb582fc16f67d57be0775460d3c7b5c64a8342d654d08b85d56628f",
+        "frozen-0.png": "404e024273e0d84865197a9ed72802fe7ffd8b358d4f623ac2fc0cb278beb125",
+        "frozen-1.png": "689fd12a7fc90f6a56117ba2980a53ad13cb2fab75009fd777f5a7276b3d4adc",
+        "phases.jsonl": "ae890603491a74ddbacacd95d0711d7fca28c5035b4b28bde2a1880c1842341a",
+        "process-samples.json": "79037fad470f38607b13ad42015441f06d35144ee778d02a34a9d4ed5191a694",
+        "result.json": "2788beb25c381ff46ae02e0eb37c36e6bee1aacd18c40b109c4b70a846af2f44"
+      }
+    }
+  ]
+}

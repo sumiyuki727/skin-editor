@@ -1,0 +1,455 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "status": "passed",
+  "platform": "Windows x64 Vulkan and WASAPI shared only",
+  "fixture": "artifacts/p0/standard-fixture-2cb51994",
+  "inventory_sha256": "84be921941507c7ae3c6c8d805a33ddd79e2c5dfeba1e6c782d855bf08485c40",
+  "executable_bytes": 14493696,
+  "environment": {
+    "os": "Windows-10-10.0.19045-SP0",
+    "architecture": "AMD64",
+    "logical_processors": 16,
+    "cpu": "AMD Ryzen 7 4800H with Radeon Graphics",
+    "physical_memory_bytes": 17042837504
+  },
+  "runs": [
+    {
+      "status": "passed",
+      "edit_count": 300,
+      "accepted_inputs": 2,
+      "audio_format": {
+        "bits": 32,
+        "buffer_frames": 4800,
+        "channels": 2,
+        "clock_frequency": 384000,
+        "rate": 48000
+      },
+      "frozen_us": 460000,
+      "resume_us": 460000,
+      "final_simulation_us": 900729,
+      "paused_wall_ms": 8519.5378,
+      "paused_device_samples": 18,
+      "paused_device_span_us": 0,
+      "composition": {
+        "adapter": "AdapterInfo { name: \"NVIDIA GeForce RTX 2060\", vendor: 4318, device: 7957, device_type: DiscreteGpu, device_pci_bus_id: \"0000:01:00.0\", driver: \"NVIDIA\", driver_info: \"560.94\", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }",
+        "display_texture_bytes": 4194304,
+        "normal_path_cpu_pixel_readbacks": 0,
+        "normal_path_cpu_texture_uploads": 0,
+        "operation_upload_bytes": 1357440,
+        "resident_buffer_bytes": 50336144,
+        "source_upload_batches": 1,
+        "source_upload_bytes": 41943040,
+        "updates": 303
+      },
+      "captures": [
+        {
+          "accepted_inputs": 1,
+          "nodes": 1,
+          "position": [
+            40.0,
+            40.0
+          ],
+          "simulation_us": 460000,
+          "stage": 0
+        },
+        {
+          "accepted_inputs": 1,
+          "nodes": 1,
+          "position": [
+            69.99999618530273,
+            60.0
+          ],
+          "simulation_us": 460000,
+          "stage": 1
+        },
+        {
+          "accepted_inputs": 1,
+          "nodes": 1,
+          "position": [
+            40.0,
+            40.0
+          ],
+          "simulation_us": 460000,
+          "stage": 2
+        },
+        {
+          "accepted_inputs": 1,
+          "nodes": 2,
+          "position": [
+            99.99999618530273,
+            70.0
+          ],
+          "simulation_us": 460000,
+          "stage": 3
+        }
+      ],
+      "composition_pixel_checks": [
+        {
+          "diagnostic_wall_ms": 1693.9039999999998,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 0
+        },
+        {
+          "diagnostic_wall_ms": 1689.6657,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 1
+        },
+        {
+          "diagnostic_wall_ms": 1709.9994000000002,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 2
+        },
+        {
+          "diagnostic_wall_ms": 1694.2845,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 3
+        }
+      ],
+      "checks": {
+        "audio_clock_was_advancing": true,
+        "cancel_restores_canvas": true,
+        "commit_changes_canvas": true,
+        "draft_changes_canvas": true,
+        "four_composition_proofs": true,
+        "fresh_paused_device_samples": true,
+        "fresh_press_after_resume_only": true,
+        "no_fault": true,
+        "paused_device_span_is_zero": true,
+        "paused_inputs_discarded": true,
+        "paused_wall_at_least_300_ms": true,
+        "resume_does_not_catch_up": true,
+        "simulation_advances_after_resume": true,
+        "simulation_uses_device_clock": true,
+        "single_commit": true,
+        "three_hundred_edits": true
+      },
+      "directory": "artifacts/p0/transport-3f426e23",
+      "result_sha256": "011ce07eb61fa42491e99024f96b9699e54dc891275fbd6b02574d48accd6a72",
+      "evidence_sha256": "0e67d03a81482a9eb591a4cbf797896a2d3c1a3656e4c4843979fd72e82cc7af",
+      "executable_sha256": "6a167f89b2d469cd4ef6091e2fbb3131b20d4349ad965c7f90e64260d36021eb",
+      "process_peaks_bytes": {
+        "working_set_bytes": 265445376,
+        "private_bytes": 344973312,
+        "peak_working_set_bytes": 269647872,
+        "peak_commit_bytes": 349224960,
+        "gpu_dedicated_bytes": 156270592,
+        "gpu_shared_bytes": 61112320
+      }
+    },
+    {
+      "status": "passed",
+      "edit_count": 300,
+      "accepted_inputs": 2,
+      "audio_format": {
+        "bits": 32,
+        "buffer_frames": 4800,
+        "channels": 2,
+        "clock_frequency": 384000,
+        "rate": 48000
+      },
+      "frozen_us": 460000,
+      "resume_us": 460000,
+      "final_simulation_us": 900104,
+      "paused_wall_ms": 8534.6906,
+      "paused_device_samples": 18,
+      "paused_device_span_us": 0,
+      "composition": {
+        "adapter": "AdapterInfo { name: \"NVIDIA GeForce RTX 2060\", vendor: 4318, device: 7957, device_type: DiscreteGpu, device_pci_bus_id: \"0000:01:00.0\", driver: \"NVIDIA\", driver_info: \"560.94\", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }",
+        "display_texture_bytes": 4194304,
+        "normal_path_cpu_pixel_readbacks": 0,
+        "normal_path_cpu_texture_uploads": 0,
+        "operation_upload_bytes": 1357440,
+        "resident_buffer_bytes": 50336144,
+        "source_upload_batches": 1,
+        "source_upload_bytes": 41943040,
+        "updates": 303
+      },
+      "captures": [
+        {
+          "accepted_inputs": 1,
+          "nodes": 1,
+          "position": [
+            40.0,
+            40.0
+          ],
+          "simulation_us": 460000,
+          "stage": 0
+        },
+        {
+          "accepted_inputs": 1,
+          "nodes": 1,
+          "position": [
+            69.99999618530273,
+            60.0
+          ],
+          "simulation_us": 460000,
+          "stage": 1
+        },
+        {
+          "accepted_inputs": 1,
+          "nodes": 1,
+          "position": [
+            40.0,
+            40.0
+          ],
+          "simulation_us": 460000,
+          "stage": 2
+        },
+        {
+          "accepted_inputs": 1,
+          "nodes": 2,
+          "position": [
+            99.99999618530273,
+            70.0
+          ],
+          "simulation_us": 460000,
+          "stage": 3
+        }
+      ],
+      "composition_pixel_checks": [
+        {
+          "diagnostic_wall_ms": 1715.5817,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 0
+        },
+        {
+          "diagnostic_wall_ms": 1688.0713,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 1
+        },
+        {
+          "diagnostic_wall_ms": 1707.3052,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 2
+        },
+        {
+          "diagnostic_wall_ms": 1693.8445,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 3
+        }
+      ],
+      "checks": {
+        "audio_clock_was_advancing": true,
+        "cancel_restores_canvas": true,
+        "commit_changes_canvas": true,
+        "draft_changes_canvas": true,
+        "four_composition_proofs": true,
+        "fresh_paused_device_samples": true,
+        "fresh_press_after_resume_only": true,
+        "no_fault": true,
+        "paused_device_span_is_zero": true,
+        "paused_inputs_discarded": true,
+        "paused_wall_at_least_300_ms": true,
+        "resume_does_not_catch_up": true,
+        "simulation_advances_after_resume": true,
+        "simulation_uses_device_clock": true,
+        "single_commit": true,
+        "three_hundred_edits": true
+      },
+      "directory": "artifacts/p0/transport-a7550772",
+      "result_sha256": "1716a41bb0b2b9515c5fd30914b7373029accfec1af994c99009c0560ad4ac0e",
+      "evidence_sha256": "2f52eec7477a2e41d81c8eac5a53c08ec0517b2c955d707963a0be42d0a5cfc1",
+      "executable_sha256": "6a167f89b2d469cd4ef6091e2fbb3131b20d4349ad965c7f90e64260d36021eb",
+      "process_peaks_bytes": {
+        "working_set_bytes": 257327104,
+        "private_bytes": 356614144,
+        "peak_working_set_bytes": 264544256,
+        "peak_commit_bytes": 356659200,
+        "gpu_dedicated_bytes": 112979968,
+        "gpu_shared_bytes": 60276736
+      }
+    },
+    {
+      "status": "passed",
+      "edit_count": 300,
+      "accepted_inputs": 2,
+      "audio_format": {
+        "bits": 32,
+        "buffer_frames": 4800,
+        "channels": 2,
+        "clock_frequency": 384000,
+        "rate": 48000
+      },
+      "frozen_us": 460000,
+      "resume_us": 460000,
+      "final_simulation_us": 902854,
+      "paused_wall_ms": 8555.5125,
+      "paused_device_samples": 17,
+      "paused_device_span_us": 0,
+      "composition": {
+        "adapter": "AdapterInfo { name: \"NVIDIA GeForce RTX 2060\", vendor: 4318, device: 7957, device_type: DiscreteGpu, device_pci_bus_id: \"0000:01:00.0\", driver: \"NVIDIA\", driver_info: \"560.94\", backend: Vulkan, subgroup_min_size: 32, subgroup_max_size: 32, transient_saves_memory: Some(false), limit_bucket: None }",
+        "display_texture_bytes": 4194304,
+        "normal_path_cpu_pixel_readbacks": 0,
+        "normal_path_cpu_texture_uploads": 0,
+        "operation_upload_bytes": 1357440,
+        "resident_buffer_bytes": 50336144,
+        "source_upload_batches": 1,
+        "source_upload_bytes": 41943040,
+        "updates": 303
+      },
+      "captures": [
+        {
+          "accepted_inputs": 1,
+          "nodes": 1,
+          "position": [
+            40.0,
+            40.0
+          ],
+          "simulation_us": 460000,
+          "stage": 0
+        },
+        {
+          "accepted_inputs": 1,
+          "nodes": 1,
+          "position": [
+            69.99999618530273,
+            60.0
+          ],
+          "simulation_us": 460000,
+          "stage": 1
+        },
+        {
+          "accepted_inputs": 1,
+          "nodes": 1,
+          "position": [
+            40.0,
+            40.0
+          ],
+          "simulation_us": 460000,
+          "stage": 2
+        },
+        {
+          "accepted_inputs": 1,
+          "nodes": 2,
+          "position": [
+            99.99999618530273,
+            70.0
+          ],
+          "simulation_us": 460000,
+          "stage": 3
+        }
+      ],
+      "composition_pixel_checks": [
+        {
+          "diagnostic_wall_ms": 1718.439,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 0
+        },
+        {
+          "diagnostic_wall_ms": 1690.8604999999998,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 1
+        },
+        {
+          "diagnostic_wall_ms": 1708.8517,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 2
+        },
+        {
+          "diagnostic_wall_ms": 1692.4044999999999,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 3
+        }
+      ],
+      "checks": {
+        "audio_clock_was_advancing": true,
+        "cancel_restores_canvas": true,
+        "commit_changes_canvas": true,
+        "draft_changes_canvas": true,
+        "four_composition_proofs": true,
+        "fresh_paused_device_samples": true,
+        "fresh_press_after_resume_only": true,
+        "no_fault": true,
+        "paused_device_span_is_zero": true,
+        "paused_inputs_discarded": true,
+        "paused_wall_at_least_300_ms": true,
+        "resume_does_not_catch_up": true,
+        "simulation_advances_after_resume": true,
+        "simulation_uses_device_clock": true,
+        "single_commit": true,
+        "three_hundred_edits": true
+      },
+      "directory": "artifacts/p0/transport-85b6ea5b",
+      "result_sha256": "8c37fc241e3ce138ef57ef8afd01ccec1efb472cf2839fae092d19d430f7d5ae",
+      "evidence_sha256": "b49e1760d064fb5f760bcb918b2c9622a2a029f5d165703f2a6062584faea55e",
+      "executable_sha256": "6a167f89b2d469cd4ef6091e2fbb3131b20d4349ad965c7f90e64260d36021eb",
+      "process_peaks_bytes": {
+        "working_set_bytes": 257708032,
+        "private_bytes": 348946432,
+        "peak_working_set_bytes": 265342976,
+        "peak_commit_bytes": 353210368,
+        "gpu_dedicated_bytes": 136048640,
+        "gpu_shared_bytes": 59228160
+      }
+    }
+  ],
+  "limits": [
+    "Same-process real silent output, synthetic egui input, no physical endpoint or audible latency verification.",
+    "Diagnostic CPU references and scheduled test repaints prevent treating these process peaks as idle CPU, latency or full application budgets.",
+    "Initial single-document PNG loading and source GPU upload remain synchronous. No background loading or document switch integration yet.",
+    "Frozen measured source snapshots retained; later added boundary/validator tests do not rewrite this evidence.",
+    "No current stable compatibility cases, hit judgement, cross-platform result or product stack decision."
+  ],
+  "regression": {
+    "directory": "artifacts/p0/interaction-6b9a7e72",
+    "result_sha256": "5c92bedc0f54a94d5ee5da7247dc7fc4c4963da5e5fb31a8756455539a789420",
+    "evidence_sha256": "4ca00e74e8d4471d2aa3273b13834afb7377f7a95d39323dcff6b615554b345f",
+    "default_no_device_audio": true,
+    "status": "passed"
+  },
+  "headless_tests": {
+    "contract": 10,
+    "native_candidate": 51,
+    "python_tools": 39,
+    "optional_audio_adapter": 1
+  }
+}

@@ -1,0 +1,545 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "status": "passed",
+  "platform": "Windows x64 Vulkan / WASAPI shared only",
+  "fixture": "artifacts/p0/standard-fixture-2cb51994",
+  "inventory_sha256": "84be921941507c7ae3c6c8d805a33ddd79e2c5dfeba1e6c782d855bf08485c40",
+  "environment": {
+    "os": "Windows-10-10.0.19045-SP0",
+    "architecture": "AMD64",
+    "logical_processors": 16,
+    "cpu": "AMD Ryzen 7 4800H with Radeon Graphics",
+    "physical_memory_bytes": 17042837504
+  },
+  "runs": [
+    {
+      "directory": "artifacts/p0/switch-audio-f8e78ae2",
+      "result_sha256": "4bb664a7edec11850de9286ac581431ea4866bfe3e271d39194450025fc09c2a",
+      "evidence_sha256": "5e98009090b779602bb796106df067f8a5e53189af8dc70575c5ffa124a805f9",
+      "executable_sha256": "56a8d3f70cc5ac3fde8fc8c8f13a77ac5939ca97626a169561eafe4b39c40493",
+      "status": "passed",
+      "audio_format": {
+        "bits": 32,
+        "buffer_frames": 4800,
+        "channels": 2,
+        "clock_frequency": 384000,
+        "rate": 48000
+      },
+      "frozen_us": 460000,
+      "resume_us": 460000,
+      "second_frozen_us": 920000,
+      "final_simulation_us": 920000,
+      "paused_wall_ms": 9245.2698,
+      "paused_samples": 9,
+      "paused_span_us": 0,
+      "accepted_inputs": 2,
+      "edit_count": 30,
+      "nodes_per_document": [
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "stale_gpu": 2,
+      "accepted_documents": 3,
+      "pipeline_warmup_ms": 78.196,
+      "proofs": [
+        {
+          "accepted_inputs": 1,
+          "diagnostic_wall_ms": 1730.1845,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "simulation_us": 460000,
+          "stage": 0
+        },
+        {
+          "accepted_inputs": 1,
+          "diagnostic_wall_ms": 1726.3709000000001,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "simulation_us": 460000,
+          "stage": 5
+        },
+        {
+          "accepted_inputs": 1,
+          "diagnostic_wall_ms": 1704.2796,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 2,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "simulation_us": 460000,
+          "stage": 1
+        },
+        {
+          "accepted_inputs": 1,
+          "diagnostic_wall_ms": 1709.5163,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 2,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "simulation_us": 460000,
+          "stage": 2
+        },
+        {
+          "accepted_inputs": 1,
+          "diagnostic_wall_ms": 1694.8829999999998,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 2,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "simulation_us": 460000,
+          "stage": 3
+        },
+        {
+          "accepted_inputs": 2,
+          "diagnostic_wall_ms": 1709.9341,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 5,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "simulation_us": 920000,
+          "stage": 4
+        }
+      ],
+      "checks": {
+        "cancel_keeps_old": true,
+        "clock_advanced_before_pause": true,
+        "close_during_upload": true,
+        "document_draft_cancelled": true,
+        "failed_keeps_old": true,
+        "final_pause_preserved": true,
+        "fresh_input_only": true,
+        "no_fault": true,
+        "paused_fresh_samples": true,
+        "paused_span_zero": true,
+        "paused_wall_observed": true,
+        "playing_document_switch": true,
+        "resume_no_catchup": true,
+        "single_document_commit": true,
+        "single_shared_clock": true,
+        "six_pixel_checks": true,
+        "stale_gpu_discarded": true,
+        "thirty_draft_updates": true
+      },
+      "uploads": [
+        {
+          "max_source_bytes_per_frame": 8388608,
+          "max_sources_per_frame": 2,
+          "upload_frames": 5,
+          "uploaded_bytes": 41943040
+        },
+        {
+          "max_source_bytes_per_frame": 8388608,
+          "max_sources_per_frame": 2,
+          "upload_frames": 5,
+          "uploaded_bytes": 41943040
+        },
+        {
+          "max_source_bytes_per_frame": 8388608,
+          "max_sources_per_frame": 2,
+          "upload_frames": 5,
+          "uploaded_bytes": 41943040
+        },
+        {
+          "max_source_bytes_per_frame": 8388608,
+          "max_sources_per_frame": 2,
+          "upload_frames": 5,
+          "uploaded_bytes": 41943040
+        },
+        {
+          "max_source_bytes_per_frame": 8388608,
+          "max_sources_per_frame": 2,
+          "upload_frames": 5,
+          "uploaded_bytes": 41943040
+        }
+      ],
+      "process_peaks_bytes": {
+        "working_set_bytes": 323862528,
+        "private_bytes": 463347712,
+        "peak_commit_bytes": 467595264,
+        "gpu_dedicated_bytes": 176017408,
+        "gpu_shared_bytes": 61112320
+      }
+    },
+    {
+      "directory": "artifacts/p0/switch-audio-3e8b2308",
+      "result_sha256": "80293a66018228e55cc3b56dff15cc0c56dfcd5f70d811bb7028bec6235bfde8",
+      "evidence_sha256": "e92d5f651afd4699a6677dcb49f66ce81924da7002abc17baec267f925e63b49",
+      "executable_sha256": "56a8d3f70cc5ac3fde8fc8c8f13a77ac5939ca97626a169561eafe4b39c40493",
+      "status": "passed",
+      "audio_format": {
+        "bits": 32,
+        "buffer_frames": 4800,
+        "channels": 2,
+        "clock_frequency": 384000,
+        "rate": 48000
+      },
+      "frozen_us": 490000,
+      "resume_us": 490000,
+      "second_frozen_us": 950000,
+      "final_simulation_us": 950000,
+      "paused_wall_ms": 9116.9443,
+      "paused_samples": 10,
+      "paused_span_us": 0,
+      "accepted_inputs": 2,
+      "edit_count": 30,
+      "nodes_per_document": [
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "stale_gpu": 2,
+      "accepted_documents": 3,
+      "pipeline_warmup_ms": 60.529399999999995,
+      "proofs": [
+        {
+          "accepted_inputs": 1,
+          "diagnostic_wall_ms": 1686.1667,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "simulation_us": 490000,
+          "stage": 0
+        },
+        {
+          "accepted_inputs": 1,
+          "diagnostic_wall_ms": 1682.1019000000001,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "simulation_us": 490000,
+          "stage": 5
+        },
+        {
+          "accepted_inputs": 1,
+          "diagnostic_wall_ms": 1694.8085,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 2,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "simulation_us": 490000,
+          "stage": 1
+        },
+        {
+          "accepted_inputs": 1,
+          "diagnostic_wall_ms": 1693.2751,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 2,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "simulation_us": 490000,
+          "stage": 2
+        },
+        {
+          "accepted_inputs": 1,
+          "diagnostic_wall_ms": 1677.1714,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 2,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "simulation_us": 490000,
+          "stage": 3
+        },
+        {
+          "accepted_inputs": 2,
+          "diagnostic_wall_ms": 1712.1892,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 5,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "simulation_us": 950000,
+          "stage": 4
+        }
+      ],
+      "checks": {
+        "cancel_keeps_old": true,
+        "clock_advanced_before_pause": true,
+        "close_during_upload": true,
+        "document_draft_cancelled": true,
+        "failed_keeps_old": true,
+        "final_pause_preserved": true,
+        "fresh_input_only": true,
+        "no_fault": true,
+        "paused_fresh_samples": true,
+        "paused_span_zero": true,
+        "paused_wall_observed": true,
+        "playing_document_switch": true,
+        "resume_no_catchup": true,
+        "single_document_commit": true,
+        "single_shared_clock": true,
+        "six_pixel_checks": true,
+        "stale_gpu_discarded": true,
+        "thirty_draft_updates": true
+      },
+      "uploads": [
+        {
+          "max_source_bytes_per_frame": 8388608,
+          "max_sources_per_frame": 2,
+          "upload_frames": 5,
+          "uploaded_bytes": 41943040
+        },
+        {
+          "max_source_bytes_per_frame": 8388608,
+          "max_sources_per_frame": 2,
+          "upload_frames": 5,
+          "uploaded_bytes": 41943040
+        },
+        {
+          "max_source_bytes_per_frame": 8388608,
+          "max_sources_per_frame": 2,
+          "upload_frames": 5,
+          "uploaded_bytes": 41943040
+        },
+        {
+          "max_source_bytes_per_frame": 8388608,
+          "max_sources_per_frame": 2,
+          "upload_frames": 5,
+          "uploaded_bytes": 41943040
+        },
+        {
+          "max_source_bytes_per_frame": 8388608,
+          "max_sources_per_frame": 2,
+          "upload_frames": 5,
+          "uploaded_bytes": 41943040
+        }
+      ],
+      "process_peaks_bytes": {
+        "working_set_bytes": 285147136,
+        "private_bytes": 472272896,
+        "peak_commit_bytes": 480718848,
+        "gpu_dedicated_bytes": 176017408,
+        "gpu_shared_bytes": 61112320
+      }
+    },
+    {
+      "directory": "artifacts/p0/switch-audio-81a602d4",
+      "result_sha256": "e4d3357f598280092bc3df82f42c33133d07d236fd05dd53ccfbaccfab255743",
+      "evidence_sha256": "84a9482f6fa6a865456ca528e4f979885a8f0fb0a20c729181eec51ae7e4bb38",
+      "executable_sha256": "56a8d3f70cc5ac3fde8fc8c8f13a77ac5939ca97626a169561eafe4b39c40493",
+      "status": "passed",
+      "audio_format": {
+        "bits": 32,
+        "buffer_frames": 4800,
+        "channels": 2,
+        "clock_frequency": 384000,
+        "rate": 48000
+      },
+      "frozen_us": 490000,
+      "resume_us": 490000,
+      "second_frozen_us": 950000,
+      "final_simulation_us": 950000,
+      "paused_wall_ms": 9240.564900000001,
+      "paused_samples": 11,
+      "paused_span_us": 0,
+      "accepted_inputs": 2,
+      "edit_count": 30,
+      "nodes_per_document": [
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "stale_gpu": 2,
+      "accepted_documents": 3,
+      "pipeline_warmup_ms": 63.18450000000001,
+      "proofs": [
+        {
+          "accepted_inputs": 1,
+          "diagnostic_wall_ms": 1699.4669999999999,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "simulation_us": 490000,
+          "stage": 0
+        },
+        {
+          "accepted_inputs": 1,
+          "diagnostic_wall_ms": 1693.9204000000002,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "simulation_us": 490000,
+          "stage": 5
+        },
+        {
+          "accepted_inputs": 1,
+          "diagnostic_wall_ms": 1707.0123,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 2,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "simulation_us": 490000,
+          "stage": 1
+        },
+        {
+          "accepted_inputs": 1,
+          "diagnostic_wall_ms": 1688.8655999999999,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 2,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "simulation_us": 490000,
+          "stage": 2
+        },
+        {
+          "accepted_inputs": 1,
+          "diagnostic_wall_ms": 1712.8139,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 2,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "simulation_us": 490000,
+          "stage": 3
+        },
+        {
+          "accepted_inputs": 2,
+          "diagnostic_wall_ms": 1706.4470000000001,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 5,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "simulation_us": 950000,
+          "stage": 4
+        }
+      ],
+      "checks": {
+        "cancel_keeps_old": true,
+        "clock_advanced_before_pause": true,
+        "close_during_upload": true,
+        "document_draft_cancelled": true,
+        "failed_keeps_old": true,
+        "final_pause_preserved": true,
+        "fresh_input_only": true,
+        "no_fault": true,
+        "paused_fresh_samples": true,
+        "paused_span_zero": true,
+        "paused_wall_observed": true,
+        "playing_document_switch": true,
+        "resume_no_catchup": true,
+        "single_document_commit": true,
+        "single_shared_clock": true,
+        "six_pixel_checks": true,
+        "stale_gpu_discarded": true,
+        "thirty_draft_updates": true
+      },
+      "uploads": [
+        {
+          "max_source_bytes_per_frame": 8388608,
+          "max_sources_per_frame": 2,
+          "upload_frames": 5,
+          "uploaded_bytes": 41943040
+        },
+        {
+          "max_source_bytes_per_frame": 8388608,
+          "max_sources_per_frame": 2,
+          "upload_frames": 5,
+          "uploaded_bytes": 41943040
+        },
+        {
+          "max_source_bytes_per_frame": 8388608,
+          "max_sources_per_frame": 2,
+          "upload_frames": 5,
+          "uploaded_bytes": 41943040
+        },
+        {
+          "max_source_bytes_per_frame": 8388608,
+          "max_sources_per_frame": 2,
+          "upload_frames": 5,
+          "uploaded_bytes": 41943040
+        },
+        {
+          "max_source_bytes_per_frame": 8388608,
+          "max_sources_per_frame": 2,
+          "upload_frames": 5,
+          "uploaded_bytes": 41943040
+        }
+      ],
+      "process_peaks_bytes": {
+        "working_set_bytes": 323334144,
+        "private_bytes": 463638528,
+        "peak_commit_bytes": 463691776,
+        "gpu_dedicated_bytes": 176009216,
+        "gpu_shared_bytes": 61112320
+      }
+    }
+  ],
+  "headless_tests": {
+    "native_candidate": 57,
+    "contract": 10,
+    "python_tools": 43,
+    "optional_audio_adapter": 1
+  },
+  "preliminary_run": "artifacts/p0/switch-audio-e4443e78",
+  "limits": [
+    "One shared transport, background documents and synthetic egui input; no stable rules or physical input test.",
+    "Missing-fixture and request cancellation, not unplug/recovery of a physical output device.",
+    "Six blocking CPU/GPU/display pixel diagnostics per run while paused; not a performance, idle or whole-application budget.",
+    "WASAPI shared silent default endpoint may be virtual; no audible latency or endpoint confirmation.",
+    "GPU cancellation drains remaining bounded writes; no early retirement or preemption.",
+    "Linux remains unverified and macOS deferred; product stack not selected."
+  ]
+}

@@ -1,0 +1,277 @@
+{
+  "schema_version": 1,
+  "kind": "manual_stable_c03_c08_review",
+  "reviewed_on_client_date": "2026-10-20",
+  "status": "accepted_for_declared_qualitative_subcases",
+  "plan": {
+    "path": "artifacts/p0/stable-c03-c08-plan-20261020-v1/plan.json",
+    "sha256": "6f60bd8892565100827e2816a51f7a1ecea86b7ec3eed3c54a57dd24f1e66c73"
+  },
+  "fixture_manifest": {
+    "path": "artifacts/p0/stable-first-batch-v1/manifest.json",
+    "sha256": "265ed2ee62e94ddb84969e77964c2d1322ab79f5d357370ca766074d206a7a0a"
+  },
+  "source_payloads_rechecked_sha256": {
+    "beatmap/P0 First Batch.osu": "725964a5e959cd3cac6bd201de27670eec587fb853e862d79f6fee70628e28b3",
+    "beatmap/silence.wav": "6ab1234a5eafcb6492dc09813160f3441317f5a9287849816a11b56a5bf5649d",
+    "refresh-B/cursor.png": "7352a93d09012f75e7d5dd35f205322fea94e64fb6f6ce079bf0e8680c2a75e5",
+    "refresh-B/hitcircleoverlay.png": "7352a93d09012f75e7d5dd35f205322fea94e64fb6f6ce079bf0e8680c2a75e5",
+    "skins/baseline/approachcircle.png": "c1d2acc1ec09dc2162bbec5bb43b21bb312bc01fe0b7794511bd5816eb21fadd",
+    "skins/baseline/cursor.png": "c1d2acc1ec09dc2162bbec5bb43b21bb312bc01fe0b7794511bd5816eb21fadd",
+    "skins/baseline/default-0.png": "42784e411292917d23b541c97ce0b350bc24db09c1b9d493a510388bfa312409",
+    "skins/baseline/default-1.png": "43fe6f5fb31607ed9958077f5a93a5cda5abecb871e042c0593d770b6d61e9b0",
+    "skins/baseline/default-2.png": "a6160c20eec2f949eff8ae6f06fec4fc5d1004c92df73a9207107ec26850776b",
+    "skins/baseline/default-3.png": "238c9a10f3f1a402b52ce3cd2b467e5afc8c54a4ffb8f2bbfc5eee545576b0e6",
+    "skins/baseline/default-4.png": "14d25ba73a9d26c8c25d31bf0627cbcda1ecb2ba0db7cd03cf94f499420c5ec5",
+    "skins/baseline/default-5.png": "52c28359be4651ec4c92a32cfc2ccbe1f962e18c4cf69e7c8d00c592bd18c23b",
+    "skins/baseline/default-6.png": "b6723558b1902329542ecde88a14d1f661ae7a212bd74f6feca5f16f6fc045cc",
+    "skins/baseline/default-7.png": "02c49ebd14eaa4cf4fa3abbbf50309dd49be39e5733dd72642da9a6536b16335",
+    "skins/baseline/default-8.png": "3f15d71dd827567d1da62677b2e668a00c3c94e273511ae3025ad00d01fb22a5",
+    "skins/baseline/default-9.png": "335e9a65964af6cad8fb56e0ff23091347f24155bf7bd6fd50541f9e822bf1eb",
+    "skins/baseline/hitcircle.png": "c73b3df88d9dd45748cc7ef63ef580aa3c8fe6e3b9107429677581978ebccf24",
+    "skins/baseline/hitcircleoverlay.png": "c1d2acc1ec09dc2162bbec5bb43b21bb312bc01fe0b7794511bd5816eb21fadd",
+    "skins/baseline/skin.ini": "81a63c15cb3947ed0f18f7b23376f6be6e11022f2644a6bf59902cab78216fdd",
+    "skins/missing/approachcircle.png": "c1d2acc1ec09dc2162bbec5bb43b21bb312bc01fe0b7794511bd5816eb21fadd",
+    "skins/missing/cursor.png": "c1d2acc1ec09dc2162bbec5bb43b21bb312bc01fe0b7794511bd5816eb21fadd",
+    "skins/missing/default-0.png": "42784e411292917d23b541c97ce0b350bc24db09c1b9d493a510388bfa312409",
+    "skins/missing/default-1.png": "43fe6f5fb31607ed9958077f5a93a5cda5abecb871e042c0593d770b6d61e9b0",
+    "skins/missing/default-2.png": "a6160c20eec2f949eff8ae6f06fec4fc5d1004c92df73a9207107ec26850776b",
+    "skins/missing/default-3.png": "238c9a10f3f1a402b52ce3cd2b467e5afc8c54a4ffb8f2bbfc5eee545576b0e6",
+    "skins/missing/default-4.png": "14d25ba73a9d26c8c25d31bf0627cbcda1ecb2ba0db7cd03cf94f499420c5ec5",
+    "skins/missing/default-5.png": "52c28359be4651ec4c92a32cfc2ccbe1f962e18c4cf69e7c8d00c592bd18c23b",
+    "skins/missing/default-6.png": "b6723558b1902329542ecde88a14d1f661ae7a212bd74f6feca5f16f6fc045cc",
+    "skins/missing/default-7.png": "02c49ebd14eaa4cf4fa3abbbf50309dd49be39e5733dd72642da9a6536b16335",
+    "skins/missing/default-8.png": "3f15d71dd827567d1da62677b2e668a00c3c94e273511ae3025ad00d01fb22a5",
+    "skins/missing/default-9.png": "335e9a65964af6cad8fb56e0ff23091347f24155bf7bd6fd50541f9e822bf1eb",
+    "skins/missing/hitcircle.png": "c73b3df88d9dd45748cc7ef63ef580aa3c8fe6e3b9107429677581978ebccf24",
+    "skins/missing/skin.ini": "2afa00cfcb96617a92ecb081de084cdb33b5fd4b3dcb082932e4a275fa099b09",
+    "skins/transparent/approachcircle.png": "c1d2acc1ec09dc2162bbec5bb43b21bb312bc01fe0b7794511bd5816eb21fadd",
+    "skins/transparent/cursor.png": "c1d2acc1ec09dc2162bbec5bb43b21bb312bc01fe0b7794511bd5816eb21fadd",
+    "skins/transparent/default-0.png": "42784e411292917d23b541c97ce0b350bc24db09c1b9d493a510388bfa312409",
+    "skins/transparent/default-1.png": "43fe6f5fb31607ed9958077f5a93a5cda5abecb871e042c0593d770b6d61e9b0",
+    "skins/transparent/default-2.png": "a6160c20eec2f949eff8ae6f06fec4fc5d1004c92df73a9207107ec26850776b",
+    "skins/transparent/default-3.png": "238c9a10f3f1a402b52ce3cd2b467e5afc8c54a4ffb8f2bbfc5eee545576b0e6",
+    "skins/transparent/default-4.png": "14d25ba73a9d26c8c25d31bf0627cbcda1ecb2ba0db7cd03cf94f499420c5ec5",
+    "skins/transparent/default-5.png": "52c28359be4651ec4c92a32cfc2ccbe1f962e18c4cf69e7c8d00c592bd18c23b",
+    "skins/transparent/default-6.png": "b6723558b1902329542ecde88a14d1f661ae7a212bd74f6feca5f16f6fc045cc",
+    "skins/transparent/default-7.png": "02c49ebd14eaa4cf4fa3abbbf50309dd49be39e5733dd72642da9a6536b16335",
+    "skins/transparent/default-8.png": "3f15d71dd827567d1da62677b2e668a00c3c94e273511ae3025ad00d01fb22a5",
+    "skins/transparent/default-9.png": "335e9a65964af6cad8fb56e0ff23091347f24155bf7bd6fd50541f9e822bf1eb",
+    "skins/transparent/hitcircle.png": "c73b3df88d9dd45748cc7ef63ef580aa3c8fe6e3b9107429677581978ebccf24",
+    "skins/transparent/hitcircleoverlay.png": "8d447892b6efbc450beab391a7003090694cfcd0014d20766150112cab1675a0",
+    "skins/transparent/skin.ini": "94b22d6f8b2a28000c1d39d9a3a0b94b4783c17e7513f604bf44a5c5cec8efa5"
+  },
+  "client": {
+    "reference_release": "b20260924.1",
+    "reference_stream": "Stable",
+    "reference_identity_evidence": "artifacts/p0/stable-review-20261020-v1/review-with-settings.json",
+    "current_executable_sha256": "3adc2d001aacced5f92ba8ae24121980d5e23f5653f37d14cf4765bca1abd9f9",
+    "unchanged_since_identity_review": true,
+    "new_release_label_in_this_batch": false,
+    "screenshot_to_process_binding": "user_supplied_provenance_not_automatically_verified"
+  },
+  "display": {
+    "reference_settings_from_previous_user_confirmation": {
+      "width": 1920,
+      "height": 1080,
+      "window_mode": "fullscreen",
+      "windows_scale_percent": 100,
+      "mods_enabled": false
+    },
+    "this_round": "user_reported_followed_supplied_steps",
+    "image_metadata_independently_registered": true
+  },
+  "images": [
+    {
+      "case": "C03",
+      "label": "C03-Baseline",
+      "registration": "artifacts/p0/stable-c03-c08-review-20261020-v1/screenshot1674/record.json",
+      "registration_sha256": "65c158b71b080b3e45c2c74399d194864979ada16ec3d4b78038448ed8b7e3a2",
+      "image_sha256": "11972013def487330dcaba8732edd469d709baa655f851194801a104d7a28527",
+      "metadata": {
+        "format": "jpg",
+        "width": 1920,
+        "height": 1080,
+        "extension": ".jpg"
+      },
+      "visual_observation": "pink_outline_visible",
+      "review_source": "user_attached_image_and_explicit_label",
+      "strict_pixel_comparison_performed": false
+    },
+    {
+      "case": "C03",
+      "label": "C03-Transparent",
+      "registration": "artifacts/p0/stable-c03-c08-review-20261020-v1/screenshot1675/record.json",
+      "registration_sha256": "2479a13aeb3514b94f964590f5a472d0f02207bed596bd200ec3c492e23cf6f9",
+      "image_sha256": "8a507645a0333a9145df3187d6982dfd58c729c03fd0d923b99e39efb47a1c89",
+      "metadata": {
+        "format": "jpg",
+        "width": 1920,
+        "height": 1080,
+        "extension": ".jpg"
+      },
+      "visual_observation": "pink_overlay_outline_absent",
+      "review_source": "user_attached_image_and_explicit_label",
+      "strict_pixel_comparison_performed": false
+    },
+    {
+      "case": "C03",
+      "label": "C03-Missing",
+      "registration": "artifacts/p0/stable-c03-c08-review-20261020-v1/screenshot1677/record.json",
+      "registration_sha256": "aff9b9b65028490696d6c8eb5e9d3ae9b4f0e74dad7d6873502ad68c6f9f9eff",
+      "image_sha256": "5ddb0180f46e01999d400a1713f8876931ac88f19a9f56c83be0849d3afa1894",
+      "metadata": {
+        "format": "jpg",
+        "width": 1920,
+        "height": 1080,
+        "extension": ".jpg"
+      },
+      "visual_observation": "white_grey_highlighted_outline_visible",
+      "review_source": "user_attached_image_and_explicit_label",
+      "strict_pixel_comparison_performed": false
+    },
+    {
+      "case": "C08",
+      "label": "C08-Menu-A",
+      "registration": "artifacts/p0/stable-c03-c08-review-20261020-v1/screenshot1678/record.json",
+      "registration_sha256": "0aebae55cc8520e12835fae6e7ec6ce2d5abde630c7e4bd1d2417e47af89af4f",
+      "image_sha256": "dd51a05c954766394abf4fc23c279fa1a334cc6c0cdd631603ef534a5373d237",
+      "metadata": {
+        "format": "jpg",
+        "width": 1920,
+        "height": 1080,
+        "extension": ".jpg"
+      },
+      "visual_observation": "pink_cursor",
+      "review_source": "user_attached_image_and_explicit_label",
+      "strict_pixel_comparison_performed": false
+    },
+    {
+      "case": "C08",
+      "label": "C08-Menu-After",
+      "registration": "artifacts/p0/stable-c03-c08-review-20261020-v1/screenshot1679/record.json",
+      "registration_sha256": "75d0bffc8304a219ced0abb2d179d81e1b93599881fbeb73f4eca77febeddb52",
+      "image_sha256": "d87c8677bde8d980d5b830ef98cf410d2279ce16c4aa6e3b3173637c3c515380",
+      "metadata": {
+        "format": "jpg",
+        "width": 1920,
+        "height": 1080,
+        "extension": ".jpg"
+      },
+      "visual_observation": "green_cursor",
+      "review_source": "user_attached_image_and_explicit_label",
+      "strict_pixel_comparison_performed": false
+    },
+    {
+      "case": "C08",
+      "label": "C08-Pause-After",
+      "registration": "artifacts/p0/stable-c03-c08-review-20261020-v1/screenshot1680/record.json",
+      "registration_sha256": "b94a62136106f6de44307add0e80c3a07fbe4b3e0e2c6ea6b84dd8c9f212fd21",
+      "image_sha256": "28184b64efb10317528fd631d69dc144d1e688c15e64d42c457555cdadd413b4",
+      "metadata": {
+        "format": "jpg",
+        "width": 1920,
+        "height": 1080,
+        "extension": ".jpg"
+      },
+      "visual_observation": "pause_menu_and_pink_cursor_old_outline",
+      "review_source": "user_attached_image_and_explicit_label",
+      "strict_pixel_comparison_performed": false
+    },
+    {
+      "case": "C08",
+      "label": "C08-SongSelect-After",
+      "registration": "artifacts/p0/stable-c03-c08-review-20261020-v1/screenshot1682/record.json",
+      "registration_sha256": "b95485edb29a8e466b0b640fc0a0d963e08d34ddfe57856f54037d96a4c8bbbe",
+      "image_sha256": "04faf270e3a80e9aa26d0e26d72073008283553bf246af82ddce8cf0eb011847",
+      "metadata": {
+        "format": "jpg",
+        "width": 1920,
+        "height": 1080,
+        "extension": ".jpg"
+      },
+      "visual_observation": "song_select_and_green_cursor",
+      "review_source": "user_attached_image_and_explicit_label",
+      "strict_pixel_comparison_performed": false
+    }
+  ],
+  "user_report": {
+    "c03_order": [
+      "Baseline",
+      "Transparent",
+      "Missing"
+    ],
+    "menu_copy_b_before_reload_changed": false,
+    "pause_copy_b_before_reload_changed": false,
+    "after_pause_reload_navigation": "directly_back_to_song_select_without_resuming",
+    "a_files_restored_and_reloaded": true,
+    "source": "direct_user_messages"
+  },
+  "accepted_scoped_findings": [
+    {
+      "id": "C03-overlay-presence-v1",
+      "case": "C03",
+      "scope": "this_hitcircleoverlay_three_skin_fixture_only",
+      "finding": "baseline pink outline; transparent does not draw that overlay or substitute the default overlay; missing displays osu default asset as confirmed by user",
+      "fallback_origin": "osu_default_asset",
+      "fallback_origin_evidence": "direct_user_confirmation_with_supplied_missing_overlay_screenshot",
+      "full_lookup_order_verified": false
+    },
+    {
+      "id": "C08-menu-cursor-reload-v1",
+      "case": "C08-M",
+      "scope": "Baseline cursor A-to-B in main_menu",
+      "finding": "user reports no change after copy before shortcut; image after reload shows green cursor"
+    },
+    {
+      "id": "C08-pause-cursor-deferred-v1",
+      "case": "C08-P",
+      "scope": "reload_requested_in_ordinary_pause_then_direct_return_to_song_select",
+      "finding": "old pink cursor visible after pause reload; green cursor visible after direct return to song select; no active-play resume between these screenshots"
+    }
+  ],
+  "not_validated": [
+    "full_fallback_lookup_priority",
+    "corrupt_files_or_extension_collisions",
+    "exact_pixels_colours_alpha_or_sampling",
+    "precise_reload_latency_or_scene_reconstruction",
+    "reloaded_green_hitcircleoverlay_in_new_gameplay",
+    "requesting_reload_during_active_play_or_results",
+    "preview_editor_freeze_capability"
+  ],
+  "counts": {
+    "new_explicit_images_reviewed": 7,
+    "scoped_behavior_findings_accepted": 3,
+    "full_matrix_behavior_cases_completed": 0
+  },
+  "public_document_comparison": {
+    "source": "https://osu.ppy.sh/wiki/en/Client/Keyboard_shortcuts",
+    "checked_on": "2026-10-20",
+    "document_says": "skin reload shortcut and gameplay/results deferral until song select",
+    "inference": "ordinary pause result is consistent with treating pause as part of gameplay; internal mechanism not proven"
+  },
+  "system_window_capture_used": false,
+  "historical_screenshot_directory_scanned": false,
+  "source_snapshot_used": false,
+  "client_installation_written_by_agent": false,
+  "product_code_or_compatibility_module_changed": false,
+  "prior_review": {
+    "path": "artifacts/p0/stable-c03-c08-review-20261020-v1/review.json",
+    "sha256": "0f8b2dc84c0929291db00429a9e35a806f9a5f2ad9d91306c63ce21ab4758015"
+  },
+  "fallback_origin_confirmation": {
+    "path": "artifacts/p0/stable-c03-c08-review-20261020-v1/fallback-confirmation.json",
+    "sha256": "29ea67597d7de2cbc3c67c932b9710a52cf75d55b41df3ee62b91e49ba37f2f7"
+  },
+  "local_review": {
+    "path": "artifacts/p0/stable-c03-c08-review-20261020-v1/review-with-fallback-confirmation.json",
+    "sha256": "8a5afba4ee3a29a5b943bfd5780ca9479264382ea2dad664ad076d8171274346"
+  },
+  "platform": {
+    "system": "Windows",
+    "release": "10",
+    "version": "10.0.19045",
+    "architecture": "AMD64",
+    "source": "local_runtime_metadata"
+  }
+}

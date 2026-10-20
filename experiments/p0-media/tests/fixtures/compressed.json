@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "generator": "self_authored_stereo_sines_compressed_v1",
+  "encoder": {
+    "package": "imageio-ffmpeg==0.6.0",
+    "version": "ffmpeg version 7.1-essentials_build-www.gyan.dev Copyright (c) 2000-2024 the FFmpeg developers",
+    "sha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+    "reference_implementation": "FFmpeg native floating point MP3/Vorbis decoder",
+    "runtime_product_dependency": false
+  },
+  "frames": 17760,
+  "rate": 48000,
+  "channels": 2,
+  "files": {
+    "audio-0_37.mp3": {
+      "bytes": 10368,
+      "sha256": "2e331b4daa636174764ee3db29b96582f000f4866d143ca3e39573f94a0ab5b2"
+    },
+    "audio-0_37.ogg": {
+      "bytes": 6418,
+      "sha256": "67c558e3a2ca9becaccc736b5b1814c2cd539f48d9e5b032c6c623f40d7295bd"
+    },
+    "audio-0_37.mp3.reference.f32": {
+      "bytes": 142080,
+      "sha256": "1a8145491b7012d9a551fd921c9d5db0d873955e6822f168aa4620eb94a24d66"
+    }
+  },
+  "vorbis_short_ffmpeg_tail_discrepancy_frames": 128,
+  "origin": "independent synthesis; no stable or third-party audio",
+  "additional_fixtures": {
+    "audio-0_37.ogg.sndfile.f32": {
+      "bytes": 142080,
+      "sha256": "2c23f2ff448f88851418f747c6f41c09a97f9f86cbd2b48f8edd6ff52e4cc1eb"
+    },
+    "seek-3.ogg": {
+      "bytes": 19757,
+      "sha256": "bf44bad5f361e3e0fa646f0dfef92f4245a45dff6c22ea6e73620c74f621b7bb"
+    }
+  },
+  "independent_vorbis_reference": {
+    "library": "libsndfile 1.2.2 / libvorbis",
+    "tool_distribution": "soundfile 0.13.1",
+    "dll_sha256": "22518c16f9d13eda5ae5adf999c4740d7d16cc2d6b178b36dd4ac2f759a38559",
+    "frames": 17760,
+    "input": "audio-0_37.ogg",
+    "reference": "audio-0_37.ogg.sndfile.f32",
+    "decoded_without_ffmpeg_demuxer": true,
+    "product_runtime_dependency": false
+  }
+}

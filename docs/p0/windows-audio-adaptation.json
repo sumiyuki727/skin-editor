@@ -1,0 +1,5990 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "status": "passed_scoped_windows_format_and_device_protocol",
+  "source_sha256": {
+    "experiments/p0-media/Cargo.toml": "69e44532ff0ca34e6faf0757f3ff04d8eb9fdf1f93f0d01dbdfd15f03da577e6",
+    "experiments/p0-media/Cargo.lock": "1878a483db0f2d481b998d8b3c0a927ff9153b027c64cc4d80e6a6ea3c731d63",
+    "experiments/p0-egui/Cargo.toml": "6c43140d7d41d16b6d14caac960524587ddbb1688906ddee5ef0a6032ddf5d7e",
+    "experiments/p0-egui/Cargo.lock": "52a687bd1c27d2f0db63873bef4e9c9feb3f92cb720b2e8bd0b8268b8000c698",
+    "experiments/p0-wasapi/Cargo.toml": "e5fb3058d68438d2125ec7bca2cf5fb1cb598ff43bcc2e304e1a905ef2f26172",
+    "experiments/p0-wasapi/Cargo.lock": "49f53790dce8df7ae66e1ec286de21a507852284a9216944c9d5a1c94ed1560d",
+    "experiments/p0-preview-contract/Cargo.toml": "3eb41a0f90829ced042f1692dcc367b7be0cf6d5426e45621eb7db895df60745",
+    "experiments/p0-preview-contract/Cargo.lock": "5ad87c4a8c1c9ef0da88e303171f592e5b76925afd2cc889a2280ecbb99077d0",
+    "experiments/p0-media/src/audio.rs": "d5fda43254fc16e397e1a8b26ba2d05c10c59a640f2a312efca6060a9a38fe95",
+    "experiments/p0-media/src/chart.rs": "b8d42456c0605d5f681f79f91b6e9c2bd1eb4f2e0de0bb3a8ef09e2de75fc331",
+    "experiments/p0-media/src/compressed.rs": "36aa0b7ce7229259603cff99e7993516633e49ed3a299d2797fd92d96777fa3d",
+    "experiments/p0-media/src/lib.rs": "cca5506f125ac02e641a269ab702ad412c2d8228f752c86ae4fd67c5ce4190c5",
+    "experiments/p0-media/src/stream.rs": "904ee701d3b648ad39cfe95b5d80e4d66405c562b96945a7553d9634a4ed3013",
+    "experiments/p0-media/src/bin/compressed-proof.rs": "1fc5e7069e101e66b55ade5201ededab216158bd7f67ae3ea694d442f1d6e23e",
+    "experiments/p0-media/src/bin/stream-proof.rs": "85ad4a8057022843e9366577dbf343af0def9e477c6433d865bdded9f1f398e5",
+    "experiments/p0-egui/src/audio_output.rs": "abaf12abc9c2f0029886fc0be520964cf0bd3ac95ce281eb762239084b5963c8",
+    "experiments/p0-egui/src/audio_transport.rs": "3dd45ce6ae3f1876a686ffaf683dc0b5c662c527ec706f53203f563d9abb2062",
+    "experiments/p0-egui/src/composition.rs": "68828405baf1006fd430a1b7c85dd67b447823fa338ed1d4d342d6d33c36fa57",
+    "experiments/p0-egui/src/composition.wgsl": "e82e7cce77a53f69de74c13be6cb17d99581bfaa30888cbb1dac9082fe6024af",
+    "experiments/p0-egui/src/composition_fixture.rs": "4096a347b90284f45abebf15d0f264c30cb1fcbd4c6978640a72cbf9fcc977a5",
+    "experiments/p0-egui/src/composition_gpu.rs": "bce644f5794344e3f6a44ce5800964551f3f243b3b5b39cccec351bb746e16b5",
+    "experiments/p0-egui/src/composition_loading.rs": "ae1d390c775c574e9d7a0211dc094dadf68cdcbfc5450df1a32978bbb9f212a8",
+    "experiments/p0-egui/src/composition_present.wgsl": "d5b73ba3fd96fcaeaeee5c5532736ca1dcdefcf1bde1324e8998153a277b8548",
+    "experiments/p0-egui/src/composition_switch.rs": "8d9b1b9cac487127a747134a4f5bb0d33b89e26243f94d6198c9a8445fc4bced",
+    "experiments/p0-egui/src/composition_view.rs": "94babe1f58d2bc357f706986df59102322312a52a247010719e865b437fa0cb5",
+    "experiments/p0-egui/src/desktop_view.rs": "d975d2d045a3163bd7f44d6f7b2764d1db732c9a1cb4296f01d7e21efc16743b",
+    "experiments/p0-egui/src/interaction.rs": "02d2f8f7a511b87ec058192e02d5fd88cef3d2abdc76d6854363a0dbdef8b3aa",
+    "experiments/p0-egui/src/interaction_view.rs": "e3e71e203be304f1d6ebd0c43f19b90e9f6624c136c8abf3df54c332ab6fce8b",
+    "experiments/p0-egui/src/lib.rs": "4aac2a1ac7dc71d3b534bb9115778f52698f7c90527f52564b4acbf1edcb58f4",
+    "experiments/p0-egui/src/loading.rs": "dbd7eebf93e51ce339de6674b39c85e40df3fc04483832208cbbd673d9980642",
+    "experiments/p0-egui/src/main.rs": "7fa519b9ef852393d1b25332406eb190712a3d073a7b42699be0c827fe59049f",
+    "experiments/p0-egui/src/streaming_decode.rs": "c2dc8af188694fe330614e7ca18901a31cdbb80dc156306cc74d85671448a070",
+    "experiments/p0-egui/src/texture_cache.rs": "6d357c3955bae9ac769cccd6458b0163a249971c26ae048ed09d1a6275efc050",
+    "experiments/p0-egui/src/upload_fence.rs": "c0b488550013e15eb403043664f6782209f3eb7a23b3bf2fdd5a3c83faab4551",
+    "experiments/p0-egui/src/view.rs": "07175368f9eac318b1a2ee899a6774643c459dd6e91f8b5bbdd9966f9843fe87",
+    "experiments/p0-egui/src/windows_audio.rs": "ad79ea57baab103523495df300806b2ca052e4f081abf99f9c933ed44d867d5d",
+    "experiments/p0-egui/src/bin/combined-soak.rs": "3f22a5165908ba3cd1882cfba17032a6f7e441cc0d8114234a10177b337a5dbf",
+    "experiments/p0-egui/src/bin/composition-proof.rs": "93bb2491887c5b830f6c5b2dbe8509dbc5a1347acc2fef2c122fb76106e32983",
+    "experiments/p0-egui/src/bin/compressed-output-proof.rs": "be8dc698ca87e998b63f8b44cc1331490c4ab25cd32cb75d76ad6dc16d950f9e",
+    "experiments/p0-egui/src/bin/desktop-proof.rs": "965d3b6e22705f949594f3df4a9f85f3cc94507d5861e250d3d68dfd58e0e24d",
+    "experiments/p0-egui/src/bin/format-device-proof.rs": "78f3fd8dc60844af54e0e6635ed1c04d39aba21b16d9f233f39aab530a4849b6",
+    "experiments/p0-egui/src/bin/interaction-proof.rs": "4df2b97cb921957cbe805a42fc322ace901cf9d1e4ed79a856b4bffe8a0149dc",
+    "experiments/p0-egui/src/bin/media-proof.rs": "d19622721130506f7ebf2b0e2dccf116bc15705d7ba07e2d577e9d7d141fdeb0",
+    "experiments/p0-egui/src/bin/pcm-proof.rs": "b88dd7710d8dd314965b08841d09031500d8478410c97a52d0091fa74a84f1fb",
+    "experiments/p0-egui/src/bin/recovery-proof.rs": "0d6ed63513fe736e331eee1023135c63a29384d289f4a134eea84ac4650dd7f6",
+    "experiments/p0-egui/src/bin/resource-cycle-proof.rs": "b6f2dbde79bc5225f1f8c87de2ee4d357d38137eaac314ce256b2c49b6e0741d",
+    "experiments/p0-egui/src/bin/standard-load.rs": "382da2cf50deb102ffaee4efe8c9a9373e894b5547484eae7016e66fd6a9589a",
+    "experiments/p0-egui/src/bin/stream-output-proof.rs": "8cf59acee91881c352f9d9d8c55a443e694183039c788bdbb59640eaaed5c0bd",
+    "experiments/p0-egui/src/bin/switch-audio-proof.rs": "4555d1839663dd7507e2c3e5e606823ad7a4bc76f5c10ab9e756c70dd4a911fd",
+    "experiments/p0-egui/src/bin/switch-proof.rs": "181a168a668a173ea75c6722fe518a2d49a84063208267f4d32a8bc43b8ca224",
+    "experiments/p0-egui/src/bin/transport-proof.rs": "3ea4aafe2141951cc215caa1c4c0e9e7c3a9db5ba70bd0c7f842f46ca5fe9975",
+    "experiments/p0-wasapi/src/buffered.rs": "fbaba83c2f4bc9d13726296cff9d10d05fe0f897ddde096296045432de03d224",
+    "experiments/p0-wasapi/src/lib.rs": "dbdeaf137af17cdac2176ef816775f588166b448f597566c2cfc5a3a91e76dea",
+    "experiments/p0-wasapi/src/pcm.rs": "f157d28b289c3bc37cdb544d2e904fac3f8669f7e095591e9cc2bef698995ae3",
+    "experiments/p0-wasapi/src/platform.rs": "df89f7660e92128909e7a05e0e359064427b7ddeaf243c370d4f97097e84fc03",
+    "experiments/p0-preview-contract/src/lib.rs": "7e7164428f5f534b7c8a44b47aa57e79529f928fad7ea75a1f23f827a85250b0",
+    "experiments/p0-preview-contract/src/main.rs": "1edf475299f1e9a664b3f3dc1057288781799e64038567619c6a99f4e41fc296",
+    "experiments/p0-media/tests/fixtures/audio-0_37.mp3": "2e331b4daa636174764ee3db29b96582f000f4866d143ca3e39573f94a0ab5b2",
+    "experiments/p0-media/tests/fixtures/audio-0_37.mp3.reference.f32": "1a8145491b7012d9a551fd921c9d5db0d873955e6822f168aa4620eb94a24d66",
+    "experiments/p0-media/tests/fixtures/audio-0_37.ogg": "67c558e3a2ca9becaccc736b5b1814c2cd539f48d9e5b032c6c623f40d7295bd",
+    "experiments/p0-media/tests/fixtures/audio-0_37.ogg.sndfile.f32": "2c23f2ff448f88851418f747c6f41c09a97f9f86cbd2b48f8edd6ff52e4cc1eb",
+    "experiments/p0-media/tests/fixtures/compressed.json": "2fa8418b807062db787774af19b0d1796f5fa0412c0ad6fd348ab021c34951fc",
+    "experiments/p0-media/tests/fixtures/seek-3.ogg": "bf44bad5f361e3e0fa646f0dfef92f4245a45dff6c22ea6e73620c74f621b7bb",
+    "tools/check_p0.py": "371d68565eeaf7959c2062aae48b39565678dcd4c4efc7fff43d719f449216cc",
+    "tools/check_p0_audio_adaptation.py": "39b26ef5964c436f9b9aef4c18ba475efaf4fa982da1d78b882d0f1da22aa1b0",
+    "tools/check_p0_combined_soak.py": "aab795ccfde5837ed87725d9d3d114a9a201ec5b73999026552923cb08de157a",
+    "tools/check_p0_composition.py": "277358084e319fb70afe1f406ba3365c500275dcfe6e18e6ea038badbe5a15af",
+    "tools/check_p0_compressed.py": "874a7710c6c6149ae7d4ab4854abe2fd180e7be3ff3352a2eb0e98b9d6218472",
+    "tools/check_p0_compressed_soak.py": "20155196ec6f20d579e412f701ebdbbaa11311b256ca045cb307beca1a3f125b",
+    "tools/check_p0_desktop.py": "de2093b6d5f0882b338d3ec41e7c0dad2023018647bef84947fc7907249318b2",
+    "tools/check_p0_edit_composition.py": "0bdb32f65e6828a0da95572c5cf639e8517c5030e070a189e826c5fc6bbf5936",
+    "tools/check_p0_gpu_memory.py": "c15fe78c3412b20dc6e02bc2c4523aa8448a8d48c4fd9759607f19b8428bd1af",
+    "tools/check_p0_gui.py": "030fac0ecdc08237297e151f8229302b94ea868701d95fdf8133ca9aa1ad1764",
+    "tools/check_p0_interaction.py": "927504336ebc4b2187d9adc8ccf6320127ab68af9446cb4f7606cde9bb64a02b",
+    "tools/check_p0_lifetime.py": "5d6d08b91ceffcf10cd973df2380fd50f39968e944087ec325c20872d951fa2f",
+    "tools/check_p0_media.py": "de300b5143a5406c4755efbd6f3358169a7252085514dd2f7248358342410c34",
+    "tools/check_p0_pcm.py": "c9bfbca3c53fab2c0000ace59bfca47af676836db203d917eccdf8921b632e01",
+    "tools/check_p0_recovery.py": "28306d06d06b4f7600bb6ef1ecfff118d60edcb136eb107688837e199301d211",
+    "tools/check_p0_resource_cycles.py": "49cb900d16f2486ab826ae4d05e1b6e607ee7beaa342b873455830877bf576c1",
+    "tools/check_p0_streaming.py": "6e031e3a2e1de901ca5e7d2a9bddb7e41a659e47fb901755c0f58bcde8320912",
+    "tools/check_p0_stream_output.py": "0e9eb58b66898d2422a2243deb1afb214565c063d2ca260d4f9b6a65d274d7c9",
+    "tools/check_p0_switch.py": "c7ea7be526ada9ab8f3ce342e5cf420ad133f01d36d7b2574c5d312ac8138ed1",
+    "tools/check_p0_switch_audio.py": "4c5dca5d6fd0a7ccbd6040857515b0a0298558ce4f9b0abf652d10ed8de54d89",
+    "tools/check_p0_transport.py": "2ef7ffba6e87dafac947a38f11f53ece2c93e811814859e133ef551385045fc8",
+    "tools/p0_audio_device.py": "a177c4443cbca80acefa66ff6d54be25dd4ec71a2d3a1ae3dea5aaa631725a64",
+    "tools/p0_compressed_fixture.py": "68f91b21c9f3742914e0ad21522d958922ded7326fc4cad20329d42ad0eddc8e",
+    "tools/p0_evidence.py": "8f35c106f64618fe8bf46b9e7eb3dd92ae811e7ed658088b63581d6dfdf530b2",
+    "tools/p0_frame_attribution.py": "d6c258f95a68e044b9b37227507083e6c973844d35546ff923679cbee2dc8d49",
+    "tools/p0_gpu_repeats.py": "d0465cec8d6fe4fbef4820b572e07e798995b9f25e404026fd7b72762a80d23b",
+    "tools/p0_heap_analysis.py": "b85366a1b5f91066585e35aeb29ecb0c8f9391ddeb9bba7da18337eaeaa92a65",
+    "tools/p0_lifetime_analysis.py": "d1834decb5d015d62c5aa44d89d0b15b9a8bce6c39db9f571526bc6bd635fcbd",
+    "tools/p0_modules.py": "1949a3e5450c6ca8bd45ee541b111add569f6124687c4dd5f68e669ecc8f7929",
+    "tools/p0_process_metrics.py": "a736bbb1b9739bfa27242ac4d0c8eb1cab81d795f6f3ca2d6ba3a9b4e2b0fba3",
+    "tools/p0_stable_batch.py": "e7f0b6fabefb434ee6e8e31c9af40f7abf0ce3769f97f2fdf09aa318ac30c63c",
+    "tools/p0_vorbis_tail.py": "8d92d76e08b8a3953838f1262e3d6eb91bf8afe985fc895532d4b44e220c1e68",
+    "tools/p0_vulkan_memory.py": "c91da53f767dd7d7171765e9191736863470e62ab3ce9463eda88a73095d875f",
+    "tools/p0_workload.py": "fc9f03661781b5964c5bba90c3ea752a85e92a40a41cbfcbd6e7f8e6898e7a5f",
+    "tools/tests/test_p0_audio_adaptation.py": "35f60d0dc7627644b6a3ceb3b178e044d81ed4a0afa901ae9c512f6b6b26cdb1",
+    "tools/tests/test_p0_audio_device.py": "0be9b31adc1849653ac4ff103a671c3fc76ba4905b1ba1a619f508e8a2c12abf",
+    "tools/tests/test_p0_benchmark.py": "7f6c78963b68652c73c0ce19f160edd29100ab84a49751a9a3938c115e8ccf69",
+    "tools/tests/test_p0_combined_soak.py": "958e1f603ea657ed4e195e41c849482a4a549a9934f6865f17aaa3158ae11c5f",
+    "tools/tests/test_p0_composition_boundary.py": "a810c172d1321d136a7990db7638e60617a38c9e7b1b628a0d72db833800a317",
+    "tools/tests/test_p0_compressed.py": "3d21937c5e6af6dcad07984d322902b33ecea409cb2521fc8673ce01a41bd867",
+    "tools/tests/test_p0_compressed_soak.py": "8f84ce893c36ae4ef9f903997d60dbb181737673c2eaba8f1374a4b2b56705bf",
+    "tools/tests/test_p0_desktop.py": "2899cbf3a9109b389c425f39444ab7fa242f415c3bc383ae208aed6839500179",
+    "tools/tests/test_p0_edit_composition.py": "d5cb5e164ebb98ce0868976f2f61da5707fc23e35bb18f88257d0e00bdf8f022",
+    "tools/tests/test_p0_evidence.py": "9b7ad82afb16d1c7f98ebf536b57a0c22ae86887baa7d41900554483c8836e04",
+    "tools/tests/test_p0_frame_attribution.py": "a3561f7d87f1b9dfce3e7f79bddffb82b86d7fd3ea743533b7bd5fdb716e1698",
+    "tools/tests/test_p0_heap_analysis.py": "3f86d19a73dbb57b71eb09b15ccfb8aeccf44dac65832497510f26c9b55bd381",
+    "tools/tests/test_p0_interaction.py": "8bf937fd0b36a98b82a30d40b57b97c56525a4ed925bace6361aec979056804c",
+    "tools/tests/test_p0_lifetime.py": "20d751702ba31b4d9da9a577a1d7acbbc0bbfc48a19b49c5fac0dfec3f549b7c",
+    "tools/tests/test_p0_media.py": "80390b148a9c0c90b4092fe89ef744444ceb96347cf13afd904adf7b27717021",
+    "tools/tests/test_p0_pcm.py": "93c6678710efd2281094b1725356ea399203f8acaa06858171fcefeea5c79e27",
+    "tools/tests/test_p0_recovery.py": "57994772fca9521fa436edfafcc39a8d05b184c43c0c1b0b7d6c49dfd1a38c34",
+    "tools/tests/test_p0_repeats.py": "71b47625ccc5f012a968c382c709796dbe84e249b2cfb213ae14484c44156225",
+    "tools/tests/test_p0_resource_cycles.py": "a2b1217694083db4ecd22bc03b18e7d1993618150701a6c2da9c519569d95c5f",
+    "tools/tests/test_p0_streaming.py": "b08ad8a17bcfab6cd3173280b15c264f5494082ee94097a450760fcd86d0b111",
+    "tools/tests/test_p0_stream_output.py": "2eb2e3649e4eb1a1bb783c17a97188d1247eee3f4c33bbe5c4d949fd36935168",
+    "tools/tests/test_p0_switch.py": "45e768fccbfacc0557fcd9708eafb4f62b5dd3eed26ef3b3f5bd640205abdba3",
+    "tools/tests/test_p0_switch_audio.py": "21954c23f973a933a48e707caa674a3813b239523d6d55aad580ba5df7255e9e",
+    "tools/tests/test_p0_transport.py": "b87d8fdaa47e6e58ee97aa861a65c618f3a4bc13ea1b11b9a9ea2641630a7882",
+    "tools/tests/test_p0_vorbis_tail.py": "8cfba700623ad5347470837ee3a9321cb6b5f9f357c487694b1e606b1bc3c080",
+    "tools/tests/test_p0_vulkan_memory.py": "fc6f704b72fddf47b9daf2f1fdbb10c89ecf2638d2dae72e686a0177b1f42a6f",
+    "tools/tests/test_p0_workload.py": "4631a75382d892272f546f2a7983384b7ce20c25022ab280c9dafe444808151a"
+  },
+  "changed_sources_from_prior": [
+    "experiments/p0-egui/Cargo.toml",
+    "experiments/p0-egui/src/windows_audio.rs",
+    "experiments/p0-egui/src/bin/format-device-proof.rs",
+    "experiments/p0-wasapi/src/lib.rs",
+    "experiments/p0-wasapi/src/platform.rs",
+    "tools/check_p0_audio_adaptation.py",
+    "tools/tests/test_p0_audio_adaptation.py"
+  ],
+  "executable_sha256": "bb0edc3c66b2f05f16000c01aa11036ff1458d40ba7c0fa47a26aa50a6597e07",
+  "summary": {
+    "path": "artifacts/p0/audio-adaptation-summary-d8125101.json",
+    "bytes": 19507,
+    "sha256": "42c52a61ee46f11d6edc43f27618b07d173143a0d548a21fd2921cfb6447a92a"
+  },
+  "fixture_manifest": {
+    "path": "artifacts/p0/audio-adaptation-fixture-v1/manifest.json",
+    "bytes": 8321,
+    "sha256": "8f2c52c472263f74bcae9c8ab2d1ffcfef2a08621c6288d9f2e8fbb815479e4a"
+  },
+  "reference_proofs": [
+    {
+      "name": "48000-2-wav",
+      "source": "48000-2.wav",
+      "source_sha256": "1901ba8688bc5b775800389d68d339d25c0b08baf1ada672d3e0a571cce464e9",
+      "rate": 48000,
+      "channels": 2,
+      "frames": 5760000,
+      "reference": "artifacts/p0/adaptation-pull-c61780a5/decoded.f32",
+      "reference_sha256": "836870d283ac697c8c64bfb76d0ea446342ae06eea76c0efa2b3344324473c65",
+      "independent_reference": "48000-2.reference.f32",
+      "independent_reference_sha256": "836870d283ac697c8c64bfb76d0ea446342ae06eea76c0efa2b3344324473c65",
+      "full_comparison": {
+        "frames": 5760000,
+        "samples": 11520000,
+        "max_error": 0.0,
+        "tolerance": 1e-05
+      },
+      "pull_result": "artifacts/p0/adaptation-pull-c61780a5/result.json",
+      "pull_result_sha256": "9e8188cb44a09f55efd1e7ca20bedb86d813d06dc072dba840d120c9ff55a414"
+    },
+    {
+      "name": "44100-1-wav",
+      "source": "44100-1.wav",
+      "source_sha256": "5c23468334df51e68a92d3cef77a1beae2648edf1865e162c11974097453b539",
+      "rate": 44100,
+      "channels": 1,
+      "frames": 5292000,
+      "reference": "artifacts/p0/adaptation-pull-12c96a63/decoded.f32",
+      "reference_sha256": "cd26f75f0dcfe1134e47b6ebab2ffde9eb18746aad45e55b677b6a64e8fccb5e",
+      "independent_reference": "44100-1.reference.f32",
+      "independent_reference_sha256": "cd26f75f0dcfe1134e47b6ebab2ffde9eb18746aad45e55b677b6a64e8fccb5e",
+      "full_comparison": {
+        "frames": 5292000,
+        "samples": 5292000,
+        "max_error": 0.0,
+        "tolerance": 1e-05
+      },
+      "pull_result": "artifacts/p0/adaptation-pull-12c96a63/result.json",
+      "pull_result_sha256": "b7f093d186926a68a6adaf597ef372769c85623c95323499107b7879d82cca2c"
+    },
+    {
+      "name": "32000-2-wav",
+      "source": "32000-2.wav",
+      "source_sha256": "d634d195d503565b613d1b8cfee9cfb6b9543ac204440076fea08369e6de781b",
+      "rate": 32000,
+      "channels": 2,
+      "frames": 3840000,
+      "reference": "artifacts/p0/adaptation-pull-88cfbd85/decoded.f32",
+      "reference_sha256": "6791b662cd4c70791b6770e67f4d7d35538728f36350a059b8da85634841ca70",
+      "independent_reference": "32000-2.reference.f32",
+      "independent_reference_sha256": "6791b662cd4c70791b6770e67f4d7d35538728f36350a059b8da85634841ca70",
+      "full_comparison": {
+        "frames": 3840000,
+        "samples": 7680000,
+        "max_error": 0.0,
+        "tolerance": 1e-05
+      },
+      "pull_result": "artifacts/p0/adaptation-pull-88cfbd85/result.json",
+      "pull_result_sha256": "818fbd1cd195a18e28bdcbc9cff357f5d4b4540e7bfcfa3aaca0c461e39dc8cc"
+    },
+    {
+      "name": "96000-2-wav",
+      "source": "96000-2.wav",
+      "source_sha256": "67af047cab2d842d9f1354b841a76ae5d29a4922c705209e466dc2e8064683d9",
+      "rate": 96000,
+      "channels": 2,
+      "frames": 11520000,
+      "reference": "artifacts/p0/adaptation-pull-75145b48/decoded.f32",
+      "reference_sha256": "07efe60fb93a501b84164302dca3b672b4263215218710b6fc6690525d62cdf8",
+      "independent_reference": "96000-2.reference.f32",
+      "independent_reference_sha256": "07efe60fb93a501b84164302dca3b672b4263215218710b6fc6690525d62cdf8",
+      "full_comparison": {
+        "frames": 11520000,
+        "samples": 23040000,
+        "max_error": 0.0,
+        "tolerance": 1e-05
+      },
+      "pull_result": "artifacts/p0/adaptation-pull-75145b48/result.json",
+      "pull_result_sha256": "0e8986be86f2c3caa37560e3f1f5d2fd6dc441546b76b3570a4a4ccf0d505a73"
+    },
+    {
+      "name": "48000-1-wav",
+      "source": "48000-1.wav",
+      "source_sha256": "4255ac2b63e1463ec6caedbb452774186a4b1ac2fbebd898a1e978b2fd343f28",
+      "rate": 48000,
+      "channels": 1,
+      "frames": 5760000,
+      "reference": "artifacts/p0/adaptation-pull-4ac1e9ee/decoded.f32",
+      "reference_sha256": "b7c70c0f94110e65e60b773a244f6c93fd4bc0f58ee94bd3cebd4b64251060b8",
+      "independent_reference": "48000-1.reference.f32",
+      "independent_reference_sha256": "b7c70c0f94110e65e60b773a244f6c93fd4bc0f58ee94bd3cebd4b64251060b8",
+      "full_comparison": {
+        "frames": 5760000,
+        "samples": 5760000,
+        "max_error": 0.0,
+        "tolerance": 1e-05
+      },
+      "pull_result": "artifacts/p0/adaptation-pull-4ac1e9ee/result.json",
+      "pull_result_sha256": "8383f0adab8c82cd7211d95b8cb13fb1fc98a0e7fac59e79ec655a71e254819f"
+    },
+    {
+      "name": "44100-1-mp3",
+      "source": "44100-1.mp3",
+      "source_sha256": "1342e5b368ed5e75c3c6a7dac0122f7fcd748c6e281a64cd5ed95f8b09c4be65",
+      "rate": 44100,
+      "channels": 1,
+      "frames": 5292000,
+      "reference": "artifacts/p0/adaptation-pull-14e3ca0b/decoded.f32",
+      "reference_sha256": "abebd6adaec9fa79577678a8bef92a745eec0cd3f46cb2de82ba947eb83784b2",
+      "independent_reference": "44100-1.mp3.reference.f32",
+      "independent_reference_sha256": "b5fdd62f29fd9d0c86aad29fbb238c2ace8cdb870adf133745ea9229ff8cafeb",
+      "full_comparison": {
+        "frames": 5292000,
+        "samples": 5292000,
+        "max_error": 8.344650268554688e-07,
+        "tolerance": 1e-05
+      },
+      "pull_result": "artifacts/p0/adaptation-pull-14e3ca0b/result.json",
+      "pull_result_sha256": "bd58e74cddaeb23cd24b4c3a8f8ffe0367483c9a5800596d70e591f6dba780de"
+    },
+    {
+      "name": "44100-1-ogg",
+      "source": "44100-1.ogg",
+      "source_sha256": "bac0d443530283ffc62b89be6e2927b2006825e7ac29b59517622cffb172d380",
+      "rate": 44100,
+      "channels": 1,
+      "frames": 5292000,
+      "reference": "artifacts/p0/adaptation-pull-bed540e9/decoded.f32",
+      "reference_sha256": "266eeb39750ea9a5decfc9217c8bbf99e62533dbcb24cc94ce7f673371571b87",
+      "independent_reference": "44100-1.ogg.reference.f32",
+      "independent_reference_sha256": "b3bacc89894f5efd1db07a02f39d98dd4a0f60ac5efeff396d35b4d6aa9dcb58",
+      "full_comparison": {
+        "frames": 5292000,
+        "samples": 5292000,
+        "max_error": 1.4901161193847656e-07,
+        "tolerance": 1e-05
+      },
+      "pull_result": "artifacts/p0/adaptation-pull-bed540e9/result.json",
+      "pull_result_sha256": "07676cce35a6cefa52ef93e2708071bcca8c37de73c0a100497b630321657bf1"
+    }
+  ],
+  "runs": [
+    {
+      "repeat": 0,
+      "case": "48000-2-wav",
+      "convert": false,
+      "directory": "artifacts/p0/audio-adaptation-ecba683e",
+      "checks": {
+        "accepted_packets": 730,
+        "stale_events": 1,
+        "retirements": 3,
+        "pauses": 3
+      },
+      "budgets": {
+        "PausedIdle": true,
+        "ClosedIdle": true,
+        "sampled_working_set_le_512_mib": true
+      },
+      "result": {
+        "path": "artifacts/p0/audio-adaptation-ecba683e/result.json",
+        "bytes": 1218857,
+        "sha256": "50a271b7ae16efc2f8cfa7b430dc937fb9853bec085f3ef2b238d5548086f844"
+      },
+      "evidence": {
+        "path": "artifacts/p0/audio-adaptation-ecba683e/evidence.json",
+        "bytes": 442913,
+        "sha256": "11ad2840524bb9ebf764dfc8a66b099122c5306dc0148c54a610b5e29ff64586"
+      },
+      "packets": {
+        "path": "artifacts/p0/audio-adaptation-ecba683e/packets.jsonl",
+        "bytes": 298144,
+        "sha256": "6a24d8e060914adb1f4bb1673cbe5bbfd833e031922478be8bee1f220656b398"
+      },
+      "source_format": {
+        "channels": 2,
+        "frames": 5760000,
+        "gain": 0.002,
+        "rate": 48000
+      },
+      "final_stats": {
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 91136,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "native_discarded_frames": 13920,
+        "origin_frame": 132573,
+        "packets": 0,
+        "queued_blocks": 0,
+        "queued_frames": 0,
+        "stale_blocks": 1,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "checkpoints": [
+        {
+          "epoch": 0,
+          "name": "continuous",
+          "simulation_us": 8005270,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 0,
+            "free_blocks": 1,
+            "generation": 1,
+            "in_flight": false,
+            "native_discarded_frames": 0,
+            "origin_frame": 0,
+            "packets": 575,
+            "queued_blocks": 4,
+            "queued_frames": 15744,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "pause_with_old_inflight",
+          "simulation_us": 8100000,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11904,
+            "free_blocks": 4,
+            "generation": 2,
+            "in_flight": true,
+            "native_discarded_frames": 4800,
+            "origin_frame": 388800,
+            "packets": 0,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "old_block_rejected",
+          "simulation_us": 8100000,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11904,
+            "free_blocks": 1,
+            "generation": 2,
+            "in_flight": false,
+            "native_discarded_frames": 4800,
+            "origin_frame": 388800,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "seek_paused",
+          "simulation_us": 1234567,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 43584,
+            "free_blocks": 1,
+            "generation": 5,
+            "in_flight": false,
+            "native_discarded_frames": 9120,
+            "origin_frame": 59259,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "fault_frozen",
+          "simulation_us": 1741942,
+          "stats": {
+            "active": false,
+            "decode_failures": 0,
+            "discarded_frames": 58880,
+            "free_blocks": 5,
+            "generation": 6,
+            "in_flight": false,
+            "native_discarded_frames": 9120,
+            "origin_frame": 59259,
+            "packets": 37,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "recovered_paused",
+          "simulation_us": 1741942,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 58880,
+            "free_blocks": 1,
+            "generation": 7,
+            "in_flight": false,
+            "native_discarded_frames": 9120,
+            "origin_frame": 83613,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "final_pause",
+          "simulation_us": 2761942,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 74752,
+            "free_blocks": 1,
+            "generation": 8,
+            "in_flight": false,
+            "native_discarded_frames": 13920,
+            "origin_frame": 132573,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        }
+      ],
+      "latencies": [
+        {
+          "kind": "play_ready",
+          "ms": 10.5642
+        },
+        {
+          "kind": "pause",
+          "ms": 10.732800000000001
+        },
+        {
+          "kind": "play_ready",
+          "ms": 11.0028
+        },
+        {
+          "kind": "pause",
+          "ms": 10.905
+        },
+        {
+          "kind": "play_ready",
+          "ms": 11.0297
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.5107
+        },
+        {
+          "kind": "pause",
+          "ms": 10.720500000000001
+        }
+      ],
+      "phases": [
+        {
+          "phase": "Playing",
+          "sample_count": 65,
+          "sample_span_seconds": 6.905999999988126,
+          "cpu_one_logical_core_percent": 0.22625253402877013,
+          "working_set_bytes_max": 9297920,
+          "working_set_bytes_last": 9297920,
+          "private_bytes_max": 4620288,
+          "private_bytes_last": 4620288,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "Transitions",
+          "sample_count": 25,
+          "sample_span_seconds": 2.577999999994063,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 9945088,
+          "working_set_bytes_last": 9945088,
+          "private_bytes_max": 5152768,
+          "private_bytes_last": 5152768,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "PausedIdle",
+          "sample_count": 591,
+          "sample_span_seconds": 63.921999999991385,
+          "cpu_one_logical_core_percent": 0.07333156033917324,
+          "working_set_bytes_max": 21323776,
+          "working_set_bytes_last": 21323776,
+          "private_bytes_max": 16863232,
+          "private_bytes_last": 16863232,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "ClosedIdle",
+          "sample_count": 591,
+          "sample_span_seconds": 63.85899999999674,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 21176320,
+          "working_set_bytes_last": 21164032,
+          "private_bytes_max": 16691200,
+          "private_bytes_last": 16662528,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        }
+      ],
+      "format_observations": [
+        "{\"buffer_frames\": 4800, \"channels\": 2, \"clock_frequency\": 384000, \"conversion_enabled\": false, \"mix_channels\": 2, \"mix_rate\": 48000, \"rate\": 48000}"
+      ],
+      "first_playing_clock_span": {
+        "wall_seconds": 8.0779647,
+        "device_seconds": 8.0665,
+        "ratio": 0.9985807439836917
+      },
+      "manual_device_change": false,
+      "device_change_observed": false,
+      "fault": {
+        "code": null,
+        "operation": "explicit stream invalidation"
+      },
+      "normal_sampled_peaks": {
+        "working_set_bytes": 21323776,
+        "private_bytes": 16863232
+      },
+      "historical_peak_counters": {
+        "peak_working_set_bytes": 21327872,
+        "peak_commit_bytes": 16863232
+      }
+    },
+    {
+      "repeat": 0,
+      "case": "48000-2-wav",
+      "convert": true,
+      "directory": "artifacts/p0/audio-adaptation-3ceb8894",
+      "checks": {
+        "accepted_packets": 692,
+        "stale_events": 1,
+        "retirements": 3,
+        "pauses": 3
+      },
+      "budgets": null,
+      "result": {
+        "path": "artifacts/p0/audio-adaptation-3ceb8894/result.json",
+        "bytes": 239347,
+        "sha256": "b3d1374bc67c30859ff6510d93fb296b8db139df0a25565ce3f717747c8454bc"
+      },
+      "evidence": {
+        "path": "artifacts/p0/audio-adaptation-3ceb8894/evidence.json",
+        "bytes": 58561,
+        "sha256": "57f3af83ca794aeb1c0c947fe91cdcd46531db65f97b7ee082e820d0ea2f50aa"
+      },
+      "packets": {
+        "path": "artifacts/p0/audio-adaptation-3ceb8894/packets.jsonl",
+        "bytes": 283286,
+        "sha256": "f3903c8c1d2112f5a3b4d6a7b23ef856172a6191d66ae385469a3c2fc1ce69dd"
+      },
+      "source_format": {
+        "channels": 2,
+        "frames": 5760000,
+        "gain": 0.002,
+        "rate": 48000
+      },
+      "final_stats": {
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 90656,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "native_discarded_frames": 13440,
+        "origin_frame": 133417,
+        "packets": 0,
+        "queued_blocks": 0,
+        "queued_frames": 0,
+        "stale_blocks": 1,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "checkpoints": [
+        {
+          "epoch": 0,
+          "name": "continuous",
+          "simulation_us": 8005020,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 0,
+            "free_blocks": 1,
+            "generation": 1,
+            "in_flight": false,
+            "native_discarded_frames": 0,
+            "origin_frame": 0,
+            "packets": 547,
+            "queued_blocks": 4,
+            "queued_frames": 15744,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "pause_with_old_inflight",
+          "simulation_us": 8110000,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11904,
+            "free_blocks": 4,
+            "generation": 2,
+            "in_flight": true,
+            "native_discarded_frames": 4320,
+            "origin_frame": 389280,
+            "packets": 0,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "old_block_rejected",
+          "simulation_us": 8110000,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11904,
+            "free_blocks": 1,
+            "generation": 2,
+            "in_flight": false,
+            "native_discarded_frames": 4320,
+            "origin_frame": 389280,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "seek_paused",
+          "simulation_us": 1234567,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 43584,
+            "free_blocks": 1,
+            "generation": 5,
+            "in_flight": false,
+            "native_discarded_frames": 9120,
+            "origin_frame": 59259,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "fault_frozen",
+          "simulation_us": 1749525,
+          "stats": {
+            "active": false,
+            "decode_failures": 0,
+            "discarded_frames": 58400,
+            "free_blocks": 5,
+            "generation": 6,
+            "in_flight": false,
+            "native_discarded_frames": 9120,
+            "origin_frame": 59259,
+            "packets": 35,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "recovered_paused",
+          "simulation_us": 1749525,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 58400,
+            "free_blocks": 1,
+            "generation": 7,
+            "in_flight": false,
+            "native_discarded_frames": 9120,
+            "origin_frame": 83977,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "final_pause",
+          "simulation_us": 2779525,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 74272,
+            "free_blocks": 1,
+            "generation": 8,
+            "in_flight": false,
+            "native_discarded_frames": 13440,
+            "origin_frame": 133417,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        }
+      ],
+      "latencies": [
+        {
+          "kind": "play_ready",
+          "ms": 10.4115
+        },
+        {
+          "kind": "pause",
+          "ms": 10.1945
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.1171
+        },
+        {
+          "kind": "pause",
+          "ms": 11.050799999999999
+        },
+        {
+          "kind": "play_ready",
+          "ms": 11.0504
+        },
+        {
+          "kind": "play_ready",
+          "ms": 11.0421
+        },
+        {
+          "kind": "pause",
+          "ms": 10.9884
+        }
+      ],
+      "phases": [
+        {
+          "phase": "Playing",
+          "sample_count": 64,
+          "sample_span_seconds": 6.812999999994645,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 9342976,
+          "working_set_bytes_last": 9342976,
+          "private_bytes_max": 4653056,
+          "private_bytes_last": 4653056,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "Transitions",
+          "sample_count": 26,
+          "sample_span_seconds": 2.7339999999967404,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 9998336,
+          "working_set_bytes_last": 9998336,
+          "private_bytes_max": 5189632,
+          "private_bytes_last": 5189632,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "PausedIdle",
+          "sample_count": 19,
+          "sample_span_seconds": 1.9529999999940628,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11550720,
+          "working_set_bytes_last": 11550720,
+          "private_bytes_max": 6766592,
+          "private_bytes_last": 6766592,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "ClosedIdle",
+          "sample_count": 17,
+          "sample_span_seconds": 1.764999999999418,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11403264,
+          "working_set_bytes_last": 11403264,
+          "private_bytes_max": 6590464,
+          "private_bytes_last": 6590464,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        }
+      ],
+      "format_observations": [
+        "{\"buffer_frames\": 4800, \"channels\": 2, \"clock_frequency\": 384000, \"conversion_enabled\": true, \"mix_channels\": 2, \"mix_rate\": 48000, \"rate\": 48000}"
+      ],
+      "first_playing_clock_span": {
+        "wall_seconds": 8.0819453,
+        "device_seconds": 8.073479,
+        "ratio": 0.9989524427986417
+      },
+      "manual_device_change": false,
+      "device_change_observed": false,
+      "fault": {
+        "code": null,
+        "operation": "explicit stream invalidation"
+      },
+      "normal_sampled_peaks": {
+        "working_set_bytes": 11550720,
+        "private_bytes": 6766592
+      },
+      "historical_peak_counters": {
+        "peak_working_set_bytes": 11554816,
+        "peak_commit_bytes": 6766592
+      }
+    },
+    {
+      "repeat": 0,
+      "case": "44100-1-wav",
+      "convert": true,
+      "directory": "artifacts/p0/audio-adaptation-023b8838",
+      "checks": {
+        "accepted_packets": 699,
+        "stale_events": 1,
+        "retirements": 3,
+        "pauses": 3
+      },
+      "budgets": {
+        "PausedIdle": true,
+        "ClosedIdle": true,
+        "sampled_working_set_le_512_mib": true
+      },
+      "result": {
+        "path": "artifacts/p0/audio-adaptation-023b8838/result.json",
+        "bytes": 1213189,
+        "sha256": "d508dba2816123fe8f369122f3a53e9f0e895639ff6ced3daba75d44438fe25a"
+      },
+      "evidence": {
+        "path": "artifacts/p0/audio-adaptation-023b8838/evidence.json",
+        "bytes": 443036,
+        "sha256": "d65230734a4fc5e147c1c657fbd3fc9f7c3538d79579dce60bf468357c58879e"
+      },
+      "packets": {
+        "path": "artifacts/p0/audio-adaptation-023b8838/packets.jsonl",
+        "bytes": 288515,
+        "sha256": "42e5e3f61ed9220ad3b707a01c24b5526d1b35dece8c744155a4e9ef5deb42f7"
+      },
+      "source_format": {
+        "channels": 1,
+        "frames": 5292000,
+        "gain": 0.002,
+        "rate": 44100
+      },
+      "final_stats": {
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 88113,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "native_discarded_frames": 12790,
+        "origin_frame": 121598,
+        "packets": 0,
+        "queued_blocks": 0,
+        "queued_frames": 0,
+        "stale_blocks": 1,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "checkpoints": [
+        {
+          "epoch": 0,
+          "name": "continuous",
+          "simulation_us": 8004036,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 0,
+            "free_blocks": 1,
+            "generation": 1,
+            "in_flight": false,
+            "native_discarded_frames": 0,
+            "origin_frame": 0,
+            "packets": 547,
+            "queued_blocks": 4,
+            "queued_frames": 14611,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "pause_with_old_inflight",
+          "simulation_us": 8090748,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11965,
+            "free_blocks": 4,
+            "generation": 2,
+            "in_flight": true,
+            "native_discarded_frames": 3970,
+            "origin_frame": 356801,
+            "packets": 0,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "old_block_rejected",
+          "simulation_us": 8090748,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11965,
+            "free_blocks": 1,
+            "generation": 2,
+            "in_flight": false,
+            "native_discarded_frames": 3970,
+            "origin_frame": 356801,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "seek_paused",
+          "simulation_us": 1234567,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 41967,
+            "free_blocks": 1,
+            "generation": 5,
+            "in_flight": false,
+            "native_discarded_frames": 8380,
+            "origin_frame": 54444,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "fault_frozen",
+          "simulation_us": 1737333,
+          "stats": {
+            "active": false,
+            "decode_failures": 0,
+            "discarded_frames": 55585,
+            "free_blocks": 5,
+            "generation": 6,
+            "in_flight": false,
+            "native_discarded_frames": 8380,
+            "origin_frame": 54444,
+            "packets": 36,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "recovered_paused",
+          "simulation_us": 1737333,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 55585,
+            "free_blocks": 1,
+            "generation": 7,
+            "in_flight": false,
+            "native_discarded_frames": 8380,
+            "origin_frame": 76616,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "final_pause",
+          "simulation_us": 2757333,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 71729,
+            "free_blocks": 1,
+            "generation": 8,
+            "in_flight": false,
+            "native_discarded_frames": 12790,
+            "origin_frame": 121598,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        }
+      ],
+      "latencies": [
+        {
+          "kind": "play_ready",
+          "ms": 10.7614
+        },
+        {
+          "kind": "pause",
+          "ms": 10.9923
+        },
+        {
+          "kind": "play_ready",
+          "ms": 11.0113
+        },
+        {
+          "kind": "pause",
+          "ms": 10.335799999999999
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.9964
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.5518
+        },
+        {
+          "kind": "pause",
+          "ms": 10.3193
+        }
+      ],
+      "phases": [
+        {
+          "phase": "Playing",
+          "sample_count": 64,
+          "sample_span_seconds": 6.8439999999973224,
+          "cpu_one_logical_core_percent": 0.2283021624781723,
+          "working_set_bytes_max": 9207808,
+          "working_set_bytes_last": 9207808,
+          "private_bytes_max": 4542464,
+          "private_bytes_last": 4542464,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "Transitions",
+          "sample_count": 25,
+          "sample_span_seconds": 2.6090000000112923,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 9793536,
+          "working_set_bytes_last": 9793536,
+          "private_bytes_max": 5005312,
+          "private_bytes_last": 5005312,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "PausedIdle",
+          "sample_count": 590,
+          "sample_span_seconds": 64.0,
+          "cpu_one_logical_core_percent": 0.1220703125,
+          "working_set_bytes_max": 21311488,
+          "working_set_bytes_last": 21311488,
+          "private_bytes_max": 16887808,
+          "private_bytes_last": 16887808,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "ClosedIdle",
+          "sample_count": 593,
+          "sample_span_seconds": 63.796999999991385,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 21245952,
+          "working_set_bytes_last": 21229568,
+          "private_bytes_max": 16752640,
+          "private_bytes_last": 16723968,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        }
+      ],
+      "format_observations": [
+        "{\"buffer_frames\": 4410, \"channels\": 1, \"clock_frequency\": 176400, \"conversion_enabled\": true, \"mix_channels\": 2, \"mix_rate\": 48000, \"rate\": 44100}"
+      ],
+      "first_playing_clock_span": {
+        "wall_seconds": 8.0543692,
+        "device_seconds": 8.047461,
+        "ratio": 0.9991423040304633
+      },
+      "manual_device_change": false,
+      "device_change_observed": false,
+      "fault": {
+        "code": null,
+        "operation": "explicit stream invalidation"
+      },
+      "normal_sampled_peaks": {
+        "working_set_bytes": 21311488,
+        "private_bytes": 16887808
+      },
+      "historical_peak_counters": {
+        "peak_working_set_bytes": 21356544,
+        "peak_commit_bytes": 16908288
+      }
+    },
+    {
+      "repeat": 0,
+      "case": "32000-2-wav",
+      "convert": true,
+      "directory": "artifacts/p0/audio-adaptation-a5b32cae",
+      "checks": {
+        "accepted_packets": 680,
+        "stale_events": 1,
+        "retirements": 3,
+        "pauses": 3
+      },
+      "budgets": null,
+      "result": {
+        "path": "artifacts/p0/audio-adaptation-a5b32cae/result.json",
+        "bytes": 235916,
+        "sha256": "c306ce69a8910e22e99ac83ee128fb6537920265cfb683a5b9fd73564837cb39"
+      },
+      "evidence": {
+        "path": "artifacts/p0/audio-adaptation-a5b32cae/evidence.json",
+        "bytes": 58076,
+        "sha256": "7d70b1144d297ec075300571c7149c4d5ae74eab8e8e37f3be2dc9787f9a9bf6"
+      },
+      "packets": {
+        "path": "artifacts/p0/audio-adaptation-a5b32cae/packets.jsonl",
+        "bytes": 280134,
+        "sha256": "7854d6ae462ecb35e2817431560fe5d4e7e9338bce3b1fc01910b0a97cda5582"
+      },
+      "source_format": {
+        "channels": 2,
+        "frames": 3840000,
+        "gain": 0.002,
+        "rate": 32000
+      },
+      "final_stats": {
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 84255,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "native_discarded_frames": 9281,
+        "origin_frame": 88485,
+        "packets": 0,
+        "queued_blocks": 0,
+        "queued_frames": 0,
+        "stale_blocks": 1,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "checkpoints": [
+        {
+          "epoch": 0,
+          "name": "continuous",
+          "simulation_us": 8003906,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 0,
+            "free_blocks": 1,
+            "generation": 1,
+            "in_flight": false,
+            "native_discarded_frames": 0,
+            "origin_frame": 0,
+            "packets": 534,
+            "queued_blocks": 4,
+            "queued_frames": 14559,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "pause_with_old_inflight",
+          "simulation_us": 8101031,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11999,
+            "free_blocks": 4,
+            "generation": 2,
+            "in_flight": true,
+            "native_discarded_frames": 3201,
+            "origin_frame": 259232,
+            "packets": 0,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "old_block_rejected",
+          "simulation_us": 8101031,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11999,
+            "free_blocks": 1,
+            "generation": 2,
+            "in_flight": false,
+            "native_discarded_frames": 3201,
+            "origin_frame": 259232,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "seek_paused",
+          "simulation_us": 1234567,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 41311,
+            "free_blocks": 1,
+            "generation": 5,
+            "in_flight": false,
+            "native_discarded_frames": 6401,
+            "origin_frame": 39506,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "fault_frozen",
+          "simulation_us": 1735160,
+          "stats": {
+            "active": false,
+            "decode_failures": 0,
+            "discarded_frames": 54559,
+            "free_blocks": 5,
+            "generation": 6,
+            "in_flight": false,
+            "native_discarded_frames": 6401,
+            "origin_frame": 39506,
+            "packets": 35,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "recovered_paused",
+          "simulation_us": 1735160,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 54559,
+            "free_blocks": 1,
+            "generation": 7,
+            "in_flight": false,
+            "native_discarded_frames": 6401,
+            "origin_frame": 55525,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "final_pause",
+          "simulation_us": 2765160,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 67871,
+            "free_blocks": 1,
+            "generation": 8,
+            "in_flight": false,
+            "native_discarded_frames": 9281,
+            "origin_frame": 88485,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        }
+      ],
+      "latencies": [
+        {
+          "kind": "play_ready",
+          "ms": 10.3555
+        },
+        {
+          "kind": "pause",
+          "ms": 11.0426
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.1976
+        },
+        {
+          "kind": "pause",
+          "ms": 10.9734
+        },
+        {
+          "kind": "play_ready",
+          "ms": 11.0391
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.9263
+        },
+        {
+          "kind": "pause",
+          "ms": 11.003300000000001
+        }
+      ],
+      "phases": [
+        {
+          "phase": "Playing",
+          "sample_count": 64,
+          "sample_span_seconds": 6.797000000005937,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 9302016,
+          "working_set_bytes_last": 9302016,
+          "private_bytes_max": 4636672,
+          "private_bytes_last": 4636672,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "Transitions",
+          "sample_count": 26,
+          "sample_span_seconds": 2.7030000000086147,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 9965568,
+          "working_set_bytes_last": 9965568,
+          "private_bytes_max": 5169152,
+          "private_bytes_last": 5169152,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "PausedIdle",
+          "sample_count": 18,
+          "sample_span_seconds": 1.8589999999967404,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11501568,
+          "working_set_bytes_last": 11501568,
+          "private_bytes_max": 6742016,
+          "private_bytes_last": 6742016,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "ClosedIdle",
+          "sample_count": 17,
+          "sample_span_seconds": 1.75,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11378688,
+          "working_set_bytes_last": 11378688,
+          "private_bytes_max": 6578176,
+          "private_bytes_last": 6578176,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        }
+      ],
+      "format_observations": [
+        "{\"buffer_frames\": 3200, \"channels\": 2, \"clock_frequency\": 256000, \"conversion_enabled\": true, \"mix_channels\": 2, \"mix_rate\": 48000, \"rate\": 32000}"
+      ],
+      "first_playing_clock_span": {
+        "wall_seconds": 8.0313915,
+        "device_seconds": 8.032844,
+        "ratio": 1.0001808528447407
+      },
+      "manual_device_change": false,
+      "device_change_observed": false,
+      "fault": {
+        "code": null,
+        "operation": "explicit stream invalidation"
+      },
+      "normal_sampled_peaks": {
+        "working_set_bytes": 11501568,
+        "private_bytes": 6742016
+      },
+      "historical_peak_counters": {
+        "peak_working_set_bytes": 11505664,
+        "peak_commit_bytes": 6742016
+      }
+    },
+    {
+      "repeat": 0,
+      "case": "96000-2-wav",
+      "convert": true,
+      "directory": "artifacts/p0/audio-adaptation-4f910520",
+      "checks": {
+        "accepted_packets": 669,
+        "stale_events": 1,
+        "retirements": 3,
+        "pauses": 3
+      },
+      "budgets": null,
+      "result": {
+        "path": "artifacts/p0/audio-adaptation-4f910520/result.json",
+        "bytes": 236242,
+        "sha256": "c37be2070df4bd0937eb000733f76125ad8645f3825288e844e01b219c28e147"
+      },
+      "evidence": {
+        "path": "artifacts/p0/audio-adaptation-4f910520/evidence.json",
+        "bytes": 57896,
+        "sha256": "119fae03bcab80713e8518cf1d2575a5e495058d218999805ca2410d2e7d2b2f"
+      },
+      "packets": {
+        "path": "artifacts/p0/audio-adaptation-4f910520/packets.jsonl",
+        "bytes": 277254,
+        "sha256": "1527df4912024c97c91028ac3755a5a49a47ee9d9943ffe99e7b61850adea7b2"
+      },
+      "source_format": {
+        "channels": 2,
+        "frames": 11520000,
+        "gain": 0.002,
+        "rate": 96000
+      },
+      "final_stats": {
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 85825,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "native_discarded_frames": 27841,
+        "origin_frame": 266452,
+        "packets": 0,
+        "queued_blocks": 0,
+        "queued_frames": 0,
+        "stale_blocks": 1,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "checkpoints": [
+        {
+          "epoch": 0,
+          "name": "continuous",
+          "simulation_us": 8010083,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 0,
+            "free_blocks": 1,
+            "generation": 1,
+            "in_flight": false,
+            "native_discarded_frames": 0,
+            "origin_frame": 0,
+            "packets": 531,
+            "queued_blocks": 4,
+            "queued_frames": 15041,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "pause_with_old_inflight",
+          "simulation_us": 8060656,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11201,
+            "free_blocks": 4,
+            "generation": 2,
+            "in_flight": true,
+            "native_discarded_frames": 9601,
+            "origin_frame": 773822,
+            "packets": 0,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "old_block_rejected",
+          "simulation_us": 8060656,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11201,
+            "free_blocks": 1,
+            "generation": 2,
+            "in_flight": false,
+            "native_discarded_frames": 9601,
+            "origin_frame": 773822,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "seek_paused",
+          "simulation_us": 1234567,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 41793,
+            "free_blocks": 1,
+            "generation": 5,
+            "in_flight": false,
+            "native_discarded_frames": 18241,
+            "origin_frame": 118518,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "fault_frozen",
+          "simulation_us": 1745546,
+          "stats": {
+            "active": false,
+            "decode_failures": 0,
+            "discarded_frames": 55041,
+            "free_blocks": 5,
+            "generation": 6,
+            "in_flight": false,
+            "native_discarded_frames": 18241,
+            "origin_frame": 118518,
+            "packets": 35,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "recovered_paused",
+          "simulation_us": 1745546,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 55041,
+            "free_blocks": 1,
+            "generation": 7,
+            "in_flight": false,
+            "native_discarded_frames": 18241,
+            "origin_frame": 167572,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "final_pause",
+          "simulation_us": 2775546,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 69441,
+            "free_blocks": 1,
+            "generation": 8,
+            "in_flight": false,
+            "native_discarded_frames": 27841,
+            "origin_frame": 266452,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        }
+      ],
+      "latencies": [
+        {
+          "kind": "play_ready",
+          "ms": 10.280299999999999
+        },
+        {
+          "kind": "pause",
+          "ms": 10.850200000000001
+        },
+        {
+          "kind": "play_ready",
+          "ms": 11.192499999999999
+        },
+        {
+          "kind": "pause",
+          "ms": 11.0395
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.6917
+        },
+        {
+          "kind": "play_ready",
+          "ms": 11.059899999999999
+        },
+        {
+          "kind": "pause",
+          "ms": 11.0079
+        }
+      ],
+      "phases": [
+        {
+          "phase": "Playing",
+          "sample_count": 63,
+          "sample_span_seconds": 6.764999999999418,
+          "cpu_one_logical_core_percent": 0.23096821877311668,
+          "working_set_bytes_max": 9494528,
+          "working_set_bytes_last": 9494528,
+          "private_bytes_max": 4775936,
+          "private_bytes_last": 4775936,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "Transitions",
+          "sample_count": 26,
+          "sample_span_seconds": 2.735000000000582,
+          "cpu_one_logical_core_percent": 0.571297989030957,
+          "working_set_bytes_max": 10121216,
+          "working_set_bytes_last": 10121216,
+          "private_bytes_max": 5267456,
+          "private_bytes_last": 5267456,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "PausedIdle",
+          "sample_count": 18,
+          "sample_span_seconds": 1.8589999999967404,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11489280,
+          "working_set_bytes_last": 11489280,
+          "private_bytes_max": 6737920,
+          "private_bytes_last": 6737920,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "ClosedIdle",
+          "sample_count": 17,
+          "sample_span_seconds": 1.75,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11423744,
+          "working_set_bytes_last": 11423744,
+          "private_bytes_max": 6602752,
+          "private_bytes_last": 6602752,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        }
+      ],
+      "format_observations": [
+        "{\"buffer_frames\": 9600, \"channels\": 2, \"clock_frequency\": 768000, \"conversion_enabled\": true, \"mix_channels\": 2, \"mix_rate\": 48000, \"rate\": 96000}"
+      ],
+      "first_playing_clock_span": {
+        "wall_seconds": 8.0046636,
+        "device_seconds": 8.010083,
+        "ratio": 1.0006770303251717
+      },
+      "manual_device_change": false,
+      "device_change_observed": false,
+      "fault": {
+        "code": null,
+        "operation": "explicit stream invalidation"
+      },
+      "normal_sampled_peaks": {
+        "working_set_bytes": 11489280,
+        "private_bytes": 6737920
+      },
+      "historical_peak_counters": {
+        "peak_working_set_bytes": 11649024,
+        "peak_commit_bytes": 6815744
+      }
+    },
+    {
+      "repeat": 0,
+      "case": "48000-1-wav",
+      "convert": true,
+      "directory": "artifacts/p0/audio-adaptation-8d611226",
+      "checks": {
+        "accepted_packets": 815,
+        "stale_events": 1,
+        "retirements": 3,
+        "pauses": 3
+      },
+      "budgets": null,
+      "result": {
+        "path": "artifacts/p0/audio-adaptation-8d611226/result.json",
+        "bytes": 242229,
+        "sha256": "8f8ec4fe7459a5c066290386e401248bbf6026ab51b6979df62c4b5c05ee5064"
+      },
+      "evidence": {
+        "path": "artifacts/p0/audio-adaptation-8d611226/evidence.json",
+        "bytes": 59725,
+        "sha256": "5ec033048d4b5e3fca5f9c561a70fac0941be8d21644dcb9a566fc6d2e05692d"
+      },
+      "packets": {
+        "path": "artifacts/p0/audio-adaptation-8d611226/packets.jsonl",
+        "bytes": 333062,
+        "sha256": "c0bc116bde6221d9371ee4a0f890a349cb76b0f1ab01b2d46f09ed665acc67e7"
+      },
+      "source_format": {
+        "channels": 1,
+        "frames": 5760000,
+        "gain": 0.002,
+        "rate": 48000
+      },
+      "final_stats": {
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 90656,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "native_discarded_frames": 14400,
+        "origin_frame": 132996,
+        "packets": 0,
+        "queued_blocks": 0,
+        "queued_frames": 0,
+        "stale_blocks": 1,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "checkpoints": [
+        {
+          "epoch": 0,
+          "name": "continuous",
+          "simulation_us": 8015020,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 0,
+            "free_blocks": 1,
+            "generation": 1,
+            "in_flight": false,
+            "native_discarded_frames": 0,
+            "origin_frame": 0,
+            "packets": 636,
+            "queued_blocks": 4,
+            "queued_frames": 15264,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "pause_with_old_inflight",
+          "simulation_us": 8100000,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11904,
+            "free_blocks": 4,
+            "generation": 2,
+            "in_flight": true,
+            "native_discarded_frames": 4800,
+            "origin_frame": 388800,
+            "packets": 0,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "old_block_rejected",
+          "simulation_us": 8100000,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11904,
+            "free_blocks": 1,
+            "generation": 2,
+            "in_flight": false,
+            "native_discarded_frames": 4800,
+            "origin_frame": 388800,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "seek_paused",
+          "simulation_us": 1234567,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 43584,
+            "free_blocks": 1,
+            "generation": 5,
+            "in_flight": false,
+            "native_discarded_frames": 9600,
+            "origin_frame": 59259,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "fault_frozen",
+          "simulation_us": 1740754,
+          "stats": {
+            "active": false,
+            "decode_failures": 0,
+            "discarded_frames": 58880,
+            "free_blocks": 5,
+            "generation": 6,
+            "in_flight": false,
+            "native_discarded_frames": 9600,
+            "origin_frame": 59259,
+            "packets": 37,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "recovered_paused",
+          "simulation_us": 1740754,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 58880,
+            "free_blocks": 1,
+            "generation": 7,
+            "in_flight": false,
+            "native_discarded_frames": 9600,
+            "origin_frame": 83556,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "final_pause",
+          "simulation_us": 2770754,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 74272,
+            "free_blocks": 1,
+            "generation": 8,
+            "in_flight": false,
+            "native_discarded_frames": 14400,
+            "origin_frame": 132996,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        }
+      ],
+      "latencies": [
+        {
+          "kind": "play_ready",
+          "ms": 10.8208
+        },
+        {
+          "kind": "pause",
+          "ms": 10.2895
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.770399999999999
+        },
+        {
+          "kind": "pause",
+          "ms": 10.1777
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.7293
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.5678
+        },
+        {
+          "kind": "pause",
+          "ms": 10.1459
+        }
+      ],
+      "phases": [
+        {
+          "phase": "Playing",
+          "sample_count": 67,
+          "sample_span_seconds": 6.9689999999973224,
+          "cpu_one_logical_core_percent": 0.4484144066582294,
+          "working_set_bytes_max": 9195520,
+          "working_set_bytes_last": 9195520,
+          "private_bytes_max": 4538368,
+          "private_bytes_last": 4538368,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "Transitions",
+          "sample_count": 27,
+          "sample_span_seconds": 2.75,
+          "cpu_one_logical_core_percent": 0.5681818181818182,
+          "working_set_bytes_max": 9814016,
+          "working_set_bytes_last": 9814016,
+          "private_bytes_max": 5021696,
+          "private_bytes_last": 5021696,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "PausedIdle",
+          "sample_count": 19,
+          "sample_span_seconds": 1.9689999999973224,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11288576,
+          "working_set_bytes_last": 11288576,
+          "private_bytes_max": 6545408,
+          "private_bytes_last": 6545408,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "ClosedIdle",
+          "sample_count": 17,
+          "sample_span_seconds": 1.735000000000582,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11223040,
+          "working_set_bytes_last": 11223040,
+          "private_bytes_max": 6410240,
+          "private_bytes_last": 6410240,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        }
+      ],
+      "format_observations": [
+        "{\"buffer_frames\": 4800, \"channels\": 1, \"clock_frequency\": 192000, \"conversion_enabled\": true, \"mix_channels\": 2, \"mix_rate\": 48000, \"rate\": 48000}"
+      ],
+      "first_playing_clock_span": {
+        "wall_seconds": 8.047115100000001,
+        "device_seconds": 8.044709,
+        "ratio": 0.9997009984360729
+      },
+      "manual_device_change": false,
+      "device_change_observed": false,
+      "fault": {
+        "code": null,
+        "operation": "explicit stream invalidation"
+      },
+      "normal_sampled_peaks": {
+        "working_set_bytes": 11288576,
+        "private_bytes": 6545408
+      },
+      "historical_peak_counters": {
+        "peak_working_set_bytes": 11333632,
+        "peak_commit_bytes": 6565888
+      }
+    },
+    {
+      "repeat": 0,
+      "case": "44100-1-mp3",
+      "convert": true,
+      "directory": "artifacts/p0/audio-adaptation-d89c28da",
+      "checks": {
+        "accepted_packets": 810,
+        "stale_events": 1,
+        "retirements": 3,
+        "pauses": 3
+      },
+      "budgets": null,
+      "result": {
+        "path": "artifacts/p0/audio-adaptation-d89c28da/result.json",
+        "bytes": 246893,
+        "sha256": "9fcd843a453d2596384b7be1476e9867e764b3cc4dfdcae6b43e86d0e30af641"
+      },
+      "evidence": {
+        "path": "artifacts/p0/audio-adaptation-d89c28da/evidence.json",
+        "bytes": 58686,
+        "sha256": "352893b685eb9b9ec9f0173afde008ae485770a32bb0d0d40740f08410deb7ed"
+      },
+      "packets": {
+        "path": "artifacts/p0/audio-adaptation-d89c28da/packets.jsonl",
+        "bytes": 334769,
+        "sha256": "b34fee75bb92c531b794fd995eaeb2b437d9e2441f4468680855533f5b9de49d"
+      },
+      "source_format": {
+        "channels": 1,
+        "frames": 5292000,
+        "gain": 0.002,
+        "rate": 44100
+      },
+      "final_stats": {
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 87606,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "native_discarded_frames": 13232,
+        "origin_frame": 121850,
+        "packets": 0,
+        "queued_blocks": 0,
+        "queued_frames": 0,
+        "stale_blocks": 1,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "checkpoints": [
+        {
+          "epoch": 0,
+          "name": "continuous",
+          "simulation_us": 8004036,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 0,
+            "free_blocks": 1,
+            "generation": 1,
+            "in_flight": false,
+            "native_discarded_frames": 0,
+            "origin_frame": 0,
+            "packets": 645,
+            "queued_blocks": 4,
+            "queued_frames": 14611,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "pause_with_old_inflight",
+          "simulation_us": 8080748,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11965,
+            "free_blocks": 4,
+            "generation": 2,
+            "in_flight": true,
+            "native_discarded_frames": 4411,
+            "origin_frame": 356360,
+            "packets": 0,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "old_block_rejected",
+          "simulation_us": 8080748,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11965,
+            "free_blocks": 1,
+            "generation": 2,
+            "in_flight": false,
+            "native_discarded_frames": 4411,
+            "origin_frame": 356360,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "seek_paused",
+          "simulation_us": 1234567,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 41526,
+            "free_blocks": 1,
+            "generation": 5,
+            "in_flight": false,
+            "native_discarded_frames": 8821,
+            "origin_frame": 54444,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "fault_frozen",
+          "simulation_us": 1742299,
+          "stats": {
+            "active": false,
+            "decode_failures": 0,
+            "discarded_frames": 55111,
+            "free_blocks": 5,
+            "generation": 6,
+            "in_flight": false,
+            "native_discarded_frames": 8821,
+            "origin_frame": 54444,
+            "packets": 43,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "recovered_paused",
+          "simulation_us": 1742299,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 55111,
+            "free_blocks": 1,
+            "generation": 7,
+            "in_flight": false,
+            "native_discarded_frames": 8821,
+            "origin_frame": 76835,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "final_pause",
+          "simulation_us": 2763047,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 71222,
+            "free_blocks": 1,
+            "generation": 8,
+            "in_flight": false,
+            "native_discarded_frames": 13232,
+            "origin_frame": 121850,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        }
+      ],
+      "latencies": [
+        {
+          "kind": "play_ready",
+          "ms": 10.333200000000001
+        },
+        {
+          "kind": "pause",
+          "ms": 10.9004
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.405100000000001
+        },
+        {
+          "kind": "pause",
+          "ms": 10.118200000000002
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.3507
+        },
+        {
+          "kind": "play_ready",
+          "ms": 11.0565
+        },
+        {
+          "kind": "pause",
+          "ms": 11.0032
+        }
+      ],
+      "phases": [
+        {
+          "phase": "Playing",
+          "sample_count": 65,
+          "sample_span_seconds": 6.860000000000582,
+          "cpu_one_logical_core_percent": 0.6833090379008167,
+          "working_set_bytes_max": 9809920,
+          "working_set_bytes_last": 9809920,
+          "private_bytes_max": 5070848,
+          "private_bytes_last": 5070848,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "Transitions",
+          "sample_count": 26,
+          "sample_span_seconds": 2.687000000005355,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 10498048,
+          "working_set_bytes_last": 10498048,
+          "private_bytes_max": 5632000,
+          "private_bytes_last": 5632000,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "PausedIdle",
+          "sample_count": 19,
+          "sample_span_seconds": 1.9369999999908032,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11919360,
+          "working_set_bytes_last": 11919360,
+          "private_bytes_max": 7073792,
+          "private_bytes_last": 7073792,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "ClosedIdle",
+          "sample_count": 17,
+          "sample_span_seconds": 1.7189999999973224,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11808768,
+          "working_set_bytes_last": 11808768,
+          "private_bytes_max": 6914048,
+          "private_bytes_last": 6914048,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        }
+      ],
+      "format_observations": [
+        "{\"buffer_frames\": 4410, \"channels\": 1, \"clock_frequency\": 176400, \"conversion_enabled\": true, \"mix_channels\": 2, \"mix_rate\": 48000, \"rate\": 44100}"
+      ],
+      "first_playing_clock_span": {
+        "wall_seconds": 8.0605742,
+        "device_seconds": 8.055963,
+        "ratio": 0.9994279315734108
+      },
+      "manual_device_change": false,
+      "device_change_observed": false,
+      "fault": {
+        "code": null,
+        "operation": "explicit stream invalidation"
+      },
+      "normal_sampled_peaks": {
+        "working_set_bytes": 11919360,
+        "private_bytes": 7073792
+      },
+      "historical_peak_counters": {
+        "peak_working_set_bytes": 11923456,
+        "peak_commit_bytes": 7073792
+      }
+    },
+    {
+      "repeat": 0,
+      "case": "44100-1-ogg",
+      "convert": true,
+      "directory": "artifacts/p0/audio-adaptation-36d9b8e7",
+      "checks": {
+        "accepted_packets": 780,
+        "stale_events": 1,
+        "retirements": 3,
+        "pauses": 3
+      },
+      "budgets": null,
+      "result": {
+        "path": "artifacts/p0/audio-adaptation-36d9b8e7/result.json",
+        "bytes": 246260,
+        "sha256": "8f97c52363ab7091dc9a21c1a3a16b9675dae199300943ba96d6c6f2cd412e0d"
+      },
+      "evidence": {
+        "path": "artifacts/p0/audio-adaptation-36d9b8e7/evidence.json",
+        "bytes": 59729,
+        "sha256": "ae3b20d4cd2bdf74a2fc5d793382ab828e1322e323308c60277cc9ca7bd4ab76"
+      },
+      "packets": {
+        "path": "artifacts/p0/audio-adaptation-36d9b8e7/packets.jsonl",
+        "bytes": 322143,
+        "sha256": "dc6269b5b9498f58ad1243a612aff4ede358b1389bcb5c38aaf029f70d5e935b"
+      },
+      "source_format": {
+        "channels": 1,
+        "frames": 5292000,
+        "gain": 0.002,
+        "rate": 44100
+      },
+      "final_stats": {
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 87606,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "native_discarded_frames": 12350,
+        "origin_frame": 122055,
+        "packets": 0,
+        "queued_blocks": 0,
+        "queued_frames": 0,
+        "stale_blocks": 1,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "checkpoints": [
+        {
+          "epoch": 0,
+          "name": "continuous",
+          "simulation_us": 8006167,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 0,
+            "free_blocks": 1,
+            "generation": 1,
+            "in_flight": false,
+            "native_discarded_frames": 0,
+            "origin_frame": 0,
+            "packets": 615,
+            "queued_blocks": 4,
+            "queued_frames": 14611,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "pause_with_old_inflight",
+          "simulation_us": 8090748,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11965,
+            "free_blocks": 4,
+            "generation": 2,
+            "in_flight": true,
+            "native_discarded_frames": 3970,
+            "origin_frame": 356801,
+            "packets": 0,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "old_block_rejected",
+          "simulation_us": 8090748,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11965,
+            "free_blocks": 1,
+            "generation": 2,
+            "in_flight": false,
+            "native_discarded_frames": 3970,
+            "origin_frame": 356801,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "seek_paused",
+          "simulation_us": 1234567,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 41967,
+            "free_blocks": 1,
+            "generation": 5,
+            "in_flight": false,
+            "native_discarded_frames": 7939,
+            "origin_frame": 54444,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "fault_frozen",
+          "simulation_us": 1746947,
+          "stats": {
+            "active": false,
+            "decode_failures": 0,
+            "discarded_frames": 55111,
+            "free_blocks": 5,
+            "generation": 6,
+            "in_flight": false,
+            "native_discarded_frames": 7939,
+            "origin_frame": 54444,
+            "packets": 46,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "recovered_paused",
+          "simulation_us": 1746947,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 55111,
+            "free_blocks": 1,
+            "generation": 7,
+            "in_flight": false,
+            "native_discarded_frames": 7939,
+            "origin_frame": 77040,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "final_pause",
+          "simulation_us": 2767695,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 71222,
+            "free_blocks": 1,
+            "generation": 8,
+            "in_flight": false,
+            "native_discarded_frames": 12350,
+            "origin_frame": 122055,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        }
+      ],
+      "latencies": [
+        {
+          "kind": "play_ready",
+          "ms": 10.4037
+        },
+        {
+          "kind": "pause",
+          "ms": 10.788300000000001
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.474
+        },
+        {
+          "kind": "pause",
+          "ms": 10.999
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.6418
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.0943
+        },
+        {
+          "kind": "pause",
+          "ms": 11.0389
+        }
+      ],
+      "phases": [
+        {
+          "phase": "Playing",
+          "sample_count": 65,
+          "sample_span_seconds": 6.813000000009197,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11149312,
+          "working_set_bytes_last": 11149312,
+          "private_bytes_max": 6606848,
+          "private_bytes_last": 6606848,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "Transitions",
+          "sample_count": 27,
+          "sample_span_seconds": 2.7820000000065193,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 12558336,
+          "working_set_bytes_last": 12558336,
+          "private_bytes_max": 8794112,
+          "private_bytes_last": 8794112,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "PausedIdle",
+          "sample_count": 20,
+          "sample_span_seconds": 2.047000000005937,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 13873152,
+          "working_set_bytes_last": 13873152,
+          "private_bytes_max": 9265152,
+          "private_bytes_last": 9265152,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "ClosedIdle",
+          "sample_count": 17,
+          "sample_span_seconds": 1.735000000000582,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 12591104,
+          "working_set_bytes_last": 12591104,
+          "private_bytes_max": 7868416,
+          "private_bytes_last": 7868416,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        }
+      ],
+      "format_observations": [
+        "{\"buffer_frames\": 4410, \"channels\": 1, \"clock_frequency\": 176400, \"conversion_enabled\": true, \"mix_channels\": 2, \"mix_rate\": 48000, \"rate\": 44100}"
+      ],
+      "first_playing_clock_span": {
+        "wall_seconds": 8.026289,
+        "device_seconds": 8.034218,
+        "ratio": 1.0009878787070836
+      },
+      "manual_device_change": false,
+      "device_change_observed": false,
+      "fault": {
+        "code": null,
+        "operation": "explicit stream invalidation"
+      },
+      "normal_sampled_peaks": {
+        "working_set_bytes": 13873152,
+        "private_bytes": 9265152
+      },
+      "historical_peak_counters": {
+        "peak_working_set_bytes": 13877248,
+        "peak_commit_bytes": 9265152
+      }
+    },
+    {
+      "repeat": 1,
+      "case": "48000-2-wav",
+      "convert": false,
+      "directory": "artifacts/p0/audio-adaptation-cde1b703",
+      "checks": {
+        "accepted_packets": 716,
+        "stale_events": 1,
+        "retirements": 3,
+        "pauses": 3
+      },
+      "budgets": null,
+      "result": {
+        "path": "artifacts/p0/audio-adaptation-cde1b703/result.json",
+        "bytes": 244845,
+        "sha256": "37f8a470aedbc25e0813bd8fbdee550b0e9cdc9f8c2819ac06c2a2b2c7089a99"
+      },
+      "evidence": {
+        "path": "artifacts/p0/audio-adaptation-cde1b703/evidence.json",
+        "bytes": 59151,
+        "sha256": "e56b5ea0bc682f3da9bf84cc7848cf7e0f2635de8cf49a080592871a9d94d791"
+      },
+      "packets": {
+        "path": "artifacts/p0/audio-adaptation-cde1b703/packets.jsonl",
+        "bytes": 292699,
+        "sha256": "937aac8b54a8d9ddc632e1be07d61a731963b1237bfb112b5f41b44c9631f167"
+      },
+      "source_format": {
+        "channels": 2,
+        "frames": 5760000,
+        "gain": 0.002,
+        "rate": 48000
+      },
+      "final_stats": {
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 90656,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "native_discarded_frames": 13920,
+        "origin_frame": 132342,
+        "packets": 0,
+        "queued_blocks": 0,
+        "queued_frames": 0,
+        "stale_blocks": 1,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "checkpoints": [
+        {
+          "epoch": 0,
+          "name": "continuous",
+          "simulation_us": 8000395,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 0,
+            "free_blocks": 1,
+            "generation": 1,
+            "in_flight": false,
+            "native_discarded_frames": 0,
+            "origin_frame": 0,
+            "packets": 561,
+            "queued_blocks": 4,
+            "queued_frames": 15744,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "pause_with_old_inflight",
+          "simulation_us": 8110000,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11904,
+            "free_blocks": 4,
+            "generation": 2,
+            "in_flight": true,
+            "native_discarded_frames": 4320,
+            "origin_frame": 389280,
+            "packets": 0,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "old_block_rejected",
+          "simulation_us": 8110000,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11904,
+            "free_blocks": 1,
+            "generation": 2,
+            "in_flight": false,
+            "native_discarded_frames": 4320,
+            "origin_frame": 389280,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "seek_paused",
+          "simulation_us": 1234567,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 43104,
+            "free_blocks": 1,
+            "generation": 5,
+            "in_flight": false,
+            "native_discarded_frames": 9120,
+            "origin_frame": 59259,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "fault_frozen",
+          "simulation_us": 1737129,
+          "stats": {
+            "active": false,
+            "decode_failures": 0,
+            "discarded_frames": 58400,
+            "free_blocks": 5,
+            "generation": 6,
+            "in_flight": false,
+            "native_discarded_frames": 9120,
+            "origin_frame": 59259,
+            "packets": 40,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "recovered_paused",
+          "simulation_us": 1737129,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 58400,
+            "free_blocks": 1,
+            "generation": 7,
+            "in_flight": false,
+            "native_discarded_frames": 9120,
+            "origin_frame": 83382,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "final_pause",
+          "simulation_us": 2757129,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 74272,
+            "free_blocks": 1,
+            "generation": 8,
+            "in_flight": false,
+            "native_discarded_frames": 13920,
+            "origin_frame": 132342,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        }
+      ],
+      "latencies": [
+        {
+          "kind": "play_ready",
+          "ms": 10.255099999999999
+        },
+        {
+          "kind": "pause",
+          "ms": 10.9958
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.4808
+        },
+        {
+          "kind": "pause",
+          "ms": 10.9362
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.9823
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.3149
+        },
+        {
+          "kind": "pause",
+          "ms": 10.0597
+        }
+      ],
+      "phases": [
+        {
+          "phase": "Playing",
+          "sample_count": 65,
+          "sample_span_seconds": 6.889999999999418,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 9396224,
+          "working_set_bytes_last": 9396224,
+          "private_bytes_max": 4722688,
+          "private_bytes_last": 4722688,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "Transitions",
+          "sample_count": 26,
+          "sample_span_seconds": 2.7030000000086147,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 9924608,
+          "working_set_bytes_last": 9924608,
+          "private_bytes_max": 5115904,
+          "private_bytes_last": 5115904,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "PausedIdle",
+          "sample_count": 19,
+          "sample_span_seconds": 1.9679999999934807,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11374592,
+          "working_set_bytes_last": 11374592,
+          "private_bytes_max": 6656000,
+          "private_bytes_last": 6656000,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "ClosedIdle",
+          "sample_count": 18,
+          "sample_span_seconds": 1.8439999999973224,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11309056,
+          "working_set_bytes_last": 11309056,
+          "private_bytes_max": 6520832,
+          "private_bytes_last": 6520832,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        }
+      ],
+      "format_observations": [
+        "{\"buffer_frames\": 4800, \"channels\": 2, \"clock_frequency\": 384000, \"conversion_enabled\": false, \"mix_channels\": 2, \"mix_rate\": 48000, \"rate\": 48000}"
+      ],
+      "first_playing_clock_span": {
+        "wall_seconds": 8.0365099,
+        "device_seconds": 8.031021,
+        "ratio": 0.9993170045121205
+      },
+      "manual_device_change": false,
+      "device_change_observed": false,
+      "fault": {
+        "code": null,
+        "operation": "explicit stream invalidation"
+      },
+      "normal_sampled_peaks": {
+        "working_set_bytes": 11374592,
+        "private_bytes": 6656000
+      },
+      "historical_peak_counters": {
+        "peak_working_set_bytes": 11460608,
+        "peak_commit_bytes": 6696960
+      }
+    },
+    {
+      "repeat": 1,
+      "case": "48000-2-wav",
+      "convert": true,
+      "directory": "artifacts/p0/audio-adaptation-983d0bf1",
+      "checks": {
+        "accepted_packets": 699,
+        "stale_events": 1,
+        "retirements": 3,
+        "pauses": 3
+      },
+      "budgets": null,
+      "result": {
+        "path": "artifacts/p0/audio-adaptation-983d0bf1/result.json",
+        "bytes": 242599,
+        "sha256": "121d353dcde2f3a09ff41ec1c64892f01db2e03522e2fa6d2ab5151e46b25c8f"
+      },
+      "evidence": {
+        "path": "artifacts/p0/audio-adaptation-983d0bf1/evidence.json",
+        "bytes": 58504,
+        "sha256": "9ec48f362eca2a92d6029e45c4ef1671c271f440b467273ac5aa3c0ca7f96bdd"
+      },
+      "packets": {
+        "path": "artifacts/p0/audio-adaptation-983d0bf1/packets.jsonl",
+        "bytes": 285918,
+        "sha256": "6fb4ee3068bcdbae4617badaa5214372c78df948ff363a4839c658e8380fcded"
+      },
+      "source_format": {
+        "channels": 2,
+        "frames": 5760000,
+        "gain": 0.002,
+        "rate": 48000
+      },
+      "final_stats": {
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 91136,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "native_discarded_frames": 13920,
+        "origin_frame": 133036,
+        "packets": 0,
+        "queued_blocks": 0,
+        "queued_frames": 0,
+        "stale_blocks": 1,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "checkpoints": [
+        {
+          "epoch": 0,
+          "name": "continuous",
+          "simulation_us": 8005687,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 0,
+            "free_blocks": 1,
+            "generation": 1,
+            "in_flight": false,
+            "native_discarded_frames": 0,
+            "origin_frame": 0,
+            "packets": 553,
+            "queued_blocks": 4,
+            "queued_frames": 15744,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "pause_with_old_inflight",
+          "simulation_us": 8100000,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11904,
+            "free_blocks": 4,
+            "generation": 2,
+            "in_flight": true,
+            "native_discarded_frames": 4800,
+            "origin_frame": 388800,
+            "packets": 0,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "old_block_rejected",
+          "simulation_us": 8100000,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11904,
+            "free_blocks": 1,
+            "generation": 2,
+            "in_flight": false,
+            "native_discarded_frames": 4800,
+            "origin_frame": 388800,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "seek_paused",
+          "simulation_us": 1234567,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 43584,
+            "free_blocks": 1,
+            "generation": 5,
+            "in_flight": false,
+            "native_discarded_frames": 9600,
+            "origin_frame": 59259,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "fault_frozen",
+          "simulation_us": 1741587,
+          "stats": {
+            "active": false,
+            "decode_failures": 0,
+            "discarded_frames": 58880,
+            "free_blocks": 5,
+            "generation": 6,
+            "in_flight": false,
+            "native_discarded_frames": 9600,
+            "origin_frame": 59259,
+            "packets": 35,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "recovered_paused",
+          "simulation_us": 1741587,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 58880,
+            "free_blocks": 1,
+            "generation": 7,
+            "in_flight": false,
+            "native_discarded_frames": 9600,
+            "origin_frame": 83596,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "final_pause",
+          "simulation_us": 2771587,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 74752,
+            "free_blocks": 1,
+            "generation": 8,
+            "in_flight": false,
+            "native_discarded_frames": 13920,
+            "origin_frame": 133036,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        }
+      ],
+      "latencies": [
+        {
+          "kind": "play_ready",
+          "ms": 10.9593
+        },
+        {
+          "kind": "pause",
+          "ms": 11.030899999999999
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.9895
+        },
+        {
+          "kind": "pause",
+          "ms": 10.5876
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.4197
+        },
+        {
+          "kind": "play_ready",
+          "ms": 11.0121
+        },
+        {
+          "kind": "pause",
+          "ms": 11.0337
+        }
+      ],
+      "phases": [
+        {
+          "phase": "Playing",
+          "sample_count": 64,
+          "sample_span_seconds": 6.811999999990803,
+          "cpu_one_logical_core_percent": 0.22937463300089686,
+          "working_set_bytes_max": 9359360,
+          "working_set_bytes_last": 9359360,
+          "private_bytes_max": 4669440,
+          "private_bytes_last": 4669440,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "Transitions",
+          "sample_count": 26,
+          "sample_span_seconds": 2.702999999994063,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 10027008,
+          "working_set_bytes_last": 10027008,
+          "private_bytes_max": 5222400,
+          "private_bytes_last": 5222400,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "PausedIdle",
+          "sample_count": 18,
+          "sample_span_seconds": 1.860000000000582,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 10305536,
+          "working_set_bytes_last": 10305536,
+          "private_bytes_max": 5500928,
+          "private_bytes_last": 5500928,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "ClosedIdle",
+          "sample_count": 18,
+          "sample_span_seconds": 1.8439999999973224,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11427840,
+          "working_set_bytes_last": 10182656,
+          "private_bytes_max": 6627328,
+          "private_bytes_last": 3563520,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        }
+      ],
+      "format_observations": [
+        "{\"buffer_frames\": 4800, \"channels\": 2, \"clock_frequency\": 384000, \"conversion_enabled\": true, \"mix_channels\": 2, \"mix_rate\": 48000, \"rate\": 48000}"
+      ],
+      "first_playing_clock_span": {
+        "wall_seconds": 8.0343449,
+        "device_seconds": 8.028937,
+        "ratio": 0.9993269021846448
+      },
+      "manual_device_change": false,
+      "device_change_observed": false,
+      "fault": {
+        "code": null,
+        "operation": "explicit stream invalidation"
+      },
+      "normal_sampled_peaks": {
+        "working_set_bytes": 11427840,
+        "private_bytes": 6627328
+      },
+      "historical_peak_counters": {
+        "peak_working_set_bytes": 12558336,
+        "peak_commit_bytes": 7786496
+      }
+    },
+    {
+      "repeat": 1,
+      "case": "44100-1-wav",
+      "convert": true,
+      "directory": "artifacts/p0/audio-adaptation-b4b3533e",
+      "checks": {
+        "accepted_packets": 681,
+        "stale_events": 1,
+        "retirements": 3,
+        "pauses": 3
+      },
+      "budgets": null,
+      "result": {
+        "path": "artifacts/p0/audio-adaptation-b4b3533e/result.json",
+        "bytes": 241555,
+        "sha256": "f614f8c93f28767c8d3b3be182526697dca6f12b4fd31744e44624cdd6d5af7e"
+      },
+      "evidence": {
+        "path": "artifacts/p0/audio-adaptation-b4b3533e/evidence.json",
+        "bytes": 58146,
+        "sha256": "019403b6f190f18fcbb6d763d3009c2f507ac8cb5c2201e4ca8d600d06ac4b45"
+      },
+      "packets": {
+        "path": "artifacts/p0/audio-adaptation-b4b3533e/packets.jsonl",
+        "bytes": 281146,
+        "sha256": "83f7d28ee0ab078d071a34603d4e1ff6ff94f7260f361c1056d6d20ec4232327"
+      },
+      "source_format": {
+        "channels": 1,
+        "frames": 5292000,
+        "gain": 0.002,
+        "rate": 44100
+      },
+      "final_stats": {
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 88047,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "native_discarded_frames": 13232,
+        "origin_frame": 121661,
+        "packets": 0,
+        "queued_blocks": 0,
+        "queued_frames": 0,
+        "stale_blocks": 1,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "checkpoints": [
+        {
+          "epoch": 0,
+          "name": "continuous",
+          "simulation_us": 8005646,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 0,
+            "free_blocks": 1,
+            "generation": 1,
+            "in_flight": false,
+            "native_discarded_frames": 0,
+            "origin_frame": 0,
+            "packets": 535,
+            "queued_blocks": 4,
+            "queued_frames": 14611,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "pause_with_old_inflight",
+          "simulation_us": 8080748,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11965,
+            "free_blocks": 4,
+            "generation": 2,
+            "in_flight": true,
+            "native_discarded_frames": 4411,
+            "origin_frame": 356360,
+            "packets": 0,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "old_block_rejected",
+          "simulation_us": 8080748,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11965,
+            "free_blocks": 1,
+            "generation": 2,
+            "in_flight": false,
+            "native_discarded_frames": 4411,
+            "origin_frame": 356360,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "seek_paused",
+          "simulation_us": 1234567,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 41967,
+            "free_blocks": 1,
+            "generation": 5,
+            "in_flight": false,
+            "native_discarded_frames": 8821,
+            "origin_frame": 54444,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "fault_frozen",
+          "simulation_us": 1738013,
+          "stats": {
+            "active": false,
+            "decode_failures": 0,
+            "discarded_frames": 55552,
+            "free_blocks": 5,
+            "generation": 6,
+            "in_flight": false,
+            "native_discarded_frames": 8821,
+            "origin_frame": 54444,
+            "packets": 38,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "recovered_paused",
+          "simulation_us": 1738013,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 55552,
+            "free_blocks": 1,
+            "generation": 7,
+            "in_flight": false,
+            "native_discarded_frames": 8821,
+            "origin_frame": 76646,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "final_pause",
+          "simulation_us": 2758761,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 71663,
+            "free_blocks": 1,
+            "generation": 8,
+            "in_flight": false,
+            "native_discarded_frames": 13232,
+            "origin_frame": 121661,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        }
+      ],
+      "latencies": [
+        {
+          "kind": "play_ready",
+          "ms": 10.8662
+        },
+        {
+          "kind": "pause",
+          "ms": 11.037999999999998
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.9826
+        },
+        {
+          "kind": "pause",
+          "ms": 11.027000000000001
+        },
+        {
+          "kind": "play_ready",
+          "ms": 11.2721
+        },
+        {
+          "kind": "play_ready",
+          "ms": 11.1897
+        },
+        {
+          "kind": "pause",
+          "ms": 10.6084
+        }
+      ],
+      "phases": [
+        {
+          "phase": "Playing",
+          "sample_count": 64,
+          "sample_span_seconds": 6.844000000011874,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 9203712,
+          "working_set_bytes_last": 9203712,
+          "private_bytes_max": 4534272,
+          "private_bytes_last": 4534272,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "Transitions",
+          "sample_count": 26,
+          "sample_span_seconds": 2.7339999999967404,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 9879552,
+          "working_set_bytes_last": 9879552,
+          "private_bytes_max": 5103616,
+          "private_bytes_last": 5103616,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "PausedIdle",
+          "sample_count": 18,
+          "sample_span_seconds": 1.860000000000582,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11337728,
+          "working_set_bytes_last": 11337728,
+          "private_bytes_max": 6610944,
+          "private_bytes_last": 6610944,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "ClosedIdle",
+          "sample_count": 17,
+          "sample_span_seconds": 1.764999999999418,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11272192,
+          "working_set_bytes_last": 11272192,
+          "private_bytes_max": 6475776,
+          "private_bytes_last": 6475776,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        }
+      ],
+      "format_observations": [
+        "{\"buffer_frames\": 4410, \"channels\": 1, \"clock_frequency\": 176400, \"conversion_enabled\": true, \"mix_channels\": 2, \"mix_rate\": 48000, \"rate\": 44100}"
+      ],
+      "first_playing_clock_span": {
+        "wall_seconds": 8.017318,
+        "device_seconds": 8.014603,
+        "ratio": 0.9996613580751069
+      },
+      "manual_device_change": false,
+      "device_change_observed": false,
+      "fault": {
+        "code": null,
+        "operation": "explicit stream invalidation"
+      },
+      "normal_sampled_peaks": {
+        "working_set_bytes": 11337728,
+        "private_bytes": 6610944
+      },
+      "historical_peak_counters": {
+        "peak_working_set_bytes": 11382784,
+        "peak_commit_bytes": 6631424
+      }
+    },
+    {
+      "repeat": 1,
+      "case": "32000-2-wav",
+      "convert": true,
+      "directory": "artifacts/p0/audio-adaptation-048cf06c",
+      "checks": {
+        "accepted_packets": 688,
+        "stale_events": 1,
+        "retirements": 3,
+        "pauses": 3
+      },
+      "budgets": null,
+      "result": {
+        "path": "artifacts/p0/audio-adaptation-048cf06c/result.json",
+        "bytes": 246118,
+        "sha256": "792c74446f2ca475fe88454bd4c7372dd86ec88566a782560eea9b34a26ff957"
+      },
+      "evidence": {
+        "path": "artifacts/p0/audio-adaptation-048cf06c/evidence.json",
+        "bytes": 58835,
+        "sha256": "6f8f0f2219ad84c9a6ecb12ae07fe68412e1f665f34a3030b0ab6b00193b3bb1"
+      },
+      "packets": {
+        "path": "artifacts/p0/audio-adaptation-048cf06c/packets.jsonl",
+        "bytes": 283422,
+        "sha256": "eafed451dd95d8cc608f6ba17e0ee57e9de0c66c304e14e36d3afa23f60558b7"
+      },
+      "source_format": {
+        "channels": 2,
+        "frames": 3840000,
+        "gain": 0.002,
+        "rate": 32000
+      },
+      "final_stats": {
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 87005,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "native_discarded_frames": 9602,
+        "origin_frame": 88643,
+        "packets": 0,
+        "queued_blocks": 0,
+        "queued_frames": 0,
+        "stale_blocks": 1,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "checkpoints": [
+        {
+          "epoch": 0,
+          "name": "continuous",
+          "simulation_us": 8008843,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 0,
+            "free_blocks": 1,
+            "generation": 1,
+            "in_flight": false,
+            "native_discarded_frames": 0,
+            "origin_frame": 0,
+            "packets": 527,
+            "queued_blocks": 4,
+            "queued_frames": 14559,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "pause_with_old_inflight",
+          "simulation_us": 8101031,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11999,
+            "free_blocks": 4,
+            "generation": 2,
+            "in_flight": true,
+            "native_discarded_frames": 3201,
+            "origin_frame": 259232,
+            "packets": 0,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "old_block_rejected",
+          "simulation_us": 8101031,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11999,
+            "free_blocks": 1,
+            "generation": 2,
+            "in_flight": false,
+            "native_discarded_frames": 3201,
+            "origin_frame": 259232,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "seek_paused",
+          "simulation_us": 1234567,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 44767,
+            "free_blocks": 1,
+            "generation": 5,
+            "in_flight": false,
+            "native_discarded_frames": 6401,
+            "origin_frame": 39506,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "fault_frozen",
+          "simulation_us": 1749067,
+          "stats": {
+            "active": false,
+            "decode_failures": 0,
+            "discarded_frames": 57342,
+            "free_blocks": 5,
+            "generation": 6,
+            "in_flight": false,
+            "native_discarded_frames": 6401,
+            "origin_frame": 39506,
+            "packets": 39,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "recovered_paused",
+          "simulation_us": 1749067,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 57342,
+            "free_blocks": 1,
+            "generation": 7,
+            "in_flight": false,
+            "native_discarded_frames": 6401,
+            "origin_frame": 55970,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "final_pause",
+          "simulation_us": 2770098,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 70621,
+            "free_blocks": 1,
+            "generation": 8,
+            "in_flight": false,
+            "native_discarded_frames": 9602,
+            "origin_frame": 88643,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        }
+      ],
+      "latencies": [
+        {
+          "kind": "play_ready",
+          "ms": 11.0507
+        },
+        {
+          "kind": "pause",
+          "ms": 10.258099999999999
+        },
+        {
+          "kind": "play_ready",
+          "ms": 11.2708
+        },
+        {
+          "kind": "pause",
+          "ms": 10.078
+        },
+        {
+          "kind": "play_ready",
+          "ms": 11.0202
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.9749
+        },
+        {
+          "kind": "pause",
+          "ms": 10.517
+        }
+      ],
+      "phases": [
+        {
+          "phase": "Playing",
+          "sample_count": 64,
+          "sample_span_seconds": 6.875,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 9400320,
+          "working_set_bytes_last": 9400320,
+          "private_bytes_max": 4718592,
+          "private_bytes_last": 4718592,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "Transitions",
+          "sample_count": 27,
+          "sample_span_seconds": 2.7960000000020955,
+          "cpu_one_logical_core_percent": 1.1176680972809934,
+          "working_set_bytes_max": 9986048,
+          "working_set_bytes_last": 9986048,
+          "private_bytes_max": 5181440,
+          "private_bytes_last": 5181440,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "PausedIdle",
+          "sample_count": 18,
+          "sample_span_seconds": 1.8280000000086147,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11567104,
+          "working_set_bytes_last": 11567104,
+          "private_bytes_max": 6791168,
+          "private_bytes_last": 6791168,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "ClosedIdle",
+          "sample_count": 18,
+          "sample_span_seconds": 1.8279999999940628,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11444224,
+          "working_set_bytes_last": 11444224,
+          "private_bytes_max": 6627328,
+          "private_bytes_last": 6627328,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        }
+      ],
+      "format_observations": [
+        "{\"buffer_frames\": 3200, \"channels\": 2, \"clock_frequency\": 256000, \"conversion_enabled\": true, \"mix_channels\": 2, \"mix_rate\": 48000, \"rate\": 32000}"
+      ],
+      "first_playing_clock_span": {
+        "wall_seconds": 8.0159983,
+        "device_seconds": 8.017562,
+        "ratio": 1.0001950723966595
+      },
+      "manual_device_change": false,
+      "device_change_observed": false,
+      "fault": {
+        "code": null,
+        "operation": "explicit stream invalidation"
+      },
+      "normal_sampled_peaks": {
+        "working_set_bytes": 11567104,
+        "private_bytes": 6791168
+      },
+      "historical_peak_counters": {
+        "peak_working_set_bytes": 11571200,
+        "peak_commit_bytes": 6791168
+      }
+    },
+    {
+      "repeat": 1,
+      "case": "96000-2-wav",
+      "convert": true,
+      "directory": "artifacts/p0/audio-adaptation-8574292c",
+      "checks": {
+        "accepted_packets": 730,
+        "stale_events": 1,
+        "retirements": 3,
+        "pauses": 3
+      },
+      "budgets": null,
+      "result": {
+        "path": "artifacts/p0/audio-adaptation-8574292c/result.json",
+        "bytes": 242473,
+        "sha256": "304e0a64eb875e7b694ff1be4e3aff28825d80e855928a7e454ef77975d01d4d"
+      },
+      "evidence": {
+        "path": "artifacts/p0/audio-adaptation-8574292c/evidence.json",
+        "bytes": 58838,
+        "sha256": "15bf65b945d28ca9f95326d4b644f47d1be3ae620e80979f027e214ed3378c9f"
+      },
+      "packets": {
+        "path": "artifacts/p0/audio-adaptation-8574292c/packets.jsonl",
+        "bytes": 302389,
+        "sha256": "2da91aa3934ff2835ea3bd241197ddb5b1848c30159139a3c0a4f85cf4f77e75"
+      },
+      "source_format": {
+        "channels": 2,
+        "frames": 11520000,
+        "gain": 0.002,
+        "rate": 96000
+      },
+      "final_stats": {
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 87619,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "native_discarded_frames": 28802,
+        "origin_frame": 264913,
+        "packets": 0,
+        "queued_blocks": 0,
+        "queued_frames": 0,
+        "stale_blocks": 1,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "checkpoints": [
+        {
+          "epoch": 0,
+          "name": "continuous",
+          "simulation_us": 8018145,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 0,
+            "free_blocks": 1,
+            "generation": 1,
+            "in_flight": false,
+            "native_discarded_frames": 0,
+            "origin_frame": 0,
+            "packets": 578,
+            "queued_blocks": 4,
+            "queued_frames": 14081,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "pause_with_old_inflight",
+          "simulation_us": 8060656,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11201,
+            "free_blocks": 4,
+            "generation": 2,
+            "in_flight": true,
+            "native_discarded_frames": 9601,
+            "origin_frame": 773822,
+            "packets": 0,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "old_block_rejected",
+          "simulation_us": 8060656,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11201,
+            "free_blocks": 1,
+            "generation": 2,
+            "in_flight": false,
+            "native_discarded_frames": 9601,
+            "origin_frame": 773822,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "seek_paused",
+          "simulation_us": 1234567,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 41793,
+            "free_blocks": 1,
+            "generation": 5,
+            "in_flight": false,
+            "native_discarded_frames": 19201,
+            "origin_frame": 118518,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "fault_frozen",
+          "simulation_us": 1738858,
+          "stats": {
+            "active": false,
+            "decode_failures": 0,
+            "discarded_frames": 55938,
+            "free_blocks": 5,
+            "generation": 6,
+            "in_flight": false,
+            "native_discarded_frames": 19201,
+            "origin_frame": 118518,
+            "packets": 38,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "recovered_paused",
+          "simulation_us": 1738858,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 55938,
+            "free_blocks": 1,
+            "generation": 7,
+            "in_flight": false,
+            "native_discarded_frames": 19201,
+            "origin_frame": 166930,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "final_pause",
+          "simulation_us": 2759514,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 71235,
+            "free_blocks": 1,
+            "generation": 8,
+            "in_flight": false,
+            "native_discarded_frames": 28802,
+            "origin_frame": 264913,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        }
+      ],
+      "latencies": [
+        {
+          "kind": "play_ready",
+          "ms": 10.1095
+        },
+        {
+          "kind": "pause",
+          "ms": 10.6887
+        },
+        {
+          "kind": "play_ready",
+          "ms": 11.011
+        },
+        {
+          "kind": "pause",
+          "ms": 10.0916
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.7928
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.5059
+        },
+        {
+          "kind": "pause",
+          "ms": 11.065800000000001
+        }
+      ],
+      "phases": [
+        {
+          "phase": "Playing",
+          "sample_count": 65,
+          "sample_span_seconds": 6.860000000000582,
+          "cpu_one_logical_core_percent": 0.6833090379008167,
+          "working_set_bytes_max": 9519104,
+          "working_set_bytes_last": 9519104,
+          "private_bytes_max": 4792320,
+          "private_bytes_last": 4792320,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "Transitions",
+          "sample_count": 26,
+          "sample_span_seconds": 2.702999999994063,
+          "cpu_one_logical_core_percent": 0.5780614132458128,
+          "working_set_bytes_max": 10219520,
+          "working_set_bytes_last": 10219520,
+          "private_bytes_max": 5390336,
+          "private_bytes_last": 5390336,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "PausedIdle",
+          "sample_count": 18,
+          "sample_span_seconds": 1.8280000000086147,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11714560,
+          "working_set_bytes_last": 11714560,
+          "private_bytes_max": 6893568,
+          "private_bytes_last": 6893568,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "ClosedIdle",
+          "sample_count": 18,
+          "sample_span_seconds": 1.812000000005355,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11493376,
+          "working_set_bytes_last": 11493376,
+          "private_bytes_max": 6680576,
+          "private_bytes_last": 6680576,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        }
+      ],
+      "format_observations": [
+        "{\"buffer_frames\": 9600, \"channels\": 2, \"clock_frequency\": 768000, \"conversion_enabled\": true, \"mix_channels\": 2, \"mix_rate\": 48000, \"rate\": 96000}"
+      ],
+      "first_playing_clock_span": {
+        "wall_seconds": 7.981299600000001,
+        "device_seconds": 7.97975,
+        "ratio": 0.9998058461556811
+      },
+      "manual_device_change": false,
+      "device_change_observed": false,
+      "fault": {
+        "code": null,
+        "operation": "explicit stream invalidation"
+      },
+      "normal_sampled_peaks": {
+        "working_set_bytes": 11714560,
+        "private_bytes": 6893568
+      },
+      "historical_peak_counters": {
+        "peak_working_set_bytes": 11718656,
+        "peak_commit_bytes": 6893568
+      }
+    },
+    {
+      "repeat": 1,
+      "case": "48000-1-wav",
+      "convert": true,
+      "directory": "artifacts/p0/audio-adaptation-6078e284",
+      "checks": {
+        "accepted_packets": 715,
+        "stale_events": 1,
+        "retirements": 3,
+        "pauses": 3
+      },
+      "budgets": null,
+      "result": {
+        "path": "artifacts/p0/audio-adaptation-6078e284/result.json",
+        "bytes": 242411,
+        "sha256": "18245577ecf13c98160ef892ac019d22e64d746e5e3fda2b9a04deb9e16f3686"
+      },
+      "evidence": {
+        "path": "artifacts/p0/audio-adaptation-6078e284/evidence.json",
+        "bytes": 58750,
+        "sha256": "05ec413590610ee3429b576db9b30121bda97cfcd5569b104c588fe65994aae8"
+      },
+      "packets": {
+        "path": "artifacts/p0/audio-adaptation-6078e284/packets.jsonl",
+        "bytes": 292574,
+        "sha256": "b7b8b9c94db20ddf77b42eeb89ad9c61e6576ce25b115fc1a70b695271beb84b"
+      },
+      "source_format": {
+        "channels": 1,
+        "frames": 5760000,
+        "gain": 0.002,
+        "rate": 48000
+      },
+      "final_stats": {
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 91136,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "native_discarded_frames": 13440,
+        "origin_frame": 132361,
+        "packets": 0,
+        "queued_blocks": 0,
+        "queued_frames": 0,
+        "stale_blocks": 1,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "checkpoints": [
+        {
+          "epoch": 0,
+          "name": "continuous",
+          "simulation_us": 8004854,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 0,
+            "free_blocks": 1,
+            "generation": 1,
+            "in_flight": false,
+            "native_discarded_frames": 0,
+            "origin_frame": 0,
+            "packets": 558,
+            "queued_blocks": 4,
+            "queued_frames": 15744,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "pause_with_old_inflight",
+          "simulation_us": 8110000,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11904,
+            "free_blocks": 4,
+            "generation": 2,
+            "in_flight": true,
+            "native_discarded_frames": 4320,
+            "origin_frame": 389280,
+            "packets": 0,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "old_block_rejected",
+          "simulation_us": 8110000,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11904,
+            "free_blocks": 1,
+            "generation": 2,
+            "in_flight": false,
+            "native_discarded_frames": 4320,
+            "origin_frame": 389280,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "seek_paused",
+          "simulation_us": 1234567,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 43584,
+            "free_blocks": 1,
+            "generation": 5,
+            "in_flight": false,
+            "native_discarded_frames": 8640,
+            "origin_frame": 59259,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "fault_frozen",
+          "simulation_us": 1737525,
+          "stats": {
+            "active": false,
+            "decode_failures": 0,
+            "discarded_frames": 58880,
+            "free_blocks": 5,
+            "generation": 6,
+            "in_flight": false,
+            "native_discarded_frames": 8640,
+            "origin_frame": 59259,
+            "packets": 42,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "recovered_paused",
+          "simulation_us": 1737525,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 58880,
+            "free_blocks": 1,
+            "generation": 7,
+            "in_flight": false,
+            "native_discarded_frames": 8640,
+            "origin_frame": 83401,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "final_pause",
+          "simulation_us": 2757525,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 74752,
+            "free_blocks": 1,
+            "generation": 8,
+            "in_flight": false,
+            "native_discarded_frames": 13440,
+            "origin_frame": 132361,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        }
+      ],
+      "latencies": [
+        {
+          "kind": "play_ready",
+          "ms": 10.431799999999999
+        },
+        {
+          "kind": "pause",
+          "ms": 10.8241
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.0905
+        },
+        {
+          "kind": "pause",
+          "ms": 10.9993
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.237599999999999
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.827399999999999
+        },
+        {
+          "kind": "pause",
+          "ms": 11.014899999999999
+        }
+      ],
+      "phases": [
+        {
+          "phase": "Playing",
+          "sample_count": 64,
+          "sample_span_seconds": 6.812999999994645,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 9240576,
+          "working_set_bytes_last": 9240576,
+          "private_bytes_max": 4571136,
+          "private_bytes_last": 4571136,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "Transitions",
+          "sample_count": 26,
+          "sample_span_seconds": 2.672000000005937,
+          "cpu_one_logical_core_percent": 1.1695359281411137,
+          "working_set_bytes_max": 9887744,
+          "working_set_bytes_last": 9887744,
+          "private_bytes_max": 5107712,
+          "private_bytes_last": 5107712,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "PausedIdle",
+          "sample_count": 19,
+          "sample_span_seconds": 1.9060000000026776,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 10584064,
+          "working_set_bytes_last": 10584064,
+          "private_bytes_max": 5804032,
+          "private_bytes_last": 5804032,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "ClosedIdle",
+          "sample_count": 18,
+          "sample_span_seconds": 1.8130000000091968,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11345920,
+          "working_set_bytes_last": 11345920,
+          "private_bytes_max": 6533120,
+          "private_bytes_last": 6533120,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        }
+      ],
+      "format_observations": [
+        "{\"buffer_frames\": 4800, \"channels\": 1, \"clock_frequency\": 192000, \"conversion_enabled\": true, \"mix_channels\": 2, \"mix_rate\": 48000, \"rate\": 48000}"
+      ],
+      "first_playing_clock_span": {
+        "wall_seconds": 8.031632,
+        "device_seconds": 8.036041,
+        "ratio": 1.0005489544341675
+      },
+      "manual_device_change": false,
+      "device_change_observed": false,
+      "fault": {
+        "code": null,
+        "operation": "explicit stream invalidation"
+      },
+      "normal_sampled_peaks": {
+        "working_set_bytes": 11345920,
+        "private_bytes": 6533120
+      },
+      "historical_peak_counters": {
+        "peak_working_set_bytes": 11456512,
+        "peak_commit_bytes": 6688768
+      }
+    },
+    {
+      "repeat": 1,
+      "case": "44100-1-mp3",
+      "convert": true,
+      "directory": "artifacts/p0/audio-adaptation-94c7167d",
+      "checks": {
+        "accepted_packets": 727,
+        "stale_events": 1,
+        "retirements": 3,
+        "pauses": 3
+      },
+      "budgets": null,
+      "result": {
+        "path": "artifacts/p0/audio-adaptation-94c7167d/result.json",
+        "bytes": 243973,
+        "sha256": "2499a411baf663ba021b63d93efc19e5ee20ce1d59137fa3309a3ecbc4db70fe"
+      },
+      "evidence": {
+        "path": "artifacts/p0/audio-adaptation-94c7167d/evidence.json",
+        "bytes": 58883,
+        "sha256": "eb6c6a866ae398ceedf16f29bf908ea982db7d3ec52fd08f1e1cd2d29ecdc682"
+      },
+      "packets": {
+        "path": "artifacts/p0/audio-adaptation-94c7167d/packets.jsonl",
+        "bytes": 300488,
+        "sha256": "2a75b2a351e1c9d0ed535ff1dba015275380303476c306595431f5b45e692e00"
+      },
+      "source_format": {
+        "channels": 1,
+        "frames": 5292000,
+        "gain": 0.002,
+        "rate": 44100
+      },
+      "final_stats": {
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 87165,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "native_discarded_frames": 12791,
+        "origin_frame": 122280,
+        "packets": 0,
+        "queued_blocks": 0,
+        "queued_frames": 0,
+        "stale_blocks": 1,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "checkpoints": [
+        {
+          "epoch": 0,
+          "name": "continuous",
+          "simulation_us": 8006009,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 0,
+            "free_blocks": 1,
+            "generation": 1,
+            "in_flight": false,
+            "native_discarded_frames": 0,
+            "origin_frame": 0,
+            "packets": 575,
+            "queued_blocks": 4,
+            "queued_frames": 14611,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "pause_with_old_inflight",
+          "simulation_us": 8090748,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11965,
+            "free_blocks": 4,
+            "generation": 2,
+            "in_flight": true,
+            "native_discarded_frames": 3970,
+            "origin_frame": 356801,
+            "packets": 0,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "old_block_rejected",
+          "simulation_us": 8090748,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11965,
+            "free_blocks": 1,
+            "generation": 2,
+            "in_flight": false,
+            "native_discarded_frames": 3970,
+            "origin_frame": 356801,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "seek_paused",
+          "simulation_us": 1234567,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 41526,
+            "free_blocks": 1,
+            "generation": 5,
+            "in_flight": false,
+            "native_discarded_frames": 8380,
+            "origin_frame": 54444,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "fault_frozen",
+          "simulation_us": 1742049,
+          "stats": {
+            "active": false,
+            "decode_failures": 0,
+            "discarded_frames": 55111,
+            "free_blocks": 5,
+            "generation": 6,
+            "in_flight": false,
+            "native_discarded_frames": 8380,
+            "origin_frame": 54444,
+            "packets": 36,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "recovered_paused",
+          "simulation_us": 1742049,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 55111,
+            "free_blocks": 1,
+            "generation": 7,
+            "in_flight": false,
+            "native_discarded_frames": 8380,
+            "origin_frame": 76824,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "final_pause",
+          "simulation_us": 2772797,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 70781,
+            "free_blocks": 1,
+            "generation": 8,
+            "in_flight": false,
+            "native_discarded_frames": 12791,
+            "origin_frame": 122280,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        }
+      ],
+      "latencies": [
+        {
+          "kind": "play_ready",
+          "ms": 10.6938
+        },
+        {
+          "kind": "pause",
+          "ms": 10.984
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.857000000000001
+        },
+        {
+          "kind": "pause",
+          "ms": 10.899199999999999
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.978299999999999
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.9776
+        },
+        {
+          "kind": "pause",
+          "ms": 10.3866
+        }
+      ],
+      "phases": [
+        {
+          "phase": "Playing",
+          "sample_count": 65,
+          "sample_span_seconds": 6.875,
+          "cpu_one_logical_core_percent": 0.22727272727272727,
+          "working_set_bytes_max": 9764864,
+          "working_set_bytes_last": 9764864,
+          "private_bytes_max": 5025792,
+          "private_bytes_last": 5025792,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "Transitions",
+          "sample_count": 26,
+          "sample_span_seconds": 2.702999999994063,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 10489856,
+          "working_set_bytes_last": 10489856,
+          "private_bytes_max": 5619712,
+          "private_bytes_last": 5619712,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "PausedIdle",
+          "sample_count": 18,
+          "sample_span_seconds": 1.860000000000582,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 10694656,
+          "working_set_bytes_last": 10694656,
+          "private_bytes_max": 5828608,
+          "private_bytes_last": 5828608,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "ClosedIdle",
+          "sample_count": 18,
+          "sample_span_seconds": 1.8430000000080327,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11825152,
+          "working_set_bytes_last": 11825152,
+          "private_bytes_max": 6967296,
+          "private_bytes_last": 6967296,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        }
+      ],
+      "format_observations": [
+        "{\"buffer_frames\": 4410, \"channels\": 1, \"clock_frequency\": 176400, \"conversion_enabled\": true, \"mix_channels\": 2, \"mix_rate\": 48000, \"rate\": 44100}"
+      ],
+      "first_playing_clock_span": {
+        "wall_seconds": 8.034050500000001,
+        "device_seconds": 8.028027,
+        "ratio": 0.999250253654741
+      },
+      "manual_device_change": false,
+      "device_change_observed": false,
+      "fault": {
+        "code": null,
+        "operation": "explicit stream invalidation"
+      },
+      "normal_sampled_peaks": {
+        "working_set_bytes": 11825152,
+        "private_bytes": 6967296
+      },
+      "historical_peak_counters": {
+        "peak_working_set_bytes": 11939840,
+        "peak_commit_bytes": 7127040
+      }
+    },
+    {
+      "repeat": 1,
+      "case": "44100-1-ogg",
+      "convert": true,
+      "directory": "artifacts/p0/audio-adaptation-edc46107",
+      "checks": {
+        "accepted_packets": 686,
+        "stale_events": 1,
+        "retirements": 3,
+        "pauses": 3
+      },
+      "budgets": null,
+      "result": {
+        "path": "artifacts/p0/audio-adaptation-edc46107/result.json",
+        "bytes": 240637,
+        "sha256": "eb56a5850be0e891b99cc1bd6c588e7d1338c216a54e95f1fbbcc88767b06f8d"
+      },
+      "evidence": {
+        "path": "artifacts/p0/audio-adaptation-edc46107/evidence.json",
+        "bytes": 58293,
+        "sha256": "d9a8887cc4d38f5edff60ded29e786d9d724b349a3b936582c676f39ac280baa"
+      },
+      "packets": {
+        "path": "artifacts/p0/audio-adaptation-edc46107/packets.jsonl",
+        "bytes": 283607,
+        "sha256": "fa94c95dcdbddf111c8a2dbd90603ee9f141d42c2476f74d1f0c2c2ee9787047"
+      },
+      "source_format": {
+        "channels": 1,
+        "frames": 5292000,
+        "gain": 0.002,
+        "rate": 44100
+      },
+      "final_stats": {
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 88047,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "native_discarded_frames": 11909,
+        "origin_frame": 121967,
+        "packets": 0,
+        "queued_blocks": 0,
+        "queued_frames": 0,
+        "stale_blocks": 1,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "checkpoints": [
+        {
+          "epoch": 0,
+          "name": "continuous",
+          "simulation_us": 8004625,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 0,
+            "free_blocks": 1,
+            "generation": 1,
+            "in_flight": false,
+            "native_discarded_frames": 0,
+            "origin_frame": 0,
+            "packets": 539,
+            "queued_blocks": 4,
+            "queued_frames": 14611,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "pause_with_old_inflight",
+          "simulation_us": 8090748,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11965,
+            "free_blocks": 4,
+            "generation": 2,
+            "in_flight": true,
+            "native_discarded_frames": 3970,
+            "origin_frame": 356801,
+            "packets": 0,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 0,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 0,
+          "name": "old_block_rejected",
+          "simulation_us": 8090748,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 11965,
+            "free_blocks": 1,
+            "generation": 2,
+            "in_flight": false,
+            "native_discarded_frames": 3970,
+            "origin_frame": 356801,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "seek_paused",
+          "simulation_us": 1234567,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 41967,
+            "free_blocks": 1,
+            "generation": 5,
+            "in_flight": false,
+            "native_discarded_frames": 7939,
+            "origin_frame": 54444,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 1,
+          "name": "fault_frozen",
+          "simulation_us": 1734952,
+          "stats": {
+            "active": false,
+            "decode_failures": 0,
+            "discarded_frames": 55552,
+            "free_blocks": 5,
+            "generation": 6,
+            "in_flight": false,
+            "native_discarded_frames": 7939,
+            "origin_frame": 54444,
+            "packets": 37,
+            "queued_blocks": 0,
+            "queued_frames": 0,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "recovered_paused",
+          "simulation_us": 1734952,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 55552,
+            "free_blocks": 1,
+            "generation": 7,
+            "in_flight": false,
+            "native_discarded_frames": 7939,
+            "origin_frame": 76511,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        },
+        {
+          "epoch": 2,
+          "name": "final_pause",
+          "simulation_us": 2765700,
+          "stats": {
+            "active": true,
+            "decode_failures": 0,
+            "discarded_frames": 71663,
+            "free_blocks": 1,
+            "generation": 8,
+            "in_flight": false,
+            "native_discarded_frames": 11909,
+            "origin_frame": 121967,
+            "packets": 0,
+            "queued_blocks": 4,
+            "queued_frames": 16384,
+            "stale_blocks": 1,
+            "trace_overflow": false,
+            "underruns": 0
+          }
+        }
+      ],
+      "latencies": [
+        {
+          "kind": "play_ready",
+          "ms": 20.6317
+        },
+        {
+          "kind": "pause",
+          "ms": 11.0689
+        },
+        {
+          "kind": "play_ready",
+          "ms": 21.9893
+        },
+        {
+          "kind": "pause",
+          "ms": 11.0097
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.5248
+        },
+        {
+          "kind": "play_ready",
+          "ms": 10.9563
+        },
+        {
+          "kind": "pause",
+          "ms": 10.9851
+        }
+      ],
+      "phases": [
+        {
+          "phase": "Playing",
+          "sample_count": 63,
+          "sample_span_seconds": 6.75,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 11026432,
+          "working_set_bytes_last": 11026432,
+          "private_bytes_max": 6492160,
+          "private_bytes_last": 6492160,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "Transitions",
+          "sample_count": 27,
+          "sample_span_seconds": 2.812000000005355,
+          "cpu_one_logical_core_percent": 0.5556543385480172,
+          "working_set_bytes_max": 12267520,
+          "working_set_bytes_last": 12267520,
+          "private_bytes_max": 7684096,
+          "private_bytes_last": 7684096,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "PausedIdle",
+          "sample_count": 18,
+          "sample_span_seconds": 1.8590000000112923,
+          "cpu_one_logical_core_percent": 0.8405056481928503,
+          "working_set_bytes_max": 13799424,
+          "working_set_bytes_last": 13799424,
+          "private_bytes_max": 9322496,
+          "private_bytes_last": 9322496,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        },
+        {
+          "phase": "ClosedIdle",
+          "sample_count": 17,
+          "sample_span_seconds": 1.7339999999967404,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 12541952,
+          "working_set_bytes_last": 12541952,
+          "private_bytes_max": 8318976,
+          "private_bytes_last": 8318976,
+          "gpu_dedicated_bytes_max": null,
+          "gpu_dedicated_bytes_last": null,
+          "gpu_shared_bytes_max": null,
+          "gpu_shared_bytes_last": null
+        }
+      ],
+      "format_observations": [
+        "{\"buffer_frames\": 4410, \"channels\": 1, \"clock_frequency\": 176400, \"conversion_enabled\": true, \"mix_channels\": 2, \"mix_rate\": 48000, \"rate\": 44100}"
+      ],
+      "first_playing_clock_span": {
+        "wall_seconds": 8.005803,
+        "device_seconds": 8.000816,
+        "ratio": 0.9993770768528779
+      },
+      "manual_device_change": false,
+      "device_change_observed": false,
+      "fault": {
+        "code": null,
+        "operation": "explicit stream invalidation"
+      },
+      "normal_sampled_peaks": {
+        "working_set_bytes": 13799424,
+        "private_bytes": 9322496
+      },
+      "historical_peak_counters": {
+        "peak_working_set_bytes": 13803520,
+        "peak_commit_bytes": 9330688
+      }
+    }
+  ],
+  "manual": {
+    "directory": "artifacts/p0/audio-adaptation-13b11a65",
+    "result": {
+      "path": "artifacts/p0/audio-adaptation-13b11a65/result.json",
+      "bytes": 2098362,
+      "sha256": "0823efd30234183c500062724be034182ba647cccc57c3b082759d917d4cd50d"
+    },
+    "evidence": {
+      "path": "artifacts/p0/audio-adaptation-13b11a65/evidence.json",
+      "bytes": 438031,
+      "sha256": "0e04bee6682a0c131ab39494dc621f4dd9451402ff6a90b6fd66915e0545af57"
+    },
+    "packets": {
+      "path": "artifacts/p0/audio-adaptation-13b11a65/packets.jsonl",
+      "bytes": 793175,
+      "sha256": "2de5bb30fdf4269d353c473ae03cf20e7f67efee519fd8fe4d7b187542db0f54"
+    },
+    "source_format": {
+      "channels": 1,
+      "frames": 5292000,
+      "gain": 0.002,
+      "rate": 44100
+    },
+    "checks": {
+      "accepted_packets": 1929,
+      "stale_events": 1,
+      "retirements": 3,
+      "pauses": 3
+    },
+    "final_stats": {
+      "active": false,
+      "decode_failures": 0,
+      "discarded_frames": 86545,
+      "free_blocks": 5,
+      "generation": 9,
+      "in_flight": false,
+      "native_discarded_frames": 12349,
+      "origin_frame": 926742,
+      "packets": 0,
+      "queued_blocks": 0,
+      "queued_frames": 0,
+      "stale_blocks": 1,
+      "trace_overflow": false,
+      "underruns": 0
+    },
+    "checkpoints": [
+      {
+        "epoch": 0,
+        "name": "continuous",
+        "simulation_us": 8003605,
+        "stats": {
+          "active": true,
+          "decode_failures": 0,
+          "discarded_frames": 0,
+          "free_blocks": 1,
+          "generation": 1,
+          "in_flight": false,
+          "native_discarded_frames": 0,
+          "origin_frame": 0,
+          "packets": 516,
+          "queued_blocks": 4,
+          "queued_frames": 14611,
+          "stale_blocks": 0,
+          "trace_overflow": false,
+          "underruns": 0
+        }
+      },
+      {
+        "epoch": 0,
+        "name": "pause_with_old_inflight",
+        "simulation_us": 8090748,
+        "stats": {
+          "active": true,
+          "decode_failures": 0,
+          "discarded_frames": 11965,
+          "free_blocks": 4,
+          "generation": 2,
+          "in_flight": true,
+          "native_discarded_frames": 3970,
+          "origin_frame": 356801,
+          "packets": 0,
+          "queued_blocks": 0,
+          "queued_frames": 0,
+          "stale_blocks": 0,
+          "trace_overflow": false,
+          "underruns": 0
+        }
+      },
+      {
+        "epoch": 0,
+        "name": "old_block_rejected",
+        "simulation_us": 8090748,
+        "stats": {
+          "active": true,
+          "decode_failures": 0,
+          "discarded_frames": 11965,
+          "free_blocks": 1,
+          "generation": 2,
+          "in_flight": false,
+          "native_discarded_frames": 3970,
+          "origin_frame": 356801,
+          "packets": 0,
+          "queued_blocks": 4,
+          "queued_frames": 16384,
+          "stale_blocks": 1,
+          "trace_overflow": false,
+          "underruns": 0
+        }
+      },
+      {
+        "epoch": 1,
+        "name": "seek_paused",
+        "simulation_us": 1234567,
+        "stats": {
+          "active": true,
+          "decode_failures": 0,
+          "discarded_frames": 41526,
+          "free_blocks": 1,
+          "generation": 5,
+          "in_flight": false,
+          "native_discarded_frames": 8380,
+          "origin_frame": 54444,
+          "packets": 0,
+          "queued_blocks": 4,
+          "queued_frames": 16384,
+          "stale_blocks": 1,
+          "trace_overflow": false,
+          "underruns": 0
+        }
+      },
+      {
+        "epoch": 1,
+        "name": "fault_frozen",
+        "simulation_us": 19984567,
+        "stats": {
+          "active": false,
+          "decode_failures": 0,
+          "discarded_frames": 54017,
+          "free_blocks": 5,
+          "generation": 6,
+          "in_flight": false,
+          "native_discarded_frames": 8380,
+          "origin_frame": 54444,
+          "packets": 1307,
+          "queued_blocks": 0,
+          "queued_frames": 0,
+          "stale_blocks": 1,
+          "trace_overflow": false,
+          "underruns": 0
+        }
+      },
+      {
+        "epoch": 2,
+        "name": "recovered_paused",
+        "simulation_us": 19984567,
+        "stats": {
+          "active": true,
+          "decode_failures": 0,
+          "discarded_frames": 54017,
+          "free_blocks": 1,
+          "generation": 7,
+          "in_flight": false,
+          "native_discarded_frames": 8380,
+          "origin_frame": 881319,
+          "packets": 0,
+          "queued_blocks": 4,
+          "queued_frames": 16384,
+          "stale_blocks": 1,
+          "trace_overflow": false,
+          "underruns": 0
+        }
+      },
+      {
+        "epoch": 2,
+        "name": "final_pause",
+        "simulation_us": 21014567,
+        "stats": {
+          "active": true,
+          "decode_failures": 0,
+          "discarded_frames": 70161,
+          "free_blocks": 1,
+          "generation": 8,
+          "in_flight": false,
+          "native_discarded_frames": 12349,
+          "origin_frame": 926742,
+          "packets": 0,
+          "queued_blocks": 4,
+          "queued_frames": 16384,
+          "stale_blocks": 1,
+          "trace_overflow": false,
+          "underruns": 0
+        }
+      }
+    ],
+    "latencies": [
+      {
+        "kind": "play_ready",
+        "ms": 10.6809
+      },
+      {
+        "kind": "pause",
+        "ms": 11.0089
+      },
+      {
+        "kind": "play_ready",
+        "ms": 11.0005
+      },
+      {
+        "kind": "pause",
+        "ms": 10.897499999999999
+      },
+      {
+        "kind": "play_ready",
+        "ms": 10.9938
+      },
+      {
+        "kind": "play_ready",
+        "ms": 119.3558
+      },
+      {
+        "kind": "pause",
+        "ms": 10.5105
+      }
+    ],
+    "phases": [
+      {
+        "phase": "Playing",
+        "sample_count": 64,
+        "sample_span_seconds": 6.89100000000326,
+        "cpu_one_logical_core_percent": 0.0,
+        "working_set_bytes_max": 9232384,
+        "working_set_bytes_last": 9232384,
+        "private_bytes_max": 4583424,
+        "private_bytes_last": 4583424,
+        "gpu_dedicated_bytes_max": null,
+        "gpu_dedicated_bytes_last": null,
+        "gpu_shared_bytes_max": null,
+        "gpu_shared_bytes_last": null
+      },
+      {
+        "phase": "Transitions",
+        "sample_count": 8,
+        "sample_span_seconds": 0.7649999999994179,
+        "cpu_one_logical_core_percent": 0.0,
+        "working_set_bytes_max": 9633792,
+        "working_set_bytes_last": 9633792,
+        "private_bytes_max": 4861952,
+        "private_bytes_last": 4861952,
+        "gpu_dedicated_bytes_max": null,
+        "gpu_dedicated_bytes_last": null,
+        "gpu_shared_bytes_max": null,
+        "gpu_shared_bytes_last": null
+      },
+      {
+        "phase": "await_unplug_playing",
+        "sample_count": 163,
+        "sample_span_seconds": 17.51600000000326,
+        "cpu_one_logical_core_percent": 0.7136332496002326,
+        "working_set_bytes_max": 11292672,
+        "working_set_bytes_last": 11288576,
+        "private_bytes_max": 6524928,
+        "private_bytes_last": 6524928,
+        "gpu_dedicated_bytes_max": null,
+        "gpu_dedicated_bytes_last": null,
+        "gpu_shared_bytes_max": null,
+        "gpu_shared_bytes_last": null
+      },
+      {
+        "phase": "await_replug_recover",
+        "sample_count": 637,
+        "sample_span_seconds": 69.03100000000268,
+        "cpu_one_logical_core_percent": 0.27161709956395347,
+        "working_set_bytes_max": 16752640,
+        "working_set_bytes_last": 16752640,
+        "private_bytes_max": 12136448,
+        "private_bytes_last": 12136448,
+        "gpu_dedicated_bytes_max": null,
+        "gpu_dedicated_bytes_last": null,
+        "gpu_shared_bytes_max": null,
+        "gpu_shared_bytes_last": null
+      },
+      {
+        "phase": "recovered_wait_explicit_play",
+        "sample_count": 307,
+        "sample_span_seconds": 33.25,
+        "cpu_one_logical_core_percent": 0.046992481203007516,
+        "working_set_bytes_max": 19505152,
+        "working_set_bytes_last": 19501056,
+        "private_bytes_max": 14962688,
+        "private_bytes_last": 14962688,
+        "gpu_dedicated_bytes_max": null,
+        "gpu_dedicated_bytes_last": null,
+        "gpu_shared_bytes_max": null,
+        "gpu_shared_bytes_last": null
+      },
+      {
+        "phase": "PausedIdle",
+        "sample_count": 18,
+        "sample_span_seconds": 1.860000000000582,
+        "cpu_one_logical_core_percent": 0.8400537634405973,
+        "working_set_bytes_max": 30306304,
+        "working_set_bytes_last": 30306304,
+        "private_bytes_max": 26034176,
+        "private_bytes_last": 26034176,
+        "gpu_dedicated_bytes_max": null,
+        "gpu_dedicated_bytes_last": null,
+        "gpu_shared_bytes_max": null,
+        "gpu_shared_bytes_last": null
+      },
+      {
+        "phase": "ClosedIdle",
+        "sample_count": 18,
+        "sample_span_seconds": 1.8439999999973224,
+        "cpu_one_logical_core_percent": 1.694685466379901,
+        "working_set_bytes_max": 32903168,
+        "working_set_bytes_last": 32903168,
+        "private_bytes_max": 31379456,
+        "private_bytes_last": 31379456,
+        "gpu_dedicated_bytes_max": null,
+        "gpu_dedicated_bytes_last": null,
+        "gpu_shared_bytes_max": null,
+        "gpu_shared_bytes_last": null
+      }
+    ],
+    "budgets": null,
+    "format_observations": [
+      "{\"buffer_frames\": 4410, \"channels\": 1, \"clock_frequency\": 176400, \"conversion_enabled\": true, \"mix_channels\": 2, \"mix_rate\": 48000, \"rate\": 44100}"
+    ],
+    "first_playing_clock_span": {
+      "wall_seconds": 8.058039299999999,
+      "device_seconds": 8.044512,
+      "ratio": 0.9983212665641876
+    },
+    "manual_device_change": true,
+    "device_change_observed": true,
+    "fault": {
+      "code": -2004287484,
+      "operation": "GetPosition precise reading"
+    },
+    "normal_sampled_peaks": {
+      "working_set_bytes": 32903168,
+      "private_bytes": 31379456
+    },
+    "historical_peak_counters": {
+      "peak_working_set_bytes": 40439808,
+      "peak_commit_bytes": 36438016
+    }
+  },
+  "smoke": {
+    "directory": "artifacts/p0/audio-adaptation-9865b5b9",
+    "result": {
+      "path": "artifacts/p0/audio-adaptation-9865b5b9/result.json",
+      "bytes": 241306,
+      "sha256": "8d6bbba6eb9c4e27527948f74655d0029a4e1cbc2c19ebfa0849c71e6eefbf72"
+    },
+    "evidence": {
+      "path": "artifacts/p0/audio-adaptation-9865b5b9/evidence.json",
+      "bytes": 58560,
+      "sha256": "51856fe8453d1d91c805990085a179ec9af0a2fd029bb69f4657ed1c1873802a"
+    },
+    "packets": {
+      "path": "artifacts/p0/audio-adaptation-9865b5b9/packets.jsonl",
+      "bytes": 292532,
+      "sha256": "f1692b89c26dd3a466c257e23867a2ef57ec229f75b80e13dec56dc2448da25d"
+    },
+    "source_format": {
+      "channels": 1,
+      "frames": 5292000,
+      "gain": 0.002,
+      "rate": 44100
+    },
+    "checks": {
+      "accepted_packets": 709,
+      "stale_events": 1,
+      "retirements": 3,
+      "pauses": 3
+    },
+    "final_stats": {
+      "active": false,
+      "decode_failures": 0,
+      "discarded_frames": 87639,
+      "free_blocks": 5,
+      "generation": 9,
+      "in_flight": false,
+      "native_discarded_frames": 13231,
+      "origin_frame": 122138,
+      "packets": 0,
+      "queued_blocks": 0,
+      "queued_frames": 0,
+      "stale_blocks": 1,
+      "trace_overflow": false,
+      "underruns": 0
+    },
+    "checkpoints": [
+      {
+        "epoch": 0,
+        "name": "continuous",
+        "simulation_us": 8001292,
+        "stats": {
+          "active": true,
+          "decode_failures": 0,
+          "discarded_frames": 0,
+          "free_blocks": 1,
+          "generation": 1,
+          "in_flight": false,
+          "native_discarded_frames": 0,
+          "origin_frame": 0,
+          "packets": 561,
+          "queued_blocks": 4,
+          "queued_frames": 14611,
+          "stale_blocks": 0,
+          "trace_overflow": false,
+          "underruns": 0
+        }
+      },
+      {
+        "epoch": 0,
+        "name": "pause_with_old_inflight",
+        "simulation_us": 8080748,
+        "stats": {
+          "active": true,
+          "decode_failures": 0,
+          "discarded_frames": 11965,
+          "free_blocks": 4,
+          "generation": 2,
+          "in_flight": true,
+          "native_discarded_frames": 4411,
+          "origin_frame": 356360,
+          "packets": 0,
+          "queued_blocks": 0,
+          "queued_frames": 0,
+          "stale_blocks": 0,
+          "trace_overflow": false,
+          "underruns": 0
+        }
+      },
+      {
+        "epoch": 0,
+        "name": "old_block_rejected",
+        "simulation_us": 8080748,
+        "stats": {
+          "active": true,
+          "decode_failures": 0,
+          "discarded_frames": 11965,
+          "free_blocks": 1,
+          "generation": 2,
+          "in_flight": false,
+          "native_discarded_frames": 4411,
+          "origin_frame": 356360,
+          "packets": 0,
+          "queued_blocks": 4,
+          "queued_frames": 16384,
+          "stale_blocks": 1,
+          "trace_overflow": false,
+          "underruns": 0
+        }
+      },
+      {
+        "epoch": 1,
+        "name": "seek_paused",
+        "simulation_us": 1234567,
+        "stats": {
+          "active": true,
+          "decode_failures": 0,
+          "discarded_frames": 41967,
+          "free_blocks": 1,
+          "generation": 5,
+          "in_flight": false,
+          "native_discarded_frames": 8821,
+          "origin_frame": 54444,
+          "packets": 0,
+          "queued_blocks": 4,
+          "queued_frames": 16384,
+          "stale_blocks": 1,
+          "trace_overflow": false,
+          "underruns": 0
+        }
+      },
+      {
+        "epoch": 1,
+        "name": "fault_frozen",
+        "simulation_us": 1739578,
+        "stats": {
+          "active": false,
+          "decode_failures": 0,
+          "discarded_frames": 55552,
+          "free_blocks": 5,
+          "generation": 6,
+          "in_flight": false,
+          "native_discarded_frames": 8821,
+          "origin_frame": 54444,
+          "packets": 39,
+          "queued_blocks": 0,
+          "queued_frames": 0,
+          "stale_blocks": 1,
+          "trace_overflow": false,
+          "underruns": 0
+        }
+      },
+      {
+        "epoch": 2,
+        "name": "recovered_paused",
+        "simulation_us": 1739578,
+        "stats": {
+          "active": true,
+          "decode_failures": 0,
+          "discarded_frames": 55552,
+          "free_blocks": 1,
+          "generation": 7,
+          "in_flight": false,
+          "native_discarded_frames": 8821,
+          "origin_frame": 76715,
+          "packets": 0,
+          "queued_blocks": 4,
+          "queued_frames": 16384,
+          "stale_blocks": 1,
+          "trace_overflow": false,
+          "underruns": 0
+        }
+      },
+      {
+        "epoch": 2,
+        "name": "final_pause",
+        "simulation_us": 2769578,
+        "stats": {
+          "active": true,
+          "decode_failures": 0,
+          "discarded_frames": 71255,
+          "free_blocks": 1,
+          "generation": 8,
+          "in_flight": false,
+          "native_discarded_frames": 13231,
+          "origin_frame": 122138,
+          "packets": 0,
+          "queued_blocks": 4,
+          "queued_frames": 16384,
+          "stale_blocks": 1,
+          "trace_overflow": false,
+          "underruns": 0
+        }
+      }
+    ],
+    "latencies": [
+      {
+        "kind": "play_ready",
+        "ms": 10.9979
+      },
+      {
+        "kind": "pause",
+        "ms": 10.9039
+      },
+      {
+        "kind": "play_ready",
+        "ms": 10.6902
+      },
+      {
+        "kind": "pause",
+        "ms": 10.698300000000001
+      },
+      {
+        "kind": "play_ready",
+        "ms": 10.0882
+      },
+      {
+        "kind": "play_ready",
+        "ms": 10.9886
+      },
+      {
+        "kind": "pause",
+        "ms": 11.0285
+      }
+    ],
+    "phases": [
+      {
+        "phase": "Playing",
+        "sample_count": 63,
+        "sample_span_seconds": 6.719000000011874,
+        "cpu_one_logical_core_percent": 0.4650989730606455,
+        "working_set_bytes_max": 10522624,
+        "working_set_bytes_last": 10522624,
+        "private_bytes_max": 4579328,
+        "private_bytes_last": 4579328,
+        "gpu_dedicated_bytes_max": null,
+        "gpu_dedicated_bytes_last": null,
+        "gpu_shared_bytes_max": null,
+        "gpu_shared_bytes_last": null
+      },
+      {
+        "phase": "Transitions",
+        "sample_count": 27,
+        "sample_span_seconds": 2.812000000005355,
+        "cpu_one_logical_core_percent": 0.0,
+        "working_set_bytes_max": 11173888,
+        "working_set_bytes_last": 11173888,
+        "private_bytes_max": 5115904,
+        "private_bytes_last": 5115904,
+        "gpu_dedicated_bytes_max": null,
+        "gpu_dedicated_bytes_last": null,
+        "gpu_shared_bytes_max": null,
+        "gpu_shared_bytes_last": null
+      },
+      {
+        "phase": "PausedIdle",
+        "sample_count": 18,
+        "sample_span_seconds": 1.8279999999940628,
+        "cpu_one_logical_core_percent": 0.0,
+        "working_set_bytes_max": 11456512,
+        "working_set_bytes_last": 11456512,
+        "private_bytes_max": 5394432,
+        "private_bytes_last": 5394432,
+        "gpu_dedicated_bytes_max": null,
+        "gpu_dedicated_bytes_last": null,
+        "gpu_shared_bytes_max": null,
+        "gpu_shared_bytes_last": null
+      },
+      {
+        "phase": "ClosedIdle",
+        "sample_count": 18,
+        "sample_span_seconds": 1.8429999999934807,
+        "cpu_one_logical_core_percent": 0.0,
+        "working_set_bytes_max": 12623872,
+        "working_set_bytes_last": 12496896,
+        "private_bytes_max": 6541312,
+        "private_bytes_last": 4710400,
+        "gpu_dedicated_bytes_max": null,
+        "gpu_dedicated_bytes_last": null,
+        "gpu_shared_bytes_max": null,
+        "gpu_shared_bytes_last": null
+      }
+    ],
+    "budgets": null,
+    "format_observations": [
+      "{\"buffer_frames\": 4410, \"channels\": 1, \"clock_frequency\": 176400, \"conversion_enabled\": true, \"mix_channels\": 2, \"mix_rate\": 48000, \"rate\": 44100}"
+    ],
+    "first_playing_clock_span": {
+      "wall_seconds": 8.0150596,
+      "device_seconds": 8.013288,
+      "ratio": 0.9997789660852926
+    },
+    "manual_device_change": false,
+    "device_change_observed": false,
+    "fault": {
+      "code": null,
+      "operation": "explicit stream invalidation"
+    },
+    "normal_sampled_peaks": {
+      "working_set_bytes": 12623872,
+      "private_bytes": 6541312
+    },
+    "historical_peak_counters": {
+      "peak_working_set_bytes": 13737984,
+      "peak_commit_bytes": 7700480
+    }
+  },
+  "manual_user_observation": {
+    "path": "artifacts/p0/audio-adaptation-manual-observation-v1.json",
+    "bytes": 525,
+    "sha256": "9a424030f93af2ddf63a78e7aef56c963a96a5870fcbd8cef8bfa997701017fd"
+  },
+  "negative_checks": [
+    {
+      "case": "strict_mismatch",
+      "exit_code": 1,
+      "result": {
+        "path": "artifacts/p0/audio-adaptation-strict-reject-9c111a63/result.json",
+        "bytes": 323,
+        "sha256": "789872fd23bc87b76e1f900423fe51eff4d16bb7d246131307fec6d713bda2e0"
+      },
+      "log": {
+        "path": "artifacts/p0/audio-adaptation-strict-reject-9c111a63.log",
+        "bytes": 281,
+        "sha256": "4657e0b9b18cc4e9e0b309390996b8ea49f2573906f5b91f879855859458703c"
+      }
+    },
+    {
+      "case": "output_escape",
+      "exit_code": 1
+    },
+    {
+      "case": "existing_output",
+      "exit_code": 1
+    }
+  ],
+  "checks": {
+    "checks-audio-adaptation-adapter-v4.log": {
+      "path": "artifacts/p0/checks-audio-adaptation-adapter-v4.log",
+      "bytes": 2963,
+      "sha256": "c6dbb4b9e929598a3e1e46d4735986a3a4dd92c5a290eb302b97daf66521a9b7"
+    },
+    "checks-audio-adaptation-gui-v2.log": {
+      "path": "artifacts/p0/checks-audio-adaptation-gui-v2.log",
+      "bytes": 12069,
+      "sha256": "45ca165973e2068cd24cb73e63f87ff5a22e40710153aa9fc3a7444f5a261bd5"
+    },
+    "checks-audio-adaptation-python-v3.log": {
+      "path": "artifacts/p0/checks-audio-adaptation-python-v3.log",
+      "bytes": 12373,
+      "sha256": "5645bddd6d00b0aaa81137dacbeb992b33a183d04782cc71ba1c50454221d7dd"
+    },
+    "checks-audio-adaptation-media-contract-v1.log": {
+      "path": "artifacts/p0/checks-audio-adaptation-media-contract-v1.log",
+      "bytes": 5692,
+      "sha256": "18aa34df57ed0fdc8fc320810f776c192a579a6b4205b1aa648ffc0006ff5d17"
+    }
+  },
+  "unique_tests": 245,
+  "tests_by_group": {
+    "gui_compressed": 77,
+    "wasapi": 25,
+    "media_compressed": 22,
+    "contract": 10,
+    "python": 111
+  },
+  "totals": {
+    "matrix_runs": 16,
+    "manual_runs": 1,
+    "smoke_runs": 1,
+    "matrix_accepted_packets": 11517,
+    "all_accepted_packets": 14155,
+    "matrix_budget_checks_passed": 6,
+    "underruns": 0,
+    "decode_failures": 0,
+    "trace_overflow": 0
+  },
+  "audit_script": {
+    "path": "artifacts/p0/finish-audio-adaptation-v1.py",
+    "bytes": 9345,
+    "sha256": "7d014b0fa1973d0e062e643df61d884933e8294611b5e29050b6a4b30ae65f3b"
+  },
+  "scope": {
+    "no_system_capture": true,
+    "no_recording": true,
+    "no_system_setting_changes": true,
+    "engine_output_samples_verified": false,
+    "system_audio_engine_cpu_memory_included": false,
+    "usb_or_true_paused_unplug_tested": false,
+    "changed_mix_format_hardware_tested": false,
+    "no_default_device_hardware_tested": false,
+    "graphical_combined_workload_included": false,
+    "linux_macos_hardware_tested": false,
+    "old_stable_code_or_resources_used": false,
+    "formal_product_implemented": false
+  }
+}

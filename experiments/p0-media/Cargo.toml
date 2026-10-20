@@ -1,0 +1,17 @@
+[package]
+name = "p0-media"
+version = "0.0.0"
+edition = "2024"
+rust-version = "1.95"
+publish = false
+
+[workspace]
+
+[features]
+compressed = ["symphonia/mp3", "symphonia/ogg", "symphonia/vorbis"]
+
+[dependencies]
+symphonia = { version = "=0.6.1", default-features = false, features = ["wav", "pcm"] }
+
+[lints.rust]
+unsafe_code = "forbid"

@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "inspected_date": "2026-10-18",
+  "source": {
+    "local_root": "E:\\osu-stable-leak-master",
+    "use_policy": "read_only_research_no_code_binary_or_asset_reuse",
+    "actual_release_version": null,
+    "version_note": "General_Version.cs contains placeholder values; snapshot date and release mapping are unresolved",
+    "authenticity_independently_verified": false,
+    "inventory_scope": "selected_inspected_files_not_whole_tree",
+    "files": [
+      {
+        "relative_path": "README.md",
+        "size_bytes": 35,
+        "sha256": "913b96af9cd3538a5a4620877a111924ad1db026de3219ed70bf0cae4c589e61"
+      },
+      {
+        "relative_path": "osu!common/osu!common.csproj",
+        "size_bytes": 22416,
+        "sha256": "029c54f530b2b9b18a178709887832caa267a32b64d1a8f5490b40ce884f4fe4"
+      },
+      {
+        "relative_path": "osu!win/osu!win.csproj",
+        "size_bytes": 12031,
+        "sha256": "e59858dfd88c63cd2aa41416f16a4b58bcf9592f4116cf2e36d8c171dabb7dcb"
+      },
+      {
+        "relative_path": "osu!/Constants/General_Version.cs",
+        "size_bytes": 476,
+        "sha256": "88475da9efd71c712600b3c75d6c3b2533974160ec0901403990a6362fdc8aa5"
+      },
+      {
+        "relative_path": "osu!/GameBase.cs",
+        "size_bytes": 128264,
+        "sha256": "449f77da176338d255547c8c45f8ceda84950caa19dfc791f1cff7e4e6397aef"
+      },
+      {
+        "relative_path": "osu!/Graphics/Skinning/SkinManager.cs",
+        "size_bytes": 15778,
+        "sha256": "6cc3e65debd7f6be0feabe0a6c1f734264a158f25c97e4f4c252aefc69e627fa"
+      },
+      {
+        "relative_path": "osu!/Graphics/Skinning/Skin.cs",
+        "size_bytes": 16225,
+        "sha256": "bc723b03b67986f028336a3de230486901e14a7db96c394abe799498d0aabfa7"
+      },
+      {
+        "relative_path": "osu!/Graphics/Skinning/SkinOsu.cs",
+        "size_bytes": 9115,
+        "sha256": "9012f62095c2890ba3a48d35baf5940bed7d0a211395197d1644341cb26a8843"
+      },
+      {
+        "relative_path": "osu!/Graphics/Textures/TextureManager.cs",
+        "size_bytes": 18481,
+        "sha256": "7c0e30ac4567d5f744dfad31b9b93066dbb39c9303a8d89333d1179145052fb8"
+      },
+      {
+        "relative_path": "osu!/Graphics/Sprites/pAnimation.cs",
+        "size_bytes": 9543,
+        "sha256": "4bc1110af07bb31d21c2361577eb6b74b4712ba236db1c5964431a9fa5908c05"
+      },
+      {
+        "relative_path": "osu!/Graphics/Sprites/SpriteManager.cs",
+        "size_bytes": 36116,
+        "sha256": "c2121c2c4628cf7cb9ca19f38d05dbbd062eaa4bdbed7f7d1d4e26f0757b8e81"
+      },
+      {
+        "relative_path": "osu!/Audio/AudioEngine_Timing.cs",
+        "size_bytes": 11391,
+        "sha256": "dc7e44a458523361188d8658e0a1aa84a826dd5e39b7f1132985a5156c3d7ba3"
+      },
+      {
+        "relative_path": "osu!/GameModes/Play/Player.cs",
+        "size_bytes": 174590,
+        "sha256": "b573409260573e6650c3ba92a0261b228fede520754b55756cb937d778e8b6df"
+      }
+    ]
+  },
+  "comparison_client": {
+    "executable_path": "D:\\osu!\\osu!.exe",
+    "file_version_resource": "1.3.3.8",
+    "product_version_resource": "1.3.3.8",
+    "sha256": "3adc2d001aacced5f92ba8ae24121980d5e23f5653f37d14cf4765bca1abd9f9",
+    "actual_stable_release": null,
+    "launch_status": "opened_confirmed_by_user",
+    "launch_confirmation_date": "2026-10-18",
+    "accidental_lazer_launch_confirmed_by_user": true,
+    "ui_capture_status": "failed_after_one_recovery_retry",
+    "ui_capture_errors": [
+      "FrameArrived timed out: timed out waiting on channel",
+      "window capture timed out: timed out waiting on channel"
+    ],
+    "compatibility_cases_executed": 0,
+    "ui_capture_status_is_historical": true,
+    "system_window_capture_enabled": false,
+    "verification_strategy": [
+      "read_only_files",
+      "allowlisted_logs",
+      "explicit_local_f12_images"
+    ],
+    "release_stream_configuration": "Stable40",
+    "historical_log_release_hint": {
+      "file": "Logs/session.log",
+      "token": "20260101.1",
+      "is_current_release_proof": false
+    },
+    "latest_f12_target_check": {
+      "target_window_found": false,
+      "key_sent": false,
+      "image_registered": false
+    }
+  },
+  "contract_probe": {
+    "path": "experiments/p0-preview-contract",
+    "authored_from": "project_preview_requirements",
+    "third_party_dependencies": 0,
+    "legacy_reference_dependency": false,
+    "integration_tests_passed": 10,
+    "actual_audio_ui_gpu_or_stable_rules_tested": false
+  },
+  "platforms": {
+    "windows": {
+      "os_version": "10.0.19045.0",
+      "architecture": "x64",
+      "logical_processors": 16,
+      "rustc": "1.80.1",
+      "cargo": "1.80.1",
+      "msvc_toolset": "14.41.34120",
+      "windows_sdk": "10.0.22621.0",
+      "dotnet_sdk": "none_found",
+      "reference_hardware_inventory": "WMI access denied; RAM/GPU/driver not established"
+    },
+    "macos": "not_tested",
+    "linux": "not_tested"
+  },
+  "native_candidate": {
+    "path": "experiments/p0-egui",
+    "framework": "eframe 0.37.0",
+    "rust": "1.95.0 project-local",
+    "result": "docs/p0/windows-native-result.json",
+    "status": "passed",
+    "system_window_capture_used": false
+  }
+}

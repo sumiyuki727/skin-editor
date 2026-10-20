@@ -1,0 +1,13 @@
+[package]
+name = "p0-preview-contract"
+version = "0.0.0"
+edition = "2021"
+rust-version = "1.80"
+publish = false
+
+# Isolated architectural experiment. No product or third-party dependencies.
+[workspace]
+
+[lints.rust]
+unsafe_code = "forbid"
+

@@ -1,0 +1,307 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "kind": "p0_decision_review",
+  "status": "decision_baseline_closed_ready_for_headless_p1",
+  "scope": {
+    "formal_product_implemented": false,
+    "p1_started": false,
+    "new_runtime_measurements": false,
+    "prior_tests_rerun": false,
+    "all_compatibility_accepted": false,
+    "all_platforms_accepted": false
+  },
+  "next_increment": "P1-0: establish toolchain, workspace, format, Clippy, headless tests, dependency checks and CI configuration before feature increments",
+  "first_scope": {
+    "mode": "osu!standard",
+    "mods": "No Mod",
+    "p2": "custom placeholder editing loop",
+    "first_compatibility_static_png_files": [
+      "hitcircle.png",
+      "hitcircleoverlay.png",
+      "approachcircle.png",
+      "default-0.png",
+      "default-1.png",
+      "default-2.png",
+      "default-3.png",
+      "default-4.png",
+      "default-5.png",
+      "default-6.png",
+      "default-7.png",
+      "default-8.png",
+      "default-9.png",
+      "cursor.png",
+      "cursortrail.png"
+    ],
+    "full_standard_gameplay": "later P5; circles alone are not full support"
+  },
+  "technology": {
+    "core": {
+      "language": "Rust",
+      "version": "1.95.0",
+      "edition": "2024",
+      "status": "adopted_for_P1"
+    },
+    "desktop": {
+      "ui": "egui/eframe 0.37.0",
+      "gpu": "wgpu 30.0.1",
+      "image": "image 0.25.10 PNG subset",
+      "status": "P2_integration_baseline_not_product_acceptance"
+    },
+    "media_decoder": {
+      "component": "Symphonia 0.6.1",
+      "status": "candidate"
+    },
+    "production_low_latency_audio_backend": "undecided"
+  },
+  "platforms": {
+    "windows_x64": "reference_machine_only_not_minimum_spec",
+    "linux": "hardware_validation_deferred",
+    "macos": "awaiting_hardware"
+  },
+  "new_development_targets": {
+    "status": "unverified_not_retroactively_applied_to_old_runs",
+    "normal_sampled_private_commit_mib": 512,
+    "windows_discrete_pid_gpu_dedicated_mib": 256,
+    "windows_discrete_pid_gpu_shared_mib": 128,
+    "playing_300s_average_cpu_percent_one_logical_core": 15
+  },
+  "prior_evidence": {
+    "latest_source_record": "docs/p0/windows-audio-adaptation.json",
+    "unchanged_source_files": 124,
+    "prior_unique_tests": 245,
+    "prior_tests_by_group": {
+      "gui_compressed": 77,
+      "wasapi": 25,
+      "media_compressed": 22,
+      "contract": 10,
+      "python": 111
+    },
+    "graphics_audio_source_files": 121,
+    "graphics_audio_snapshot_equals_latest": false,
+    "old_budget_checks": 54,
+    "new_budget_checks_executed": 0
+  },
+  "dependency_metadata": {
+    "scope": "P0 Windows compressed-proof; not product dependencies or distribution approval",
+    "reachable_packages": 186,
+    "registry_packages": 182,
+    "local_experiment_packages": 4,
+    "selected_components": [
+      {
+        "name": "eframe",
+        "version": "0.37.0",
+        "license": "MIT OR Apache-2.0",
+        "rust_version": "1.95"
+      },
+      {
+        "name": "egui",
+        "version": "0.37.0",
+        "license": "MIT OR Apache-2.0",
+        "rust_version": "1.95"
+      },
+      {
+        "name": "image",
+        "version": "0.25.10",
+        "license": "MIT OR Apache-2.0",
+        "rust_version": "1.88.0"
+      },
+      {
+        "name": "symphonia",
+        "version": "0.6.1",
+        "license": "MPL-2.0",
+        "rust_version": "1.85"
+      },
+      {
+        "name": "wgpu",
+        "version": "30.0.1",
+        "license": "MIT OR Apache-2.0",
+        "rust_version": "1.87.0"
+      },
+      {
+        "name": "windows",
+        "version": "0.62.2",
+        "license": "MIT OR Apache-2.0",
+        "rust_version": "1.82"
+      }
+    ],
+    "local_inventory": {
+      "path": "artifacts/p0/p1-decision-dependencies-v1.json",
+      "bytes": 51395,
+      "sha256": "756436fdddbba31efd167fa57a1c0387b297fa8ceecb2e031710cf114672d083"
+    }
+  },
+  "open_acceptance": [
+    {
+      "id": "A01",
+      "limitation": "当前没有正式 domain／application 或模块检查",
+      "next_deliverable": "P1 启动增量建立 workspace、测试／格式／Clippy／依赖检查，运行最小核心测试",
+      "gate": "开始 P1 功能增量前"
+    },
+    {
+      "id": "A02",
+      "limitation": "大历史成本与新工程预算未测",
+      "next_deliverable": "100 资源／10 文档／500 层及 10000 小事务的确定性基线，测历史往返、分支资源与内存",
+      "gate": "P1 结束建立基线；P2/P3 加功能后复验"
+    },
+    {
+      "id": "A03",
+      "limitation": "完整 UI／音频／素材库同版本集成、空项目预算未测；旧图形与新音频不是同一快照",
+      "next_deliverable": "用实际 P2/P3 程序测空闲、连续编辑、切换、关闭；注明系统引擎及辅助进程成本",
+      "gate": "对应编辑闭环验收前"
+    },
+    {
+      "id": "A04",
+      "limitation": "两轮 MP3 的孤立长帧，最长 CPU 帧 64.761 ms；驱动／堆保留未完全归因",
+      "next_deliverable": "正式集成报告 p95／p99／最大值；复现影响输入或播放的停顿时单独归因",
+      "gate": "P2 交互验收；游玩相关不得越过 P5"
+    },
+    {
+      "id": "A05",
+      "limitation": "真实不同 DPI、完整布局、无障碍和发布包未验收",
+      "next_deliverable": "在正式 UI 重测真实输入、IME、缩放、文件路径、全屏；列出未支持能力",
+      "gate": "P2；声明平台发布能力前"
+    },
+    {
+      "id": "A06",
+      "limitation": "首批 15 元素尚无内置 compatibility 实现；默认素材不能复用客户端资源",
+      "next_deliverable": "按 C01–C04、C09/C10 取得适用证据与 fixture；未知查找／默认值不实现；缺失默认素材的自制或授权来源单独验收",
+      "gate": "P3 导出／P4 对应元素标为支持前"
+    },
+    {
+      "id": "A07",
+      "limitation": "序列动画、帧率与声音规则未验证",
+      "next_deliverable": "C05/C06、C11 按明确元素／格式增加证据，检查冻结及相位保持",
+      "gate": "P4/P5 相应能力验收前"
+    },
+    {
+      "id": "A08",
+      "limitation": "未测物理输入／显示／声学延迟；100 ms 输出和互斥／阻塞 I/O 不构成实时承诺",
+      "next_deliverable": "专用输入与音频压力实验、回调／队列和缓冲选择、可听及端到端测量，含主线程阻塞与退出处理",
+      "gate": "P5 实际游玩与正式音频后端定案前"
+    },
+    {
+      "id": "A09",
+      "limitation": "USB、暂停中真实拔出、无默认设备、不同混音格式、系统引擎成本未实测",
+      "next_deliverable": "设备矩阵＋失败／恢复记录；目前 fake 路径与一次模拟耳机失效分栏保留",
+      "gate": "对应平台音频能力声明前"
+    },
+    {
+      "id": "A10",
+      "limitation": "MP3 总前缀定位、阻塞 I/O 取消、真实音乐／标签／特殊容器仍有限",
+      "next_deliverable": "决定支持子集与资源限额；定位／取消压力与错误诊断，不复用未验证参考",
+      "gate": "P5 媒体支持声明前"
+    },
+    {
+      "id": "A11",
+      "limitation": "Linux 实测延期，macOS 无设备",
+      "next_deliverable": "按发行版／显示协议／图形／音频建立真实平台记录，含最低环境",
+      "gate": "各平台发布支持前；不阻塞 P1 无窗口核心"
+    },
+    {
+      "id": "A12",
+      "limitation": "产品自身许可、完整分发清单、字体／默认素材来源未定",
+      "next_deliverable": "正式依赖树与 notices／资源来源清单、打包验证；由用户决定项目自身许可",
+      "gate": "引入对应分发内容及首次发布前"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "docs/p0/windows-compressed-combined-soak.json",
+      "bytes": 102680,
+      "sha256": "7028624b5ada6f2c23fb7019a4f7ed2e5e2494be8a67339a077c14a542da2893"
+    },
+    {
+      "path": "docs/p0/windows-audio-adaptation.json",
+      "bytes": 196913,
+      "sha256": "87da80cc47db5759f940bd674190e7fbead567a80d3e5574b0e4edce7edc892f"
+    },
+    {
+      "path": "docs/p0/windows-resource-cycles.json",
+      "bytes": 55911,
+      "sha256": "dac852218dc9e49adb69daa83b9e29439637cf0837163a656f4a59215a618c06"
+    },
+    {
+      "path": "docs/p0/windows-desktop.json",
+      "bytes": 33278,
+      "sha256": "132f983d03c63dbd8b7be023e4262a0e979c6d2b642fb6dc961ce14318b89685"
+    },
+    {
+      "path": "docs/p0/windows-edit-composition.json",
+      "bytes": 12452,
+      "sha256": "321f15fde170893214f62564a4d2ecbca717a9256b596428b25213d0c3a7d3af"
+    },
+    {
+      "path": "docs/p0/windows-composition-scale.json",
+      "bytes": 3303,
+      "sha256": "c8d9e6e75659f7e42a217827f6451651e7253ea43ce97d95ac871531100a5087"
+    },
+    {
+      "path": "docs/p0/stable-c03-c08-20261020.json",
+      "bytes": 14585,
+      "sha256": "54db1e069192f06ea159858e4a8fae6917b36e5201f4fc84fd95992dc195ff06"
+    },
+    {
+      "path": "docs/p0/source-inventory.json",
+      "bytes": 5302,
+      "sha256": "841a2b5e3eee86a1fe013405c9fdd34edb80445b4276049296cc82f4aec076cc"
+    }
+  ],
+  "documents": [
+    {
+      "path": "README.md",
+      "bytes": 23078,
+      "sha256": "bfcc4bc714f6d826402f37739f4e84d4ff83f950102c86f38bc5f48e863ae8d6"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "bytes": 39147,
+      "sha256": "72c3304983e3741074c2beb9116c151759aa49b1c2f6c0d511a5a0558613e16a"
+    },
+    {
+      "path": "docs/REQUIREMENTS.md",
+      "bytes": 16521,
+      "sha256": "cd3fdeed690126cfee7afc4dd0bd7d6e129e4b0dd07ec33f406dea75fb5645f6"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "bytes": 15917,
+      "sha256": "16d07f85b6724b15bff1866b14de4433a1aad77482068ce3e2dea2b2902daa72"
+    },
+    {
+      "path": "docs/TECH_STACK.md",
+      "bytes": 28055,
+      "sha256": "ecea3f59b08d97382b67e3bb416e8b5ccfc56cc61f3813171689902e38f359f0"
+    },
+    {
+      "path": "docs/P1_PLAN.md",
+      "bytes": 5442,
+      "sha256": "034df9c70ee2fe991126d651e460bec98526c2a05e398ba164c743275db2594c"
+    },
+    {
+      "path": "docs/p0/REPORT.md",
+      "bytes": 69257,
+      "sha256": "011b93d6ed01527e56900f5fd9bdc08c02a0617f25f5bfa13c80489526fd4bde"
+    },
+    {
+      "path": "docs/p0/VALIDATION_MATRIX.md",
+      "bytes": 10052,
+      "sha256": "5ea4d3ae7d3da6e59b69f24708f94d68de57ec2ba2343a29b8bebc8541b0bd13"
+    },
+    {
+      "path": "docs/p0/PREVIEW_SCOPE.md",
+      "bytes": 10688,
+      "sha256": "080ae690945071ef5bf5dbdf8cfa7aa677cb3254b4fc359d68d4d9d38f2438bf"
+    },
+    {
+      "path": "docs/p0/RESOURCE_BUDGET.md",
+      "bytes": 6768,
+      "sha256": "ad6a97e81325e44ab54bc0016df8907d8efeffc23b5896a219bf2c149cc9dd1b"
+    },
+    {
+      "path": "docs/p0/P0_EXIT_REVIEW.md",
+      "bytes": 7924,
+      "sha256": "48cb72ae7b53ed4305e63e015c0e4d895bb40e06042aa42f4ab9ae2c491b9a49"
+    }
+  ]
+}

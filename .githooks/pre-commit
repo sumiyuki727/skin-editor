@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+python tools/check_repository.py --staged
+if [ -f Cargo.toml ]; then
+    python tools/check_core.py
+fi

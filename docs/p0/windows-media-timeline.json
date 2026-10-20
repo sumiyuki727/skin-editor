@@ -1,0 +1,1073 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "status": "passed_for_wav_circle_fixture_scope",
+  "platform": "Windows x64, WASAPI shared float32; no window or GPU in media proof",
+  "runs": [
+    {
+      "directory": "artifacts/p0/media-999fef4d",
+      "kind": "frozen_repeat",
+      "status": "passed",
+      "result_sha256": "cb63e9a1a99d2b290657ab0c444ab04a5e616c55db7df9d4cb5088fbd31f906c",
+      "evidence_sha256": "9b553a9a4b5c4d58aaef7dae651ef1a16d86805118b47b5830fe5b366577d5d0",
+      "executable_sha256": "75186a374bfb1cf286017cf2e1d91289d726f609db335b5336c0a32d28d2bdf2",
+      "fixture": "artifacts/p0/media-fixture-3810a55c",
+      "fixture_sha256": {
+        "manifest.json": "8ed3ad2c5f76ff7b3827f83fd64729721efd9174b1e25995fd5fc1bb6fcb3bae",
+        "timeline.osu": "3a04aa828ad41ae459e777c3cb3ab060b2fd9042e25a20e0d2de06af35f21119",
+        "\u97f3\u9891 \u65e5\u672c\u8a9e.wav": "b14765370296670a4b3e6e6ef38516c34ab86cbc4f057918dfb421908fd7bcf0"
+      },
+      "decode_ms": 1.4568999999999999,
+      "decoded": {
+        "channels": 2,
+        "duration_us": 3000000,
+        "frames": 144000,
+        "gain": 0.04,
+        "payload_bytes": 1152000,
+        "rate": 48000
+      },
+      "audio_format": {
+        "bits": 32,
+        "buffer_frames": 4800,
+        "channels": 2,
+        "rate": 48000
+      },
+      "event_crossings": {
+        "0": [
+          1,
+          2,
+          3
+        ],
+        "1": [
+          5
+        ],
+        "2": [
+          1,
+          2,
+          3
+        ]
+      },
+      "accepted_inputs": 2,
+      "pause_checks": [
+        {
+          "epoch": 0,
+          "position_us": 620000,
+          "wall_ms": 350.4561,
+          "fresh_samples": 3,
+          "device_span_us": 0,
+          "submitted_frame_span": 0
+        },
+        {
+          "epoch": 1,
+          "position_us": 1630000,
+          "wall_ms": 353.0771,
+          "fresh_samples": 3,
+          "device_span_us": 0,
+          "submitted_frame_span": 0
+        },
+        {
+          "epoch": 2,
+          "position_us": 630000,
+          "wall_ms": 360.5344,
+          "fresh_samples": 3,
+          "device_span_us": 0,
+          "submitted_frame_span": 0
+        }
+      ],
+      "relocations": [
+        {
+          "epoch": 1,
+          "frame": {
+            "objects": [
+              {
+                "id": 1,
+                "stage": "Past"
+              },
+              {
+                "id": 2,
+                "stage": "Past"
+              },
+              {
+                "id": 3,
+                "stage": "Past"
+              },
+              {
+                "id": 4,
+                "stage": "Past"
+              },
+              {
+                "id": 5,
+                "stage": "Pending"
+              },
+              {
+                "id": 6,
+                "stage": "Pending"
+              }
+            ],
+            "position_us": 1100000
+          },
+          "pcm": {
+            "first": null,
+            "last": null,
+            "packets": 0,
+            "requested_us": 1100000,
+            "source_origin_frame": 52800,
+            "submitted_frames": 0
+          },
+          "position_us": 1100000
+        },
+        {
+          "epoch": 2,
+          "frame": {
+            "objects": [
+              {
+                "id": 1,
+                "stage": "Visible"
+              },
+              {
+                "id": 2,
+                "stage": "Pending"
+              },
+              {
+                "id": 3,
+                "stage": "Pending"
+              },
+              {
+                "id": 4,
+                "stage": "Pending"
+              },
+              {
+                "id": 5,
+                "stage": "Pending"
+              },
+              {
+                "id": 6,
+                "stage": "Pending"
+              }
+            ],
+            "position_us": 100000
+          },
+          "pcm": {
+            "first": null,
+            "last": null,
+            "packets": 0,
+            "requested_us": 100000,
+            "source_origin_frame": 4800,
+            "submitted_frames": 0
+          },
+          "position_us": 100000
+        }
+      ],
+      "checks": {
+        "backward_seek_re_evaluates": true,
+        "device_content_clock": true,
+        "forward_seek_skips_events": true,
+        "out_of_content_seek_rejected": true,
+        "pause_and_held_input_isolation": true,
+        "paused_timeline_and_pcm_frozen": true,
+        "relocation_waits_for_ack": true
+      },
+      "validation_source_sha256": {
+        "tools/check_p0_transport.py": "88c67d0845679fced020fcf039c0af240503b9ab9b2ef1a5bf43e96ef43c06c9",
+        "tools/check_p0_gui.py": "f3a40594f80d75d2f349969e8f462e9488ed966433124e639564f384df23f5d8",
+        "tools/p0_process_metrics.py": "a736bbb1b9739bfa27242ac4d0c8eb1cab81d795f6f3ca2d6ba3a9b4e2b0fba3",
+        "tools/check_p0_media.py": "418e0fb34117ecad9f894c4f43791193ec5b5a236b6669b2a6f763b03b107cb2",
+        "tools/check_p0.py": "371d68565eeaf7959c2062aae48b39565678dcd4c4efc7fff43d719f449216cc",
+        "tools/tests/test_p0_media.py": "d2dee693fe8fff5a9c5307be1358e1a118a4a517d9bb64bdb05ebf140eba27c0"
+      }
+    },
+    {
+      "directory": "artifacts/p0/media-4f5d0d28",
+      "kind": "frozen_repeat",
+      "status": "passed",
+      "result_sha256": "6eff78360c24606e3f6fbdec5bc187cb77ec995ebb68624c6a4ae3addf2bd32e",
+      "evidence_sha256": "9b553a9a4b5c4d58aaef7dae651ef1a16d86805118b47b5830fe5b366577d5d0",
+      "executable_sha256": "75186a374bfb1cf286017cf2e1d91289d726f609db335b5336c0a32d28d2bdf2",
+      "fixture": "artifacts/p0/media-fixture-3810a55c",
+      "fixture_sha256": {
+        "manifest.json": "8ed3ad2c5f76ff7b3827f83fd64729721efd9174b1e25995fd5fc1bb6fcb3bae",
+        "timeline.osu": "3a04aa828ad41ae459e777c3cb3ab060b2fd9042e25a20e0d2de06af35f21119",
+        "\u97f3\u9891 \u65e5\u672c\u8a9e.wav": "b14765370296670a4b3e6e6ef38516c34ab86cbc4f057918dfb421908fd7bcf0"
+      },
+      "decode_ms": 1.3786,
+      "decoded": {
+        "channels": 2,
+        "duration_us": 3000000,
+        "frames": 144000,
+        "gain": 0.04,
+        "payload_bytes": 1152000,
+        "rate": 48000
+      },
+      "audio_format": {
+        "bits": 32,
+        "buffer_frames": 4800,
+        "channels": 2,
+        "rate": 48000
+      },
+      "event_crossings": {
+        "0": [
+          1,
+          2,
+          3
+        ],
+        "1": [
+          5
+        ],
+        "2": [
+          1,
+          2,
+          3
+        ]
+      },
+      "accepted_inputs": 2,
+      "pause_checks": [
+        {
+          "epoch": 0,
+          "position_us": 620000,
+          "wall_ms": 357.321,
+          "fresh_samples": 3,
+          "device_span_us": 0,
+          "submitted_frame_span": 0
+        },
+        {
+          "epoch": 1,
+          "position_us": 1630000,
+          "wall_ms": 359.6026,
+          "fresh_samples": 3,
+          "device_span_us": 0,
+          "submitted_frame_span": 0
+        },
+        {
+          "epoch": 2,
+          "position_us": 620000,
+          "wall_ms": 359.694,
+          "fresh_samples": 3,
+          "device_span_us": 0,
+          "submitted_frame_span": 0
+        }
+      ],
+      "relocations": [
+        {
+          "epoch": 1,
+          "frame": {
+            "objects": [
+              {
+                "id": 1,
+                "stage": "Past"
+              },
+              {
+                "id": 2,
+                "stage": "Past"
+              },
+              {
+                "id": 3,
+                "stage": "Past"
+              },
+              {
+                "id": 4,
+                "stage": "Past"
+              },
+              {
+                "id": 5,
+                "stage": "Pending"
+              },
+              {
+                "id": 6,
+                "stage": "Pending"
+              }
+            ],
+            "position_us": 1100000
+          },
+          "pcm": {
+            "first": null,
+            "last": null,
+            "packets": 0,
+            "requested_us": 1100000,
+            "source_origin_frame": 52800,
+            "submitted_frames": 0
+          },
+          "position_us": 1100000
+        },
+        {
+          "epoch": 2,
+          "frame": {
+            "objects": [
+              {
+                "id": 1,
+                "stage": "Visible"
+              },
+              {
+                "id": 2,
+                "stage": "Pending"
+              },
+              {
+                "id": 3,
+                "stage": "Pending"
+              },
+              {
+                "id": 4,
+                "stage": "Pending"
+              },
+              {
+                "id": 5,
+                "stage": "Pending"
+              },
+              {
+                "id": 6,
+                "stage": "Pending"
+              }
+            ],
+            "position_us": 100000
+          },
+          "pcm": {
+            "first": null,
+            "last": null,
+            "packets": 0,
+            "requested_us": 100000,
+            "source_origin_frame": 4800,
+            "submitted_frames": 0
+          },
+          "position_us": 100000
+        }
+      ],
+      "checks": {
+        "backward_seek_re_evaluates": true,
+        "device_content_clock": true,
+        "forward_seek_skips_events": true,
+        "out_of_content_seek_rejected": true,
+        "pause_and_held_input_isolation": true,
+        "paused_timeline_and_pcm_frozen": true,
+        "relocation_waits_for_ack": true
+      },
+      "validation_source_sha256": {
+        "tools/check_p0_transport.py": "88c67d0845679fced020fcf039c0af240503b9ab9b2ef1a5bf43e96ef43c06c9",
+        "tools/check_p0_gui.py": "f3a40594f80d75d2f349969e8f462e9488ed966433124e639564f384df23f5d8",
+        "tools/p0_process_metrics.py": "a736bbb1b9739bfa27242ac4d0c8eb1cab81d795f6f3ca2d6ba3a9b4e2b0fba3",
+        "tools/check_p0_media.py": "418e0fb34117ecad9f894c4f43791193ec5b5a236b6669b2a6f763b03b107cb2",
+        "tools/check_p0.py": "371d68565eeaf7959c2062aae48b39565678dcd4c4efc7fff43d719f449216cc",
+        "tools/tests/test_p0_media.py": "d2dee693fe8fff5a9c5307be1358e1a118a4a517d9bb64bdb05ebf140eba27c0"
+      }
+    },
+    {
+      "directory": "artifacts/p0/media-7348d644",
+      "kind": "frozen_repeat",
+      "status": "passed",
+      "result_sha256": "917596ba1dfdea67cbb1b100802489fff5b768b667881650ff21e177f2973d78",
+      "evidence_sha256": "9b553a9a4b5c4d58aaef7dae651ef1a16d86805118b47b5830fe5b366577d5d0",
+      "executable_sha256": "75186a374bfb1cf286017cf2e1d91289d726f609db335b5336c0a32d28d2bdf2",
+      "fixture": "artifacts/p0/media-fixture-3810a55c",
+      "fixture_sha256": {
+        "manifest.json": "8ed3ad2c5f76ff7b3827f83fd64729721efd9174b1e25995fd5fc1bb6fcb3bae",
+        "timeline.osu": "3a04aa828ad41ae459e777c3cb3ab060b2fd9042e25a20e0d2de06af35f21119",
+        "\u97f3\u9891 \u65e5\u672c\u8a9e.wav": "b14765370296670a4b3e6e6ef38516c34ab86cbc4f057918dfb421908fd7bcf0"
+      },
+      "decode_ms": 1.387,
+      "decoded": {
+        "channels": 2,
+        "duration_us": 3000000,
+        "frames": 144000,
+        "gain": 0.04,
+        "payload_bytes": 1152000,
+        "rate": 48000
+      },
+      "audio_format": {
+        "bits": 32,
+        "buffer_frames": 4800,
+        "channels": 2,
+        "rate": 48000
+      },
+      "event_crossings": {
+        "0": [
+          1,
+          2,
+          3
+        ],
+        "1": [
+          5
+        ],
+        "2": [
+          1,
+          2,
+          3
+        ]
+      },
+      "accepted_inputs": 2,
+      "pause_checks": [
+        {
+          "epoch": 0,
+          "position_us": 620000,
+          "wall_ms": 352.3104,
+          "fresh_samples": 3,
+          "device_span_us": 0,
+          "submitted_frame_span": 0
+        },
+        {
+          "epoch": 1,
+          "position_us": 1630000,
+          "wall_ms": 353.766,
+          "fresh_samples": 3,
+          "device_span_us": 0,
+          "submitted_frame_span": 0
+        },
+        {
+          "epoch": 2,
+          "position_us": 620000,
+          "wall_ms": 351.774,
+          "fresh_samples": 3,
+          "device_span_us": 0,
+          "submitted_frame_span": 0
+        }
+      ],
+      "relocations": [
+        {
+          "epoch": 1,
+          "frame": {
+            "objects": [
+              {
+                "id": 1,
+                "stage": "Past"
+              },
+              {
+                "id": 2,
+                "stage": "Past"
+              },
+              {
+                "id": 3,
+                "stage": "Past"
+              },
+              {
+                "id": 4,
+                "stage": "Past"
+              },
+              {
+                "id": 5,
+                "stage": "Pending"
+              },
+              {
+                "id": 6,
+                "stage": "Pending"
+              }
+            ],
+            "position_us": 1100000
+          },
+          "pcm": {
+            "first": null,
+            "last": null,
+            "packets": 0,
+            "requested_us": 1100000,
+            "source_origin_frame": 52800,
+            "submitted_frames": 0
+          },
+          "position_us": 1100000
+        },
+        {
+          "epoch": 2,
+          "frame": {
+            "objects": [
+              {
+                "id": 1,
+                "stage": "Visible"
+              },
+              {
+                "id": 2,
+                "stage": "Pending"
+              },
+              {
+                "id": 3,
+                "stage": "Pending"
+              },
+              {
+                "id": 4,
+                "stage": "Pending"
+              },
+              {
+                "id": 5,
+                "stage": "Pending"
+              },
+              {
+                "id": 6,
+                "stage": "Pending"
+              }
+            ],
+            "position_us": 100000
+          },
+          "pcm": {
+            "first": null,
+            "last": null,
+            "packets": 0,
+            "requested_us": 100000,
+            "source_origin_frame": 4800,
+            "submitted_frames": 0
+          },
+          "position_us": 100000
+        }
+      ],
+      "checks": {
+        "backward_seek_re_evaluates": true,
+        "device_content_clock": true,
+        "forward_seek_skips_events": true,
+        "out_of_content_seek_rejected": true,
+        "pause_and_held_input_isolation": true,
+        "paused_timeline_and_pcm_frozen": true,
+        "relocation_waits_for_ack": true
+      },
+      "validation_source_sha256": {
+        "tools/check_p0_transport.py": "88c67d0845679fced020fcf039c0af240503b9ab9b2ef1a5bf43e96ef43c06c9",
+        "tools/check_p0_gui.py": "f3a40594f80d75d2f349969e8f462e9488ed966433124e639564f384df23f5d8",
+        "tools/p0_process_metrics.py": "a736bbb1b9739bfa27242ac4d0c8eb1cab81d795f6f3ca2d6ba3a9b4e2b0fba3",
+        "tools/check_p0_media.py": "418e0fb34117ecad9f894c4f43791193ec5b5a236b6669b2a6f763b03b107cb2",
+        "tools/check_p0.py": "371d68565eeaf7959c2062aae48b39565678dcd4c4efc7fff43d719f449216cc",
+        "tools/tests/test_p0_media.py": "d2dee693fe8fff5a9c5307be1358e1a118a4a517d9bb64bdb05ebf140eba27c0"
+      }
+    },
+    {
+      "directory": "artifacts/p0/media-8897c34f",
+      "kind": "followup_after_file_reader_unit_test",
+      "status": "passed",
+      "result_sha256": "373bdd8cb2a77ae89c7d43806b34918b395db51e11b399e3168cb1959a0e20cb",
+      "evidence_sha256": "b77b1d817b67730baab4f091b5bf6b118b6cc62d3ca408bda76256bb06d28d0c",
+      "executable_sha256": "4ad38dfe40364e5f5ab66fdbf17863bbcb456989f1213a7cbe9dd49c3107c19f",
+      "fixture": "artifacts/p0/media-fixture-76b9b2fe",
+      "fixture_sha256": {
+        "manifest.json": "8ed3ad2c5f76ff7b3827f83fd64729721efd9174b1e25995fd5fc1bb6fcb3bae",
+        "timeline.osu": "3a04aa828ad41ae459e777c3cb3ab060b2fd9042e25a20e0d2de06af35f21119",
+        "\u97f3\u9891 \u65e5\u672c\u8a9e.wav": "b14765370296670a4b3e6e6ef38516c34ab86cbc4f057918dfb421908fd7bcf0"
+      },
+      "decode_ms": 1.435,
+      "decoded": {
+        "channels": 2,
+        "duration_us": 3000000,
+        "frames": 144000,
+        "gain": 0.04,
+        "payload_bytes": 1152000,
+        "rate": 48000
+      },
+      "audio_format": {
+        "bits": 32,
+        "buffer_frames": 4800,
+        "channels": 2,
+        "rate": 48000
+      },
+      "event_crossings": {
+        "0": [
+          1,
+          2,
+          3
+        ],
+        "1": [
+          5
+        ],
+        "2": [
+          1,
+          2,
+          3
+        ]
+      },
+      "accepted_inputs": 2,
+      "pause_checks": [
+        {
+          "epoch": 0,
+          "position_us": 620000,
+          "wall_ms": 357.42839999999995,
+          "fresh_samples": 3,
+          "device_span_us": 0,
+          "submitted_frame_span": 0
+        },
+        {
+          "epoch": 1,
+          "position_us": 1630000,
+          "wall_ms": 359.9094,
+          "fresh_samples": 3,
+          "device_span_us": 0,
+          "submitted_frame_span": 0
+        },
+        {
+          "epoch": 2,
+          "position_us": 630000,
+          "wall_ms": 359.0765,
+          "fresh_samples": 3,
+          "device_span_us": 0,
+          "submitted_frame_span": 0
+        }
+      ],
+      "relocations": [
+        {
+          "epoch": 1,
+          "frame": {
+            "objects": [
+              {
+                "id": 1,
+                "stage": "Past"
+              },
+              {
+                "id": 2,
+                "stage": "Past"
+              },
+              {
+                "id": 3,
+                "stage": "Past"
+              },
+              {
+                "id": 4,
+                "stage": "Past"
+              },
+              {
+                "id": 5,
+                "stage": "Pending"
+              },
+              {
+                "id": 6,
+                "stage": "Pending"
+              }
+            ],
+            "position_us": 1100000
+          },
+          "pcm": {
+            "first": null,
+            "last": null,
+            "packets": 0,
+            "requested_us": 1100000,
+            "source_origin_frame": 52800,
+            "submitted_frames": 0
+          },
+          "position_us": 1100000
+        },
+        {
+          "epoch": 2,
+          "frame": {
+            "objects": [
+              {
+                "id": 1,
+                "stage": "Visible"
+              },
+              {
+                "id": 2,
+                "stage": "Pending"
+              },
+              {
+                "id": 3,
+                "stage": "Pending"
+              },
+              {
+                "id": 4,
+                "stage": "Pending"
+              },
+              {
+                "id": 5,
+                "stage": "Pending"
+              },
+              {
+                "id": 6,
+                "stage": "Pending"
+              }
+            ],
+            "position_us": 100000
+          },
+          "pcm": {
+            "first": null,
+            "last": null,
+            "packets": 0,
+            "requested_us": 100000,
+            "source_origin_frame": 4800,
+            "submitted_frames": 0
+          },
+          "position_us": 100000
+        }
+      ],
+      "checks": {
+        "backward_seek_re_evaluates": true,
+        "device_content_clock": true,
+        "forward_seek_skips_events": true,
+        "out_of_content_seek_rejected": true,
+        "pause_and_held_input_isolation": true,
+        "paused_timeline_and_pcm_frozen": true,
+        "relocation_waits_for_ack": true
+      },
+      "validation_source_sha256": {
+        "tools/check_p0_transport.py": "88c67d0845679fced020fcf039c0af240503b9ab9b2ef1a5bf43e96ef43c06c9",
+        "tools/check_p0_gui.py": "f3a40594f80d75d2f349969e8f462e9488ed966433124e639564f384df23f5d8",
+        "tools/p0_process_metrics.py": "a736bbb1b9739bfa27242ac4d0c8eb1cab81d795f6f3ca2d6ba3a9b4e2b0fba3",
+        "tools/check_p0_media.py": "418e0fb34117ecad9f894c4f43791193ec5b5a236b6669b2a6f763b03b107cb2",
+        "tools/check_p0.py": "371d68565eeaf7959c2062aae48b39565678dcd4c4efc7fff43d719f449216cc",
+        "tools/tests/test_p0_media.py": "d2dee693fe8fff5a9c5307be1358e1a118a4a517d9bb64bdb05ebf140eba27c0"
+      }
+    },
+    {
+      "directory": "artifacts/p0/media-8867f257",
+      "kind": "followup_complete_optional_source_inventory",
+      "status": "passed",
+      "result_sha256": "7a929791aec22289fc390da0934f65b2105231e1b8c098a633efd6150bedbbf8",
+      "evidence_sha256": "2a478604f7f33f5cb2369d947e962841c70306a9be760d787e6909667b2698bf",
+      "executable_sha256": "4ad38dfe40364e5f5ab66fdbf17863bbcb456989f1213a7cbe9dd49c3107c19f",
+      "fixture": "artifacts/p0/media-fixture-76b9b2fe",
+      "fixture_sha256": {
+        "manifest.json": "8ed3ad2c5f76ff7b3827f83fd64729721efd9174b1e25995fd5fc1bb6fcb3bae",
+        "timeline.osu": "3a04aa828ad41ae459e777c3cb3ab060b2fd9042e25a20e0d2de06af35f21119",
+        "\u97f3\u9891 \u65e5\u672c\u8a9e.wav": "b14765370296670a4b3e6e6ef38516c34ab86cbc4f057918dfb421908fd7bcf0"
+      },
+      "decode_ms": 1.4546999999999999,
+      "decoded": {
+        "channels": 2,
+        "duration_us": 3000000,
+        "frames": 144000,
+        "gain": 0.04,
+        "payload_bytes": 1152000,
+        "rate": 48000
+      },
+      "audio_format": {
+        "bits": 32,
+        "buffer_frames": 4800,
+        "channels": 2,
+        "rate": 48000
+      },
+      "event_crossings": {
+        "0": [
+          1,
+          2,
+          3
+        ],
+        "1": [
+          5
+        ],
+        "2": [
+          1,
+          2,
+          3
+        ]
+      },
+      "accepted_inputs": 2,
+      "pause_checks": [
+        {
+          "epoch": 0,
+          "position_us": 610000,
+          "wall_ms": 354.33189999999996,
+          "fresh_samples": 3,
+          "device_span_us": 0,
+          "submitted_frame_span": 0
+        },
+        {
+          "epoch": 1,
+          "position_us": 1630000,
+          "wall_ms": 357.2518,
+          "fresh_samples": 3,
+          "device_span_us": 0,
+          "submitted_frame_span": 0
+        },
+        {
+          "epoch": 2,
+          "position_us": 630000,
+          "wall_ms": 354.9023,
+          "fresh_samples": 3,
+          "device_span_us": 0,
+          "submitted_frame_span": 0
+        }
+      ],
+      "relocations": [
+        {
+          "epoch": 1,
+          "frame": {
+            "objects": [
+              {
+                "id": 1,
+                "stage": "Past"
+              },
+              {
+                "id": 2,
+                "stage": "Past"
+              },
+              {
+                "id": 3,
+                "stage": "Past"
+              },
+              {
+                "id": 4,
+                "stage": "Past"
+              },
+              {
+                "id": 5,
+                "stage": "Pending"
+              },
+              {
+                "id": 6,
+                "stage": "Pending"
+              }
+            ],
+            "position_us": 1100000
+          },
+          "pcm": {
+            "first": null,
+            "last": null,
+            "packets": 0,
+            "requested_us": 1100000,
+            "source_origin_frame": 52800,
+            "submitted_frames": 0
+          },
+          "position_us": 1100000
+        },
+        {
+          "epoch": 2,
+          "frame": {
+            "objects": [
+              {
+                "id": 1,
+                "stage": "Visible"
+              },
+              {
+                "id": 2,
+                "stage": "Pending"
+              },
+              {
+                "id": 3,
+                "stage": "Pending"
+              },
+              {
+                "id": 4,
+                "stage": "Pending"
+              },
+              {
+                "id": 5,
+                "stage": "Pending"
+              },
+              {
+                "id": 6,
+                "stage": "Pending"
+              }
+            ],
+            "position_us": 100000
+          },
+          "pcm": {
+            "first": null,
+            "last": null,
+            "packets": 0,
+            "requested_us": 100000,
+            "source_origin_frame": 4800,
+            "submitted_frames": 0
+          },
+          "position_us": 100000
+        }
+      ],
+      "checks": {
+        "backward_seek_re_evaluates": true,
+        "device_content_clock": true,
+        "forward_seek_skips_events": true,
+        "out_of_content_seek_rejected": true,
+        "pause_and_held_input_isolation": true,
+        "paused_timeline_and_pcm_frozen": true,
+        "relocation_waits_for_ack": true
+      },
+      "validation_source_sha256": {
+        "tools/check_p0_transport.py": "2ef7ffba6e87dafac947a38f11f53ece2c93e811814859e133ef551385045fc8",
+        "tools/check_p0_gui.py": "f3a40594f80d75d2f349969e8f462e9488ed966433124e639564f384df23f5d8",
+        "tools/p0_process_metrics.py": "a736bbb1b9739bfa27242ac4d0c8eb1cab81d795f6f3ca2d6ba3a9b4e2b0fba3",
+        "tools/check_p0_media.py": "d3fa76f69914ad0c4646f6a65e27b5dcf412bd0fb82fcdf94bbe34bdb5e678ab",
+        "tools/check_p0.py": "371d68565eeaf7959c2062aae48b39565678dcd4c4efc7fff43d719f449216cc",
+        "tools/tests/test_p0_media.py": "315b0933a5075dd220d225b3167871549c9fcc7025b97a83f2c69596bf0b350b"
+      }
+    }
+  ],
+  "build_source_sha256": {
+    "75186a374bfb1cf286017cf2e1d91289d726f609db335b5336c0a32d28d2bdf2": {
+      "experiments/p0-egui/Cargo.toml": "c48e949e0409bd50ee863635061ab311fd20d2df9a7b171316f61677e85f52fe",
+      "experiments/p0-egui/Cargo.lock": "1613d3627b0aeff109ffc560e5351802c87c7bef74e819f4bae53f40a25a3373",
+      "experiments/p0-egui/src/audio_output.rs": "abaf12abc9c2f0029886fc0be520964cf0bd3ac95ce281eb762239084b5963c8",
+      "experiments/p0-egui/src/audio_transport.rs": "3dd45ce6ae3f1876a686ffaf683dc0b5c662c527ec706f53203f563d9abb2062",
+      "experiments/p0-egui/src/bin/composition-proof.rs": "93bb2491887c5b830f6c5b2dbe8509dbc5a1347acc2fef2c122fb76106e32983",
+      "experiments/p0-egui/src/bin/desktop-proof.rs": "965d3b6e22705f949594f3df4a9f85f3cc94507d5861e250d3d68dfd58e0e24d",
+      "experiments/p0-egui/src/bin/interaction-proof.rs": "4df2b97cb921957cbe805a42fc322ace901cf9d1e4ed79a856b4bffe8a0149dc",
+      "experiments/p0-egui/src/bin/media-proof.rs": "d566ce1c433e87cdccecf8b763f3bf060d17c942f7ab9edbb777ff4e2983f2c9",
+      "experiments/p0-egui/src/bin/pcm-proof.rs": "f234d6b21587c74bc35423103a3c6e1b8bc1acfb543b995b592c812047c753c7",
+      "experiments/p0-egui/src/bin/recovery-proof.rs": "0d6ed63513fe736e331eee1023135c63a29384d289f4a134eea84ac4650dd7f6",
+      "experiments/p0-egui/src/bin/standard-load.rs": "96f59ba6064964648009dd8e941bf188c99a8d7b6a8262569bba0a84f6359ff6",
+      "experiments/p0-egui/src/bin/switch-audio-proof.rs": "d16edb1da3f3aaca24882566c933bc5eeadf340d3a32c7f6da743152058c3c01",
+      "experiments/p0-egui/src/bin/switch-proof.rs": "181a168a668a173ea75c6722fe518a2d49a84063208267f4d32a8bc43b8ca224",
+      "experiments/p0-egui/src/bin/transport-proof.rs": "aa57b6b99b95d9dc9ebd8ffb5c8c15a05b9f18ca5c95cca1024b1bef932cb5ce",
+      "experiments/p0-egui/src/composition.rs": "68828405baf1006fd430a1b7c85dd67b447823fa338ed1d4d342d6d33c36fa57",
+      "experiments/p0-egui/src/composition_fixture.rs": "4096a347b90284f45abebf15d0f264c30cb1fcbd4c6978640a72cbf9fcc977a5",
+      "experiments/p0-egui/src/composition_gpu.rs": "bce644f5794344e3f6a44ce5800964551f3f243b3b5b39cccec351bb746e16b5",
+      "experiments/p0-egui/src/composition_loading.rs": "ae1d390c775c574e9d7a0211dc094dadf68cdcbfc5450df1a32978bbb9f212a8",
+      "experiments/p0-egui/src/composition_switch.rs": "8d9b1b9cac487127a747134a4f5bb0d33b89e26243f94d6198c9a8445fc4bced",
+      "experiments/p0-egui/src/composition_view.rs": "94babe1f58d2bc357f706986df59102322312a52a247010719e865b437fa0cb5",
+      "experiments/p0-egui/src/desktop_view.rs": "d975d2d045a3163bd7f44d6f7b2764d1db732c9a1cb4296f01d7e21efc16743b",
+      "experiments/p0-egui/src/interaction.rs": "02d2f8f7a511b87ec058192e02d5fd88cef3d2abdc76d6854363a0dbdef8b3aa",
+      "experiments/p0-egui/src/interaction_view.rs": "e3e71e203be304f1d6ebd0c43f19b90e9f6624c136c8abf3df54c332ab6fce8b",
+      "experiments/p0-egui/src/lib.rs": "c91550268d25723cf298cd7b2e14f75f2e68837e89bb7e5e2c8a15135e9b1cd3",
+      "experiments/p0-egui/src/loading.rs": "dbd7eebf93e51ce339de6674b39c85e40df3fc04483832208cbbd673d9980642",
+      "experiments/p0-egui/src/main.rs": "7fa519b9ef852393d1b25332406eb190712a3d073a7b42699be0c827fe59049f",
+      "experiments/p0-egui/src/texture_cache.rs": "6d357c3955bae9ac769cccd6458b0163a249971c26ae048ed09d1a6275efc050",
+      "experiments/p0-egui/src/upload_fence.rs": "c0b488550013e15eb403043664f6782209f3eb7a23b3bf2fdd5a3c83faab4551",
+      "experiments/p0-egui/src/view.rs": "07175368f9eac318b1a2ee899a6774643c459dd6e91f8b5bbdd9966f9843fe87",
+      "experiments/p0-egui/src/windows_audio.rs": "fb00f358945a97689572f07ad7c895d63a848a71d6b8c1aa0649a154ab754c0b",
+      "experiments/p0-wasapi/Cargo.toml": "e5fb3058d68438d2125ec7bca2cf5fb1cb598ff43bcc2e304e1a905ef2f26172",
+      "experiments/p0-wasapi/Cargo.lock": "49f53790dce8df7ae66e1ec286de21a507852284a9216944c9d5a1c94ed1560d",
+      "experiments/p0-wasapi/src/lib.rs": "4e3c73323b4672d51a077d98762805a2f57b9d1768e88af571c962726374d506",
+      "experiments/p0-wasapi/src/pcm.rs": "f157d28b289c3bc37cdb544d2e904fac3f8669f7e095591e9cc2bef698995ae3",
+      "experiments/p0-wasapi/src/platform.rs": "54f44f15f1d6c452e8d48e405f45bf426474a21d0451fd0a20b913d6cdbb0dda",
+      "experiments/p0-preview-contract/Cargo.toml": "3eb41a0f90829ced042f1692dcc367b7be0cf6d5426e45621eb7db895df60745",
+      "experiments/p0-preview-contract/Cargo.lock": "5ad87c4a8c1c9ef0da88e303171f592e5b76925afd2cc889a2280ecbb99077d0",
+      "experiments/p0-preview-contract/src/lib.rs": "7e7164428f5f534b7c8a44b47aa57e79529f928fad7ea75a1f23f827a85250b0",
+      "experiments/p0-preview-contract/src/main.rs": "1edf475299f1e9a664b3f3dc1057288781799e64038567619c6a99f4e41fc296",
+      "experiments/p0-egui/src/composition.wgsl": "e82e7cce77a53f69de74c13be6cb17d99581bfaa30888cbb1dac9082fe6024af",
+      "experiments/p0-egui/src/composition_present.wgsl": "d5b73ba3fd96fcaeaeee5c5532736ca1dcdefcf1bde1324e8998153a277b8548",
+      "experiments/p0-media/Cargo.toml": "00b0d49bb5100aa6615b4a8f041ea824f502521f4bb40a2b83c784e4da280527",
+      "experiments/p0-media/Cargo.lock": "cec2422db2a1fe63b9faedcf6c7f198e068acf62d1d2944e1edf024a16bbc3bd",
+      "experiments/p0-media/src/audio.rs": "d5fda43254fc16e397e1a8b26ba2d05c10c59a640f2a312efca6060a9a38fe95",
+      "experiments/p0-media/src/chart.rs": "b8d42456c0605d5f681f79f91b6e9c2bd1eb4f2e0de0bb3a8ef09e2de75fc331",
+      "experiments/p0-media/src/lib.rs": "0281d8097d6c289779d18550108c9901acdf8633e84d02220ab235415778be55"
+    },
+    "4ad38dfe40364e5f5ab66fdbf17863bbcb456989f1213a7cbe9dd49c3107c19f": {
+      "experiments/p0-egui/Cargo.toml": "c48e949e0409bd50ee863635061ab311fd20d2df9a7b171316f61677e85f52fe",
+      "experiments/p0-egui/Cargo.lock": "1613d3627b0aeff109ffc560e5351802c87c7bef74e819f4bae53f40a25a3373",
+      "experiments/p0-egui/src/audio_output.rs": "abaf12abc9c2f0029886fc0be520964cf0bd3ac95ce281eb762239084b5963c8",
+      "experiments/p0-egui/src/audio_transport.rs": "3dd45ce6ae3f1876a686ffaf683dc0b5c662c527ec706f53203f563d9abb2062",
+      "experiments/p0-egui/src/bin/composition-proof.rs": "93bb2491887c5b830f6c5b2dbe8509dbc5a1347acc2fef2c122fb76106e32983",
+      "experiments/p0-egui/src/bin/desktop-proof.rs": "965d3b6e22705f949594f3df4a9f85f3cc94507d5861e250d3d68dfd58e0e24d",
+      "experiments/p0-egui/src/bin/interaction-proof.rs": "4df2b97cb921957cbe805a42fc322ace901cf9d1e4ed79a856b4bffe8a0149dc",
+      "experiments/p0-egui/src/bin/media-proof.rs": "d19622721130506f7ebf2b0e2dccf116bc15705d7ba07e2d577e9d7d141fdeb0",
+      "experiments/p0-egui/src/bin/pcm-proof.rs": "f234d6b21587c74bc35423103a3c6e1b8bc1acfb543b995b592c812047c753c7",
+      "experiments/p0-egui/src/bin/recovery-proof.rs": "0d6ed63513fe736e331eee1023135c63a29384d289f4a134eea84ac4650dd7f6",
+      "experiments/p0-egui/src/bin/standard-load.rs": "96f59ba6064964648009dd8e941bf188c99a8d7b6a8262569bba0a84f6359ff6",
+      "experiments/p0-egui/src/bin/switch-audio-proof.rs": "d16edb1da3f3aaca24882566c933bc5eeadf340d3a32c7f6da743152058c3c01",
+      "experiments/p0-egui/src/bin/switch-proof.rs": "181a168a668a173ea75c6722fe518a2d49a84063208267f4d32a8bc43b8ca224",
+      "experiments/p0-egui/src/bin/transport-proof.rs": "aa57b6b99b95d9dc9ebd8ffb5c8c15a05b9f18ca5c95cca1024b1bef932cb5ce",
+      "experiments/p0-egui/src/composition.rs": "68828405baf1006fd430a1b7c85dd67b447823fa338ed1d4d342d6d33c36fa57",
+      "experiments/p0-egui/src/composition_fixture.rs": "4096a347b90284f45abebf15d0f264c30cb1fcbd4c6978640a72cbf9fcc977a5",
+      "experiments/p0-egui/src/composition_gpu.rs": "bce644f5794344e3f6a44ce5800964551f3f243b3b5b39cccec351bb746e16b5",
+      "experiments/p0-egui/src/composition_loading.rs": "ae1d390c775c574e9d7a0211dc094dadf68cdcbfc5450df1a32978bbb9f212a8",
+      "experiments/p0-egui/src/composition_switch.rs": "8d9b1b9cac487127a747134a4f5bb0d33b89e26243f94d6198c9a8445fc4bced",
+      "experiments/p0-egui/src/composition_view.rs": "94babe1f58d2bc357f706986df59102322312a52a247010719e865b437fa0cb5",
+      "experiments/p0-egui/src/desktop_view.rs": "d975d2d045a3163bd7f44d6f7b2764d1db732c9a1cb4296f01d7e21efc16743b",
+      "experiments/p0-egui/src/interaction.rs": "02d2f8f7a511b87ec058192e02d5fd88cef3d2abdc76d6854363a0dbdef8b3aa",
+      "experiments/p0-egui/src/interaction_view.rs": "e3e71e203be304f1d6ebd0c43f19b90e9f6624c136c8abf3df54c332ab6fce8b",
+      "experiments/p0-egui/src/lib.rs": "c91550268d25723cf298cd7b2e14f75f2e68837e89bb7e5e2c8a15135e9b1cd3",
+      "experiments/p0-egui/src/loading.rs": "dbd7eebf93e51ce339de6674b39c85e40df3fc04483832208cbbd673d9980642",
+      "experiments/p0-egui/src/main.rs": "7fa519b9ef852393d1b25332406eb190712a3d073a7b42699be0c827fe59049f",
+      "experiments/p0-egui/src/texture_cache.rs": "6d357c3955bae9ac769cccd6458b0163a249971c26ae048ed09d1a6275efc050",
+      "experiments/p0-egui/src/upload_fence.rs": "c0b488550013e15eb403043664f6782209f3eb7a23b3bf2fdd5a3c83faab4551",
+      "experiments/p0-egui/src/view.rs": "07175368f9eac318b1a2ee899a6774643c459dd6e91f8b5bbdd9966f9843fe87",
+      "experiments/p0-egui/src/windows_audio.rs": "fb00f358945a97689572f07ad7c895d63a848a71d6b8c1aa0649a154ab754c0b",
+      "experiments/p0-wasapi/Cargo.toml": "e5fb3058d68438d2125ec7bca2cf5fb1cb598ff43bcc2e304e1a905ef2f26172",
+      "experiments/p0-wasapi/Cargo.lock": "49f53790dce8df7ae66e1ec286de21a507852284a9216944c9d5a1c94ed1560d",
+      "experiments/p0-wasapi/src/lib.rs": "4e3c73323b4672d51a077d98762805a2f57b9d1768e88af571c962726374d506",
+      "experiments/p0-wasapi/src/pcm.rs": "f157d28b289c3bc37cdb544d2e904fac3f8669f7e095591e9cc2bef698995ae3",
+      "experiments/p0-wasapi/src/platform.rs": "54f44f15f1d6c452e8d48e405f45bf426474a21d0451fd0a20b913d6cdbb0dda",
+      "experiments/p0-preview-contract/Cargo.toml": "3eb41a0f90829ced042f1692dcc367b7be0cf6d5426e45621eb7db895df60745",
+      "experiments/p0-preview-contract/Cargo.lock": "5ad87c4a8c1c9ef0da88e303171f592e5b76925afd2cc889a2280ecbb99077d0",
+      "experiments/p0-preview-contract/src/lib.rs": "7e7164428f5f534b7c8a44b47aa57e79529f928fad7ea75a1f23f827a85250b0",
+      "experiments/p0-preview-contract/src/main.rs": "1edf475299f1e9a664b3f3dc1057288781799e64038567619c6a99f4e41fc296",
+      "experiments/p0-egui/src/composition.wgsl": "e82e7cce77a53f69de74c13be6cb17d99581bfaa30888cbb1dac9082fe6024af",
+      "experiments/p0-egui/src/composition_present.wgsl": "d5b73ba3fd96fcaeaeee5c5532736ca1dcdefcf1bde1324e8998153a277b8548",
+      "experiments/p0-media/Cargo.toml": "00b0d49bb5100aa6615b4a8f041ea824f502521f4bb40a2b83c784e4da280527",
+      "experiments/p0-media/Cargo.lock": "cec2422db2a1fe63b9faedcf6c7f198e068acf62d1d2944e1edf024a16bbc3bd",
+      "experiments/p0-media/src/audio.rs": "d5fda43254fc16e397e1a8b26ba2d05c10c59a640f2a312efca6060a9a38fe95",
+      "experiments/p0-media/src/chart.rs": "b8d42456c0605d5f681f79f91b6e9c2bd1eb4f2e0de0bb3a8ef09e2de75fc331",
+      "experiments/p0-media/src/lib.rs": "0281d8097d6c289779d18550108c9901acdf8633e84d02220ab235415778be55"
+    }
+  },
+  "regressions": [
+    {
+      "directory": "artifacts/p0/pcm-f31ce58c",
+      "kind": "generated_pcm",
+      "status": "passed",
+      "result_sha256": "e35282f20f33f7d926688b03100751879bb82b4c13c567b578f022bb6bbbddb5",
+      "evidence_sha256": "2d6231c81f672374b6231fb7d10fdd24730325f1c4d2eba16ac2b0f0b4404774",
+      "executable_sha256": "f67f627a5746241157f86c1fbf34b10b22d86bb0464ddf1de34e2a3717668f89",
+      "optional_media_sources_archived": true
+    },
+    {
+      "directory": "artifacts/p0/recovery-2ce2beaf",
+      "kind": "silent_recovery",
+      "status": "passed",
+      "result_sha256": "37741d564482dc344c87c1dda276eb53ea42d3b1d1dd1438908dac46d0252a2b",
+      "evidence_sha256": "ce2b9eb17edf7ee51032c1164cec50cd7f8a043a3ad60314664c57ca7f6cc8c1",
+      "executable_sha256": "288e5827541a6f3eae2646fd989a1cb82efcf481bd5a5c264ed08339486dbb85",
+      "optional_media_sources_archived": true
+    }
+  ],
+  "headless_tests": {
+    "gui_default": 70,
+    "gui_media_file_reader": 1,
+    "media": 6,
+    "output_adapter": 11,
+    "contract": 10,
+    "python": 58,
+    "total_unique": 156
+  },
+  "checks": {
+    "core_dependency_and_no_io_wall_clock_boundary": "passed",
+    "core_format_clippy_tests": "passed",
+    "gui_default_format_clippy_tests_build": "passed",
+    "device_audio_format_clippy_tests_build": "passed",
+    "media_feature_format_clippy_tests_build": "passed",
+    "output_boundary_overwrite_and_input_identity": "passed",
+    "packet_reference": "independent Python WAV PCM16 normalization, float32 gain, all-channel FNV/peak/nonzero/probe",
+    "optional_local_source_inventory": "covered by a no-device regression; full source archive now includes p0-media even when the feature is disabled"
+  },
+  "dependencies": {
+    "decoder": "symphonia =0.6.1",
+    "license": "MPL-2.0",
+    "features": [
+      "wav",
+      "pcm"
+    ],
+    "default_features": false,
+    "p0_media_optional_in_gui": true,
+    "new_third_party_packages_in_gui_lock": [
+      "symphonia 0.6.1",
+      "symphonia-core 0.6.1",
+      "symphonia-metadata 0.6.1",
+      "symphonia-format-riff 0.6.1",
+      "symphonia-codec-pcm 0.6.1",
+      "extended 0.1.0",
+      "lazy_static 1.5.1",
+      "num-complex 0.4.6",
+      "regex-lite 0.1.9"
+    ],
+    "previous_versions_upgraded_or_removed": false,
+    "wasapi_new_dependencies_or_api_features": false
+  },
+  "limits": {
+    "encoded_bytes": 8388608,
+    "decoded_payload_bytes": 16777216,
+    "duration_us": 6000000,
+    "text_bytes": 65536,
+    "objects": 1024,
+    "fixture_before_us": 150000,
+    "fixture_after_us": 100000,
+    "fixture_windows_are_stable_rules": false,
+    "total_memory_budget_passed": false,
+    "physical_audio_latency_measured": false,
+    "compressed_codec_or_resampling_tested": false,
+    "full_v14_import_or_hit_judgement_implemented": false
+  },
+  "public_format_source": {
+    "url": "https://osu.ppy.sh/wiki/en/Client/File_formats/osu_(file_format)",
+    "verified_on": "2026-10-19",
+    "scope": "Documented v14 fields and self-authored strict fixture, not current stable output validation"
+  },
+  "current_stable_cases_executed": 0,
+  "linux_actual_testing": "deferred",
+  "macos_actual_testing": "awaiting_device",
+  "system_capture_used": false,
+  "private_client_or_music_files_read": false,
+  "formal_project_modules_implemented": false,
+  "pre_archive_completion_regressions": [
+    {
+      "directory": "artifacts/p0/pcm-9a73970e",
+      "kind": "generated_pcm",
+      "status": "passed",
+      "result_sha256": "311d7069187778cd0e0262e767b49e9635c072ce8c6dc21e246d2fe0c7e4b75a",
+      "evidence_sha256": "3a002aefea6759b0eac3b808cb2aa759bb1a082e9e8099e221cc40aaa3bcb640",
+      "executable_sha256": "f67f627a5746241157f86c1fbf34b10b22d86bb0464ddf1de34e2a3717668f89",
+      "archive_note": "Original frozen source inventory omitted newly optional p0-media; active non-media path passed; record preserved, superseded for complete archive by the new regressions."
+    },
+    {
+      "directory": "artifacts/p0/recovery-8b683b56",
+      "kind": "silent_recovery",
+      "status": "passed",
+      "result_sha256": "9e00cb3e701cc3f7d15b7d7d7587c5fa2f5f231186985b9534b1862b56a92f88",
+      "evidence_sha256": "17ea70572aaa75a91fb64b8c178a2f398f43ef835ca921106ff85cffaa059b57",
+      "executable_sha256": "288e5827541a6f3eae2646fd989a1cb82efcf481bd5a5c264ed08339486dbb85",
+      "archive_note": "Original frozen source inventory omitted newly optional p0-media; active non-media path passed; record preserved, superseded for complete archive by the new regressions."
+    }
+  ]
+}

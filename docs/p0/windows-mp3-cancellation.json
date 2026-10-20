@@ -1,0 +1,1426 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "status": "passed_scoped_mp3_prefix_cancellation_windows",
+  "environment": {
+    "os": "Windows-10-10.0.19045-SP0",
+    "architecture": "AMD64",
+    "logical_processors": 16,
+    "cpu": "AMD Ryzen 7 4800H with Radeon Graphics",
+    "physical_memory_bytes": 17042837504
+  },
+  "prior_baseline_record": {
+    "path": "docs/p0/windows-vorbis-tail-and-seek.json",
+    "bytes": 216216,
+    "sha256": "e9e92a9f24af1b426f0f8b299925c04ff565c9d0258e86ec313b2c8839c31181"
+  },
+  "source_sha256": {
+    "experiments/p0-media/Cargo.toml": "69e44532ff0ca34e6faf0757f3ff04d8eb9fdf1f93f0d01dbdfd15f03da577e6",
+    "experiments/p0-media/Cargo.lock": "1878a483db0f2d481b998d8b3c0a927ff9153b027c64cc4d80e6a6ea3c731d63",
+    "experiments/p0-egui/Cargo.toml": "7d17afe0bf2e8c27afefa18fb33bd409c403ea658e1a63611781d30b3d9317fa",
+    "experiments/p0-egui/Cargo.lock": "52a687bd1c27d2f0db63873bef4e9c9feb3f92cb720b2e8bd0b8268b8000c698",
+    "experiments/p0-wasapi/Cargo.toml": "e5fb3058d68438d2125ec7bca2cf5fb1cb598ff43bcc2e304e1a905ef2f26172",
+    "experiments/p0-wasapi/Cargo.lock": "49f53790dce8df7ae66e1ec286de21a507852284a9216944c9d5a1c94ed1560d",
+    "experiments/p0-preview-contract/Cargo.toml": "3eb41a0f90829ced042f1692dcc367b7be0cf6d5426e45621eb7db895df60745",
+    "experiments/p0-preview-contract/Cargo.lock": "5ad87c4a8c1c9ef0da88e303171f592e5b76925afd2cc889a2280ecbb99077d0",
+    "experiments/p0-media/src/audio.rs": "d5fda43254fc16e397e1a8b26ba2d05c10c59a640f2a312efca6060a9a38fe95",
+    "experiments/p0-media/src/chart.rs": "b8d42456c0605d5f681f79f91b6e9c2bd1eb4f2e0de0bb3a8ef09e2de75fc331",
+    "experiments/p0-media/src/compressed.rs": "36aa0b7ce7229259603cff99e7993516633e49ed3a299d2797fd92d96777fa3d",
+    "experiments/p0-media/src/lib.rs": "cca5506f125ac02e641a269ab702ad412c2d8228f752c86ae4fd67c5ce4190c5",
+    "experiments/p0-media/src/stream.rs": "904ee701d3b648ad39cfe95b5d80e4d66405c562b96945a7553d9634a4ed3013",
+    "experiments/p0-media/src/bin/compressed-proof.rs": "1fc5e7069e101e66b55ade5201ededab216158bd7f67ae3ea694d442f1d6e23e",
+    "experiments/p0-media/src/bin/stream-proof.rs": "85ad4a8057022843e9366577dbf343af0def9e477c6433d865bdded9f1f398e5",
+    "experiments/p0-egui/src/audio_output.rs": "abaf12abc9c2f0029886fc0be520964cf0bd3ac95ce281eb762239084b5963c8",
+    "experiments/p0-egui/src/audio_transport.rs": "3dd45ce6ae3f1876a686ffaf683dc0b5c662c527ec706f53203f563d9abb2062",
+    "experiments/p0-egui/src/composition.rs": "68828405baf1006fd430a1b7c85dd67b447823fa338ed1d4d342d6d33c36fa57",
+    "experiments/p0-egui/src/composition.wgsl": "e82e7cce77a53f69de74c13be6cb17d99581bfaa30888cbb1dac9082fe6024af",
+    "experiments/p0-egui/src/composition_fixture.rs": "4096a347b90284f45abebf15d0f264c30cb1fcbd4c6978640a72cbf9fcc977a5",
+    "experiments/p0-egui/src/composition_gpu.rs": "bce644f5794344e3f6a44ce5800964551f3f243b3b5b39cccec351bb746e16b5",
+    "experiments/p0-egui/src/composition_loading.rs": "ae1d390c775c574e9d7a0211dc094dadf68cdcbfc5450df1a32978bbb9f212a8",
+    "experiments/p0-egui/src/composition_present.wgsl": "d5b73ba3fd96fcaeaeee5c5532736ca1dcdefcf1bde1324e8998153a277b8548",
+    "experiments/p0-egui/src/composition_switch.rs": "8d9b1b9cac487127a747134a4f5bb0d33b89e26243f94d6198c9a8445fc4bced",
+    "experiments/p0-egui/src/composition_view.rs": "94babe1f58d2bc357f706986df59102322312a52a247010719e865b437fa0cb5",
+    "experiments/p0-egui/src/desktop_view.rs": "d975d2d045a3163bd7f44d6f7b2764d1db732c9a1cb4296f01d7e21efc16743b",
+    "experiments/p0-egui/src/interaction.rs": "02d2f8f7a511b87ec058192e02d5fd88cef3d2abdc76d6854363a0dbdef8b3aa",
+    "experiments/p0-egui/src/interaction_view.rs": "e3e71e203be304f1d6ebd0c43f19b90e9f6624c136c8abf3df54c332ab6fce8b",
+    "experiments/p0-egui/src/lib.rs": "4aac2a1ac7dc71d3b534bb9115778f52698f7c90527f52564b4acbf1edcb58f4",
+    "experiments/p0-egui/src/loading.rs": "dbd7eebf93e51ce339de6674b39c85e40df3fc04483832208cbbd673d9980642",
+    "experiments/p0-egui/src/main.rs": "7fa519b9ef852393d1b25332406eb190712a3d073a7b42699be0c827fe59049f",
+    "experiments/p0-egui/src/streaming_decode.rs": "c2dc8af188694fe330614e7ca18901a31cdbb80dc156306cc74d85671448a070",
+    "experiments/p0-egui/src/texture_cache.rs": "6d357c3955bae9ac769cccd6458b0163a249971c26ae048ed09d1a6275efc050",
+    "experiments/p0-egui/src/upload_fence.rs": "c0b488550013e15eb403043664f6782209f3eb7a23b3bf2fdd5a3c83faab4551",
+    "experiments/p0-egui/src/view.rs": "07175368f9eac318b1a2ee899a6774643c459dd6e91f8b5bbdd9966f9843fe87",
+    "experiments/p0-egui/src/windows_audio.rs": "6a46e72c33f07d2d09112f5e13acfe4d78a5a637c8691bc378864160f01fd05b",
+    "experiments/p0-egui/src/bin/combined-soak.rs": "c124fc4416ffa2acbf092b5c730c55cb121b8648088ad1ec594732f77b62d293",
+    "experiments/p0-egui/src/bin/composition-proof.rs": "93bb2491887c5b830f6c5b2dbe8509dbc5a1347acc2fef2c122fb76106e32983",
+    "experiments/p0-egui/src/bin/compressed-output-proof.rs": "be8dc698ca87e998b63f8b44cc1331490c4ab25cd32cb75d76ad6dc16d950f9e",
+    "experiments/p0-egui/src/bin/desktop-proof.rs": "965d3b6e22705f949594f3df4a9f85f3cc94507d5861e250d3d68dfd58e0e24d",
+    "experiments/p0-egui/src/bin/interaction-proof.rs": "4df2b97cb921957cbe805a42fc322ace901cf9d1e4ed79a856b4bffe8a0149dc",
+    "experiments/p0-egui/src/bin/media-proof.rs": "d19622721130506f7ebf2b0e2dccf116bc15705d7ba07e2d577e9d7d141fdeb0",
+    "experiments/p0-egui/src/bin/pcm-proof.rs": "b88dd7710d8dd314965b08841d09031500d8478410c97a52d0091fa74a84f1fb",
+    "experiments/p0-egui/src/bin/recovery-proof.rs": "0d6ed63513fe736e331eee1023135c63a29384d289f4a134eea84ac4650dd7f6",
+    "experiments/p0-egui/src/bin/resource-cycle-proof.rs": "b6f2dbde79bc5225f1f8c87de2ee4d357d38137eaac314ce256b2c49b6e0741d",
+    "experiments/p0-egui/src/bin/standard-load.rs": "382da2cf50deb102ffaee4efe8c9a9373e894b5547484eae7016e66fd6a9589a",
+    "experiments/p0-egui/src/bin/stream-output-proof.rs": "8cf59acee91881c352f9d9d8c55a443e694183039c788bdbb59640eaaed5c0bd",
+    "experiments/p0-egui/src/bin/switch-audio-proof.rs": "4555d1839663dd7507e2c3e5e606823ad7a4bc76f5c10ab9e756c70dd4a911fd",
+    "experiments/p0-egui/src/bin/switch-proof.rs": "181a168a668a173ea75c6722fe518a2d49a84063208267f4d32a8bc43b8ca224",
+    "experiments/p0-egui/src/bin/transport-proof.rs": "3ea4aafe2141951cc215caa1c4c0e9e7c3a9db5ba70bd0c7f842f46ca5fe9975",
+    "experiments/p0-wasapi/src/buffered.rs": "fbaba83c2f4bc9d13726296cff9d10d05fe0f897ddde096296045432de03d224",
+    "experiments/p0-wasapi/src/lib.rs": "6a6d717e7af868ebf7e214b564cca8f03b452c5d90e54fe64b1b39b14cc3de88",
+    "experiments/p0-wasapi/src/pcm.rs": "f157d28b289c3bc37cdb544d2e904fac3f8669f7e095591e9cc2bef698995ae3",
+    "experiments/p0-wasapi/src/platform.rs": "f51c809e3ebec968dec8af65cd3e575c605b8abbf0cb56b7d8f455ed4d872dd8",
+    "experiments/p0-preview-contract/src/lib.rs": "7e7164428f5f534b7c8a44b47aa57e79529f928fad7ea75a1f23f827a85250b0",
+    "experiments/p0-preview-contract/src/main.rs": "1edf475299f1e9a664b3f3dc1057288781799e64038567619c6a99f4e41fc296",
+    "experiments/p0-media/tests/fixtures/audio-0_37.mp3": "2e331b4daa636174764ee3db29b96582f000f4866d143ca3e39573f94a0ab5b2",
+    "experiments/p0-media/tests/fixtures/audio-0_37.mp3.reference.f32": "1a8145491b7012d9a551fd921c9d5db0d873955e6822f168aa4620eb94a24d66",
+    "experiments/p0-media/tests/fixtures/audio-0_37.ogg": "67c558e3a2ca9becaccc736b5b1814c2cd539f48d9e5b032c6c623f40d7295bd",
+    "experiments/p0-media/tests/fixtures/audio-0_37.ogg.sndfile.f32": "2c23f2ff448f88851418f747c6f41c09a97f9f86cbd2b48f8edd6ff52e4cc1eb",
+    "experiments/p0-media/tests/fixtures/compressed.json": "2fa8418b807062db787774af19b0d1796f5fa0412c0ad6fd348ab021c34951fc",
+    "experiments/p0-media/tests/fixtures/seek-3.ogg": "bf44bad5f361e3e0fa646f0dfef92f4245a45dff6c22ea6e73620c74f621b7bb",
+    "tools/check_p0.py": "371d68565eeaf7959c2062aae48b39565678dcd4c4efc7fff43d719f449216cc",
+    "tools/check_p0_combined_soak.py": "f9bc785618483d48a52ef9596c053f9c9c2eb90c94a2a4363d21138a80d2d403",
+    "tools/check_p0_composition.py": "277358084e319fb70afe1f406ba3365c500275dcfe6e18e6ea038badbe5a15af",
+    "tools/check_p0_compressed.py": "0d9716c23f7f3a634cb1ba695f02da722000b875b56129f3b3b1fd9ebb0682a3",
+    "tools/check_p0_desktop.py": "de2093b6d5f0882b338d3ec41e7c0dad2023018647bef84947fc7907249318b2",
+    "tools/check_p0_edit_composition.py": "0bdb32f65e6828a0da95572c5cf639e8517c5030e070a189e826c5fc6bbf5936",
+    "tools/check_p0_gpu_memory.py": "c15fe78c3412b20dc6e02bc2c4523aa8448a8d48c4fd9759607f19b8428bd1af",
+    "tools/check_p0_gui.py": "030fac0ecdc08237297e151f8229302b94ea868701d95fdf8133ca9aa1ad1764",
+    "tools/check_p0_interaction.py": "927504336ebc4b2187d9adc8ccf6320127ab68af9446cb4f7606cde9bb64a02b",
+    "tools/check_p0_lifetime.py": "5d6d08b91ceffcf10cd973df2380fd50f39968e944087ec325c20872d951fa2f",
+    "tools/check_p0_media.py": "de300b5143a5406c4755efbd6f3358169a7252085514dd2f7248358342410c34",
+    "tools/check_p0_pcm.py": "c9bfbca3c53fab2c0000ace59bfca47af676836db203d917eccdf8921b632e01",
+    "tools/check_p0_recovery.py": "28306d06d06b4f7600bb6ef1ecfff118d60edcb136eb107688837e199301d211",
+    "tools/check_p0_resource_cycles.py": "49cb900d16f2486ab826ae4d05e1b6e607ee7beaa342b873455830877bf576c1",
+    "tools/check_p0_streaming.py": "6e031e3a2e1de901ca5e7d2a9bddb7e41a659e47fb901755c0f58bcde8320912",
+    "tools/check_p0_stream_output.py": "0e9eb58b66898d2422a2243deb1afb214565c063d2ca260d4f9b6a65d274d7c9",
+    "tools/check_p0_switch.py": "c7ea7be526ada9ab8f3ce342e5cf420ad133f01d36d7b2574c5d312ac8138ed1",
+    "tools/check_p0_switch_audio.py": "4c5dca5d6fd0a7ccbd6040857515b0a0298558ce4f9b0abf652d10ed8de54d89",
+    "tools/check_p0_transport.py": "2ef7ffba6e87dafac947a38f11f53ece2c93e811814859e133ef551385045fc8",
+    "tools/p0_audio_device.py": "a177c4443cbca80acefa66ff6d54be25dd4ec71a2d3a1ae3dea5aaa631725a64",
+    "tools/p0_compressed_fixture.py": "68f91b21c9f3742914e0ad21522d958922ded7326fc4cad20329d42ad0eddc8e",
+    "tools/p0_evidence.py": "8f35c106f64618fe8bf46b9e7eb3dd92ae811e7ed658088b63581d6dfdf530b2",
+    "tools/p0_frame_attribution.py": "d6c258f95a68e044b9b37227507083e6c973844d35546ff923679cbee2dc8d49",
+    "tools/p0_gpu_repeats.py": "d0465cec8d6fe4fbef4820b572e07e798995b9f25e404026fd7b72762a80d23b",
+    "tools/p0_heap_analysis.py": "b85366a1b5f91066585e35aeb29ecb0c8f9391ddeb9bba7da18337eaeaa92a65",
+    "tools/p0_lifetime_analysis.py": "d1834decb5d015d62c5aa44d89d0b15b9a8bce6c39db9f571526bc6bd635fcbd",
+    "tools/p0_modules.py": "1949a3e5450c6ca8bd45ee541b111add569f6124687c4dd5f68e669ecc8f7929",
+    "tools/p0_process_metrics.py": "a736bbb1b9739bfa27242ac4d0c8eb1cab81d795f6f3ca2d6ba3a9b4e2b0fba3",
+    "tools/p0_stable_batch.py": "e7f0b6fabefb434ee6e8e31c9af40f7abf0ce3769f97f2fdf09aa318ac30c63c",
+    "tools/p0_vorbis_tail.py": "8d92d76e08b8a3953838f1262e3d6eb91bf8afe985fc895532d4b44e220c1e68",
+    "tools/p0_vulkan_memory.py": "c91da53f767dd7d7171765e9191736863470e62ab3ce9463eda88a73095d875f",
+    "tools/p0_workload.py": "fc9f03661781b5964c5bba90c3ea752a85e92a40a41cbfcbd6e7f8e6898e7a5f",
+    "tools/tests/test_p0_audio_device.py": "0be9b31adc1849653ac4ff103a671c3fc76ba4905b1ba1a619f508e8a2c12abf",
+    "tools/tests/test_p0_benchmark.py": "7f6c78963b68652c73c0ce19f160edd29100ab84a49751a9a3938c115e8ccf69",
+    "tools/tests/test_p0_combined_soak.py": "958e1f603ea657ed4e195e41c849482a4a549a9934f6865f17aaa3158ae11c5f",
+    "tools/tests/test_p0_composition_boundary.py": "a810c172d1321d136a7990db7638e60617a38c9e7b1b628a0d72db833800a317",
+    "tools/tests/test_p0_compressed.py": "3d21937c5e6af6dcad07984d322902b33ecea409cb2521fc8673ce01a41bd867",
+    "tools/tests/test_p0_desktop.py": "2899cbf3a9109b389c425f39444ab7fa242f415c3bc383ae208aed6839500179",
+    "tools/tests/test_p0_edit_composition.py": "d5cb5e164ebb98ce0868976f2f61da5707fc23e35bb18f88257d0e00bdf8f022",
+    "tools/tests/test_p0_evidence.py": "9b7ad82afb16d1c7f98ebf536b57a0c22ae86887baa7d41900554483c8836e04",
+    "tools/tests/test_p0_frame_attribution.py": "a3561f7d87f1b9dfce3e7f79bddffb82b86d7fd3ea743533b7bd5fdb716e1698",
+    "tools/tests/test_p0_heap_analysis.py": "3f86d19a73dbb57b71eb09b15ccfb8aeccf44dac65832497510f26c9b55bd381",
+    "tools/tests/test_p0_interaction.py": "8bf937fd0b36a98b82a30d40b57b97c56525a4ed925bace6361aec979056804c",
+    "tools/tests/test_p0_lifetime.py": "20d751702ba31b4d9da9a577a1d7acbbc0bbfc48a19b49c5fac0dfec3f549b7c",
+    "tools/tests/test_p0_media.py": "80390b148a9c0c90b4092fe89ef744444ceb96347cf13afd904adf7b27717021",
+    "tools/tests/test_p0_pcm.py": "93c6678710efd2281094b1725356ea399203f8acaa06858171fcefeea5c79e27",
+    "tools/tests/test_p0_recovery.py": "57994772fca9521fa436edfafcc39a8d05b184c43c0c1b0b7d6c49dfd1a38c34",
+    "tools/tests/test_p0_repeats.py": "71b47625ccc5f012a968c382c709796dbe84e249b2cfb213ae14484c44156225",
+    "tools/tests/test_p0_resource_cycles.py": "a2b1217694083db4ecd22bc03b18e7d1993618150701a6c2da9c519569d95c5f",
+    "tools/tests/test_p0_streaming.py": "b08ad8a17bcfab6cd3173280b15c264f5494082ee94097a450760fcd86d0b111",
+    "tools/tests/test_p0_stream_output.py": "2eb2e3649e4eb1a1bb783c17a97188d1247eee3f4c33bbe5c4d949fd36935168",
+    "tools/tests/test_p0_switch.py": "45e768fccbfacc0557fcd9708eafb4f62b5dd3eed26ef3b3f5bd640205abdba3",
+    "tools/tests/test_p0_switch_audio.py": "21954c23f973a933a48e707caa674a3813b239523d6d55aad580ba5df7255e9e",
+    "tools/tests/test_p0_transport.py": "b87d8fdaa47e6e58ee97aa861a65c618f3a4bc13ea1b11b9a9ea2641630a7882",
+    "tools/tests/test_p0_vorbis_tail.py": "8cfba700623ad5347470837ee3a9321cb6b5f9f357c487694b1e606b1bc3c080",
+    "tools/tests/test_p0_vulkan_memory.py": "fc6f704b72fddf47b9daf2f1fdbb10c89ecf2638d2dae72e686a0177b1f42a6f",
+    "tools/tests/test_p0_workload.py": "4631a75382d892272f546f2a7983384b7ce20c25022ab280c9dafe444808151a"
+  },
+  "changed_sources": [
+    "experiments/p0-media/src/compressed.rs",
+    "experiments/p0-media/src/bin/compressed-proof.rs",
+    "experiments/p0-egui/src/streaming_decode.rs",
+    "experiments/p0-wasapi/src/buffered.rs"
+  ],
+  "cargo_manifests_and_locks_unchanged": true,
+  "new_runtime_dependencies": false,
+  "summary": {
+    "unique_tests": 229,
+    "tests_by_group": {
+      "gui_compressed": 77,
+      "wasapi": 23,
+      "media_compressed": 22,
+      "preview_contract": 10,
+      "python": 97
+    },
+    "race_repetitions": 20,
+    "cases_per_repetition": 3,
+    "regressions_failed_before_fix": 3,
+    "long_pull_runs": 6,
+    "native_runs": 6,
+    "linear_pcm_hashes_unchanged": 6,
+    "accepted_native_packets_checked": 12320,
+    "pause_segments": 24,
+    "underruns": 0,
+    "decode_failures": 0,
+    "trace_overflow": 0
+  },
+  "raw_summary": {
+    "path": "artifacts/p0/mp3-cancel-summary-v1.json",
+    "bytes": 15801,
+    "sha256": "183b4ad5e416b9b08876f0ccf493c5fe7e0cbe160cfec092beb7742b8c5ce4e2"
+  },
+  "orchestration": {
+    "path": "artifacts/p0/run-cancel-validation-v1.py",
+    "bytes": 5462,
+    "sha256": "3a292c3fdcec6641a82d2345a9b2c3446fd522a2c14c54622db4cfe1efb4b06a"
+  },
+  "regression_logs": {
+    "default": {
+      "path": "artifacts/p0/checks-cancel-default.log",
+      "bytes": 9321,
+      "sha256": "e7ff76e873002ea204e7b29fb4648b873ead5c8ed09d586bce3dc4a65e034407"
+    },
+    "wav": {
+      "path": "artifacts/p0/checks-cancel-wav.log",
+      "bytes": 13696,
+      "sha256": "eb7847d450b5ce95bf56a74bdc1d55c45b52f8e0609b3799627b679b7fda9e50"
+    },
+    "contract": {
+      "path": "artifacts/p0/checks-cancel-contract.log",
+      "bytes": 2055,
+      "sha256": "5e0991d1ea34b8065c342bbb51180121258f60daa0773bff98cacd0b07ad9f7f"
+    },
+    "python": {
+      "path": "artifacts/p0/checks-cancel-python.log",
+      "bytes": 201,
+      "sha256": "0c370a17a8a13b9f869f296e87afa15bc21970cd7a8fd3d4ea1a6426d9df6b8a"
+    },
+    "wav-core": {
+      "path": "artifacts/p0/checks-cancel-wav-core.log",
+      "bytes": 2624,
+      "sha256": "61f4f879ae9207b30f7cd9b18b9bfb7a22c164001deaa6895ab35b318a31beb0"
+    },
+    "compressed-final": {
+      "path": "artifacts/p0/checks-cancel-compressed-final.log",
+      "bytes": 18002,
+      "sha256": "ed16c26ae5cbcd415eac2e5024b08caa2520c12e199773947e6d53a2affb3ea3"
+    },
+    "race-repeat": {
+      "path": "artifacts/p0/checks-cancel-race-repeat.log",
+      "bytes": 8531,
+      "sha256": "b08c2ba362aba6b25bfb0e9d828fdee4bd0c1330fff42003a4116e6b0b7f214a"
+    },
+    "before": {
+      "path": "artifacts/p0/checks-cancel-before.log",
+      "bytes": 1713,
+      "sha256": "10ca0c6357fae9e85afca380cdf92d26a136cb48e169b3a43f02ac74986b5b38"
+    }
+  },
+  "runs": [
+    {
+      "repeat": 0,
+      "mode": "pull",
+      "codec": "wav",
+      "directory": "artifacts/p0/compressed-pull-af5a66aa",
+      "linear_hash_unchanged": true,
+      "seek_steps_verified": true,
+      "evidence": {
+        "path": "artifacts/p0/compressed-pull-af5a66aa/evidence.json",
+        "bytes": 19501,
+        "sha256": "0f62b85abc5064847e38f33ea326db8645438ffb2a887e61c8bcfe943b3c6217"
+      },
+      "result": {
+        "path": "artifacts/p0/compressed-pull-af5a66aa/result.json",
+        "bytes": 623,
+        "sha256": "f873c03bb4098d8a773a5298d5ec887c5aac98849f08d48586c53e17d4e00d84"
+      },
+      "executable_sha256": "5c491f3ef11df815af2d4ea41277b721f66c1b2aeba0161a47a1bfc6eae7063f",
+      "all_source_snapshot_copies_verified": true,
+      "source_sha256": "2436b1089667c3567b9ac0096cafed205cbb897ba4835109c22841875c554beb",
+      "reference_sha256": "e5188f76d6a62a3fdd9a4df08f49c0156cb3ffa86472a5567827ff6ac0d05d81",
+      "peak_working_set_mib": 3.5703125,
+      "peak_commit_mib": 0.875,
+      "cpu_seconds_observed": 0.140625,
+      "process_sample_count": 16,
+      "linear_pcm": {
+        "path": "artifacts/p0/compressed-pull-af5a66aa/decoded.f32",
+        "bytes": 69120000,
+        "sha256": "e5188f76d6a62a3fdd9a4df08f49c0156cb3ffa86472a5567827ff6ac0d05d81"
+      },
+      "comparison": {
+        "actual_frames": 8640000,
+        "reference_frames": 8640000,
+        "frames_match": true,
+        "compared_samples": 17280000,
+        "max_error": 0.0,
+        "rmse": 0.0,
+        "samples_outside_tolerance": 0,
+        "tolerance": 1e-05,
+        "uncompared_tail_frames": 0
+      },
+      "seeks": [
+        {
+          "target": 4320007,
+          "frames": 257,
+          "eof": false,
+          "generation": 1,
+          "ms": 0.0559,
+          "steps": 1,
+          "max_step_ms": 0.0354
+        },
+        {
+          "target": 11,
+          "frames": 257,
+          "eof": false,
+          "generation": 2,
+          "ms": 0.031900000000000005,
+          "steps": 1,
+          "max_step_ms": 0.0028
+        },
+        {
+          "target": 8639991,
+          "frames": 9,
+          "eof": true,
+          "generation": 3,
+          "ms": 0.025599999999999998,
+          "steps": 1,
+          "max_step_ms": 0.0027
+        },
+        {
+          "target": 8640000,
+          "frames": 0,
+          "eof": true,
+          "generation": 4,
+          "ms": 0.0021,
+          "steps": 1,
+          "max_step_ms": 0.0007
+        }
+      ],
+      "decode_write_ms": 119.4205
+    },
+    {
+      "repeat": 0,
+      "mode": "pull",
+      "codec": "mp3",
+      "directory": "artifacts/p0/compressed-pull-d3242eba",
+      "linear_hash_unchanged": true,
+      "seek_steps_verified": true,
+      "evidence": {
+        "path": "artifacts/p0/compressed-pull-d3242eba/evidence.json",
+        "bytes": 24063,
+        "sha256": "8944f1b241858cb091ea8961a97f21d6689f8a41326031e8d005bdd64241e2e7"
+      },
+      "result": {
+        "path": "artifacts/p0/compressed-pull-d3242eba/result.json",
+        "bytes": 631,
+        "sha256": "21a07dc14033f4b96c378ee95123499c6dd9e861eb601748233116a0502b99ea"
+      },
+      "executable_sha256": "5c491f3ef11df815af2d4ea41277b721f66c1b2aeba0161a47a1bfc6eae7063f",
+      "all_source_snapshot_copies_verified": true,
+      "source_sha256": "c911d4afa37bfdb2b1d8ab15f2af98102ca87757dfd6e6bd57dc2484c82f340f",
+      "reference_sha256": "4271129fc27dc557e8488351282f5cbfb2952298eb1f8041c8ddf79bcc2b98f6",
+      "peak_working_set_mib": 4.05078125,
+      "peak_commit_mib": 1.26171875,
+      "cpu_seconds_observed": 0.5625,
+      "process_sample_count": 31,
+      "linear_pcm": {
+        "path": "artifacts/p0/compressed-pull-d3242eba/decoded.f32",
+        "bytes": 69120000,
+        "sha256": "51fbfdf3d662df49aae18b2b4810f4d4d4d450ce5fcde4d9459e81f22bfb4cef"
+      },
+      "comparison": {
+        "actual_frames": 8640000,
+        "reference_frames": 8640000,
+        "frames_match": true,
+        "compared_samples": 17280000,
+        "max_error": 9.5367431640625e-07,
+        "rmse": 1.0973133023623892e-07,
+        "samples_outside_tolerance": 0,
+        "tolerance": 1e-05,
+        "uncompared_tail_frames": 0
+      },
+      "seeks": [
+        {
+          "target": 4320007,
+          "frames": 257,
+          "eof": false,
+          "generation": 1,
+          "ms": 93.8774,
+          "steps": 1055,
+          "max_step_ms": 0.2787
+        },
+        {
+          "target": 11,
+          "frames": 257,
+          "eof": false,
+          "generation": 2,
+          "ms": 0.09469999999999999,
+          "steps": 1,
+          "max_step_ms": 0.0625
+        },
+        {
+          "target": 8639991,
+          "frames": 9,
+          "eof": true,
+          "generation": 3,
+          "ms": 189.2868,
+          "steps": 2110,
+          "max_step_ms": 0.28259999999999996
+        },
+        {
+          "target": 8640000,
+          "frames": 0,
+          "eof": true,
+          "generation": 4,
+          "ms": 0.0018,
+          "steps": 1,
+          "max_step_ms": 0.0003
+        }
+      ],
+      "decode_write_ms": 262.3111
+    },
+    {
+      "repeat": 0,
+      "mode": "pull",
+      "codec": "ogg",
+      "directory": "artifacts/p0/compressed-pull-c13e8052",
+      "linear_hash_unchanged": true,
+      "seek_steps_verified": true,
+      "evidence": {
+        "path": "artifacts/p0/compressed-pull-c13e8052/evidence.json",
+        "bytes": 21032,
+        "sha256": "6f763d5d17206a83d93e4a3201a551eb4b467864b2c305096a2a87966a1c68fb"
+      },
+      "result": {
+        "path": "artifacts/p0/compressed-pull-c13e8052/result.json",
+        "bytes": 649,
+        "sha256": "11cdd692ec7316c3b55276704a5f4715dcb34f6cb16f53854dd80e837f3db397"
+      },
+      "executable_sha256": "5c491f3ef11df815af2d4ea41277b721f66c1b2aeba0161a47a1bfc6eae7063f",
+      "all_source_snapshot_copies_verified": true,
+      "source_sha256": "cb1e85ebc234368590a5537cad3718d8128ab4657aeef02e631c13ab42723dd2",
+      "reference_sha256": "3549f68dd525fea6a9a10eadeb4bc7b00dd34c9f486e0d06c0f497997ad0e15c",
+      "peak_working_set_mib": 5.54296875,
+      "peak_commit_mib": 2.90234375,
+      "cpu_seconds_observed": 0.25,
+      "process_sample_count": 21,
+      "linear_pcm": {
+        "path": "artifacts/p0/compressed-pull-c13e8052/decoded.f32",
+        "bytes": 69120000,
+        "sha256": "3fe0e7f7f922e9214846e086ddf8c0ff03f1b12883647af34018602445b02565"
+      },
+      "comparison": {
+        "actual_frames": 8640000,
+        "reference_frames": 8640000,
+        "frames_match": true,
+        "compared_samples": 17280000,
+        "max_error": 1.4901161193847656e-07,
+        "rmse": 2.4300827737971412e-08,
+        "samples_outside_tolerance": 0,
+        "tolerance": 1e-05,
+        "uncompared_tail_frames": 0
+      },
+      "seeks": [
+        {
+          "target": 4320007,
+          "frames": 257,
+          "eof": false,
+          "generation": 1,
+          "ms": 0.3303,
+          "steps": 1,
+          "max_step_ms": 0.32949999999999996
+        },
+        {
+          "target": 11,
+          "frames": 257,
+          "eof": false,
+          "generation": 2,
+          "ms": 0.1472,
+          "steps": 1,
+          "max_step_ms": 0.14550000000000002
+        },
+        {
+          "target": 8639991,
+          "frames": 9,
+          "eof": true,
+          "generation": 3,
+          "ms": 0.32870000000000005,
+          "steps": 1,
+          "max_step_ms": 0.3281
+        },
+        {
+          "target": 8640000,
+          "frames": 0,
+          "eof": true,
+          "generation": 4,
+          "ms": 0.0017000000000000001,
+          "steps": 1,
+          "max_step_ms": 0.0006
+        }
+      ],
+      "decode_write_ms": 214.1588
+    },
+    {
+      "repeat": 0,
+      "mode": "native",
+      "codec": "wav",
+      "directory": "artifacts/p0/compressed-native-0cc773ff",
+      "evidence": {
+        "path": "artifacts/p0/compressed-native-0cc773ff/evidence.json",
+        "bytes": 353983,
+        "sha256": "0a9465ce5e3bcbf9865ec48a8b65420f7c0f161ce3eef988c3e307c972164327"
+      },
+      "result": {
+        "path": "artifacts/p0/compressed-native-0cc773ff/result.json",
+        "bytes": 1690285,
+        "sha256": "74e9a7fe7d138e72dbae4fa359dbf5d0a936b61fffce6163a52f55651248a176"
+      },
+      "executable_sha256": "3164f788478fe0b993c11301e0f2df3db3f571421bc5cef49c955e6272d775b7",
+      "all_source_snapshot_copies_verified": true,
+      "source_sha256": "2436b1089667c3567b9ac0096cafed205cbb897ba4835109c22841875c554beb",
+      "reference_sha256": "e5188f76d6a62a3fdd9a4df08f49c0156cb3ffa86472a5567827ff6ac0d05d81",
+      "peak_working_set_mib": 22.46484375,
+      "peak_commit_mib": 17.54296875,
+      "cpu_seconds_observed": 0.078125,
+      "process_sample_count": 1121,
+      "accepted_packets_checked": 2054,
+      "final_stats": {
+        "accepted_blocks": 403,
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 96928,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "max_queued_blocks": 4,
+        "native_discarded_frames": 13440,
+        "packets": 0,
+        "queued_blocks": 0,
+        "source_origin_frame": 73440,
+        "stale_blocks": 0,
+        "submitted_frames": 0,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "latency": [
+        {
+          "content_us": 0,
+          "kind": "play_ready_ack",
+          "ms": 10.9307
+        },
+        {
+          "content_us": 30040000,
+          "kind": "pause_ack",
+          "ms": 10.9635
+        },
+        {
+          "content_us": 90000000,
+          "kind": "seek_ack",
+          "ms": 21.016199999999998
+        },
+        {
+          "content_us": 90000000,
+          "kind": "seek_prefill",
+          "ms": 21.018700000000003
+        },
+        {
+          "content_us": 90000000,
+          "kind": "play_ready_ack",
+          "ms": 10.9923
+        },
+        {
+          "content_us": 91020000,
+          "kind": "pause_ack",
+          "ms": 10.489500000000001
+        },
+        {
+          "content_us": 500000,
+          "kind": "seek_ack",
+          "ms": 21.4986
+        },
+        {
+          "content_us": 500000,
+          "kind": "seek_prefill",
+          "ms": 21.5014
+        },
+        {
+          "content_us": 500000,
+          "kind": "play_ready_ack",
+          "ms": 11.018699999999999
+        },
+        {
+          "content_us": 1530000,
+          "kind": "pause_ack",
+          "ms": 10.9637
+        }
+      ],
+      "pause_segments": [
+        656.7491,
+        651.895,
+        653.6495,
+        652.8966
+      ]
+    },
+    {
+      "repeat": 0,
+      "mode": "native",
+      "codec": "mp3",
+      "directory": "artifacts/p0/compressed-native-3a0f707e",
+      "evidence": {
+        "path": "artifacts/p0/compressed-native-3a0f707e/evidence.json",
+        "bytes": 355192,
+        "sha256": "c215ab1c1cff92290e1975b8103540a7734e0c631e867231b72cff899d0e9d99"
+      },
+      "result": {
+        "path": "artifacts/p0/compressed-native-3a0f707e/result.json",
+        "bytes": 1693984,
+        "sha256": "a860d766c020254b616940bf458be8fb7e3dcb33af17d27386c975359216eff0"
+      },
+      "executable_sha256": "3164f788478fe0b993c11301e0f2df3db3f571421bc5cef49c955e6272d775b7",
+      "all_source_snapshot_copies_verified": true,
+      "source_sha256": "c911d4afa37bfdb2b1d8ab15f2af98102ca87757dfd6e6bd57dc2484c82f340f",
+      "reference_sha256": "51fbfdf3d662df49aae18b2b4810f4d4d4d450ce5fcde4d9459e81f22bfb4cef",
+      "peak_working_set_mib": 23.22265625,
+      "peak_commit_mib": 18.67578125,
+      "cpu_seconds_observed": 0.21875,
+      "process_sample_count": 1124,
+      "accepted_packets_checked": 2056,
+      "final_stats": {
+        "accepted_blocks": 399,
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 80064,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "max_queued_blocks": 4,
+        "native_discarded_frames": 13920,
+        "packets": 0,
+        "queued_blocks": 0,
+        "source_origin_frame": 72960,
+        "stale_blocks": 1,
+        "submitted_frames": 0,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "latency": [
+        {
+          "content_us": 0,
+          "kind": "play_ready_ack",
+          "ms": 10.936100000000001
+        },
+        {
+          "content_us": 30030000,
+          "kind": "pause_ack",
+          "ms": 10.3407
+        },
+        {
+          "content_us": 90000000,
+          "kind": "seek_ack",
+          "ms": 22.011400000000002
+        },
+        {
+          "content_us": 90000000,
+          "kind": "seek_prefill",
+          "ms": 116.9911
+        },
+        {
+          "content_us": 90000000,
+          "kind": "play_ready_ack",
+          "ms": 10.8003
+        },
+        {
+          "content_us": 91040000,
+          "kind": "pause_ack",
+          "ms": 10.1145
+        },
+        {
+          "content_us": 500000,
+          "kind": "seek_ack",
+          "ms": 22.023500000000002
+        },
+        {
+          "content_us": 500000,
+          "kind": "seek_prefill",
+          "ms": 22.026600000000002
+        },
+        {
+          "content_us": 500000,
+          "kind": "play_ready_ack",
+          "ms": 10.9938
+        },
+        {
+          "content_us": 1520000,
+          "kind": "pause_ack",
+          "ms": 10.6896
+        }
+      ],
+      "pause_segments": [
+        651.5061,
+        656.1696999999999,
+        652.5037,
+        655.2521999999999
+      ]
+    },
+    {
+      "repeat": 0,
+      "mode": "native",
+      "codec": "ogg",
+      "directory": "artifacts/p0/compressed-native-69e50248",
+      "evidence": {
+        "path": "artifacts/p0/compressed-native-69e50248/evidence.json",
+        "bytes": 354918,
+        "sha256": "03125f2399560fabee16a056f9e7d1a073b0c5068f7b34aeda48733b7be86e98"
+      },
+      "result": {
+        "path": "artifacts/p0/compressed-native-69e50248/result.json",
+        "bytes": 1692870,
+        "sha256": "4f0a29543930349fc835b2bfde081f653fd46209fbaa2710536fd0fb0be075ba"
+      },
+      "executable_sha256": "3164f788478fe0b993c11301e0f2df3db3f571421bc5cef49c955e6272d775b7",
+      "all_source_snapshot_copies_verified": true,
+      "source_sha256": "cb1e85ebc234368590a5537cad3718d8128ab4657aeef02e631c13ab42723dd2",
+      "reference_sha256": "3fe0e7f7f922e9214846e086ddf8c0ff03f1b12883647af34018602445b02565",
+      "peak_working_set_mib": 20.53125,
+      "peak_commit_mib": 14.92578125,
+      "cpu_seconds_observed": 0.0625,
+      "process_sample_count": 1120,
+      "accepted_packets_checked": 2056,
+      "final_stats": {
+        "accepted_blocks": 402,
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 92352,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "max_queued_blocks": 4,
+        "native_discarded_frames": 14400,
+        "packets": 0,
+        "queued_blocks": 0,
+        "source_origin_frame": 73440,
+        "stale_blocks": 0,
+        "submitted_frames": 0,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "latency": [
+        {
+          "content_us": 0,
+          "kind": "play_ready_ack",
+          "ms": 11.0106
+        },
+        {
+          "content_us": 30020000,
+          "kind": "pause_ack",
+          "ms": 10.980500000000001
+        },
+        {
+          "content_us": 90000000,
+          "kind": "seek_ack",
+          "ms": 21.653599999999997
+        },
+        {
+          "content_us": 90000000,
+          "kind": "seek_prefill",
+          "ms": 21.656100000000002
+        },
+        {
+          "content_us": 90000000,
+          "kind": "play_ready_ack",
+          "ms": 10.9994
+        },
+        {
+          "content_us": 91030000,
+          "kind": "pause_ack",
+          "ms": 10.9665
+        },
+        {
+          "content_us": 500000,
+          "kind": "seek_ack",
+          "ms": 22.001
+        },
+        {
+          "content_us": 500000,
+          "kind": "seek_prefill",
+          "ms": 22.0045
+        },
+        {
+          "content_us": 500000,
+          "kind": "play_ready_ack",
+          "ms": 10.9581
+        },
+        {
+          "content_us": 1530000,
+          "kind": "pause_ack",
+          "ms": 11.027500000000002
+        }
+      ],
+      "pause_segments": [
+        659.5448,
+        654.8679,
+        658.5023,
+        657.1496999999999
+      ]
+    },
+    {
+      "repeat": 1,
+      "mode": "pull",
+      "codec": "wav",
+      "directory": "artifacts/p0/compressed-pull-60702993",
+      "linear_hash_unchanged": true,
+      "seek_steps_verified": true,
+      "evidence": {
+        "path": "artifacts/p0/compressed-pull-60702993/evidence.json",
+        "bytes": 20411,
+        "sha256": "905fe369837feba7f6ed82660bd630a37c2321f4ca54c5580579bb68efb82784"
+      },
+      "result": {
+        "path": "artifacts/p0/compressed-pull-60702993/result.json",
+        "bytes": 605,
+        "sha256": "94ac1f586ed66c3949bd8f8044eaae2266c0f011fd1f231587945c1b3467351e"
+      },
+      "executable_sha256": "5c491f3ef11df815af2d4ea41277b721f66c1b2aeba0161a47a1bfc6eae7063f",
+      "all_source_snapshot_copies_verified": true,
+      "source_sha256": "2436b1089667c3567b9ac0096cafed205cbb897ba4835109c22841875c554beb",
+      "reference_sha256": "e5188f76d6a62a3fdd9a4df08f49c0156cb3ffa86472a5567827ff6ac0d05d81",
+      "peak_working_set_mib": 3.55859375,
+      "peak_commit_mib": 0.8671875,
+      "cpu_seconds_observed": 0.203125,
+      "process_sample_count": 19,
+      "linear_pcm": {
+        "path": "artifacts/p0/compressed-pull-60702993/decoded.f32",
+        "bytes": 69120000,
+        "sha256": "e5188f76d6a62a3fdd9a4df08f49c0156cb3ffa86472a5567827ff6ac0d05d81"
+      },
+      "comparison": {
+        "actual_frames": 8640000,
+        "reference_frames": 8640000,
+        "frames_match": true,
+        "compared_samples": 17280000,
+        "max_error": 0.0,
+        "rmse": 0.0,
+        "samples_outside_tolerance": 0,
+        "tolerance": 1e-05,
+        "uncompared_tail_frames": 0
+      },
+      "seeks": [
+        {
+          "target": 4320007,
+          "frames": 257,
+          "eof": false,
+          "generation": 1,
+          "ms": 0.0717,
+          "steps": 1,
+          "max_step_ms": 0.0354
+        },
+        {
+          "target": 11,
+          "frames": 257,
+          "eof": false,
+          "generation": 2,
+          "ms": 0.0414,
+          "steps": 1,
+          "max_step_ms": 0.0037
+        },
+        {
+          "target": 8639991,
+          "frames": 9,
+          "eof": true,
+          "generation": 3,
+          "ms": 0.0388,
+          "steps": 1,
+          "max_step_ms": 0.0044
+        },
+        {
+          "target": 8640000,
+          "frames": 0,
+          "eof": true,
+          "generation": 4,
+          "ms": 0.0035,
+          "steps": 1,
+          "max_step_ms": 0.0012
+        }
+      ],
+      "decode_write_ms": 157.35299999999998
+    },
+    {
+      "repeat": 1,
+      "mode": "pull",
+      "codec": "mp3",
+      "directory": "artifacts/p0/compressed-pull-547c5bda",
+      "linear_hash_unchanged": true,
+      "seek_steps_verified": true,
+      "evidence": {
+        "path": "artifacts/p0/compressed-pull-547c5bda/evidence.json",
+        "bytes": 23788,
+        "sha256": "ce9c0a8b3f048d360ec27d40e15cec3b2b002356fecce0f8a81ba972a85e58a0"
+      },
+      "result": {
+        "path": "artifacts/p0/compressed-pull-547c5bda/result.json",
+        "bytes": 616,
+        "sha256": "2fc3fe27de053633cafba9cf4927476a11092c04eb6d08c3241ada20e1493643"
+      },
+      "executable_sha256": "5c491f3ef11df815af2d4ea41277b721f66c1b2aeba0161a47a1bfc6eae7063f",
+      "all_source_snapshot_copies_verified": true,
+      "source_sha256": "c911d4afa37bfdb2b1d8ab15f2af98102ca87757dfd6e6bd57dc2484c82f340f",
+      "reference_sha256": "4271129fc27dc557e8488351282f5cbfb2952298eb1f8041c8ddf79bcc2b98f6",
+      "peak_working_set_mib": 4.05078125,
+      "peak_commit_mib": 1.265625,
+      "cpu_seconds_observed": 0.546875,
+      "process_sample_count": 30,
+      "linear_pcm": {
+        "path": "artifacts/p0/compressed-pull-547c5bda/decoded.f32",
+        "bytes": 69120000,
+        "sha256": "51fbfdf3d662df49aae18b2b4810f4d4d4d450ce5fcde4d9459e81f22bfb4cef"
+      },
+      "comparison": {
+        "actual_frames": 8640000,
+        "reference_frames": 8640000,
+        "frames_match": true,
+        "compared_samples": 17280000,
+        "max_error": 9.5367431640625e-07,
+        "rmse": 1.0973133023623892e-07,
+        "samples_outside_tolerance": 0,
+        "tolerance": 1e-05,
+        "uncompared_tail_frames": 0
+      },
+      "seeks": [
+        {
+          "target": 4320007,
+          "frames": 257,
+          "eof": false,
+          "generation": 1,
+          "ms": 94.178,
+          "steps": 1055,
+          "max_step_ms": 0.1787
+        },
+        {
+          "target": 11,
+          "frames": 257,
+          "eof": false,
+          "generation": 2,
+          "ms": 0.0924,
+          "steps": 1,
+          "max_step_ms": 0.0606
+        },
+        {
+          "target": 8639991,
+          "frames": 9,
+          "eof": true,
+          "generation": 3,
+          "ms": 186.1799,
+          "steps": 2110,
+          "max_step_ms": 0.1737
+        },
+        {
+          "target": 8640000,
+          "frames": 0,
+          "eof": true,
+          "generation": 4,
+          "ms": 0.0027,
+          "steps": 1,
+          "max_step_ms": 0.0005
+        }
+      ],
+      "decode_write_ms": 250.3321
+    },
+    {
+      "repeat": 1,
+      "mode": "pull",
+      "codec": "ogg",
+      "directory": "artifacts/p0/compressed-pull-b4d72f0e",
+      "linear_hash_unchanged": true,
+      "seek_steps_verified": true,
+      "evidence": {
+        "path": "artifacts/p0/compressed-pull-b4d72f0e/evidence.json",
+        "bytes": 21671,
+        "sha256": "129faed618d34db3e0695bc668ad4caf4f455a5e804b37525c421dc41daaa5c0"
+      },
+      "result": {
+        "path": "artifacts/p0/compressed-pull-b4d72f0e/result.json",
+        "bytes": 607,
+        "sha256": "c6bba7736ffe8807b3e941fe55dd4449ed456d79948d6652f6029d95dc3eee24"
+      },
+      "executable_sha256": "5c491f3ef11df815af2d4ea41277b721f66c1b2aeba0161a47a1bfc6eae7063f",
+      "all_source_snapshot_copies_verified": true,
+      "source_sha256": "cb1e85ebc234368590a5537cad3718d8128ab4657aeef02e631c13ab42723dd2",
+      "reference_sha256": "3549f68dd525fea6a9a10eadeb4bc7b00dd34c9f486e0d06c0f497997ad0e15c",
+      "peak_working_set_mib": 5.55859375,
+      "peak_commit_mib": 2.95703125,
+      "cpu_seconds_observed": 0.3125,
+      "process_sample_count": 23,
+      "linear_pcm": {
+        "path": "artifacts/p0/compressed-pull-b4d72f0e/decoded.f32",
+        "bytes": 69120000,
+        "sha256": "3fe0e7f7f922e9214846e086ddf8c0ff03f1b12883647af34018602445b02565"
+      },
+      "comparison": {
+        "actual_frames": 8640000,
+        "reference_frames": 8640000,
+        "frames_match": true,
+        "compared_samples": 17280000,
+        "max_error": 1.4901161193847656e-07,
+        "rmse": 2.4300827737971412e-08,
+        "samples_outside_tolerance": 0,
+        "tolerance": 1e-05,
+        "uncompared_tail_frames": 0
+      },
+      "seeks": [
+        {
+          "target": 4320007,
+          "frames": 257,
+          "eof": false,
+          "generation": 1,
+          "ms": 0.37829999999999997,
+          "steps": 1,
+          "max_step_ms": 0.3761
+        },
+        {
+          "target": 11,
+          "frames": 257,
+          "eof": false,
+          "generation": 2,
+          "ms": 0.1536,
+          "steps": 1,
+          "max_step_ms": 0.1527
+        },
+        {
+          "target": 8639991,
+          "frames": 9,
+          "eof": true,
+          "generation": 3,
+          "ms": 0.4638,
+          "steps": 1,
+          "max_step_ms": 0.462
+        },
+        {
+          "target": 8640000,
+          "frames": 0,
+          "eof": true,
+          "generation": 4,
+          "ms": 0.0036,
+          "steps": 1,
+          "max_step_ms": 0.0011
+        }
+      ],
+      "decode_write_ms": 287.3503
+    },
+    {
+      "repeat": 1,
+      "mode": "native",
+      "codec": "wav",
+      "directory": "artifacts/p0/compressed-native-db9de3b7",
+      "evidence": {
+        "path": "artifacts/p0/compressed-native-db9de3b7/evidence.json",
+        "bytes": 353804,
+        "sha256": "1b365e775658147778059f57218437adcd131fcbcb6e87884b3718c74b504e06"
+      },
+      "result": {
+        "path": "artifacts/p0/compressed-native-db9de3b7/result.json",
+        "bytes": 1690494,
+        "sha256": "9462e0179eb860bb334a611a947d255339f81c66f8ca288ec00582c467359174"
+      },
+      "executable_sha256": "3164f788478fe0b993c11301e0f2df3db3f571421bc5cef49c955e6272d775b7",
+      "all_source_snapshot_copies_verified": true,
+      "source_sha256": "2436b1089667c3567b9ac0096cafed205cbb897ba4835109c22841875c554beb",
+      "reference_sha256": "e5188f76d6a62a3fdd9a4df08f49c0156cb3ffa86472a5567827ff6ac0d05d81",
+      "peak_working_set_mib": 20.1875,
+      "peak_commit_mib": 14.7109375,
+      "cpu_seconds_observed": 0.03125,
+      "process_sample_count": 1117,
+      "accepted_packets_checked": 2055,
+      "final_stats": {
+        "accepted_blocks": 402,
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 93312,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "max_queued_blocks": 4,
+        "native_discarded_frames": 13920,
+        "packets": 0,
+        "queued_blocks": 0,
+        "source_origin_frame": 72960,
+        "stale_blocks": 0,
+        "submitted_frames": 0,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "latency": [
+        {
+          "content_us": 0,
+          "kind": "play_ready_ack",
+          "ms": 11.011099999999999
+        },
+        {
+          "content_us": 30030000,
+          "kind": "pause_ack",
+          "ms": 10.9826
+        },
+        {
+          "content_us": 90000000,
+          "kind": "seek_ack",
+          "ms": 22.0032
+        },
+        {
+          "content_us": 90000000,
+          "kind": "seek_prefill",
+          "ms": 22.0051
+        },
+        {
+          "content_us": 90000000,
+          "kind": "play_ready_ack",
+          "ms": 11.054400000000001
+        },
+        {
+          "content_us": 91020000,
+          "kind": "pause_ack",
+          "ms": 10.2952
+        },
+        {
+          "content_us": 500000,
+          "kind": "seek_ack",
+          "ms": 42.964299999999994
+        },
+        {
+          "content_us": 500000,
+          "kind": "seek_prefill",
+          "ms": 42.965999999999994
+        },
+        {
+          "content_us": 500000,
+          "kind": "play_ready_ack",
+          "ms": 10.2972
+        },
+        {
+          "content_us": 1520000,
+          "kind": "pause_ack",
+          "ms": 10.3056
+        }
+      ],
+      "pause_segments": [
+        652.5919,
+        650.0142,
+        656.6761,
+        651.0368
+      ]
+    },
+    {
+      "repeat": 1,
+      "mode": "native",
+      "codec": "mp3",
+      "directory": "artifacts/p0/compressed-native-54abd697",
+      "evidence": {
+        "path": "artifacts/p0/compressed-native-54abd697/evidence.json",
+        "bytes": 355922,
+        "sha256": "fcdb3abe66b115d0cf6c9129fab8c45c7838bee3c85a68c2718eb3e6ba536edd"
+      },
+      "result": {
+        "path": "artifacts/p0/compressed-native-54abd697/result.json",
+        "bytes": 1687816,
+        "sha256": "a8c7591534bdbcfd3b03923e77b2fae51f51c98f02677eb3b7779d439688290e"
+      },
+      "executable_sha256": "3164f788478fe0b993c11301e0f2df3db3f571421bc5cef49c955e6272d775b7",
+      "all_source_snapshot_copies_verified": true,
+      "source_sha256": "c911d4afa37bfdb2b1d8ab15f2af98102ca87757dfd6e6bd57dc2484c82f340f",
+      "reference_sha256": "51fbfdf3d662df49aae18b2b4810f4d4d4d450ce5fcde4d9459e81f22bfb4cef",
+      "peak_working_set_mib": 22.89453125,
+      "peak_commit_mib": 18.25390625,
+      "cpu_seconds_observed": 0.1875,
+      "process_sample_count": 1123,
+      "accepted_packets_checked": 2050,
+      "final_stats": {
+        "accepted_blocks": 399,
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 80544,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "max_queued_blocks": 4,
+        "native_discarded_frames": 13440,
+        "packets": 0,
+        "queued_blocks": 0,
+        "source_origin_frame": 73440,
+        "stale_blocks": 1,
+        "submitted_frames": 0,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "latency": [
+        {
+          "content_us": 0,
+          "kind": "play_ready_ack",
+          "ms": 21.966800000000003
+        },
+        {
+          "content_us": 30030000,
+          "kind": "pause_ack",
+          "ms": 11.004399999999999
+        },
+        {
+          "content_us": 90000000,
+          "kind": "seek_ack",
+          "ms": 21.9761
+        },
+        {
+          "content_us": 90000000,
+          "kind": "seek_prefill",
+          "ms": 119.1939
+        },
+        {
+          "content_us": 90000000,
+          "kind": "play_ready_ack",
+          "ms": 11.0639
+        },
+        {
+          "content_us": 91030000,
+          "kind": "pause_ack",
+          "ms": 10.978
+        },
+        {
+          "content_us": 500000,
+          "kind": "seek_ack",
+          "ms": 32.5761
+        },
+        {
+          "content_us": 500000,
+          "kind": "seek_prefill",
+          "ms": 43.582
+        },
+        {
+          "content_us": 500000,
+          "kind": "play_ready_ack",
+          "ms": 10.9263
+        },
+        {
+          "content_us": 1530000,
+          "kind": "pause_ack",
+          "ms": 11.003300000000001
+        }
+      ],
+      "pause_segments": [
+        651.432,
+        658.6175,
+        656.6122,
+        652.7355
+      ]
+    },
+    {
+      "repeat": 1,
+      "mode": "native",
+      "codec": "ogg",
+      "directory": "artifacts/p0/compressed-native-157b0bc5",
+      "evidence": {
+        "path": "artifacts/p0/compressed-native-157b0bc5/evidence.json",
+        "bytes": 355211,
+        "sha256": "3de8068ca57abd607ac2f1c958433028b397ad84e737bc8aa204afb16528e17d"
+      },
+      "result": {
+        "path": "artifacts/p0/compressed-native-157b0bc5/result.json",
+        "bytes": 1685617,
+        "sha256": "06c880b68eef66191bc5b79c32ccbce871fbbbfc2165a35d5d57beac24f9a71f"
+      },
+      "executable_sha256": "3164f788478fe0b993c11301e0f2df3db3f571421bc5cef49c955e6272d775b7",
+      "all_source_snapshot_copies_verified": true,
+      "source_sha256": "cb1e85ebc234368590a5537cad3718d8128ab4657aeef02e631c13ab42723dd2",
+      "reference_sha256": "3fe0e7f7f922e9214846e086ddf8c0ff03f1b12883647af34018602445b02565",
+      "peak_working_set_mib": 23.00390625,
+      "peak_commit_mib": 18.078125,
+      "cpu_seconds_observed": 0.09375,
+      "process_sample_count": 1118,
+      "accepted_packets_checked": 2049,
+      "final_stats": {
+        "accepted_blocks": 402,
+        "active": false,
+        "decode_failures": 0,
+        "discarded_frames": 93312,
+        "free_blocks": 5,
+        "generation": 9,
+        "in_flight": false,
+        "max_queued_blocks": 4,
+        "native_discarded_frames": 13920,
+        "packets": 0,
+        "queued_blocks": 0,
+        "source_origin_frame": 72960,
+        "stale_blocks": 0,
+        "submitted_frames": 0,
+        "trace_overflow": false,
+        "underruns": 0
+      },
+      "latency": [
+        {
+          "content_us": 0,
+          "kind": "play_ready_ack",
+          "ms": 21.7987
+        },
+        {
+          "content_us": 30020000,
+          "kind": "pause_ack",
+          "ms": 11.028599999999999
+        },
+        {
+          "content_us": 90000000,
+          "kind": "seek_ack",
+          "ms": 21.9946
+        },
+        {
+          "content_us": 90000000,
+          "kind": "seek_prefill",
+          "ms": 21.9963
+        },
+        {
+          "content_us": 90000000,
+          "kind": "play_ready_ack",
+          "ms": 11.0552
+        },
+        {
+          "content_us": 91030000,
+          "kind": "pause_ack",
+          "ms": 10.9125
+        },
+        {
+          "content_us": 500000,
+          "kind": "seek_ack",
+          "ms": 32.000800000000005
+        },
+        {
+          "content_us": 500000,
+          "kind": "seek_prefill",
+          "ms": 43.0079
+        },
+        {
+          "content_us": 500000,
+          "kind": "play_ready_ack",
+          "ms": 11.1172
+        },
+        {
+          "content_us": 1520000,
+          "kind": "pause_ack",
+          "ms": 11.0064
+        }
+      ],
+      "pause_segments": [
+        658.8771,
+        650.0853,
+        650.7221,
+        659.0072
+      ]
+    }
+  ],
+  "scope": {
+    "device_opened_only_in_native_runs": true,
+    "native_runs_measure_playback_regression_not_controlled_cancel_race": true,
+    "system_capture_used": false,
+    "old_stable_source_used": false,
+    "microphone_or_loopback_used": false,
+    "physical_input_or_acoustic_latency_measured": false,
+    "wall_clock_cancel_deadline_verified": false,
+    "blocked_io_interrupt_supported": false,
+    "mp3_index_or_reservoir_fast_seek_added": false,
+    "core_tests_require_encoder_reference_dll_device_or_network": false
+  },
+  "remaining": [
+    "MP3 total prefix seek cost",
+    "cancellation during blocking source factory/read/seek or codec calls",
+    "resampling and format conversion",
+    "compressed audio plus graphics long soak",
+    "real music, metadata, nonzero starts and chained streams",
+    "physical input, acoustic latency and device changes",
+    "Linux and macOS real-machine validation",
+    "P0 scope and technology decision"
+  ],
+  "mp3_pause_to_backward_comparison": {
+    "same_encoded_source": true,
+    "sequential_observation_not_acoustic_or_isolated_scheduler_benchmark": true,
+    "zero_frame_stale_event_is_lease_return_not_proof_of_zero_decode_work": true,
+    "runs": [
+      {
+        "before": {
+          "result": {
+            "path": "artifacts/p0/compressed-native-a1e3abe1/result.json",
+            "sha256": "59a3a293e92d24c71d3d01c01561bb2349e090d810ed726c2694425e21146d56"
+          },
+          "source_sha256": "c911d4afa37bfdb2b1d8ab15f2af98102ca87757dfd6e6bd57dc2484c82f340f",
+          "seek_prefill_ms": {
+            "90000000": 119.3964,
+            "500000": 97.88520000000001
+          },
+          "stale_events": [
+            {
+              "first_frame": 4369920,
+              "frames": 4096,
+              "generation": 5,
+              "kind": "Stale",
+              "native_discarded_frames": 0
+            }
+          ]
+        },
+        "after": {
+          "result": {
+            "path": "artifacts/p0/compressed-native-3a0f707e/result.json",
+            "sha256": "a860d766c020254b616940bf458be8fb7e3dcb33af17d27386c975359216eff0"
+          },
+          "source_sha256": "c911d4afa37bfdb2b1d8ab15f2af98102ca87757dfd6e6bd57dc2484c82f340f",
+          "seek_prefill_ms": {
+            "90000000": 116.9911,
+            "500000": 22.026600000000002
+          },
+          "stale_events": [
+            {
+              "first_frame": 4369920,
+              "frames": 0,
+              "generation": 5,
+              "kind": "Stale",
+              "native_discarded_frames": 0
+            }
+          ]
+        }
+      },
+      {
+        "before": {
+          "result": {
+            "path": "artifacts/p0/compressed-native-ff5e94e0/result.json",
+            "sha256": "587f9e66c46c9b016a9eaae5e220ecb8732959da55a6efd076ce36bb03f0f179"
+          },
+          "source_sha256": "c911d4afa37bfdb2b1d8ab15f2af98102ca87757dfd6e6bd57dc2484c82f340f",
+          "seek_prefill_ms": {
+            "90000000": 119.8981,
+            "500000": 98.7454
+          },
+          "stale_events": [
+            {
+              "first_frame": 4369920,
+              "frames": 4096,
+              "generation": 5,
+              "kind": "Stale",
+              "native_discarded_frames": 0
+            }
+          ]
+        },
+        "after": {
+          "result": {
+            "path": "artifacts/p0/compressed-native-54abd697/result.json",
+            "sha256": "a8c7591534bdbcfd3b03923e77b2fae51f51c98f02677eb3b7779d439688290e"
+          },
+          "source_sha256": "c911d4afa37bfdb2b1d8ab15f2af98102ca87757dfd6e6bd57dc2484c82f340f",
+          "seek_prefill_ms": {
+            "90000000": 119.1939,
+            "500000": 43.582
+          },
+          "stale_events": [
+            {
+              "first_frame": 4369440,
+              "frames": 0,
+              "generation": 5,
+              "kind": "Stale",
+              "native_discarded_frames": 0
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

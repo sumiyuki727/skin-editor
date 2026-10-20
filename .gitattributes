@@ -1,0 +1,27 @@
+* text=auto
+.gitattributes text eol=lf
+.gitignore text eol=lf
+*.rs text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.toml text eol=lf
+*.lock text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+.githooks/* text eol=lf
+*.png -text
+*.jpg -text
+*.ogg -text
+*.mp3 -text
+*.wav -text
+*.f32 -text
+
+# Keep the exact bytes referenced by archived P0 source and evidence hashes.
+experiments/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+docs/p0/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tools/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# This measured manifest already ends with a blank line; retain its recorded hash.
+experiments/p0-preview-contract/Cargo.toml -text whitespace=blank-at-eol,space-before-tab,cr-at-eol,-blank-at-eof
+tools/check_repository.py text eol=lf
+tools/test_check_repository.py text eol=lf

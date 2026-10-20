@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "status": "passed",
+  "directory": "artifacts/p0/interaction-b1c05fb0",
+  "result_sha256": "b2146a1b796656a5fef0352178f636415134142ada02f4746b6ad9c2a2d5da38",
+  "evidence_sha256": "c47416aacec86590b325197a55de43247872837d42d4ce03960e96443f74d6c2",
+  "executable_sha256": "17df34c903f8338cb96cd387a03f797faa92b90175ba90a09c35137e5ba7446e",
+  "observations": [
+    {
+      "accepted_game_inputs": 0,
+      "committed_node": 0,
+      "nodes": 1,
+      "simulation_ms": 0,
+      "stage": 0,
+      "visible_position": [
+        40.0,
+        40.0
+      ]
+    },
+    {
+      "accepted_game_inputs": 0,
+      "committed_node": 0,
+      "nodes": 1,
+      "simulation_ms": 0,
+      "stage": 1,
+      "visible_position": [
+        70.0,
+        60.0
+      ]
+    },
+    {
+      "accepted_game_inputs": 0,
+      "committed_node": 0,
+      "nodes": 1,
+      "simulation_ms": 0,
+      "stage": 2,
+      "visible_position": [
+        40.0,
+        40.0
+      ]
+    },
+    {
+      "accepted_game_inputs": 0,
+      "committed_node": 1,
+      "nodes": 2,
+      "simulation_ms": 0,
+      "stage": 3,
+      "visible_position": [
+        100.0,
+        70.0
+      ]
+    }
+  ],
+  "before_equals_cancelled_canvas": true,
+  "draft_changes_canvas": true,
+  "commit_changes_canvas": true,
+  "headless_tests": {
+    "owner": 4,
+    "egui_widget_route": 4,
+    "native_harness_timing": 1
+  },
+  "failed_exploration": {
+    "directory": "artifacts/p0/interaction-861110b3",
+    "status": "failed",
+    "reason": "screenshot callback advanced test step after input hook; first press skipped; fixed with input-step latch"
+  },
+  "audio_preflight": {
+    "wave_output_entries": 5,
+    "api": "winmm.waveOutGetNumDevs",
+    "device_open_tested": false,
+    "playback_tested": false,
+    "device_detail_wmi_query": "access denied"
+  },
+  "limits": [
+    "One synthetic rectangle, no product project or stable scenes",
+    "Physical mouse/keyboard, OS focus transitions, IME, full screen and DPI transitions remain manual checks",
+    "No audio integration"
+  ],
+  "input": "synthetic egui RawInput through the same widget/command route as manual mode",
+  "system_capture_used": false,
+  "previous_passing_run": "artifacts/p0/interaction-8c82de77"
+}

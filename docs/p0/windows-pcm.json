@@ -1,0 +1,922 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "status": "passed",
+  "platform": "Windows x64 Vulkan / WASAPI shared float32",
+  "runs": [
+    {
+      "status": "passed",
+      "audio_format": {
+        "bits": 32,
+        "buffer_frames": 4800,
+        "channels": 2,
+        "clock_frequency": 384000,
+        "rate": 48000
+      },
+      "frozen_us": 360000,
+      "normal_resume_us": 360000,
+      "recovery_frozen_us": 387479,
+      "final_simulation_us": 747479,
+      "accepted_inputs": 2,
+      "edit_count": 30,
+      "nodes": 2,
+      "stale_rejected": 3,
+      "checkpoints": [
+        {
+          "accepted_inputs": 1,
+          "epoch": 0,
+          "nodes": 1,
+          "pcm": {
+            "first": {
+              "frames": 4800,
+              "hash": 1291874844981481033,
+              "nonzero_samples": 9598,
+              "peak": 0.03999999910593033,
+              "probe": [
+                0.0,
+                9.594004040991422e-06,
+                3.8312384276650846e-05,
+                8.596455154474825e-05,
+                0.00015223391528706998,
+                0.00023667945060878992,
+                0.0003387379110790789,
+                0.0004577266226988286
+              ],
+              "source_frame": 0
+            },
+            "last": {
+              "frames": 480,
+              "hash": 12472726521326456613,
+              "nonzero_samples": 0,
+              "peak": 0.0,
+              "probe": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "source_frame": 21600
+            },
+            "nonzero_samples": 19198,
+            "packets": 37,
+            "requested_us": 0,
+            "source_origin_frame": 0,
+            "submitted_frames": 22080
+          },
+          "simulation_us": 360000,
+          "stage": 0
+        },
+        {
+          "accepted_inputs": 1,
+          "epoch": 0,
+          "nodes": 2,
+          "pcm": {
+            "first": {
+              "frames": 4800,
+              "hash": 1291874844981481033,
+              "nonzero_samples": 9598,
+              "peak": 0.03999999910593033,
+              "probe": [
+                0.0,
+                9.594004040991422e-06,
+                3.8312384276650846e-05,
+                8.596455154474825e-05,
+                0.00015223391528706998,
+                0.00023667945060878992,
+                0.0003387379110790789,
+                0.0004577266226988286
+              ],
+              "source_frame": 0
+            },
+            "last": {
+              "frames": 480,
+              "hash": 12472726521326456613,
+              "nonzero_samples": 0,
+              "peak": 0.0,
+              "probe": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "source_frame": 21600
+            },
+            "nonzero_samples": 19198,
+            "packets": 37,
+            "requested_us": 0,
+            "source_origin_frame": 0,
+            "submitted_frames": 22080
+          },
+          "simulation_us": 360000,
+          "stage": 1
+        },
+        {
+          "accepted_inputs": 2,
+          "epoch": 1,
+          "nodes": 2,
+          "pcm": {
+            "first": null,
+            "last": null,
+            "nonzero_samples": 0,
+            "packets": 0,
+            "requested_us": 1050000,
+            "source_origin_frame": 50400,
+            "submitted_frames": 0
+          },
+          "simulation_us": 1050000,
+          "stage": 2
+        },
+        {
+          "accepted_inputs": 2,
+          "epoch": 3,
+          "nodes": 2,
+          "pcm": {
+            "first": null,
+            "last": null,
+            "nonzero_samples": 0,
+            "packets": 0,
+            "requested_us": 387479,
+            "source_origin_frame": 18598,
+            "submitted_frames": 0
+          },
+          "simulation_us": 387479,
+          "stage": 3
+        }
+      ],
+      "proofs": [
+        {
+          "diagnostic_wall_ms": 1686.8138,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 0
+        },
+        {
+          "diagnostic_wall_ms": 1695.2364,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 1
+        },
+        {
+          "diagnostic_wall_ms": 1683.4104,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 2
+        },
+        {
+          "diagnostic_wall_ms": 1681.3068,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 3
+        }
+      ],
+      "directory": "artifacts/p0/pcm-103f05cb",
+      "result_sha256": "17d73ecd7054c1bf2acc9589a2ac105850539698f901ad45c5537b5f5c73d1cd",
+      "evidence_sha256": "3547a0cbb466ed917547f61d6a08bb94d69527b48f6d4c883527ef692808b9f1",
+      "executable_sha256": "bf8dca1e7ef638d4610245a0c628699560915fafd9757e6fe654407f00a2c53e",
+      "role": "automatic_repetition",
+      "content_epochs": [
+        {
+          "epoch": 0,
+          "base_us": 0,
+          "submitted_frames": 39360,
+          "nonzero_samples": 38398
+        },
+        {
+          "epoch": 1,
+          "base_us": 1050000,
+          "submitted_frames": 22080,
+          "nonzero_samples": 15360
+        },
+        {
+          "epoch": 2,
+          "base_us": 50000,
+          "submitted_frames": 21600,
+          "nonzero_samples": 14400
+        },
+        {
+          "epoch": 3,
+          "base_us": 387479,
+          "submitted_frames": 21600,
+          "nonzero_samples": 19200
+        }
+      ]
+    },
+    {
+      "status": "passed",
+      "audio_format": {
+        "bits": 32,
+        "buffer_frames": 4800,
+        "channels": 2,
+        "clock_frequency": 384000,
+        "rate": 48000
+      },
+      "frozen_us": 360000,
+      "normal_resume_us": 360000,
+      "recovery_frozen_us": 388562,
+      "final_simulation_us": 748562,
+      "accepted_inputs": 2,
+      "edit_count": 30,
+      "nodes": 2,
+      "stale_rejected": 3,
+      "checkpoints": [
+        {
+          "accepted_inputs": 1,
+          "epoch": 0,
+          "nodes": 1,
+          "pcm": {
+            "first": {
+              "frames": 4800,
+              "hash": 1291874844981481033,
+              "nonzero_samples": 9598,
+              "peak": 0.03999999910593033,
+              "probe": [
+                0.0,
+                9.594004040991422e-06,
+                3.8312384276650846e-05,
+                8.596455154474825e-05,
+                0.00015223391528706998,
+                0.00023667945060878992,
+                0.0003387379110790789,
+                0.0004577266226988286
+              ],
+              "source_frame": 0
+            },
+            "last": {
+              "frames": 480,
+              "hash": 12472726521326456613,
+              "nonzero_samples": 0,
+              "peak": 0.0,
+              "probe": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "source_frame": 21120
+            },
+            "nonzero_samples": 19198,
+            "packets": 36,
+            "requested_us": 0,
+            "source_origin_frame": 0,
+            "submitted_frames": 21600
+          },
+          "simulation_us": 360000,
+          "stage": 0
+        },
+        {
+          "accepted_inputs": 1,
+          "epoch": 0,
+          "nodes": 2,
+          "pcm": {
+            "first": {
+              "frames": 4800,
+              "hash": 1291874844981481033,
+              "nonzero_samples": 9598,
+              "peak": 0.03999999910593033,
+              "probe": [
+                0.0,
+                9.594004040991422e-06,
+                3.8312384276650846e-05,
+                8.596455154474825e-05,
+                0.00015223391528706998,
+                0.00023667945060878992,
+                0.0003387379110790789,
+                0.0004577266226988286
+              ],
+              "source_frame": 0
+            },
+            "last": {
+              "frames": 480,
+              "hash": 12472726521326456613,
+              "nonzero_samples": 0,
+              "peak": 0.0,
+              "probe": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "source_frame": 21120
+            },
+            "nonzero_samples": 19198,
+            "packets": 36,
+            "requested_us": 0,
+            "source_origin_frame": 0,
+            "submitted_frames": 21600
+          },
+          "simulation_us": 360000,
+          "stage": 1
+        },
+        {
+          "accepted_inputs": 2,
+          "epoch": 1,
+          "nodes": 2,
+          "pcm": {
+            "first": null,
+            "last": null,
+            "nonzero_samples": 0,
+            "packets": 0,
+            "requested_us": 1050000,
+            "source_origin_frame": 50400,
+            "submitted_frames": 0
+          },
+          "simulation_us": 1050000,
+          "stage": 2
+        },
+        {
+          "accepted_inputs": 2,
+          "epoch": 3,
+          "nodes": 2,
+          "pcm": {
+            "first": null,
+            "last": null,
+            "nonzero_samples": 0,
+            "packets": 0,
+            "requested_us": 388562,
+            "source_origin_frame": 18650,
+            "submitted_frames": 0
+          },
+          "simulation_us": 388562,
+          "stage": 3
+        }
+      ],
+      "proofs": [
+        {
+          "diagnostic_wall_ms": 1705.6898,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 0
+        },
+        {
+          "diagnostic_wall_ms": 1704.3561,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 1
+        },
+        {
+          "diagnostic_wall_ms": 1705.4582,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 2
+        },
+        {
+          "diagnostic_wall_ms": 1693.5691,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 3
+        }
+      ],
+      "directory": "artifacts/p0/pcm-50bc841a",
+      "result_sha256": "a493258d362b9ed473d8431781b40f3bd92ed3454f2b8a9d1c6fa27f3e7e24ca",
+      "evidence_sha256": "c1927d429672fda7bab09f5bf67524df6030f751d3c66e73c373fee86a2a3def",
+      "executable_sha256": "bf8dca1e7ef638d4610245a0c628699560915fafd9757e6fe654407f00a2c53e",
+      "role": "automatic_repetition",
+      "content_epochs": [
+        {
+          "epoch": 0,
+          "base_us": 0,
+          "submitted_frames": 39360,
+          "nonzero_samples": 38398
+        },
+        {
+          "epoch": 1,
+          "base_us": 1050000,
+          "submitted_frames": 22080,
+          "nonzero_samples": 15360
+        },
+        {
+          "epoch": 2,
+          "base_us": 50000,
+          "submitted_frames": 21600,
+          "nonzero_samples": 14400
+        },
+        {
+          "epoch": 3,
+          "base_us": 388562,
+          "submitted_frames": 22080,
+          "nonzero_samples": 19200
+        }
+      ]
+    },
+    {
+      "status": "passed",
+      "audio_format": {
+        "bits": 32,
+        "buffer_frames": 4800,
+        "channels": 2,
+        "clock_frequency": 384000,
+        "rate": 48000
+      },
+      "frozen_us": 360000,
+      "normal_resume_us": 360000,
+      "recovery_frozen_us": 389229,
+      "final_simulation_us": 749229,
+      "accepted_inputs": 2,
+      "edit_count": 30,
+      "nodes": 2,
+      "stale_rejected": 3,
+      "checkpoints": [
+        {
+          "accepted_inputs": 1,
+          "epoch": 0,
+          "nodes": 1,
+          "pcm": {
+            "first": {
+              "frames": 4800,
+              "hash": 1291874844981481033,
+              "nonzero_samples": 9598,
+              "peak": 0.03999999910593033,
+              "probe": [
+                0.0,
+                9.594004040991422e-06,
+                3.8312384276650846e-05,
+                8.596455154474825e-05,
+                0.00015223391528706998,
+                0.00023667945060878992,
+                0.0003387379110790789,
+                0.0004577266226988286
+              ],
+              "source_frame": 0
+            },
+            "last": {
+              "frames": 480,
+              "hash": 12472726521326456613,
+              "nonzero_samples": 0,
+              "peak": 0.0,
+              "probe": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "source_frame": 21600
+            },
+            "nonzero_samples": 19198,
+            "packets": 37,
+            "requested_us": 0,
+            "source_origin_frame": 0,
+            "submitted_frames": 22080
+          },
+          "simulation_us": 360000,
+          "stage": 0
+        },
+        {
+          "accepted_inputs": 1,
+          "epoch": 0,
+          "nodes": 2,
+          "pcm": {
+            "first": {
+              "frames": 4800,
+              "hash": 1291874844981481033,
+              "nonzero_samples": 9598,
+              "peak": 0.03999999910593033,
+              "probe": [
+                0.0,
+                9.594004040991422e-06,
+                3.8312384276650846e-05,
+                8.596455154474825e-05,
+                0.00015223391528706998,
+                0.00023667945060878992,
+                0.0003387379110790789,
+                0.0004577266226988286
+              ],
+              "source_frame": 0
+            },
+            "last": {
+              "frames": 480,
+              "hash": 12472726521326456613,
+              "nonzero_samples": 0,
+              "peak": 0.0,
+              "probe": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "source_frame": 21600
+            },
+            "nonzero_samples": 19198,
+            "packets": 37,
+            "requested_us": 0,
+            "source_origin_frame": 0,
+            "submitted_frames": 22080
+          },
+          "simulation_us": 360000,
+          "stage": 1
+        },
+        {
+          "accepted_inputs": 2,
+          "epoch": 1,
+          "nodes": 2,
+          "pcm": {
+            "first": null,
+            "last": null,
+            "nonzero_samples": 0,
+            "packets": 0,
+            "requested_us": 1050000,
+            "source_origin_frame": 50400,
+            "submitted_frames": 0
+          },
+          "simulation_us": 1050000,
+          "stage": 2
+        },
+        {
+          "accepted_inputs": 2,
+          "epoch": 3,
+          "nodes": 2,
+          "pcm": {
+            "first": null,
+            "last": null,
+            "nonzero_samples": 0,
+            "packets": 0,
+            "requested_us": 389229,
+            "source_origin_frame": 18682,
+            "submitted_frames": 0
+          },
+          "simulation_us": 389229,
+          "stage": 3
+        }
+      ],
+      "proofs": [
+        {
+          "diagnostic_wall_ms": 1717.7936,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 0
+        },
+        {
+          "diagnostic_wall_ms": 1716.2831999999999,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 1
+        },
+        {
+          "diagnostic_wall_ms": 1696.4932,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 2
+        },
+        {
+          "diagnostic_wall_ms": 1691.3390000000002,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 3
+        }
+      ],
+      "directory": "artifacts/p0/pcm-11b87455",
+      "result_sha256": "c15a8ab544c956764f7582fcde21f23a353de6cb3eab9eb669efe4cf815bfeeb",
+      "evidence_sha256": "c0cff822fddcd21e5eb57f96f4b951ecabbfdee24577dbab2703ce0904295062",
+      "executable_sha256": "bf8dca1e7ef638d4610245a0c628699560915fafd9757e6fe654407f00a2c53e",
+      "role": "automatic_repetition",
+      "content_epochs": [
+        {
+          "epoch": 0,
+          "base_us": 0,
+          "submitted_frames": 39360,
+          "nonzero_samples": 38398
+        },
+        {
+          "epoch": 1,
+          "base_us": 1050000,
+          "submitted_frames": 22080,
+          "nonzero_samples": 15360
+        },
+        {
+          "epoch": 2,
+          "base_us": 50000,
+          "submitted_frames": 21600,
+          "nonzero_samples": 14400
+        },
+        {
+          "epoch": 3,
+          "base_us": 389229,
+          "submitted_frames": 21600,
+          "nonzero_samples": 19200
+        }
+      ]
+    },
+    {
+      "status": "passed",
+      "audio_format": {
+        "bits": 32,
+        "buffer_frames": 4800,
+        "channels": 2,
+        "clock_frequency": 384000,
+        "rate": 48000
+      },
+      "frozen_us": 380000,
+      "normal_resume_us": 380000,
+      "recovery_frozen_us": 387708,
+      "final_simulation_us": 747708,
+      "accepted_inputs": 2,
+      "edit_count": 30,
+      "nodes": 2,
+      "stale_rejected": 3,
+      "checkpoints": [
+        {
+          "accepted_inputs": 1,
+          "epoch": 0,
+          "nodes": 1,
+          "pcm": {
+            "first": {
+              "frames": 4800,
+              "hash": 1291874844981481033,
+              "nonzero_samples": 9598,
+              "peak": 0.03999999910593033,
+              "probe": [
+                0.0,
+                9.594004040991422e-06,
+                3.8312384276650846e-05,
+                8.596455154474825e-05,
+                0.00015223391528706998,
+                0.00023667945060878992,
+                0.0003387379110790789,
+                0.0004577266226988286
+              ],
+              "source_frame": 0
+            },
+            "last": {
+              "frames": 480,
+              "hash": 12472726521326456613,
+              "nonzero_samples": 0,
+              "peak": 0.0,
+              "probe": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "source_frame": 22560
+            },
+            "nonzero_samples": 19198,
+            "packets": 39,
+            "requested_us": 0,
+            "source_origin_frame": 0,
+            "submitted_frames": 23040
+          },
+          "simulation_us": 380000,
+          "stage": 0
+        },
+        {
+          "accepted_inputs": 1,
+          "epoch": 0,
+          "nodes": 2,
+          "pcm": {
+            "first": {
+              "frames": 4800,
+              "hash": 1291874844981481033,
+              "nonzero_samples": 9598,
+              "peak": 0.03999999910593033,
+              "probe": [
+                0.0,
+                9.594004040991422e-06,
+                3.8312384276650846e-05,
+                8.596455154474825e-05,
+                0.00015223391528706998,
+                0.00023667945060878992,
+                0.0003387379110790789,
+                0.0004577266226988286
+              ],
+              "source_frame": 0
+            },
+            "last": {
+              "frames": 480,
+              "hash": 12472726521326456613,
+              "nonzero_samples": 0,
+              "peak": 0.0,
+              "probe": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "source_frame": 22560
+            },
+            "nonzero_samples": 19198,
+            "packets": 39,
+            "requested_us": 0,
+            "source_origin_frame": 0,
+            "submitted_frames": 23040
+          },
+          "simulation_us": 380000,
+          "stage": 1
+        },
+        {
+          "accepted_inputs": 2,
+          "epoch": 1,
+          "nodes": 2,
+          "pcm": {
+            "first": null,
+            "last": null,
+            "nonzero_samples": 0,
+            "packets": 0,
+            "requested_us": 1050000,
+            "source_origin_frame": 50400,
+            "submitted_frames": 0
+          },
+          "simulation_us": 1050000,
+          "stage": 2
+        },
+        {
+          "accepted_inputs": 2,
+          "epoch": 3,
+          "nodes": 2,
+          "pcm": {
+            "first": null,
+            "last": null,
+            "nonzero_samples": 0,
+            "packets": 0,
+            "requested_us": 387708,
+            "source_origin_frame": 18609,
+            "submitted_frames": 0
+          },
+          "simulation_us": 387708,
+          "stage": 3
+        }
+      ],
+      "proofs": [
+        {
+          "diagnostic_wall_ms": 1720.2451,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 0
+        },
+        {
+          "diagnostic_wall_ms": 1700.632,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 1
+        },
+        {
+          "diagnostic_wall_ms": 1705.6312999999998,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 2
+        },
+        {
+          "diagnostic_wall_ms": 1755.8763,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 3
+        }
+      ],
+      "directory": "artifacts/p0/pcm-0a1c8c62",
+      "result_sha256": "837b65cb7ff155bb355d9f8c4f10f8f649f48617c25d687e4447ef8de434a99f",
+      "evidence_sha256": "232d902b7430752e7051f573e09926e773c60c954158e528b2ef1fd5e38f6bd8",
+      "executable_sha256": "bf8dca1e7ef638d4610245a0c628699560915fafd9757e6fe654407f00a2c53e",
+      "role": "human_observation",
+      "content_epochs": [
+        {
+          "epoch": 0,
+          "base_us": 0,
+          "submitted_frames": 40320,
+          "nonzero_samples": 38398
+        },
+        {
+          "epoch": 1,
+          "base_us": 1050000,
+          "submitted_frames": 22080,
+          "nonzero_samples": 15360
+        },
+        {
+          "epoch": 2,
+          "base_us": 50000,
+          "submitted_frames": 21600,
+          "nonzero_samples": 14400
+        },
+        {
+          "epoch": 3,
+          "base_us": 387708,
+          "submitted_frames": 22080,
+          "nonzero_samples": 19200
+        }
+      ]
+    }
+  ],
+  "headless_tests": {
+    "native_candidate": 62,
+    "contract": 10,
+    "python": 47,
+    "optional_windows_adapter": 9
+  },
+  "human_confirmation": {
+    "status": "confirmed_audible_pause_resume",
+    "run": "artifacts/p0/pcm-0a1c8c62",
+    "scope": "User reported audible tone, normal pause and resume; not latency, endpoint identity or physical input validation",
+    "source": "Explicit user reply in this chat on 2026-10-19"
+  },
+  "excluded_preliminary": {
+    "directory": "artifacts/p0/pcm-1a6b09c5",
+    "reason": "Native checks completed, but result omitted stale_rejected; outer validation failed. Not included in passed runs."
+  },
+  "limits": [
+    "Generated tone only; no file decoding, resampling, mixing, chart loading or gameplay",
+    "100 ms polling shared buffer; no acoustic or input latency certification",
+    "Controlled stream retirement, not unplug or default-device change",
+    "Pixel references execute while paused; not full application budgets",
+    "Linux actual testing deferred; macOS deferred; no old/client resources used"
+  ],
+  "environment": {
+    "os": "Windows-10-10.0.19045-SP0",
+    "architecture": "AMD64",
+    "logical_processors": 16,
+    "cpu": "AMD Ryzen 7 4800H with Radeon Graphics",
+    "physical_memory_bytes": 17042837504
+  },
+  "fixture": "artifacts/p0/standard-fixture-2cb51994",
+  "inventory_sha256": "84be921941507c7ae3c6c8d805a33ddd79e2c5dfeba1e6c782d855bf08485c40",
+  "regressions": [
+    {
+      "directory": "artifacts/p0/recovery-5df9b7b4",
+      "status": "passed",
+      "result_sha256": "0644b0d0789a6855a76d674b621b1adadc74977b25e4957096a2e9574fb59c4d",
+      "evidence_sha256": "06c730810642eef2c0d0c9ee7384e2ca7c85526e804f4c1fcbfdc187490bb94f"
+    },
+    {
+      "directory": "artifacts/p0/switch-audio-7ae3bb93",
+      "status": "passed",
+      "result_sha256": "0cf03bcfeeca916da9c5bca94ebb3102d2126a143cdbd3f681c0042375a4c62d",
+      "evidence_sha256": "b7176c66b5d8a8ae3f621a68b4e9d424bdbf6665166f24d5772bdd9258535261"
+    }
+  ]
+}

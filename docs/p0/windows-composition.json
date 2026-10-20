@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "output": "artifacts\\p0\\composition-c6bde3ef",
+  "result": {
+    "adapter": {
+      "backend": "Vulkan",
+      "driver": "NVIDIA",
+      "driver_info": "560.94",
+      "name": "NVIDIA GeForce RTX 2060"
+    },
+    "cases": [
+      {
+        "case": "empty",
+        "cpu_wall_ms": 0.0162,
+        "differing_pixels": 0,
+        "gpu_setup_submit_readback_wall_ms": 1.2893,
+        "max_channel_error": 0,
+        "ops": 0,
+        "pixels": 1440,
+        "pixels_outside_tolerance": 0
+      },
+      {
+        "case": "identity",
+        "cpu_wall_ms": 0.09119999999999999,
+        "differing_pixels": 0,
+        "gpu_setup_submit_readback_wall_ms": 0.769,
+        "max_channel_error": 0,
+        "ops": 1,
+        "pixels": 1440,
+        "pixels_outside_tolerance": 0
+      },
+      {
+        "case": "affine",
+        "cpu_wall_ms": 0.179,
+        "differing_pixels": 0,
+        "gpu_setup_submit_readback_wall_ms": 0.5989,
+        "max_channel_error": 0,
+        "ops": 1,
+        "pixels": 1440,
+        "pixels_outside_tolerance": 0
+      },
+      {
+        "case": "reflection",
+        "cpu_wall_ms": 0.1374,
+        "differing_pixels": 4,
+        "gpu_setup_submit_readback_wall_ms": 0.3839,
+        "max_channel_error": 1,
+        "ops": 1,
+        "pixels": 1440,
+        "pixels_outside_tolerance": 0
+      },
+      {
+        "case": "isolated-overlap",
+        "cpu_wall_ms": 0.1152,
+        "differing_pixels": 0,
+        "gpu_setup_submit_readback_wall_ms": 0.4,
+        "max_channel_error": 0,
+        "ops": 4,
+        "pixels": 1440,
+        "pixels_outside_tolerance": 0
+      },
+      {
+        "case": "nested",
+        "cpu_wall_ms": 0.5952000000000001,
+        "differing_pixels": 5,
+        "gpu_setup_submit_readback_wall_ms": 0.4634,
+        "max_channel_error": 1,
+        "ops": 7,
+        "pixels": 1440,
+        "pixels_outside_tolerance": 0
+      },
+      {
+        "case": "outside-clip",
+        "cpu_wall_ms": 0.087,
+        "differing_pixels": 1,
+        "gpu_setup_submit_readback_wall_ms": 0.4354,
+        "max_channel_error": 1,
+        "ops": 1,
+        "pixels": 1440,
+        "pixels_outside_tolerance": 0
+      },
+      {
+        "case": "zero-opacity",
+        "cpu_wall_ms": 0.098,
+        "differing_pixels": 0,
+        "gpu_setup_submit_readback_wall_ms": 0.6253,
+        "max_channel_error": 0,
+        "ops": 3,
+        "pixels": 1440,
+        "pixels_outside_tolerance": 0
+      },
+      {
+        "case": "boundary-snap",
+        "cpu_wall_ms": 0.056499999999999995,
+        "differing_pixels": 0,
+        "gpu_setup_submit_readback_wall_ms": 0.6887,
+        "max_channel_error": 0,
+        "ops": 1,
+        "pixels": 1440,
+        "pixels_outside_tolerance": 0
+      }
+    ],
+    "limits": [
+      "Small generated fixtures, not standard-load performance or final composition backend",
+      "sRGB linear-light policy is an editor experiment, not verified stable behavior",
+      "No masks, effects, color profiles, project edits, audio or game logic",
+      "GPU wall time includes setup and readback; not GPU execution timing"
+    ],
+    "pixel_dimensions": [
+      40,
+      36
+    ],
+    "schema_version": 1,
+    "semantics_version": 1,
+    "status": "passed",
+    "system_capture_used": false,
+    "tolerance_per_channel": 2,
+    "window_used": false
+  },
+  "evidence": {
+    "schema_version": 1,
+    "executable_sha256": "ff352eb69e2be743a404c96e3777dcaa6a2d2aab7486ab36c3f0f627e4b24053",
+    "source_sha256": {
+      "experiments\\p0-egui\\Cargo.toml": "eecf2a26187fc847a1e27b60401b9c22c56d29e762f64dc57db9e8e0a09b5762",
+      "experiments\\p0-egui\\Cargo.lock": "be0a0524978313aa1d1e72f20b002eb986f3eace025d4e898bd8ceee19ee0eba",
+      "experiments\\p0-egui\\src\\composition.rs": "16054b49a1b9b51bec2e320ab0beec89e291ef60bcaa869e6d8c9982722831e3",
+      "experiments\\p0-egui\\src\\composition.wgsl": "e82e7cce77a53f69de74c13be6cb17d99581bfaa30888cbb1dac9082fe6024af",
+      "experiments\\p0-egui\\src\\bin\\composition-proof.rs": "5fa7e49bbd4d45272ecb02aaa530d58b64c3e4986dabeec03ad11049eddae4ef",
+      "tools\\check_p0_composition.py": "a28911f1c47f7b42ca9bf5aecf2b4ae9418b9a0a6e5ee65bb4429a8c0cda80b4"
+    },
+    "output_sha256": {
+      "affine-cpu.png": "344a74c8f153784b5ac88371ccc980c819b9c1878784d0b5b204f620e6e8a26e",
+      "affine-gpu.png": "344a74c8f153784b5ac88371ccc980c819b9c1878784d0b5b204f620e6e8a26e",
+      "asset-0.png": "36cf28a6860511edfdbc0d60ecf6c287114e2e8a3e6f37d880507dae47ed9eba",
+      "asset-1.png": "a287a2c61179e0fa658383fa0e4f43032fedbf3c2fcdf489399b64646e72aa22",
+      "asset-2.png": "0a35c05886e08f115161c9b720464abd143b71900f539b6fc796e7697af5d26f",
+      "asset-3.png": "18f4fa5bba0f3aee92c9c6c7b85367a2247e976a9ff46056a06338685487cfc1",
+      "asset-4.png": "5d5364dd67ec3c930211d21e26615d9ab9138efac88e5042be602189ba5e0043",
+      "boundary-snap-cpu.png": "17acef61c91968f265351818f6ac463113452976f2b1f0e88eb50930fdc7c982",
+      "boundary-snap-gpu.png": "17acef61c91968f265351818f6ac463113452976f2b1f0e88eb50930fdc7c982",
+      "empty-cpu.png": "1d2c74de12b051b4f90a19798f6242f13efffc83db58b9d3e3241dab2bfd07a8",
+      "empty-gpu.png": "1d2c74de12b051b4f90a19798f6242f13efffc83db58b9d3e3241dab2bfd07a8",
+      "identity-cpu.png": "75159c9d2e97943ecc5982b21e1d31475638f87a3a6edeef012798edebd490d1",
+      "identity-gpu.png": "75159c9d2e97943ecc5982b21e1d31475638f87a3a6edeef012798edebd490d1",
+      "isolated-overlap-cpu.png": "ed0e9f7369d4f2971810ae41af4ba2b7633e935dfe9f7d7c2f47f467c252f142",
+      "isolated-overlap-gpu.png": "ed0e9f7369d4f2971810ae41af4ba2b7633e935dfe9f7d7c2f47f467c252f142",
+      "nested-cpu.png": "a8885a88b98f80694619f54d1ed29c9b766bab12b692c60e829ba7ac1827d0f9",
+      "nested-gpu.png": "519f69273a97db66f1cdae2917601d9e68114497185c7fd4cc5b159f019a8c4c",
+      "outside-clip-cpu.png": "cab51cfe1da0a3b7de7794e8c941fb020253b63f07d423c9a78f6c32f2691735",
+      "outside-clip-gpu.png": "e9dc5202f2ea5dae547058384d8a1870db7e2ed92ee96bf903b01a46b50acc2e",
+      "reflection-cpu.png": "9d898ed73c8c26cfa5090d48b74f9ed0e5097c14fd5a9849c334ce57b7abefce",
+      "reflection-gpu.png": "fd6dc050486d65be8a2d9a3bbad3f755c3625183c14cc902c16b818a0f24ea23",
+      "zero-opacity-cpu.png": "1d2c74de12b051b4f90a19798f6242f13efffc83db58b9d3e3241dab2bfd07a8",
+      "zero-opacity-gpu.png": "1d2c74de12b051b4f90a19798f6242f13efffc83db58b9d3e3241dab2bfd07a8"
+    },
+    "note": "GPU directly reads its own compute result. No window or desktop capture. Not a standard-load performance or stable compatibility test."
+  },
+  "result_sha256": "ef9b364eb2a6582a588cf75aab13a89a3b235088ab8ac39392bcc52162104c7f",
+  "previous_passing_output": "artifacts/p0/composition-aa11b20e"
+}

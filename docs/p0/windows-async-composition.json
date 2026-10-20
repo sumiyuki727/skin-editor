@@ -1,0 +1,549 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "status": "passed",
+  "platform": "Windows x64 Vulkan only; Linux pending; macOS deferred",
+  "fixture": "artifacts/p0/standard-fixture-2cb51994",
+  "inventory_sha256": "84be921941507c7ae3c6c8d805a33ddd79e2c5dfeba1e6c782d855bf08485c40",
+  "executable_bytes": 14451712,
+  "environment": {
+    "os": "Windows-10-10.0.19045-SP0",
+    "architecture": "AMD64",
+    "logical_processors": 16,
+    "cpu": "AMD Ryzen 7 4800H with Radeon Graphics",
+    "physical_memory_bytes": 17042837504
+  },
+  "runs": [
+    {
+      "directory": "artifacts/p0/composition-switch-6222dc34",
+      "result_sha256": "dceedd7158c96f211987960e13085db768df418276204f1d9fe2d2f877a5b5ad",
+      "evidence_sha256": "88774c85a83b97b7b4f91faf3fbd94c927e9c85e3d151ef77a02aa367a1a766b",
+      "executable_sha256": "f500635c490c1c3388be44a11ad81b23dda9c5b2acce047f0ae69a8e45287f9e",
+      "status": "passed",
+      "pixel_diagnostic": true,
+      "long_observation": false,
+      "stale_reads": 0,
+      "stale_gpu": 1,
+      "accepted_documents": 22,
+      "retained_frames": 11,
+      "idle_ui_frames": 1,
+      "closed_ui_frames": 1,
+      "proofs": [
+        {
+          "diagnostic_wall_ms": 1756.0522,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 0,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 0
+        },
+        {
+          "diagnostic_wall_ms": 1729.0684,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 2,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 1
+        },
+        {
+          "diagnostic_wall_ms": 1713.0928999999999,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 2,
+          "max_channel_error": 1,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 3
+        },
+        {
+          "diagnostic_wall_ms": 1700.0986999999998,
+          "display_max_channel_error": 1,
+          "display_pixels_outside_tolerance": 0,
+          "document": 9,
+          "max_channel_error": 0,
+          "pixels": 1048576,
+          "pixels_outside_tolerance": 0,
+          "stage": 2
+        }
+      ],
+      "checks": {
+        "all_views_paused": true,
+        "bounded_source_upload": true,
+        "cancel_keeps_old": true,
+        "closed_without_active_or_pending": true,
+        "failed_keeps_old": true,
+        "no_errors": true,
+        "old_view_retained": true,
+        "pixel_proofs": true,
+        "stale_gpu_discarded": true,
+        "twenty_switches": true
+      },
+      "switch_ms": {
+        "count": 20,
+        "p50": 160.22729999999999,
+        "p95": 170.1932,
+        "max": 171.4273
+      },
+      "request_cpu_ms": {
+        "count": 25,
+        "p50": 0.0047,
+        "p95": 0.0069,
+        "max": 0.0112
+      },
+      "loading_eframe_cpu_ms": null,
+      "phase_summary": [
+        {
+          "phase": "Loading",
+          "sample_count": 49,
+          "sample_span_seconds": 5.327999999994063,
+          "cpu_one_logical_core_percent": 100.29560810821987,
+          "working_set_bytes_max": 244965376,
+          "working_set_bytes_last": 172371968,
+          "private_bytes_max": 412897280,
+          "private_bytes_last": 240893952,
+          "gpu_dedicated_bytes_max": 153296896,
+          "gpu_dedicated_bytes_last": 102854656,
+          "gpu_shared_bytes_max": 26824704,
+          "gpu_shared_bytes_last": 22630400
+        },
+        {
+          "phase": "Cycle",
+          "sample_count": 45,
+          "sample_span_seconds": 4.860000000000582,
+          "cpu_one_logical_core_percent": 67.19393004114421,
+          "working_set_bytes_max": 202166272,
+          "working_set_bytes_last": 168919040,
+          "private_bytes_max": 569139200,
+          "private_bytes_last": 497524736,
+          "gpu_dedicated_bytes_max": 153284608,
+          "gpu_dedicated_bytes_last": 102854656,
+          "gpu_shared_bytes_max": 22630400,
+          "gpu_shared_bytes_last": 22630400
+        },
+        {
+          "phase": "IdleSettle",
+          "sample_count": 27,
+          "sample_span_seconds": 2.8589999999967404,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 156323840,
+          "working_set_bytes_last": 156323840,
+          "private_bytes_max": 476499968,
+          "private_bytes_last": 224337920,
+          "gpu_dedicated_bytes_max": 102854656,
+          "gpu_dedicated_bytes_last": 102854656,
+          "gpu_shared_bytes_max": 22630400,
+          "gpu_shared_bytes_last": 22630400
+        },
+        {
+          "phase": "Idle",
+          "sample_count": 9,
+          "sample_span_seconds": 0.875,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 156327936,
+          "working_set_bytes_last": 156327936,
+          "private_bytes_max": 224337920,
+          "private_bytes_last": 224337920,
+          "gpu_dedicated_bytes_max": 102854656,
+          "gpu_dedicated_bytes_last": 102854656,
+          "gpu_shared_bytes_max": 22630400,
+          "gpu_shared_bytes_last": 22630400
+        },
+        {
+          "phase": "ClosedSettle",
+          "sample_count": 28,
+          "sample_span_seconds": 2.937999999994645,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 112943104,
+          "working_set_bytes_last": 112943104,
+          "private_bytes_max": 180740096,
+          "private_bytes_last": 180740096,
+          "gpu_dedicated_bytes_max": 60829696,
+          "gpu_dedicated_bytes_last": 60829696,
+          "gpu_shared_bytes_max": 22630400,
+          "gpu_shared_bytes_last": 22630400
+        },
+        {
+          "phase": "Closed",
+          "sample_count": 9,
+          "sample_span_seconds": 0.8909999999887077,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 112943104,
+          "working_set_bytes_last": 112943104,
+          "private_bytes_max": 138719232,
+          "private_bytes_last": 138719232,
+          "gpu_dedicated_bytes_max": 60829696,
+          "gpu_dedicated_bytes_last": 60829696,
+          "gpu_shared_bytes_max": 22630400,
+          "gpu_shared_bytes_last": 22630400
+        }
+      ],
+      "budgets": null,
+      "process_peaks_bytes": {
+        "working_set_bytes": 244965376,
+        "private_bytes": 569139200,
+        "peak_working_set_bytes": 256131072,
+        "peak_commit_bytes": 581799936,
+        "gpu_dedicated_bytes": 153296896,
+        "gpu_shared_bytes": 26824704
+      },
+      "source_upload": {
+        "candidate_count": 23,
+        "bytes_per_candidate": 41943040,
+        "frames_per_candidate": 5,
+        "max_source_bytes_per_frame": 8388608,
+        "max_sources_per_frame": 2
+      }
+    },
+    {
+      "directory": "artifacts/p0/composition-switch-abc45b02",
+      "result_sha256": "cb7ba15cece6890ddb9af87921796838160d985b83680ba4445a6100b38cd15c",
+      "evidence_sha256": "a94ba585fbe2a483e83b7d7a4251f238d26db8b94abc7069f5b60a46070d6005",
+      "executable_sha256": "f500635c490c1c3388be44a11ad81b23dda9c5b2acce047f0ae69a8e45287f9e",
+      "status": "passed",
+      "pixel_diagnostic": false,
+      "long_observation": true,
+      "stale_reads": 0,
+      "stale_gpu": 1,
+      "accepted_documents": 22,
+      "retained_frames": 11,
+      "idle_ui_frames": 1,
+      "closed_ui_frames": 1,
+      "proofs": [],
+      "checks": {
+        "all_views_paused": true,
+        "bounded_source_upload": true,
+        "cancel_keeps_old": true,
+        "closed_without_active_or_pending": true,
+        "failed_keeps_old": true,
+        "no_errors": true,
+        "old_view_retained": true,
+        "pixel_proofs": true,
+        "stale_gpu_discarded": true,
+        "twenty_switches": true
+      },
+      "switch_ms": {
+        "count": 20,
+        "p50": 170.5072,
+        "p95": 183.243,
+        "max": 183.9658
+      },
+      "request_cpu_ms": {
+        "count": 25,
+        "p50": 0.0045000000000000005,
+        "p95": 0.0079,
+        "max": 0.0079
+      },
+      "loading_eframe_cpu_ms": {
+        "count": 249,
+        "p50": 4.652899742126465,
+        "p95": 13.384698867797852,
+        "max": 60.240699768066406
+      },
+      "phase_summary": [
+        {
+          "phase": "Loading",
+          "sample_count": 4,
+          "sample_span_seconds": 0.3279999999940628,
+          "cpu_one_logical_core_percent": 142.91158536844054,
+          "working_set_bytes_max": 245321728,
+          "working_set_bytes_last": 200876032,
+          "private_bytes_max": 406970368,
+          "private_bytes_last": 406970368,
+          "gpu_dedicated_bytes_max": 153296896,
+          "gpu_dedicated_bytes_last": 153296896,
+          "gpu_shared_bytes_max": 26824704,
+          "gpu_shared_bytes_last": 26824704
+        },
+        {
+          "phase": "Cycle",
+          "sample_count": 31,
+          "sample_span_seconds": 3.297000000005937,
+          "cpu_one_logical_core_percent": 54.02638762501645,
+          "working_set_bytes_max": 209571840,
+          "working_set_bytes_last": 198070272,
+          "private_bytes_max": 571609088,
+          "private_bytes_last": 509100032,
+          "gpu_dedicated_bytes_max": 153284608,
+          "gpu_dedicated_bytes_last": 153284608,
+          "gpu_shared_bytes_max": 22630400,
+          "gpu_shared_bytes_last": 22630400
+        },
+        {
+          "phase": "IdleSettle",
+          "sample_count": 27,
+          "sample_span_seconds": 2.8589999999967404,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 156082176,
+          "working_set_bytes_last": 156082176,
+          "private_bytes_max": 466919424,
+          "private_bytes_last": 273592320,
+          "gpu_dedicated_bytes_max": 102854656,
+          "gpu_dedicated_bytes_last": 102854656,
+          "gpu_shared_bytes_max": 22630400,
+          "gpu_shared_bytes_last": 22630400
+        },
+        {
+          "phase": "Idle",
+          "sample_count": 546,
+          "sample_span_seconds": 59.92200000000594,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 156086272,
+          "working_set_bytes_last": 148357120,
+          "private_bytes_max": 223162368,
+          "private_bytes_last": 222994432,
+          "gpu_dedicated_bytes_max": 102854656,
+          "gpu_dedicated_bytes_last": 102854656,
+          "gpu_shared_bytes_max": 22630400,
+          "gpu_shared_bytes_last": 22630400
+        },
+        {
+          "phase": "ClosedSettle",
+          "sample_count": 27,
+          "sample_span_seconds": 2.8439999999973224,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 104943616,
+          "working_set_bytes_last": 104943616,
+          "private_bytes_max": 179208192,
+          "private_bytes_last": 179208192,
+          "gpu_dedicated_bytes_max": 60829696,
+          "gpu_dedicated_bytes_last": 60829696,
+          "gpu_shared_bytes_max": 22630400,
+          "gpu_shared_bytes_last": 22630400
+        },
+        {
+          "phase": "Closed",
+          "sample_count": 547,
+          "sample_span_seconds": 59.921999999991385,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 104943616,
+          "working_set_bytes_last": 104943616,
+          "private_bytes_max": 179265536,
+          "private_bytes_last": 137240576,
+          "gpu_dedicated_bytes_max": 60829696,
+          "gpu_dedicated_bytes_last": 60829696,
+          "gpu_shared_bytes_max": 22630400,
+          "gpu_shared_bytes_last": 22630400
+        }
+      ],
+      "budgets": {
+        "idle_60_seconds": true,
+        "closed_60_seconds": true,
+        "idle_cpu_le_2_percent_one_core": true,
+        "closed_cpu_le_2_percent_one_core": true,
+        "idle_no_continuous_frames": true,
+        "closed_no_continuous_frames": true,
+        "loading_eframe_cpu_p95_le_16_7_ms": true
+      },
+      "process_peaks_bytes": {
+        "working_set_bytes": 245321728,
+        "private_bytes": 571609088,
+        "peak_working_set_bytes": 258162688,
+        "peak_commit_bytes": 583991296,
+        "gpu_dedicated_bytes": 153296896,
+        "gpu_shared_bytes": 26824704
+      },
+      "source_upload": {
+        "candidate_count": 23,
+        "bytes_per_candidate": 41943040,
+        "frames_per_candidate": 5,
+        "max_source_bytes_per_frame": 8388608,
+        "max_sources_per_frame": 2
+      }
+    },
+    {
+      "directory": "artifacts/p0/composition-switch-49b2d8e7",
+      "result_sha256": "2db5fa1e3ab632b668cdee675cff606986c6ec145b711917d4466c397844c033",
+      "evidence_sha256": "9d7a412f86f811d69ac08da16e9bf40fedc2878435d4adb2b53cf07dbf1bb934",
+      "executable_sha256": "f500635c490c1c3388be44a11ad81b23dda9c5b2acce047f0ae69a8e45287f9e",
+      "status": "passed",
+      "pixel_diagnostic": false,
+      "long_observation": true,
+      "stale_reads": 0,
+      "stale_gpu": 1,
+      "accepted_documents": 22,
+      "retained_frames": 11,
+      "idle_ui_frames": 1,
+      "closed_ui_frames": 1,
+      "proofs": [],
+      "checks": {
+        "all_views_paused": true,
+        "bounded_source_upload": true,
+        "cancel_keeps_old": true,
+        "closed_without_active_or_pending": true,
+        "failed_keeps_old": true,
+        "no_errors": true,
+        "old_view_retained": true,
+        "pixel_proofs": true,
+        "stale_gpu_discarded": true,
+        "twenty_switches": true
+      },
+      "switch_ms": {
+        "count": 20,
+        "p50": 162.1322,
+        "p95": 172.6075,
+        "max": 173.44650000000001
+      },
+      "request_cpu_ms": {
+        "count": 25,
+        "p50": 0.005,
+        "p95": 0.0066,
+        "max": 0.0131
+      },
+      "loading_eframe_cpu_ms": {
+        "count": 250,
+        "p50": 4.5127997398376465,
+        "p95": 8.364200592041016,
+        "max": 59.34539794921875
+      },
+      "phase_summary": [
+        {
+          "phase": "Loading",
+          "sample_count": 4,
+          "sample_span_seconds": 0.3279999999940628,
+          "cpu_one_logical_core_percent": 133.38414634387783,
+          "working_set_bytes_max": 242958336,
+          "working_set_bytes_last": 201072640,
+          "private_bytes_max": 407846912,
+          "private_bytes_last": 407846912,
+          "gpu_dedicated_bytes_max": 144887808,
+          "gpu_dedicated_bytes_last": 144887808,
+          "gpu_shared_bytes_max": 26824704,
+          "gpu_shared_bytes_last": 26824704
+        },
+        {
+          "phase": "Cycle",
+          "sample_count": 30,
+          "sample_span_seconds": 3.187000000005355,
+          "cpu_one_logical_core_percent": 48.04675243167327,
+          "working_set_bytes_max": 207323136,
+          "working_set_bytes_last": 198332416,
+          "private_bytes_max": 572207104,
+          "private_bytes_last": 560144384,
+          "gpu_dedicated_bytes_max": 153284608,
+          "gpu_dedicated_bytes_last": 153284608,
+          "gpu_shared_bytes_max": 22630400,
+          "gpu_shared_bytes_last": 22630400
+        },
+        {
+          "phase": "IdleSettle",
+          "sample_count": 27,
+          "sample_span_seconds": 2.875,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 156344320,
+          "working_set_bytes_last": 156344320,
+          "private_bytes_max": 459120640,
+          "private_bytes_last": 223764480,
+          "gpu_dedicated_bytes_max": 102854656,
+          "gpu_dedicated_bytes_last": 102854656,
+          "gpu_shared_bytes_max": 22630400,
+          "gpu_shared_bytes_last": 22630400
+        },
+        {
+          "phase": "Idle",
+          "sample_count": 547,
+          "sample_span_seconds": 59.92200000000594,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 156348416,
+          "working_set_bytes_last": 156266496,
+          "private_bytes_max": 223764480,
+          "private_bytes_last": 223600640,
+          "gpu_dedicated_bytes_max": 102854656,
+          "gpu_dedicated_bytes_last": 102854656,
+          "gpu_shared_bytes_max": 22630400,
+          "gpu_shared_bytes_last": 22630400
+        },
+        {
+          "phase": "ClosedSettle",
+          "sample_count": 27,
+          "sample_span_seconds": 2.860000000000582,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 112914432,
+          "working_set_bytes_last": 112914432,
+          "private_bytes_max": 180027392,
+          "private_bytes_last": 180027392,
+          "gpu_dedicated_bytes_max": 60829696,
+          "gpu_dedicated_bytes_last": 60829696,
+          "gpu_shared_bytes_max": 22630400,
+          "gpu_shared_bytes_last": 22630400
+        },
+        {
+          "phase": "Closed",
+          "sample_count": 548,
+          "sample_span_seconds": 59.92200000000594,
+          "cpu_one_logical_core_percent": 0.0,
+          "working_set_bytes_max": 112914432,
+          "working_set_bytes_last": 112914432,
+          "private_bytes_max": 180125696,
+          "private_bytes_last": 138096640,
+          "gpu_dedicated_bytes_max": 60829696,
+          "gpu_dedicated_bytes_last": 60829696,
+          "gpu_shared_bytes_max": 22630400,
+          "gpu_shared_bytes_last": 22630400
+        }
+      ],
+      "budgets": {
+        "idle_60_seconds": true,
+        "closed_60_seconds": true,
+        "idle_cpu_le_2_percent_one_core": true,
+        "closed_cpu_le_2_percent_one_core": true,
+        "idle_no_continuous_frames": true,
+        "closed_no_continuous_frames": true,
+        "loading_eframe_cpu_p95_le_16_7_ms": true
+      },
+      "process_peaks_bytes": {
+        "working_set_bytes": 242958336,
+        "private_bytes": 572207104,
+        "peak_working_set_bytes": 255434752,
+        "peak_commit_bytes": 589049856,
+        "gpu_dedicated_bytes": 153284608,
+        "gpu_shared_bytes": 26824704
+      },
+      "source_upload": {
+        "candidate_count": 23,
+        "bytes_per_candidate": 41943040,
+        "frames_per_candidate": 5,
+        "max_source_bytes_per_frame": 8388608,
+        "max_sources_per_frame": 2
+      }
+    }
+  ],
+  "headless_tests": {
+    "contract": 10,
+    "native_candidate": 55,
+    "python_tools": 41,
+    "optional_audio_adapter": 1
+  },
+  "other_attempts": [
+    {
+      "directory": "artifacts/p0/composition-switch-dbf06b66",
+      "status": "preliminary_pixel_diagnostic_before_cancel_drain_fix",
+      "used_for_performance": false
+    },
+    {
+      "directory": "artifacts/p0/composition-switch-aab2973f",
+      "status": "interrupted_before_result_to_fix_cancel_drain",
+      "used_for_performance": false
+    }
+  ],
+  "limits": [
+    "Read-only fixture and paused synthetic state; not the device-audio switching entry or stable gameplay.",
+    "Source bytes per frame are bounded, not GPU allocations, buffer zeroing, total staging or driver retention.",
+    "Up to three CPU original sets (120 MiB) plus decoder, upload and framework/driver costs.",
+    "Obsolete GPU candidates finish all remaining uploads and first compute before being dropped; work is bounded but not preempted.",
+    "Long non-pixel runs only: each has 60 s idle and closed windows after 3 s settle; phase-label sampling leaves boundary uncertainty.",
+    "Observed loading CPU maximum near 60 ms remains unresolved; p95 alone is not a zero-stall guarantee.",
+    "No Linux or macOS results, product stack choice or current stable compatibility cases."
+  ],
+  "regression": {
+    "directory": "artifacts/p0/transport-3fc07040",
+    "status": "passed",
+    "result_sha256": "c7f5558d64e83141ac63237320f2bfafee043208c468bb299f64820edb815a74",
+    "evidence_sha256": "656df7f390673930b8f60d7f77ef1945222ed8beaf07eda801e013adacadb777",
+    "executable_sha256": "2c39ec47def6419492e453ab2635409a33ef5ea09d964e735df11dee5dfae089",
+    "scope": "Existing synchronous audio + gesture + GPU path only; no background audio switching claim"
+  }
+}

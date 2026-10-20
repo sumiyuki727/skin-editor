@@ -1,0 +1,758 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "status": "partial_manual_acceptance",
+  "scope": "Windows P0 desktop fixture; not full product or stable acceptance",
+  "platform": "Windows x64 / Vulkan / synthetic clock, no device audio",
+  "runs": [
+    {
+      "directory": "artifacts/p0/desktop-smoke-cabe0031",
+      "kind": "initial_renderer_smoke",
+      "result_sha256": "a37dd4bbf3b26da975c303dc3249e9e26decec99f4ac48bf0c6efc571d85aa6d",
+      "evidence_sha256": "0718ea985dfc315c2ad19fe653f87c8dc968628314a3e230093537e3cacefd22",
+      "executable_sha256": "3a7fd47e126f8f9155db8bdd8a1f3ed2ba80c5514b879ae40f9f1064f90b11aa",
+      "png_sha256": {
+        "smoke-own-renderer.png": "5944770d57353ce3b6d30b9212730b91256cc84e3ce68232ca9d3d75cdbdf76a",
+        "\u7d20\u6750 \u65e5\u672c\u8a9e.png": "941464550c2fe81fe7eb56d0e7632de5241b1d384d2b59f00b86eeb25067e925"
+      },
+      "observations": {
+        "status": "recorded",
+        "source": "native_smoke_no_manual_input",
+        "elapsed_ms": 1206,
+        "ended_by": "window_close_or_smoke",
+        "history_nodes": 1,
+        "draft_active": false,
+        "accepted_game_inputs": 0,
+        "native_event_observations": {
+          "drop_accepted": 0,
+          "drop_rejected": 0,
+          "escape_cancelled_draft": 0,
+          "focus_cancelled_draft": 0,
+          "focus_lost": 0,
+          "focus_returned": 0,
+          "fullscreen_entered": 0,
+          "fullscreen_returned": 0,
+          "ime_commit": 0,
+          "ime_preedit": 0,
+          "keyboard_game_accepts": 0,
+          "pointer_presses": 0,
+          "text_game_input_leaks": 0,
+          "text_zx_presses": 0,
+          "text_zx_while_playing": 0,
+          "zx_presses": 0
+        },
+        "human_confirmations": {
+          "chinese_ime": false,
+          "drop_thumbnail": false,
+          "font_legibility": false,
+          "fullscreen_return": false,
+          "ime_candidate_commit_escape": false,
+          "japanese_ime": false
+        },
+        "unavailable": {
+          "cross_native_dpi": false,
+          "japanese_ime": false
+        },
+        "layouts_visited": [
+          true,
+          true
+        ],
+        "pending_fullscreen": null,
+        "scale_summary": {
+          "trace_entries": 1,
+          "trace_cap_reached": false,
+          "native_pixels_per_point": [
+            1.0
+          ],
+          "ui_zoom_range": [
+            1.0,
+            1.0
+          ]
+        }
+      },
+      "assessment": {
+        "schema_version": 1,
+        "scope": "renderer_smoke_only",
+        "observed": {
+          "drag_commit": false,
+          "escape_cancel": false,
+          "focus_cancel_return": false,
+          "keyboard_editor_isolation": false,
+          "ime_events": false,
+          "known_file_drop": false,
+          "fullscreen_return": false,
+          "both_layouts": false,
+          "native_scale_observed": false,
+          "native_dpi_transition": false
+        },
+        "user_confirmed": {
+          "font_legibility": false,
+          "chinese_ime": false,
+          "japanese_ime": false,
+          "drop_thumbnail": false,
+          "fullscreen_return": false
+        },
+        "unverified_observations": [
+          "drag_commit",
+          "escape_cancel",
+          "focus_cancel_return",
+          "keyboard_editor_isolation",
+          "ime_events",
+          "known_file_drop",
+          "fullscreen_return",
+          "both_layouts",
+          "native_scale_observed",
+          "native_dpi_transition"
+        ],
+        "unconfirmed_user_checks": [
+          "font_legibility",
+          "chinese_ime",
+          "japanese_ime",
+          "drop_thumbnail",
+          "fullscreen_return"
+        ],
+        "input_leak_detected": false,
+        "unavailable": {
+          "cross_native_dpi": false,
+          "japanese_ime": false
+        },
+        "product_acceptance_passed": false
+      }
+    },
+    {
+      "directory": "artifacts/p0/desktop-user-d1ea17cf",
+      "kind": "initial_manual_with_reported_defects",
+      "result_sha256": "7f06d55b279f14d69b5b54928195da147033a58390690c201488900c671cd69a",
+      "evidence_sha256": "e063e56e6690f9f1625974ae4074f998b30f8e9b51e973da00dbfda5d39eec6e",
+      "executable_sha256": "3a7fd47e126f8f9155db8bdd8a1f3ed2ba80c5514b879ae40f9f1064f90b11aa",
+      "png_sha256": {
+        "\u7d20\u6750 \u65e5\u672c\u8a9e.png": "941464550c2fe81fe7eb56d0e7632de5241b1d384d2b59f00b86eeb25067e925"
+      },
+      "observations": {
+        "status": "recorded",
+        "source": "native_user_session",
+        "elapsed_ms": 621373,
+        "ended_by": "record_button",
+        "history_nodes": 9,
+        "draft_active": false,
+        "accepted_game_inputs": 0,
+        "native_event_observations": {
+          "drop_accepted": 1,
+          "drop_rejected": 0,
+          "escape_cancelled_draft": 0,
+          "focus_cancelled_draft": 3,
+          "focus_lost": 23,
+          "focus_returned": 24,
+          "fullscreen_entered": 6,
+          "fullscreen_returned": 6,
+          "ime_commit": 4,
+          "ime_preedit": 24,
+          "keyboard_game_accepts": 0,
+          "pointer_presses": 103,
+          "text_game_input_leaks": 0,
+          "text_zx_presses": 2,
+          "text_zx_while_playing": 0,
+          "zx_presses": 94
+        },
+        "human_confirmations": {
+          "chinese_ime": true,
+          "drop_thumbnail": true,
+          "font_legibility": true,
+          "fullscreen_return": true,
+          "ime_candidate_commit_escape": true,
+          "japanese_ime": true
+        },
+        "unavailable": {
+          "cross_native_dpi": false,
+          "japanese_ime": false
+        },
+        "layouts_visited": [
+          true,
+          true
+        ],
+        "pending_fullscreen": null,
+        "scale_summary": {
+          "trace_entries": 64,
+          "trace_cap_reached": true,
+          "native_pixels_per_point": [
+            1.0
+          ],
+          "ui_zoom_range": [
+            0.9800000190734863,
+            1.159999966621399
+          ]
+        }
+      },
+      "assessment": {
+        "schema_version": 1,
+        "scope": "native_user_session",
+        "observed": {
+          "drag_commit": true,
+          "escape_cancel": false,
+          "focus_cancel_return": true,
+          "keyboard_editor_isolation": false,
+          "ime_events": true,
+          "known_file_drop": true,
+          "fullscreen_return": true,
+          "both_layouts": true,
+          "native_scale_observed": true,
+          "native_dpi_transition": false
+        },
+        "user_confirmed": {
+          "font_legibility": true,
+          "chinese_ime": true,
+          "japanese_ime": true,
+          "drop_thumbnail": true,
+          "fullscreen_return": true
+        },
+        "unverified_observations": [
+          "escape_cancel",
+          "keyboard_editor_isolation",
+          "native_dpi_transition"
+        ],
+        "unconfirmed_user_checks": [],
+        "input_leak_detected": false,
+        "unavailable": {
+          "cross_native_dpi": false,
+          "japanese_ime": false
+        },
+        "product_acceptance_passed": false
+      }
+    },
+    {
+      "directory": "artifacts/p0/desktop-user-3610465a",
+      "kind": "escape_retest",
+      "result_sha256": "adee46d59cf0830c666891b30a6c563c37a599c8c4a41bfff4587d6ecf379fd1",
+      "evidence_sha256": "e063e56e6690f9f1625974ae4074f998b30f8e9b51e973da00dbfda5d39eec6e",
+      "executable_sha256": "3a7fd47e126f8f9155db8bdd8a1f3ed2ba80c5514b879ae40f9f1064f90b11aa",
+      "png_sha256": {
+        "\u7d20\u6750 \u65e5\u672c\u8a9e.png": "941464550c2fe81fe7eb56d0e7632de5241b1d384d2b59f00b86eeb25067e925"
+      },
+      "observations": {
+        "status": "recorded",
+        "source": "native_user_session",
+        "elapsed_ms": 103491,
+        "ended_by": "record_button",
+        "history_nodes": 4,
+        "draft_active": false,
+        "accepted_game_inputs": 0,
+        "native_event_observations": {
+          "drop_accepted": 0,
+          "drop_rejected": 0,
+          "escape_cancelled_draft": 8,
+          "focus_cancelled_draft": 0,
+          "focus_lost": 6,
+          "focus_returned": 7,
+          "fullscreen_entered": 0,
+          "fullscreen_returned": 0,
+          "ime_commit": 0,
+          "ime_preedit": 0,
+          "keyboard_game_accepts": 0,
+          "pointer_presses": 36,
+          "text_game_input_leaks": 0,
+          "text_zx_presses": 0,
+          "text_zx_while_playing": 0,
+          "zx_presses": 0
+        },
+        "human_confirmations": {
+          "chinese_ime": false,
+          "drop_thumbnail": false,
+          "font_legibility": false,
+          "fullscreen_return": false,
+          "ime_candidate_commit_escape": false,
+          "japanese_ime": false
+        },
+        "unavailable": {
+          "cross_native_dpi": false,
+          "japanese_ime": false
+        },
+        "layouts_visited": [
+          true,
+          true
+        ],
+        "pending_fullscreen": null,
+        "scale_summary": {
+          "trace_entries": 1,
+          "trace_cap_reached": false,
+          "native_pixels_per_point": [
+            1.0
+          ],
+          "ui_zoom_range": [
+            1.0,
+            1.0
+          ]
+        }
+      },
+      "assessment": {
+        "schema_version": 1,
+        "scope": "native_user_session",
+        "observed": {
+          "drag_commit": true,
+          "escape_cancel": true,
+          "focus_cancel_return": false,
+          "keyboard_editor_isolation": false,
+          "ime_events": false,
+          "known_file_drop": false,
+          "fullscreen_return": false,
+          "both_layouts": true,
+          "native_scale_observed": true,
+          "native_dpi_transition": false
+        },
+        "user_confirmed": {
+          "font_legibility": false,
+          "chinese_ime": false,
+          "japanese_ime": false,
+          "drop_thumbnail": false,
+          "fullscreen_return": false
+        },
+        "unverified_observations": [
+          "focus_cancel_return",
+          "keyboard_editor_isolation",
+          "ime_events",
+          "known_file_drop",
+          "fullscreen_return",
+          "native_dpi_transition"
+        ],
+        "unconfirmed_user_checks": [
+          "font_legibility",
+          "chinese_ime",
+          "japanese_ime",
+          "drop_thumbnail",
+          "fullscreen_return"
+        ],
+        "input_leak_detected": false,
+        "unavailable": {
+          "cross_native_dpi": false,
+          "japanese_ime": false
+        },
+        "product_acceptance_passed": false
+      }
+    },
+    {
+      "directory": "artifacts/p0/desktop-smoke-52a6f5d0",
+      "kind": "fixed_renderer_smoke",
+      "result_sha256": "1fb2a3a0cbc367556b57afd345c0bd8e1f5b96fc982acdae940be7a7d7c5c332",
+      "evidence_sha256": "e8cd7a50c2255c939a36804dbfdff3bd0b9f00fcad8da363282328464ac8395b",
+      "executable_sha256": "189235c8a3aabda69545b07909bbda60bcbfb57f125e4d84af41a0e84d1f6d3e",
+      "png_sha256": {
+        "smoke-own-renderer.png": "e1160bda9e6886612c07768e6b65ce57b0b8f388c214f9ae0d1c992895c9b1df",
+        "\u7d20\u6750 \u65e5\u672c\u8a9e.png": "941464550c2fe81fe7eb56d0e7632de5241b1d384d2b59f00b86eeb25067e925"
+      },
+      "observations": {
+        "status": "recorded",
+        "source": "native_smoke_no_manual_input",
+        "elapsed_ms": 905,
+        "ended_by": "window_close_or_smoke",
+        "history_nodes": 1,
+        "draft_active": false,
+        "accepted_game_inputs": 0,
+        "native_event_observations": {
+          "drop_accepted": 0,
+          "drop_rejected": 0,
+          "escape_cancelled_draft": 0,
+          "focus_cancelled_draft": 0,
+          "focus_lost": 0,
+          "focus_returned": 0,
+          "fullscreen_entered": 0,
+          "fullscreen_returned": 0,
+          "ime_commit": 0,
+          "ime_preedit": 0,
+          "keyboard_game_accepts": 0,
+          "pointer_presses": 0,
+          "text_game_input_leaks": 0,
+          "text_zx_presses": 0,
+          "text_zx_while_playing": 0,
+          "zx_presses": 0
+        },
+        "human_confirmations": {
+          "chinese_ime": false,
+          "drop_thumbnail": false,
+          "font_legibility": false,
+          "fullscreen_return": false,
+          "ime_candidate_commit_escape": false,
+          "japanese_ime": false
+        },
+        "unavailable": {
+          "cross_native_dpi": false,
+          "japanese_ime": false
+        },
+        "layouts_visited": [
+          true,
+          true
+        ],
+        "pending_fullscreen": null,
+        "scale_summary": {
+          "trace_entries": 1,
+          "trace_cap_reached": false,
+          "native_pixels_per_point": [
+            1.0
+          ],
+          "ui_zoom_range": [
+            1.0,
+            1.0
+          ]
+        }
+      },
+      "assessment": {
+        "schema_version": 1,
+        "scope": "renderer_smoke_only",
+        "observed": {
+          "drag_commit": false,
+          "escape_cancel": false,
+          "focus_cancel_return": false,
+          "keyboard_editor_isolation": false,
+          "ime_events": false,
+          "known_file_drop": false,
+          "fullscreen_return": false,
+          "both_layouts": false,
+          "native_scale_observed": false,
+          "native_dpi_transition": false
+        },
+        "user_confirmed": {
+          "font_legibility": false,
+          "chinese_ime": false,
+          "japanese_ime": false,
+          "drop_thumbnail": false,
+          "fullscreen_return": false
+        },
+        "unverified_observations": [
+          "drag_commit",
+          "escape_cancel",
+          "focus_cancel_return",
+          "keyboard_editor_isolation",
+          "ime_events",
+          "known_file_drop",
+          "fullscreen_return",
+          "both_layouts",
+          "native_scale_observed",
+          "native_dpi_transition"
+        ],
+        "unconfirmed_user_checks": [
+          "font_legibility",
+          "chinese_ime",
+          "japanese_ime",
+          "drop_thumbnail",
+          "fullscreen_return"
+        ],
+        "input_leak_detected": false,
+        "unavailable": {
+          "cross_native_dpi": false,
+          "japanese_ime": false
+        },
+        "product_acceptance_passed": false
+      }
+    },
+    {
+      "directory": "artifacts/p0/desktop-user-efdfd718",
+      "kind": "fixed_keyboard_isolation_clipboard_retest",
+      "result_sha256": "0b65d68a5588de67457d32a844279d8dc7ae0ec71bc83aaa9692482a07a1e65f",
+      "evidence_sha256": "222c7fd2a3272d71a26d8100a68acd842851f191bbe9b0acc77f8f2f995fe352",
+      "executable_sha256": "189235c8a3aabda69545b07909bbda60bcbfb57f125e4d84af41a0e84d1f6d3e",
+      "png_sha256": {
+        "\u7d20\u6750 \u65e5\u672c\u8a9e.png": "941464550c2fe81fe7eb56d0e7632de5241b1d384d2b59f00b86eeb25067e925"
+      },
+      "observations": {
+        "status": "recorded",
+        "source": "native_user_session",
+        "elapsed_ms": 73704,
+        "ended_by": "record_button",
+        "history_nodes": 1,
+        "draft_active": false,
+        "accepted_game_inputs": 16,
+        "native_event_observations": {
+          "drop_accepted": 0,
+          "drop_rejected": 0,
+          "escape_cancelled_draft": 0,
+          "focus_cancelled_draft": 0,
+          "focus_lost": 6,
+          "focus_returned": 7,
+          "fullscreen_entered": 0,
+          "fullscreen_returned": 0,
+          "ime_commit": 0,
+          "ime_preedit": 0,
+          "keyboard_game_accepts": 16,
+          "pointer_presses": 9,
+          "text_game_input_leaks": 0,
+          "text_zx_presses": 14,
+          "text_zx_while_playing": 14,
+          "zx_presses": 30
+        },
+        "human_confirmations": {
+          "chinese_ime": false,
+          "drop_thumbnail": false,
+          "font_legibility": false,
+          "fullscreen_return": false,
+          "ime_candidate_commit_escape": false,
+          "japanese_ime": false
+        },
+        "unavailable": {
+          "cross_native_dpi": false,
+          "japanese_ime": false
+        },
+        "layouts_visited": [
+          true,
+          false
+        ],
+        "pending_fullscreen": null
+      },
+      "scale_summary": {
+        "trace_entries": 1,
+        "trace_cap_reached": false,
+        "native_pixels_per_point": [
+          1.0
+        ]
+      },
+      "assessment": {
+        "schema_version": 1,
+        "scope": "native_user_session",
+        "observed": {
+          "drag_commit": false,
+          "escape_cancel": false,
+          "focus_cancel_return": false,
+          "keyboard_editor_isolation": true,
+          "ime_events": false,
+          "known_file_drop": false,
+          "fullscreen_return": false,
+          "both_layouts": false,
+          "native_scale_observed": true,
+          "native_dpi_transition": false
+        },
+        "user_confirmed": {
+          "font_legibility": false,
+          "chinese_ime": false,
+          "japanese_ime": false,
+          "drop_thumbnail": false,
+          "fullscreen_return": false
+        },
+        "unverified_observations": [
+          "drag_commit",
+          "escape_cancel",
+          "focus_cancel_return",
+          "ime_events",
+          "known_file_drop",
+          "fullscreen_return",
+          "both_layouts",
+          "native_dpi_transition"
+        ],
+        "unconfirmed_user_checks": [
+          "font_legibility",
+          "chinese_ime",
+          "japanese_ime",
+          "drop_thumbnail",
+          "fullscreen_return"
+        ],
+        "input_leak_detected": false,
+        "unavailable": {
+          "cross_native_dpi": false,
+          "japanese_ime": false
+        },
+        "product_acceptance_passed": false
+      }
+    }
+  ],
+  "build_source_sha256": {
+    "3a7fd47e126f8f9155db8bdd8a1f3ed2ba80c5514b879ae40f9f1064f90b11aa": {
+      "experiments/p0-egui/Cargo.toml": "14c289118aab7fdfc5db7ddd02f997e7489377eeab9d5ea9534385c88f70aba9",
+      "experiments/p0-egui/Cargo.lock": "2697e55f87efa126975a4705c41b3b8fb45140a653a192e6102b0f085aa57ec5",
+      "experiments/p0-egui/src/audio_output.rs": "abaf12abc9c2f0029886fc0be520964cf0bd3ac95ce281eb762239084b5963c8",
+      "experiments/p0-egui/src/audio_transport.rs": "3dd45ce6ae3f1876a686ffaf683dc0b5c662c527ec706f53203f563d9abb2062",
+      "experiments/p0-egui/src/bin/composition-proof.rs": "93bb2491887c5b830f6c5b2dbe8509dbc5a1347acc2fef2c122fb76106e32983",
+      "experiments/p0-egui/src/bin/desktop-proof.rs": "965d3b6e22705f949594f3df4a9f85f3cc94507d5861e250d3d68dfd58e0e24d",
+      "experiments/p0-egui/src/bin/interaction-proof.rs": "4df2b97cb921957cbe805a42fc322ace901cf9d1e4ed79a856b4bffe8a0149dc",
+      "experiments/p0-egui/src/bin/pcm-proof.rs": "cf1b288fa0935b507674c4ee4c080f6c0d10c3506b3cd8000ef972910f3f56cb",
+      "experiments/p0-egui/src/bin/recovery-proof.rs": "f44ab75046529199aa91d2dd556a3891c05ea44de619b5a911bd37d54db6efd8",
+      "experiments/p0-egui/src/bin/standard-load.rs": "96f59ba6064964648009dd8e941bf188c99a8d7b6a8262569bba0a84f6359ff6",
+      "experiments/p0-egui/src/bin/switch-audio-proof.rs": "4adf1cd60a5f7d79e8e6b70fbbf27f0cfca8b5993ca4b1a45074294791ff1a3e",
+      "experiments/p0-egui/src/bin/switch-proof.rs": "181a168a668a173ea75c6722fe518a2d49a84063208267f4d32a8bc43b8ca224",
+      "experiments/p0-egui/src/bin/transport-proof.rs": "aa57b6b99b95d9dc9ebd8ffb5c8c15a05b9f18ca5c95cca1024b1bef932cb5ce",
+      "experiments/p0-egui/src/composition.rs": "68828405baf1006fd430a1b7c85dd67b447823fa338ed1d4d342d6d33c36fa57",
+      "experiments/p0-egui/src/composition_fixture.rs": "4096a347b90284f45abebf15d0f264c30cb1fcbd4c6978640a72cbf9fcc977a5",
+      "experiments/p0-egui/src/composition_gpu.rs": "bce644f5794344e3f6a44ce5800964551f3f243b3b5b39cccec351bb746e16b5",
+      "experiments/p0-egui/src/composition_loading.rs": "ae1d390c775c574e9d7a0211dc094dadf68cdcbfc5450df1a32978bbb9f212a8",
+      "experiments/p0-egui/src/composition_switch.rs": "8d9b1b9cac487127a747134a4f5bb0d33b89e26243f94d6198c9a8445fc4bced",
+      "experiments/p0-egui/src/composition_view.rs": "94babe1f58d2bc357f706986df59102322312a52a247010719e865b437fa0cb5",
+      "experiments/p0-egui/src/desktop_view.rs": "32cbe833cc3c8cc260e910122b9cb39e1784c1fce4d0840fdda0f4ae794dcdc2",
+      "experiments/p0-egui/src/interaction.rs": "02d2f8f7a511b87ec058192e02d5fd88cef3d2abdc76d6854363a0dbdef8b3aa",
+      "experiments/p0-egui/src/interaction_view.rs": "46228a0db3b10913257bac88635276d196cd15695c72291eca1d02400561f8e1",
+      "experiments/p0-egui/src/lib.rs": "c91550268d25723cf298cd7b2e14f75f2e68837e89bb7e5e2c8a15135e9b1cd3",
+      "experiments/p0-egui/src/loading.rs": "dbd7eebf93e51ce339de6674b39c85e40df3fc04483832208cbbd673d9980642",
+      "experiments/p0-egui/src/main.rs": "7fa519b9ef852393d1b25332406eb190712a3d073a7b42699be0c827fe59049f",
+      "experiments/p0-egui/src/texture_cache.rs": "6d357c3955bae9ac769cccd6458b0163a249971c26ae048ed09d1a6275efc050",
+      "experiments/p0-egui/src/upload_fence.rs": "c0b488550013e15eb403043664f6782209f3eb7a23b3bf2fdd5a3c83faab4551",
+      "experiments/p0-egui/src/view.rs": "07175368f9eac318b1a2ee899a6774643c459dd6e91f8b5bbdd9966f9843fe87",
+      "experiments/p0-egui/src/windows_audio.rs": "b218e917440bb23f0b9712cec6280868803295c944d3a5f1f8719549f2158155",
+      "experiments/p0-wasapi/Cargo.toml": "e5fb3058d68438d2125ec7bca2cf5fb1cb598ff43bcc2e304e1a905ef2f26172",
+      "experiments/p0-wasapi/Cargo.lock": "49f53790dce8df7ae66e1ec286de21a507852284a9216944c9d5a1c94ed1560d",
+      "experiments/p0-wasapi/src/lib.rs": "57e526337d393c7bba4f8221313bf65e9fda5a084e47f9e93006d57c1bc5fd40",
+      "experiments/p0-wasapi/src/pcm.rs": "b36b2f2b7cd17fd36f4357df7a7fff07c52dc582b8f7a74eaa441ed1283d4fdc",
+      "experiments/p0-wasapi/src/platform.rs": "f5868a4440c1fca87ebc22bd26b3cbd2963a5f5b92b6d1831f01625f4f4bd18f",
+      "experiments/p0-preview-contract/Cargo.toml": "3eb41a0f90829ced042f1692dcc367b7be0cf6d5426e45621eb7db895df60745",
+      "experiments/p0-preview-contract/Cargo.lock": "5ad87c4a8c1c9ef0da88e303171f592e5b76925afd2cc889a2280ecbb99077d0",
+      "experiments/p0-preview-contract/src/lib.rs": "7e7164428f5f534b7c8a44b47aa57e79529f928fad7ea75a1f23f827a85250b0",
+      "experiments/p0-preview-contract/src/main.rs": "1edf475299f1e9a664b3f3dc1057288781799e64038567619c6a99f4e41fc296",
+      "experiments/p0-egui/src/composition.wgsl": "e82e7cce77a53f69de74c13be6cb17d99581bfaa30888cbb1dac9082fe6024af",
+      "experiments/p0-egui/src/composition_present.wgsl": "d5b73ba3fd96fcaeaeee5c5532736ca1dcdefcf1bde1324e8998153a277b8548",
+      "tools/check_p0_transport.py": "88c67d0845679fced020fcf039c0af240503b9ab9b2ef1a5bf43e96ef43c06c9",
+      "tools/check_p0_gui.py": "1d4c72454a1f9f35649e3783fa2ecbaba7e651469ac97dbc11ec8c3c7d61cbce",
+      "tools/p0_process_metrics.py": "a736bbb1b9739bfa27242ac4d0c8eb1cab81d795f6f3ca2d6ba3a9b4e2b0fba3",
+      "tools/check_p0_desktop.py": "de2093b6d5f0882b338d3ec41e7c0dad2023018647bef84947fc7907249318b2"
+    },
+    "189235c8a3aabda69545b07909bbda60bcbfb57f125e4d84af41a0e84d1f6d3e": {
+      "experiments/p0-egui/Cargo.toml": "a5933e237e1524bc2ed41662f5dcc7f65ed9100409192c5d6658a75b8af48067",
+      "experiments/p0-egui/Cargo.lock": "b805054fe9ce44748ffc0620b24b73de40816659ca9601bddfa82bc0dca577fd",
+      "experiments/p0-egui/src/audio_output.rs": "abaf12abc9c2f0029886fc0be520964cf0bd3ac95ce281eb762239084b5963c8",
+      "experiments/p0-egui/src/audio_transport.rs": "3dd45ce6ae3f1876a686ffaf683dc0b5c662c527ec706f53203f563d9abb2062",
+      "experiments/p0-egui/src/bin/composition-proof.rs": "93bb2491887c5b830f6c5b2dbe8509dbc5a1347acc2fef2c122fb76106e32983",
+      "experiments/p0-egui/src/bin/desktop-proof.rs": "965d3b6e22705f949594f3df4a9f85f3cc94507d5861e250d3d68dfd58e0e24d",
+      "experiments/p0-egui/src/bin/interaction-proof.rs": "4df2b97cb921957cbe805a42fc322ace901cf9d1e4ed79a856b4bffe8a0149dc",
+      "experiments/p0-egui/src/bin/pcm-proof.rs": "f234d6b21587c74bc35423103a3c6e1b8bc1acfb543b995b592c812047c753c7",
+      "experiments/p0-egui/src/bin/recovery-proof.rs": "0d6ed63513fe736e331eee1023135c63a29384d289f4a134eea84ac4650dd7f6",
+      "experiments/p0-egui/src/bin/standard-load.rs": "96f59ba6064964648009dd8e941bf188c99a8d7b6a8262569bba0a84f6359ff6",
+      "experiments/p0-egui/src/bin/switch-audio-proof.rs": "d16edb1da3f3aaca24882566c933bc5eeadf340d3a32c7f6da743152058c3c01",
+      "experiments/p0-egui/src/bin/switch-proof.rs": "181a168a668a173ea75c6722fe518a2d49a84063208267f4d32a8bc43b8ca224",
+      "experiments/p0-egui/src/bin/transport-proof.rs": "aa57b6b99b95d9dc9ebd8ffb5c8c15a05b9f18ca5c95cca1024b1bef932cb5ce",
+      "experiments/p0-egui/src/composition.rs": "68828405baf1006fd430a1b7c85dd67b447823fa338ed1d4d342d6d33c36fa57",
+      "experiments/p0-egui/src/composition_fixture.rs": "4096a347b90284f45abebf15d0f264c30cb1fcbd4c6978640a72cbf9fcc977a5",
+      "experiments/p0-egui/src/composition_gpu.rs": "bce644f5794344e3f6a44ce5800964551f3f243b3b5b39cccec351bb746e16b5",
+      "experiments/p0-egui/src/composition_loading.rs": "ae1d390c775c574e9d7a0211dc094dadf68cdcbfc5450df1a32978bbb9f212a8",
+      "experiments/p0-egui/src/composition_switch.rs": "8d9b1b9cac487127a747134a4f5bb0d33b89e26243f94d6198c9a8445fc4bced",
+      "experiments/p0-egui/src/composition_view.rs": "94babe1f58d2bc357f706986df59102322312a52a247010719e865b437fa0cb5",
+      "experiments/p0-egui/src/desktop_view.rs": "d975d2d045a3163bd7f44d6f7b2764d1db732c9a1cb4296f01d7e21efc16743b",
+      "experiments/p0-egui/src/interaction.rs": "02d2f8f7a511b87ec058192e02d5fd88cef3d2abdc76d6854363a0dbdef8b3aa",
+      "experiments/p0-egui/src/interaction_view.rs": "e3e71e203be304f1d6ebd0c43f19b90e9f6624c136c8abf3df54c332ab6fce8b",
+      "experiments/p0-egui/src/lib.rs": "c91550268d25723cf298cd7b2e14f75f2e68837e89bb7e5e2c8a15135e9b1cd3",
+      "experiments/p0-egui/src/loading.rs": "dbd7eebf93e51ce339de6674b39c85e40df3fc04483832208cbbd673d9980642",
+      "experiments/p0-egui/src/main.rs": "7fa519b9ef852393d1b25332406eb190712a3d073a7b42699be0c827fe59049f",
+      "experiments/p0-egui/src/texture_cache.rs": "6d357c3955bae9ac769cccd6458b0163a249971c26ae048ed09d1a6275efc050",
+      "experiments/p0-egui/src/upload_fence.rs": "c0b488550013e15eb403043664f6782209f3eb7a23b3bf2fdd5a3c83faab4551",
+      "experiments/p0-egui/src/view.rs": "07175368f9eac318b1a2ee899a6774643c459dd6e91f8b5bbdd9966f9843fe87",
+      "experiments/p0-egui/src/windows_audio.rs": "b218e917440bb23f0b9712cec6280868803295c944d3a5f1f8719549f2158155",
+      "experiments/p0-wasapi/Cargo.toml": "e5fb3058d68438d2125ec7bca2cf5fb1cb598ff43bcc2e304e1a905ef2f26172",
+      "experiments/p0-wasapi/Cargo.lock": "49f53790dce8df7ae66e1ec286de21a507852284a9216944c9d5a1c94ed1560d",
+      "experiments/p0-wasapi/src/lib.rs": "57e526337d393c7bba4f8221313bf65e9fda5a084e47f9e93006d57c1bc5fd40",
+      "experiments/p0-wasapi/src/pcm.rs": "b36b2f2b7cd17fd36f4357df7a7fff07c52dc582b8f7a74eaa441ed1283d4fdc",
+      "experiments/p0-wasapi/src/platform.rs": "f5868a4440c1fca87ebc22bd26b3cbd2963a5f5b92b6d1831f01625f4f4bd18f",
+      "experiments/p0-preview-contract/Cargo.toml": "3eb41a0f90829ced042f1692dcc367b7be0cf6d5426e45621eb7db895df60745",
+      "experiments/p0-preview-contract/Cargo.lock": "5ad87c4a8c1c9ef0da88e303171f592e5b76925afd2cc889a2280ecbb99077d0",
+      "experiments/p0-preview-contract/src/lib.rs": "7e7164428f5f534b7c8a44b47aa57e79529f928fad7ea75a1f23f827a85250b0",
+      "experiments/p0-preview-contract/src/main.rs": "1edf475299f1e9a664b3f3dc1057288781799e64038567619c6a99f4e41fc296",
+      "experiments/p0-egui/src/composition.wgsl": "e82e7cce77a53f69de74c13be6cb17d99581bfaa30888cbb1dac9082fe6024af",
+      "experiments/p0-egui/src/composition_present.wgsl": "d5b73ba3fd96fcaeaeee5c5532736ca1dcdefcf1bde1324e8998153a277b8548",
+      "tools/check_p0_transport.py": "88c67d0845679fced020fcf039c0af240503b9ab9b2ef1a5bf43e96ef43c06c9",
+      "tools/check_p0_gui.py": "c6ce791cc5b8fa57160d5efb14c8aa32bee208984fed94fcd559864ad6993477",
+      "tools/p0_process_metrics.py": "a736bbb1b9739bfa27242ac4d0c8eb1cab81d795f6f3ca2d6ba3a9b4e2b0fba3",
+      "tools/check_p0_desktop.py": "de2093b6d5f0882b338d3ec41e7c0dad2023018647bef84947fc7907249318b2"
+    }
+  },
+  "excluded_sessions": [
+    {
+      "directory": "artifacts/p0/desktop-user-54f77415",
+      "reason": "User could not see window; own window metadata showed CodexSandboxDesktop. Closed own PID/title-matched window normally. Not acceptance.",
+      "result_sha256": "d21ebe39df38d8bd89a404773c2c312f8c96405dbf37bc12198f7ef75f3c8aa1",
+      "evidence_sha256": "e063e56e6690f9f1625974ae4074f998b30f8e9b51e973da00dbfda5d39eec6e"
+    }
+  ],
+  "manual_session": {
+    "directory": "artifacts/p0/desktop-user-efdfd718",
+    "status": "completed_targeted_retest",
+    "human_confirmation": {
+      "source": "direct_user_reply",
+      "meaning": "All three checks normal: preview Z/X, text editor isolation, external directory clipboard paste",
+      "confirmed": true
+    }
+  },
+  "headless_tests": {
+    "native": 70,
+    "contract": 10,
+    "python": 53,
+    "windows_adapter": 9,
+    "total": 142
+  },
+  "checks": {
+    "default_format_clippy_tests_build": "passed",
+    "device_audio_format_clippy_tests_build": "passed",
+    "python_tests": "passed",
+    "contract_boundary_format_clippy_tests": "passed",
+    "output_boundary_and_overwrite": "passed_for_completed_runs",
+    "new_renderer_readback_inspected": true
+  },
+  "reported_defects": [
+    {
+      "issue": "game keys blocked by ordinary toolbar keyboard focus",
+      "source": "User report and zero accepted inputs in initial native run",
+      "reproduced": "focused_non_text_control_does_not_steal_playing_preview_keys failed before fix; passed after",
+      "resolution": "Text editing ownership instead of any widget focus; retain editor ownership within UI pass",
+      "native_retest": "passed_in_desktop-user-efdfd718; direct user confirmation plus native key evidence where applicable"
+    },
+    {
+      "issue": "copy directory remained application internal",
+      "source": "User reported copy button did not update external clipboard; pinned framework feature/source confirmed fallback",
+      "resolution": "Enable official eframe clipboard feature, validate feature set, also display own fixture directory",
+      "native_retest": "passed_in_desktop-user-efdfd718; direct user confirmation plus native key evidence where applicable"
+    }
+  ],
+  "dependency_change": {
+    "eframe_clipboard_enabled": true,
+    "windows_activated_existing_packages": [
+      "arboard 3.7.0",
+      "clipboard-win 5.4.1",
+      "error-code 3.4.0",
+      "existing Windows bindings"
+    ],
+    "new_linux_wayland_locked_packages": [
+      "calloop 0.14.5",
+      "calloop-wayland-source 0.4.1",
+      "smithay-client-toolkit 0.20.0",
+      "smithay-clipboard 0.7.3",
+      "wayland-protocols-experimental 20250721.0.1",
+      "wayland-protocols-misc 0.3.12"
+    ],
+    "previous_packages_upgraded_or_removed": false,
+    "linux_runtime_tested": false,
+    "clipboard_resource_cost_in_full_budget": "unmeasured"
+  },
+  "remaining": [
+    "Native DPI transitions; first native scale trace reached cap, no later-DPI inference",
+    "Complete product layout workflow/preference",
+    "Physical input-to-audio latency, complete resource budget, gameplay, current stable compatibility and deferred platforms"
+  ],
+  "current_stable_cases_executed": 0,
+  "system_capture_used": false,
+  "typed_text_persisted": false,
+  "foreign_drop_file_bytes_read": false,
+  "product_acceptance_passed": false,
+  "aggregate_scope": {
+    "note": "Union of named manual fixture runs, not one full product workflow or all behaviors revalidated on the final build",
+    "evidenced": [
+      "drag_commit",
+      "escape_cancel",
+      "focus_cancel_return",
+      "keyboard_editor_isolation",
+      "chinese_ime",
+      "japanese_ime",
+      "known_file_drop_and_thumbnail",
+      "fullscreen_return",
+      "font_legibility",
+      "external_clipboard_paste",
+      "both_lightweight_panels_visited"
+    ],
+    "not_evidenced": [
+      "native_dpi_transition",
+      "complete_product_layout_workflow_or_preference",
+      "physical_input_audio_latency",
+      "full_product_budget",
+      "current_stable_compatibility"
+    ]
+  },
+  "followup_observations": [
+    {
+      "date": "2026-10-19",
+      "source": "direct_user_message",
+      "observation": "User moved the window between their two displays and noticed no abnormal behavior so far",
+      "associated_native_run": "unspecified",
+      "display_scaling_values": "unspecified",
+      "native_dpi_transition_verified": false,
+      "original_run_records_modified": false
+    }
+  ]
+}

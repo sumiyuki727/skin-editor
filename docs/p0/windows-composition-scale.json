@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "semantics_version": 1,
+  "status": "passed",
+  "platform": "Windows x64 Vulkan only",
+  "runs": [
+    {
+      "directory": "artifacts/p0/composition-scale-5c990392",
+      "result_sha256": "229f90828fe9904818afcf2628f8c8fbf17d5528921aaeaf76e3df17880fbf8f",
+      "evidence_sha256": "fca4ef89ff5d7980b4dbbf3272be153db0563c8e98d7923ebcc1c4c7e3f7ed95",
+      "status": "passed",
+      "adapter": {
+        "backend": "Vulkan",
+        "driver": "NVIDIA",
+        "driver_info": "560.94",
+        "name": "NVIDIA GeForce RTX 2060"
+      },
+      "executable_sha256": "ae5d0f0ca82b51063cea1cecbb7da9b5d680853fe90c6bfaebfda999aa81e78c",
+      "compared_pixels": 10485760,
+      "max_channel_error": 1,
+      "pixels_outside_tolerance": 0,
+      "warm_gpu_ms": {
+        "count": 300,
+        "min": 2.457472,
+        "p50": 3.165376,
+        "p95": 5.530112,
+        "max": 6.032992
+      },
+      "warm_submit_wait_readback_ms": {
+        "count": 300,
+        "min": 4.6688,
+        "p50": 6.2776000000000005,
+        "p95": 8.5547,
+        "max": 9.4126
+      },
+      "cpu_reference_ms": {
+        "count": 10,
+        "min": 1497.4937,
+        "p50": 1513.0713,
+        "p95": 1540.1582,
+        "max": 1540.1582
+      },
+      "resident_buffer_bytes_per_document": 50336176,
+      "process_peaks_bytes": {
+        "working_set_bytes": 200568832,
+        "private_bytes": 393117696,
+        "peak_commit_bytes": 393117696,
+        "gpu_dedicated_bytes": 101744640
+      }
+    },
+    {
+      "directory": "artifacts/p0/composition-scale-bd88b1bf",
+      "result_sha256": "cfd2e520e808d84925b0f42cfa6db12c581db6a7f8798ef7e709579f8a9c6f54",
+      "evidence_sha256": "d2f1a6532d44f980bc76a1b79cca90d5ec3b7c660fa397fdb8e59df7e5cbb63f",
+      "status": "passed",
+      "adapter": {
+        "backend": "Vulkan",
+        "driver": "NVIDIA",
+        "driver_info": "560.94",
+        "name": "NVIDIA GeForce RTX 2060"
+      },
+      "executable_sha256": "ae5d0f0ca82b51063cea1cecbb7da9b5d680853fe90c6bfaebfda999aa81e78c",
+      "compared_pixels": 10485760,
+      "max_channel_error": 1,
+      "pixels_outside_tolerance": 0,
+      "warm_gpu_ms": {
+        "count": 300,
+        "min": 2.383424,
+        "p50": 3.12496,
+        "p95": 5.513344,
+        "max": 6.020704
+      },
+      "warm_submit_wait_readback_ms": {
+        "count": 300,
+        "min": 4.5075,
+        "p50": 6.1019000000000005,
+        "p95": 8.3424,
+        "max": 16.383399999999998
+      },
+      "cpu_reference_ms": {
+        "count": 10,
+        "min": 1493.101,
+        "p50": 1505.1306,
+        "p95": 1541.0097,
+        "max": 1541.0097
+      },
+      "resident_buffer_bytes_per_document": 50336176,
+      "process_peaks_bytes": {
+        "working_set_bytes": 178954240,
+        "private_bytes": 345690112,
+        "peak_commit_bytes": 349888512,
+        "gpu_dedicated_bytes": 101744640
+      }
+    }
+  ],
+  "limits": [
+    "Two standalone processes, no GUI; not full application budgets",
+    "300 static warm dispatches each, not 300 edit gestures",
+    "GPU timestamps cover compute pass only",
+    "No stable compatibility, physical input/audio or macOS/Linux validation"
+  ]
+}

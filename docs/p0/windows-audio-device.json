@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "status": "passed",
+  "directory": "artifacts/p0/audio-device-e7f2dbe8",
+  "result_sha256": "d10098fc5b38b40576f2c481a45ad341f5f279ce66d25f56543d7e3b5e76f388",
+  "source_sha256": "a177c4443cbca80acefa66ff6d54be25dd4ec71a2d3a1ae3dea5aaa631725a64",
+  "platform": "Windows x64 default multimedia render endpoint, WASAPI shared mode",
+  "runs": [
+    {
+      "schema_version": 1,
+      "status": "passed",
+      "checks": {
+        "advances_before_pause": true,
+        "paused_clock_spread_le_2_ms": true,
+        "position_readings_accurate": true,
+        "paused_observation_ge_300_ms": true,
+        "advances_after_resume": true,
+        "resume_has_no_pause_catchup": true,
+        "resumed_advance_le_active_wall_plus_50_ms": true
+      },
+      "paused_clock_spread_ms": 0.0,
+      "before_advance_ms": 457.0208333333333,
+      "after_advance_ms": 451.16666666666663,
+      "resume_first_gap_ms": 0.0,
+      "resume_first_wall_gap_ms": 0.5188000000000415,
+      "api": "WASAPI shared render / IAudioClock",
+      "default_role": "multimedia render",
+      "format": {
+        "tag": 65534,
+        "channels": 2,
+        "sample_rate": 48000,
+        "block_align": 8,
+        "bits": 32,
+        "extra_bytes": 22
+      },
+      "buffer_frames": 4800,
+      "reported_stream_latency_ms": 0.0,
+      "clock_frequency": 384000,
+      "silent_frames_submitted": 49440,
+      "cleanup": [
+        "stream stopped and reset"
+      ],
+      "limits": [
+        "Silent device stream, not audible output or microphone recording",
+        "Reported stream latency is not measured acoustic/input-to-sound latency",
+        "100 ms requested shared buffer, polling diagnostic, not a selected low-latency backend",
+        "Separate from GUI/game clock; no device-switch, underrun or cross-platform validation"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "status": "passed",
+      "checks": {
+        "advances_before_pause": true,
+        "paused_clock_spread_le_2_ms": true,
+        "position_readings_accurate": true,
+        "paused_observation_ge_300_ms": true,
+        "advances_after_resume": true,
+        "resume_has_no_pause_catchup": true,
+        "resumed_advance_le_active_wall_plus_50_ms": true
+      },
+      "paused_clock_spread_ms": 0.0,
+      "before_advance_ms": 452.3541666666667,
+      "after_advance_ms": 441.35416666666674,
+      "resume_first_gap_ms": 0.0,
+      "resume_first_wall_gap_ms": 0.672800000000251,
+      "api": "WASAPI shared render / IAudioClock",
+      "default_role": "multimedia render",
+      "format": {
+        "tag": 65534,
+        "channels": 2,
+        "sample_rate": 48000,
+        "block_align": 8,
+        "bits": 32,
+        "extra_bytes": 22
+      },
+      "buffer_frames": 4800,
+      "reported_stream_latency_ms": 0.0,
+      "clock_frequency": 384000,
+      "silent_frames_submitted": 49440,
+      "cleanup": [
+        "stream stopped and reset"
+      ],
+      "limits": [
+        "Silent device stream, not audible output or microphone recording",
+        "Reported stream latency is not measured acoustic/input-to-sound latency",
+        "100 ms requested shared buffer, polling diagnostic, not a selected low-latency backend",
+        "Separate from GUI/game clock; no device-switch, underrun or cross-platform validation"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "status": "passed",
+      "checks": {
+        "advances_before_pause": true,
+        "paused_clock_spread_le_2_ms": true,
+        "position_readings_accurate": true,
+        "paused_observation_ge_300_ms": true,
+        "advances_after_resume": true,
+        "resume_has_no_pause_catchup": true,
+        "resumed_advance_le_active_wall_plus_50_ms": true
+      },
+      "paused_clock_spread_ms": 0.0,
+      "before_advance_ms": 453.77083333333337,
+      "after_advance_ms": 445.02083333333326,
+      "resume_first_gap_ms": 0.0,
+      "resume_first_wall_gap_ms": 0.5897999999993075,
+      "api": "WASAPI shared render / IAudioClock",
+      "default_role": "multimedia render",
+      "format": {
+        "tag": 65534,
+        "channels": 2,
+        "sample_rate": 48000,
+        "block_align": 8,
+        "bits": 32,
+        "extra_bytes": 22
+      },
+      "buffer_frames": 4800,
+      "reported_stream_latency_ms": 0.0,
+      "clock_frequency": 384000,
+      "silent_frames_submitted": 49440,
+      "cleanup": [
+        "stream stopped and reset"
+      ],
+      "limits": [
+        "Silent device stream, not audible output or microphone recording",
+        "Reported stream latency is not measured acoustic/input-to-sound latency",
+        "100 ms requested shared buffer, polling diagnostic, not a selected low-latency backend",
+        "Separate from GUI/game clock; no device-switch, underrun or cross-platform validation"
+      ]
+    }
+  ],
+  "limits": [
+    "Silent stream only; no audible/acoustic verification or physical endpoint identity assertion",
+    "Reported stream latency of zero is not a zero-latency measurement",
+    "Separate from editor and simulation clock; no integrated gameplay test",
+    "No microphone, capture, private audio, endpoint settings or exclusive mode"
+  ]
+}

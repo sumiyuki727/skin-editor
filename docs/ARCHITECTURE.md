@@ -1,6 +1,6 @@
 # 架构设计
 
-状态：产品架构设计基线。2026-10-20 已完成 [P1-0／1](P1_PROGRESS.md) 的 domain／application 工作区、经校验项目模型、嵌套图层／组件及自有查询副本；Command／事务、历史、渲染与预览尚未实现。独立 P0 实验不属于正式模块，除进度中明确列出的内容外，本文中的模块名、类型名和调用仍为设计约定。技术方案见 [TECH_STACK.md](TECH_STACK.md)。
+状态：产品架构设计基线。2026-10-21 已完成 [P1-0／1／2](P1_PROGRESS.md) 的工作区、经校验模型、统一 Command／事务、修订冲突／去重及最小追加历史；撤销／检出／分叉、渲染与预览尚未实现。独立 P0 实验不属于正式模块，除进度中明确列出的内容外，本文中的模块名、类型名和调用仍为设计约定。技术方案见 [TECH_STACK.md](TECH_STACK.md)。
 
 ## 设计出发点
 
@@ -54,7 +54,7 @@ UI 只获取 FrameDescriptor 的不透明 FrameKey、来源与状态；desktop �
 
 先按逻辑模块限制公开面；不要求每个概念独立成包。首个语言工程必须提供可检查的包依赖或导入规则，禁止跨模块访问内部存储。无需为每个类创建一个接口，端口只用于真实边界或实现替换点。
 
-当前实际工作区只含 `crates/domain` 与 `crates/application`，依赖为 application→domain；当前无第三方包，P0 工程明确排除。`tools/check_core.py` 通过实际 Cargo 元数据、保守源码规则、独立禁止依赖 canary 及编译拒绝测试检查边界，后续引入依赖／feature 必须显式扩展规则。查询值为副本，不提供可变会话引用；目前尚无内容编辑入口。核心禁止 unsafe，工作区与工具链独立锁定。
+当前实际工作区只含 `crates/domain` 与 `crates/application`，依赖为 application→domain；当前无第三方包，P0 工程明确排除。`tools/check_core.py` 通过实际 Cargo 元数据、保守源码规则、独立禁止依赖 canary 及编译拒绝测试检查边界，后续引入依赖／feature 必须显式扩展规则。查询值为副本，不提供可变会话引用；内容只经 submit 写入并同步记录历史。核心禁止 unsafe，工作区与工具链独立锁定。
 
 ## 核心模型与所有权
 
@@ -75,7 +75,7 @@ UI 只获取 FrameDescriptor 的不透明 FrameKey、来源与状态；desktop �
 
 所有对象 ID 使用类型区分，例如 AssetId / LayerId / HistoryNodeId。具体生成算法在实现时选择；身份不随排序、重命名或历史检出变化。删除后新建对象不得复用旧 ID。
 
-P1-1 实际采用非零 u128 项目／资源／文档／图层／组件／输出 ID，历史 ID 仍按独立寻址设计待实现。`ProjectDefinition` 是带 MODEL_VERSION 的分离输入，`SkinProject::from_definition` 只构造经校验的不可变值，不取得活动项目写权限。application 拥有活动 SkinProject，当前只能创建空根和查询自有副本，不开放整体替换／加载捷径。MODEL_VERSION 是内存契约版本，项目文件 schema 在 P3 另行冻结。
+P1-1 实际采用非零 u128 项目／资源／文档／图层／组件／输出 ID；P1-2 已采用独立会话＋非零 u64 历史 ID，短地址待 P1-3。`ProjectDefinition` 是带 MODEL_VERSION 的分离输入，`SkinProject::from_definition` 只构造经校验的不可变值，不取得活动项目写权限。application 拥有活动 SkinProject，只创建空根、返回自有查询副本并经 Command 提交修改，不开放整体替换／加载捷径。MODEL_VERSION 是内存契约版本，项目文件 schema 在 P3 另行冻结。
 
 图层与组件树使用平坦节点表、显式有序子 ID、派生父索引和世界变换；校验、遍历、克隆及释放不递归持有子对象。仅共用内部的关系校验函数，不建立公共通用树框架。BlobRef 只携带不可变摘要和字节长度，真实字节及摘要核对由后续字节存储端口负责；配置保留有序原始字节与可选字段范围，不冒充 skin.ini 解析器。输出路径目前只做词法、大小写及文件／目录前缀冲突检查，P3 仍须验证具体文件系统、保留名、Unicode 等价与安全发布。
 
@@ -111,18 +111,18 @@ P1-1 实际采用非零 u128 项目／资源／文档／图层／组件／输出
 | ProjectIO | 新建、打开、保存选定节点、导入、导出 | 导入内容通过命令；保存/导出不产生；新建/打开建立新根 |
 | PreviewControl | 查询能力、切场景、暂停/恢复、全屏、截图 | 否 |
 
-建议的请求形状（示意，尚未冻结协议）：
+P1-2 已实现 application v2 Rust 值契约，见 [命令契约](COMMANDS.md)。核心请求形状如下；尚无 JSON／AI 服务或稳定的跨进程编码：
 
 ```text
 CommandRequest {
-  apiVersion, projectSessionId, requestId,
-  expected: { headNodeId, sessionRevision },
-  commands: [ { type, version, payload } ]
+  api_version, session_id: HistorySessionId, request_id,
+  expected: { head: NodeId, revision },
+  commands: [ Command ]
 }
 
 CommandResult {
   status: committed | no_change | rejected,
-  headNodeId, sessionRevision, changedObjectIds, diagnostics
+  state: { head, revision }, changed_objects, configuration_changed
 }
 ```
 
@@ -131,12 +131,14 @@ CommandResult {
 一次提交的处理顺序：
 
 1. application 检查会话、请求去重、期望节点及修订；同一项目的写入串行执行。
-2. 解析输入、分配稳定 ID、构造已解析命令；预校验不能代替提交时的再次校验。
+2. 解析输入并验证候选对象 ID 的会话内准入，构造已解析命令；成功创建的身份不再复用。预校验不能代替提交时的再次校验。
 3. 在隔离候选状态中按序执行整个批次，检查引用、图层树、配置及输出不变量，生成可逆变更集。
-4. 验证全部成功后原子发布内容、历史节点和新的修订，再发出一次 ProjectChanged。失败不发布部分内容、历史或成功事件。
+4. 验证全部成功并固定必要原始资源后原子发布内容、历史节点和新的修订，返回一次 Committed 结果；后续适配器据此刷新。失败不发布部分内容、历史或成功通知。
 5. 渲染、面板和预览依据变更对象增量刷新。派生工作失败只形成诊断，不撤销已经有效提交的项目内容，也不冒充渲染成功。
 
 文件解码、网络或 GPU 操作不放在可逆命令中。导入先将资源字节写入暂存区并验证，然后使用 RegisterAsset 原子登记；失败产生的无引用暂存数据可安全清理。历史重放使用已解析 ID、元数据和 BlobRef，不重新读取外部文件或再次生成随机 ID。
+
+P1-2 的 ResourceStore／BlobLease 只固定已暂存且经存储适配器验证的内容，原图字节不进入项目补丁。预检不触碰端口；提交时新租约先私有获取，失败释放，历史可达租约在会话中保留。候选执行每条命令后重新验证模型，所有可失败步骤在发布前完成；同步 owner 不引入通用事件总线。去重回执含失败与 NoChange，且有明确数量上限，详见命令契约。
 
 错误至少可区分 InvalidReference、WouldCreateCycle、AssetInUse、InvalidValue、Conflict、Busy、UnsupportedCapability、IoFailure 和 ResourceLimit；向调用方返回对象 ID 与可理解说明。会话内相同 requestId 和相同载荷返回原结果，载荷不同则拒绝，避免重复执行。
 

@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use crate::{AssetId, ModelError, ObjectId, PixelSize};
 
 /// Content address asserted by the byte store, not computed or verified here.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct BlobRef {
     sha256: [u8; 32],
     byte_len: u64,

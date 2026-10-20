@@ -29,7 +29,7 @@ pub use project::{MODEL_VERSION, ProjectDefinition, SkinProject};
 
 use core::num::NonZeroU128;
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub enum ObjectId {
     Asset(AssetId),
     Document(DocumentId),

@@ -1,9 +1,12 @@
 //! Single project writer: value commands, isolated transactions and history.
 #![forbid(unsafe_code)]
 
+mod address;
 mod contract;
 mod execute;
 mod history;
+mod history_control;
+mod history_queries;
 mod resources;
 
 use std::collections::{BTreeMap, BTreeSet};
@@ -12,10 +15,13 @@ use std::sync::Arc;
 use skin_editor_domain::{BlobRef, ObjectId};
 use skin_editor_domain::{ProjectId, SkinProject};
 
+pub use address::{MAX_BRANCH_ADDRESS, MAX_NODE_ADDRESS};
 pub use contract::{
-    Command, CommandError, CommandFailure, CommandRequest, CommandResult, CommandStatus,
-    ExpectedState, HistoryEntry, HistoryQueryError, HistorySessionId, NodeId, RequestId,
-    ValidationResult,
+    AddressError, BranchCoordinate, Command, CommandError, CommandFailure, CommandRequest,
+    CommandResult, CommandStatus, ExpectedState, HistoryAction, HistoryAncestorsPage,
+    HistoryChildrenPage, HistoryEntry, HistoryError, HistoryQueryError, HistoryRequest,
+    HistoryResult, HistorySessionId, HistoryStatistics, HistoryStatus, HistorySummary,
+    MAX_HISTORY_PAGE, NodeId, RequestId, ValidationResult,
 };
 pub use resources::{BlobLease, ResourceError, ResourceStore};
 
@@ -31,7 +37,7 @@ pub mod values {
 }
 
 /// Current version of the owned application query values.
-pub const API_VERSION: u16 = 2;
+pub const API_VERSION: u16 = 3;
 
 /// A structured lifecycle validation error, usable without UI types.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -88,9 +94,15 @@ impl Default for SessionLimits {
     }
 }
 
-struct Receipt {
-    request: CommandRequest,
-    outcome: Result<CommandResult, CommandError>,
+enum Receipt {
+    Command {
+        request: CommandRequest,
+        outcome: Result<CommandResult, CommandError>,
+    },
+    History {
+        request: HistoryRequest,
+        outcome: Result<HistoryResult, HistoryError>,
+    },
 }
 
 /// Owns the active validated project. No whole-state replacement is exposed.
@@ -210,7 +222,11 @@ impl ProjectSession {
         if session_id != self.session_id {
             return Err(HistoryQueryError::WrongSession);
         }
-        let project = self.history.materialize(id)?;
+        let project = if id == self.state.head {
+            self.project.clone()
+        } else {
+            self.history.materialize(id)?
+        };
         Ok(HistoricalSnapshot {
             api_version: API_VERSION,
             session_id,
@@ -232,9 +248,15 @@ impl ProjectSession {
         Ok(())
     }
 
-    fn cached(&self, request: &CommandRequest) -> Result<Option<&Receipt>, CommandError> {
+    fn cached(
+        &self,
+        request: &CommandRequest,
+    ) -> Result<Option<&Result<CommandResult, CommandError>>, CommandError> {
         match self.receipts.get(&request.request_id) {
-            Some(receipt) if receipt.request == *request => Ok(Some(receipt)),
+            Some(Receipt::Command {
+                request: old,
+                outcome,
+            }) if old == request => Ok(Some(outcome)),
             Some(_) => Err(CommandError::RequestIdReused),
             None => Ok(None),
         }
@@ -263,9 +285,7 @@ impl ProjectSession {
             if self.history.nodes.len() >= self.limits.history_nodes {
                 return Err(CommandError::ResourceLimit("history_nodes"));
             }
-            if NodeId::new(self.history.next_id).is_none() {
-                return Err(CommandError::ResourceLimit("node_id"));
-            }
+            self.history.plan_append(self.state.head)?;
             self.state
                 .revision
                 .checked_add(1)
@@ -279,7 +299,7 @@ impl ProjectSession {
     pub fn validate(&self, request: &CommandRequest) -> Result<ValidationResult, CommandError> {
         self.envelope(request)?;
         if let Some(receipt) = self.cached(request)? {
-            receipt.outcome.as_ref().map_err(Clone::clone)?;
+            receipt.as_ref().map_err(Clone::clone)?;
             return Ok(ValidationResult {
                 api_version: API_VERSION,
                 state: self.state,
@@ -327,7 +347,7 @@ impl ProjectSession {
     pub fn submit(&mut self, request: CommandRequest) -> Result<CommandResult, CommandError> {
         self.envelope(&request)?;
         if let Some(receipt) = self.cached(&request)? {
-            return receipt.outcome.clone();
+            return receipt.clone();
         }
         // Never exceed the receipt cap even when recording rejection.
         if self.receipts.len() >= self.limits.retained_requests {
@@ -336,7 +356,7 @@ impl ProjectSession {
         let outcome = self.commit(&request);
         self.receipts.insert(
             request.request_id,
-            Receipt {
+            Receipt::Command {
                 request,
                 outcome: outcome.clone(),
             },
@@ -357,7 +377,8 @@ impl ProjectSession {
                 configuration_changed: false,
             });
         }
-        let id = NodeId::new(self.history.next_id).ok_or(CommandError::ResourceLimit("node_id"))?;
+        let plan = self.history.plan_append(self.state.head)?;
+        let id = plan.id;
         let revision = self
             .state
             .revision
@@ -391,15 +412,7 @@ impl ProjectSession {
             configuration_changed: patch.configuration_changed(),
         };
         // All fallible validation/acquisition is complete before publishing.
-        self.history.nodes.insert(
-            id,
-            history::Node {
-                parent: Some(self.state.head),
-                patch: Some(patch),
-                request: Some(request.request_id),
-            },
-        );
-        self.history.next_id = id.get().checked_add(1).unwrap_or(0);
+        self.history.append(plan, patch, request.request_id);
         self.project = candidate;
         self.state = result.state;
         self.used_ids = used;

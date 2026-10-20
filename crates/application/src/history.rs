@@ -5,7 +5,10 @@ use skin_editor_domain::{
     OutputMapping, ProjectDefinition, SkinConfiguration, SkinProject,
 };
 
-use crate::{API_VERSION, HistoryEntry, HistoryQueryError, HistorySessionId, NodeId, RequestId};
+use crate::{
+    API_VERSION, BranchCoordinate, CommandError, HistoryEntry, HistoryQueryError, HistorySessionId,
+    HistorySummary, NodeId, RequestId,
+};
 
 pub(crate) fn definition(project: &SkinProject) -> ProjectDefinition {
     ProjectDefinition {
@@ -160,29 +163,141 @@ pub(crate) struct Node {
     pub parent: Option<NodeId>,
     pub patch: Option<Patch>,
     pub request: Option<RequestId>,
+    pub children: Vec<NodeId>,
+    pub depth: u64,
+    pub coordinate: BranchCoordinate,
 }
 pub(crate) struct History {
     pub root: SkinProject,
     pub nodes: BTreeMap<NodeId, Node>,
     pub next_id: u64,
+    pub coordinates: BTreeMap<BranchCoordinate, NodeId>,
+    pub next_branch_id: u64,
+    pub branch_count: usize,
+    pub max_depth: u64,
+}
+
+pub(crate) struct AppendPlan {
+    pub id: NodeId,
+    parent: NodeId,
+    depth: u64,
+    coordinate: BranchCoordinate,
+    new_branch: bool,
 }
 
 impl History {
     pub fn new(root: SkinProject) -> Self {
+        let root_id = NodeId::new(1).expect("nonzero root");
+        let coordinate = BranchCoordinate::new(1, 0).expect("nonzero branch");
         let mut nodes = BTreeMap::new();
         nodes.insert(
-            NodeId::new(1).expect("nonzero root"),
+            root_id,
             Node {
                 parent: None,
                 patch: None,
                 request: None,
+                children: Vec::new(),
+                depth: 0,
+                coordinate,
             },
         );
         Self {
             root,
             nodes,
             next_id: 2,
+            coordinates: BTreeMap::from([(coordinate, root_id)]),
+            next_branch_id: 2,
+            branch_count: 1,
+            max_depth: 0,
         }
+    }
+
+    pub fn plan_append(&self, parent: NodeId) -> Result<AppendPlan, CommandError> {
+        let id = NodeId::new(self.next_id).ok_or(CommandError::ResourceLimit("node_id"))?;
+        let old = self.nodes.get(&parent).ok_or(CommandError::History(
+            HistoryQueryError::UnknownNode(parent),
+        ))?;
+        let depth = old
+            .depth
+            .checked_add(1)
+            .ok_or(CommandError::ResourceLimit("history_depth"))?;
+        let new_branch = !old.children.is_empty();
+        let coordinate = if new_branch {
+            BranchCoordinate::new(self.next_branch_id, 0)
+                .ok_or(CommandError::ResourceLimit("branch_id"))?
+        } else {
+            let ordinal = old
+                .coordinate
+                .ordinal()
+                .checked_add(1)
+                .ok_or(CommandError::ResourceLimit("branch_ordinal"))?;
+            BranchCoordinate::new(old.coordinate.branch(), ordinal)
+                .expect("existing nonzero branch")
+        };
+        if self.coordinates.contains_key(&coordinate) {
+            return Err(CommandError::History(HistoryQueryError::InvalidHistory(
+                ModelError::InvalidValue("duplicate_history_coordinate"),
+            )));
+        }
+        Ok(AppendPlan {
+            id,
+            parent,
+            depth,
+            coordinate,
+            new_branch,
+        })
+    }
+
+    /// Called only after all validation and resource pinning succeeds.
+    pub fn append(&mut self, plan: AppendPlan, patch: Patch, request: RequestId) {
+        self.nodes
+            .get_mut(&plan.parent)
+            .expect("validated parent")
+            .children
+            .push(plan.id);
+        self.coordinates.insert(plan.coordinate, plan.id);
+        self.nodes.insert(
+            plan.id,
+            Node {
+                parent: Some(plan.parent),
+                patch: Some(patch),
+                request: Some(request),
+                children: Vec::new(),
+                depth: plan.depth,
+                coordinate: plan.coordinate,
+            },
+        );
+        self.next_id = plan.id.get().checked_add(1).unwrap_or(0);
+        if plan.new_branch {
+            self.next_branch_id = plan.coordinate.branch().checked_add(1).unwrap_or(0);
+            self.branch_count += 1;
+        }
+        self.max_depth = self.max_depth.max(plan.depth);
+    }
+
+    pub fn summary(&self, id: NodeId) -> Result<HistorySummary, HistoryQueryError> {
+        let node = self.node(id)?;
+        Ok(HistorySummary {
+            id,
+            parent: node.parent,
+            depth: node.depth,
+            coordinate: node.coordinate,
+            child_count: node.children.len(),
+        })
+    }
+
+    pub fn node(&self, id: NodeId) -> Result<&Node, HistoryQueryError> {
+        self.nodes
+            .get(&id)
+            .ok_or(HistoryQueryError::UnknownNode(id))
+    }
+
+    fn parent(&self, id: NodeId) -> Result<NodeId, HistoryQueryError> {
+        self.node(id)?
+            .parent
+            .ok_or(HistoryQueryError::InvalidHistory(ModelError::InvalidValue(
+                "history_parent",
+            )))
     }
     pub fn entry(&self, session_id: HistorySessionId, id: NodeId) -> Option<HistoryEntry> {
         let node = self.nodes.get(&id)?;
@@ -203,28 +318,56 @@ impl History {
         })
     }
     pub fn materialize(&self, id: NodeId) -> Result<SkinProject, HistoryQueryError> {
-        let mut cursor = id;
-        let mut patches = Vec::new();
-        loop {
-            let node = self
-                .nodes
-                .get(&cursor)
-                .ok_or(HistoryQueryError::UnknownNode(cursor))?;
-            if let Some(patch) = &node.patch {
-                patches.push(patch);
+        self.transition(NodeId::new(1).expect("root"), id, &self.root)
+    }
+
+    /// Restore through the nearest common ancestor without publishing interim
+    /// states or executing old commands/resource acquisition again.
+    pub fn transition(
+        &self,
+        from: NodeId,
+        to: NodeId,
+        current: &SkinProject,
+    ) -> Result<SkinProject, HistoryQueryError> {
+        let mut left = from;
+        let mut right = to;
+        let mut undo = Vec::new();
+        let mut redo = Vec::new();
+        self.node(from)?;
+        self.node(to)?;
+        while left != right {
+            if undo.len() > self.nodes.len() || redo.len() > self.nodes.len() {
+                return Err(HistoryQueryError::InvalidHistory(ModelError::Cycle));
             }
-            match node.parent {
-                Some(parent) => cursor = parent,
-                None => break,
+            let left_depth = self.node(left)?.depth;
+            let right_depth = self.node(right)?.depth;
+            if left_depth >= right_depth {
+                undo.push(left);
+                left = self.parent(left)?;
+            }
+            if right_depth >= left_depth {
+                redo.push(right);
+                right = self.parent(right)?;
             }
         }
-        let mut project = self.root.clone();
-        for patch in patches.into_iter().rev() {
-            project = patch
-                .apply(&project, true)
+        let mut candidate = current.clone();
+        for (id, forward) in undo
+            .into_iter()
+            .map(|id| (id, false))
+            .chain(redo.into_iter().rev().map(|id| (id, true)))
+        {
+            let patch = self
+                .node(id)?
+                .patch
+                .as_ref()
+                .ok_or(HistoryQueryError::InvalidHistory(ModelError::InvalidValue(
+                    "history_patch",
+                )))?;
+            candidate = patch
+                .apply(&candidate, forward)
                 .map_err(HistoryQueryError::InvalidHistory)?;
         }
-        Ok(project)
+        Ok(candidate)
     }
 }
 
@@ -236,6 +379,48 @@ mod tests {
         ConfigInterpretation, ConfigRecord, LayerId, LayerKind, LayerNode, LayerTree, Opacity,
         OutputId, OutputPath, PixelSize, ProjectId,
     };
+
+    #[test]
+    fn depth_ordinal_and_branch_exhaustion_reject_before_appending() {
+        let root = NodeId::new(1).unwrap();
+        let mut history = History::new(SkinProject::empty(ProjectId::new(1).unwrap()));
+        history.nodes.get_mut(&root).unwrap().depth = u64::MAX;
+        assert!(matches!(
+            history.plan_append(root),
+            Err(CommandError::ResourceLimit("history_depth"))
+        ));
+        history.nodes.get_mut(&root).unwrap().depth = 0;
+        history.nodes.get_mut(&root).unwrap().coordinate =
+            BranchCoordinate::new(1, u64::MAX).unwrap();
+        assert!(matches!(
+            history.plan_append(root),
+            Err(CommandError::ResourceLimit("branch_ordinal"))
+        ));
+        history.nodes.get_mut(&root).unwrap().coordinate = BranchCoordinate::new(1, 0).unwrap();
+        let plan = history.plan_append(root).unwrap();
+        history.append(
+            plan,
+            Patch::between(&history.root, &history.root),
+            RequestId::new(1).unwrap(),
+        );
+        history.next_branch_id = u64::MAX;
+        let plan = history.plan_append(root).unwrap();
+        history.append(
+            plan,
+            Patch::between(&history.root, &history.root),
+            RequestId::new(2).unwrap(),
+        );
+        let children = history.nodes[&root].children.clone();
+        let index = history.coordinates.clone();
+        assert!(matches!(
+            history.plan_append(root),
+            Err(CommandError::ResourceLimit("branch_id"))
+        ));
+        assert_eq!(history.nodes[&root].children, children);
+        assert_eq!(history.coordinates, index);
+        assert_eq!(history.nodes.len(), 3);
+        assert_eq!(history.next_id, 4);
+    }
 
     #[test]
     fn patches_round_trip_assets_documents_components_outputs_and_configuration_together() {

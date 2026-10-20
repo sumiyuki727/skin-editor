@@ -56,7 +56,7 @@ pub struct ExpectedState {
     pub revision: u64,
 }
 
-/// v2 is a closed value protocol. New-object IDs are explicit candidates;
+/// v3 is a closed value protocol. New-object IDs are explicit candidates;
 /// application admits them once per session, and never reuses a committed ID.
 /// Positions are zero-based; moves index the destination AFTER detaching.
 #[derive(Clone, Debug, PartialEq)]
@@ -223,6 +223,7 @@ pub enum CommandError {
         error: crate::ResourceError,
     },
     ResourceLimit(&'static str),
+    History(HistoryQueryError),
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -240,6 +241,10 @@ pub enum HistoryQueryError {
     WrongSession,
     UnknownNode(NodeId),
     InvalidHistory(ModelError),
+    InvalidAddress(AddressError),
+    UnknownCoordinate(BranchCoordinate),
+    InvalidPageLimit(usize),
+    InvalidOffset { offset: usize, len: usize },
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -251,4 +256,143 @@ pub struct HistoryEntry {
     pub request_id: Option<RequestId>,
     pub changed_objects: Vec<ObjectId>,
     pub configuration_changed: bool,
+}
+
+/// Stable coordinate: the first child continues its parent's branch; later
+/// children begin a new branch at ordinal zero. Neither sorting nor checkout
+/// changes an assigned coordinate. No ancestor path is stored.
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
+pub struct BranchCoordinate {
+    branch: NonZeroU64,
+    ordinal: u64,
+}
+impl BranchCoordinate {
+    pub const fn new(branch: u64, ordinal: u64) -> Option<Self> {
+        match NonZeroU64::new(branch) {
+            Some(branch) => Some(Self { branch, ordinal }),
+            None => None,
+        }
+    }
+    pub const fn branch(self) -> u64 {
+        self.branch.get()
+    }
+    pub const fn ordinal(self) -> u64 {
+        self.ordinal
+    }
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum AddressError {
+    TooLong,
+    InvalidSyntax,
+    Overflow,
+    ZeroIdentity,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum HistoryAction {
+    Undo,
+    /// None is allowed only with zero/one child. Multiple children are explicit.
+    Redo {
+        child: Option<NodeId>,
+    },
+    Checkout {
+        node: NodeId,
+    },
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct HistoryRequest {
+    pub api_version: u16,
+    pub session_id: HistorySessionId,
+    pub request_id: RequestId,
+    pub expected: ExpectedState,
+    pub action: HistoryAction,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum HistoryStatus {
+    Changed,
+    NoChange,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct HistoryResult {
+    pub api_version: u16,
+    pub session_id: HistorySessionId,
+    pub request_id: RequestId,
+    pub previous: ExpectedState,
+    pub state: ExpectedState,
+    pub status: HistoryStatus,
+    pub changed_objects: Vec<ObjectId>,
+    pub configuration_changed: bool,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum HistoryError {
+    UnsupportedVersion(u16),
+    WrongSession,
+    RequestIdReused,
+    Conflict {
+        expected: ExpectedState,
+        actual: ExpectedState,
+    },
+    Query(HistoryQueryError),
+    AmbiguousRedo {
+        child_count: usize,
+    },
+    NotAChild {
+        parent: NodeId,
+        child: NodeId,
+    },
+    MissingPinnedResource(skin_editor_domain::BlobRef),
+    ResourceLimit(&'static str),
+}
+impl From<HistoryQueryError> for HistoryError {
+    fn from(error: HistoryQueryError) -> Self {
+        Self::Query(error)
+    }
+}
+
+pub const MAX_HISTORY_PAGE: usize = 256;
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct HistorySummary {
+    pub id: NodeId,
+    pub parent: Option<NodeId>,
+    pub depth: u64,
+    pub coordinate: BranchCoordinate,
+    pub child_count: usize,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct HistoryChildrenPage {
+    pub api_version: u16,
+    pub session_id: HistorySessionId,
+    pub parent: NodeId,
+    pub entries: Vec<HistorySummary>,
+    pub next_offset: Option<usize>,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct HistoryAncestorsPage {
+    pub api_version: u16,
+    pub session_id: HistorySessionId,
+    pub entries: Vec<HistorySummary>,
+    /// First ancestor not included in this page, for the next query.
+    pub next_ancestor: Option<NodeId>,
+}
+
+/// Relationship/index counts, not allocator bytes or a process-memory budget.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct HistoryStatistics {
+    pub api_version: u16,
+    pub session_id: HistorySessionId,
+    pub nodes: usize,
+    pub edges: usize,
+    pub coordinate_entries: usize,
+    pub branches: usize,
+    pub max_depth: u64,
+    pub retained_blobs: usize,
+    pub retained_requests: usize,
 }

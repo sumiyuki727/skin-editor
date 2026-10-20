@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "kind": "read_only_lazer_reference",
+  "root": "D:/osu",
+  "head": "d4993624374c2984b0df8203acbfbc6267ab5e6e",
+  "selected_paths_clean": true,
+  "release_identity": "not established; Git snapshot only",
+  "scope": "design reference; not a stable compatibility result; no code/assets copied, built or executed",
+  "files": [
+    {
+      "path": "LICENCE",
+      "bytes": 1092,
+      "sha256": "2e73c7c4295cc3da18697ac982f64a4ec449e0781e8f4c59318216e13998864a"
+    },
+    {
+      "path": "osu.Game/Screens/Edit/EditorClock.cs",
+      "bytes": 13510,
+      "sha256": "f366aaef177229897cb4fbe835a2ab8c23facbbd28576ccf4ed0028b7160ff0f"
+    },
+    {
+      "path": "osu.Game/Screens/Play/ReplayPlayer.cs",
+      "bytes": 10938,
+      "sha256": "1110215dd4ea6355ea5bf0465abbd5ff34aff9d1d8c0e3408aebac50666f550b"
+    },
+    {
+      "path": "osu.Game/Screens/Play/Player.cs",
+      "bytes": 54559,
+      "sha256": "4d6377d1570d78962993783af6145c950bafa7dc244ce4b0f506dd97714dea6d"
+    },
+    {
+      "path": "osu.Game/Screens/Play/HUD/SongProgressBar.cs",
+      "bytes": 3071,
+      "sha256": "595de6dfded0ccc0611eec52f4af628be96bf03171fdd94a22083943cc91ab7f"
+    },
+    {
+      "path": "osu.Game/Rulesets/Scoring/ScoreProcessor.cs",
+      "bytes": 24804,
+      "sha256": "647df488bcc1e95a96dcd875b67ad0af21349e7d6c91814d6b5e69175847979f"
+    },
+    {
+      "path": "osu.Game/Rulesets/UI/FrameStabilityContainer.cs",
+      "bytes": 13171,
+      "sha256": "5d44862741e0281c5c208ee93da8c255fad6ac661ddcf1fa3eeea2413fe585da"
+    },
+    {
+      "path": "osu.Game/Rulesets/UI/RulesetInputManager.cs",
+      "bytes": 10128,
+      "sha256": "ed68f930dfb40fbb6b5c28cc095d0d897f6007661eca9ff776ca10f6a83f5317"
+    },
+    {
+      "path": "osu.Game/Beatmaps/ControlPoints/TimingControlPoint.cs",
+      "bytes": 4237,
+      "sha256": "1c0c55823acff226575ae18e2d17d0791348dc960885d8851713a79f519ab91f"
+    },
+    {
+      "path": "osu.Game/Rulesets/Objects/BarLineGenerator.cs",
+      "bytes": 4143,
+      "sha256": "9503b6f6ec44d111b6cfca5f3f62b71aec9d4c0ca40b93bb5b9f0a4885cd5fa1"
+    },
+    {
+      "path": "osu.Game.Rulesets.Mania/Edit/ManiaBeatSnapGrid.cs",
+      "bytes": 815,
+      "sha256": "b1c9fb952866c986b0fd9b47fcb908ec0b6c92d386a785be1d93ccb42a253024"
+    }
+  ]
+}

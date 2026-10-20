@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "kind": "pinned_api_read_only_review",
+  "scope": "source/API review only; no product code, dependencies or GPU tests added",
+  "sources": [
+    {
+      "package": "egui-wgpu",
+      "version": "0.37.0",
+      "vcs": {
+        "git": {
+          "sha1": "7c0b40402271e8d40cda69f87cf3c2617c2e4382"
+        },
+        "path_in_vcs": "crates/egui-wgpu"
+      },
+      "path_in_package": "src/renderer.rs",
+      "bytes": 51070,
+      "sha256": "f0c9b669f71d6eec03731e5eeafdd25ab9f20f64216c730d94776435e48f57cc",
+      "selected_line_ranges": [
+        [
+          790,
+          903
+        ]
+      ]
+    },
+    {
+      "package": "wgpu",
+      "version": "30.0.1",
+      "vcs": {
+        "git": {
+          "sha1": "40f4a34ebaf56f9a046231f54125ad046239d3f3"
+        },
+        "path_in_vcs": "wgpu"
+      },
+      "path_in_package": "src/api/queue.rs",
+      "bytes": 16217,
+      "sha256": "14dae3b36f75911a5ac4ed556d48875930e097990649110f9a5e53deada8d846",
+      "selected_line_ranges": [[306, 324]]
+    }
+  ],
+  "public_references": [
+    "https://docs.rs/egui-wgpu/latest/egui_wgpu/struct.Renderer.html",
+    "https://docs.rs/wgpu/30.0.1/wgpu/struct.Queue.html#method.on_submitted_work_done"
+  ],
+  "limitations": [
+    "egui public latest page showed 0.37.0 when reviewed; local package and VCS identity fix the observed version",
+    "native ownership and retirement policy still require P2 integration and tests"
+  ]
+}

@@ -18,9 +18,9 @@
 | `rendering` | 文档合成计划、图层采样、CPU/GPU 渲染与派生缓存 | domain |
 | `compatibility` | 有证据的 stable 元素描述、配置规则、格式映射与诊断 | domain |
 | `preview` | 场景、游戏模拟、游戏输入、场景实例映射、能力契约 | domain、rendering、compatibility |
-| `application` | 活动项目存储、命令、事务、历史、查询、保存/导出与预览用例编排；定义外部 I/O 端口 | domain、rendering、compatibility、preview |
-| `infrastructure` | 实现资源字节存储、项目读写、图像编解码、外部客户端及平台服务端口 | application 的端口、domain；需要时依赖 preview 的平台端口 |
-| `ui` | 视图模型、工具、选择、控制柄、参数面板和输入路由 | application 的公开契约及返回的只读值 |
+| `application` | 活动项目存储、命令、事务、历史、查询与用例编排；定义 I/O、预览和渲染任务端口 | domain；后续按实际用例允许 compatibility 的纯规则契约，不依赖 preview／rendering 运行时 |
+| `infrastructure` | 资源／文件／编解码／平台实现；将 application 端口委托给实际预览与渲染实现的适配器 | application 的端口、domain、preview、rendering；需要时使用 compatibility |
+| `ui` | 视图模型、工具、选择、控制柄、参数面板和输入路由 | application 的公开契约；UI 自己定义窄呈现端口，由 desktop 实现，不直接依赖预览／渲染器 |
 | `automation` | 结构化请求校验、协议适配、结果序列化 | application 的公开契约及返回的只读值 |
 | `desktop` | 入口与依赖组装、平台生命周期 | 上述公开入口 |
 
@@ -34,8 +34,8 @@ flowchart TD
   Automation --> Application
   Infrastructure --> Application
   Infrastructure --> Preview[preview]
-  Application --> Preview
-  Application --> Rendering[rendering]
+  Infrastructure --> Rendering[rendering]
+  Infrastructure --> Compatibility[compatibility]
   Application --> Compatibility[compatibility]
   Application --> Domain[domain]
   Preview --> Rendering
@@ -46,7 +46,11 @@ flowchart TD
   Infrastructure --> Domain
 ```
 
-infrastructure 通过依赖倒置实现 application / preview 声明的端口，desktop 注入实例。application 不导入 infrastructure。preview 通过自身输入契约接收只读投影或素材句柄，不反向查询 application。UI 不持有预览内核或渲染器的可变引用。
+infrastructure 通过依赖倒置实现 application / preview 声明的端口，desktop 注入实例。application 不导入 infrastructure、preview／rendering 运行时或 GPU 类型；原图中的 application→preview／rendering 直接依赖在本次边界审查后改为应用端口＋适配器。preview 接收自身契约中的只读投影、渲染句柄和请求标签，不反向查询 application。适配器负责将应用修订／节点身份与运行时回执关联，preview 无需导入历史模块。
+
+application 的实际用例包括：提交／取消草稿后请求新素材版本、历史检出后更新投影、AI 请求指定节点画面、场景切换与时间轴控制。它决定来源及控制语义，经端口发出请求；游戏逐帧更新和 GPU 资源寿命留在运行时宿主。提交项目与异步预览失败分别处理，后者不能回滚已经有效的项目事务。
+
+UI 只获取 FrameDescriptor 的不透明 FrameKey、来源与状态；desktop 提供 UI 所定义的窄呈现端口完成 egui 原生纹理绘制。该通道不负责项目查询／修改，原生句柄不穿过 application 或 AI。详细的创建、尺寸变化、历史切换与回收契约见 [呈现交接](PRESENTATION_CONTRACT.md)。
 
 先按逻辑模块限制公开面；不要求每个概念独立成包。首个语言工程必须提供可检查的包依赖或导入规则，禁止跨模块访问内部存储。无需为每个类创建一个接口，端口只用于真实边界或实现替换点。
 
@@ -58,11 +62,12 @@ P1-0 的实际工作区只含 `crates/domain` 与 `crates/application`，依赖�
 
 | 对象 | 主要内容 | 不变量 |
 | --- | --- | --- |
-| SkinProject | ProjectId、SchemaVersion、AssetLibrary、文档集合、SkinConfiguration、输出映射 | 不包含选择、历史树、窗口和游戏运行状态 |
+| SkinProject | ProjectId、SchemaVersion、AssetLibrary、文档集合、ComponentTree、SkinConfiguration、输出映射 | 不包含选择、历史树、窗口和游戏运行状态 |
 | AssetLibrary | AssetId → 元数据与不可变 BlobRef；资源标签及组织信息 | AssetId 代表资源身份，内容摘要用于共享字节，文件名不是主键 |
 | Asset | 类型、显示名称、尺寸/格式等已知元数据、BlobRef、导入来源说明 | 原始字节不就地覆写；外部来源路径只是信息 |
 | ElementDocument | DocumentId、画布像素范围、LayerTree、元素语义绑定 | 可独立编辑；stable 输出命名由单独映射决定 |
 | LayerTree | 有序根列表；图层/组节点的稳定 ID、父子关系与本地参数 | 单父节点、无环、有序；根序列及组内序列共同确定绘制顺序 |
+| ComponentTree／ComponentGroup | 跨元素的文档引用及可嵌套组件组，带自身变换和显式共同坐标映射 | 单父、无环；一个文档只有一条权威组件变换链，独立输出边界保留 |
 | 图像图层 | AssetId、局部变换、透明度、显隐及支持的效果参数 | 共享 Asset 不共享图层参数 |
 | 图层组 | 有序子节点及组变换、透明度、显隐 | 父子变换可组合，不允许迁移到自身后代 |
 | SkinConfiguration | 原始语法表示与已识别的结构化值 | 未知键、注释及未解释条目可保留，已知配置的校验不破坏原文 |
@@ -75,6 +80,8 @@ P1-0 的实际工作区只含 `crates/domain` 与 `crates/application`，依赖�
 局部变换使用可组合的二维仿射表示，UI 先提供平移/缩放/旋转。组迁移默认令 `newLocal = inverse(newParentWorld) × oldWorld`，保持文档空间几何变换；新父组不可逆时拒绝。旋转与非等比缩放组合可能引入斜切，内部不得靠强行分解为平移/旋转/缩放而损失信息；参数面板遇到此类变换要明确表示或限制不支持的编辑。新父组的显隐、透明度等仍会影响合成像素。
 
 首版只支持经过验证的基础合成操作。组透明度以合成组结果后再应用为设计语义，需要独立合成时按需分配中间纹理；不将组简单展平成多个带相同透明度的图层。额外混合模式、蒙版和效果必须同时定义预览/导出语义后再加入。
+
+组本身可当作可编辑节点嵌套、选择并整体平移／缩放／旋转。文档内 LayerGroup 与跨元素 ComponentGroup 共用变换语义，但保留不同输出边界，见 [组件模型](COMPONENT_MODEL.md)。组件变换进入各成员的共同合成计划，不能仅改变游戏预览位置；跨文件隔离透明度／蒙版暂不继承单文档组能力。包围框、游戏命中区和 GUI 区域分别计算，空组与不可逆迁移均有明确处理。
 
 ### 会话与预览状态
 
@@ -140,15 +147,15 @@ UI 不直接修改暂存项目。首版同一项目只允许一个活动编辑�
 每个非根节点包含：NodeId、ParentId、追加顺序确定的子节点列表、事务摘要、已解析正向/反向变更集及所需资源引用；时间和调用来源只作说明，不决定重放行为。
 
 ```text
-root (地址 0)
-└─ A (0.1)
-   ├─ B (0.1.1)  原方案，保留
-   └─ C (0.1.2)  从 A 继续编辑的新方案
+n1 根
+└─ n2 A
+   ├─ n3 B  原方案，保留
+   └─ n4 C  从 A 继续编辑的新方案
 ```
 
 - 撤销进入父节点，重做进入明确选择的直接子节点；只有一个子节点时可以使用简写。任意跳转走检出。
 - 新节点总是追加到当前节点，不覆盖其已有子树。首版没有合并，所以结构是树而非合并 DAG。
-- 地址使用追加时分配且不重排的子序号；UI 排序不得改地址。地址只在所属 HistorySession 内有效，必须返回解析后的 NodeId。
+- 节点用会话内固定大小的 u64 ID，外部身份另带 HistorySessionId。短标识 `n`＋base36 最长 14 字符，预留的分支坐标最长 28 字符；不在每个节点复制完整祖先地址。父子关系、显示路径和稳定身份分离，UI 排序不得改地址，见 [寻址设计](HISTORY_ADDRESSING.md)。
 - 首版采用根状态与可逆元数据补丁作为恢复设计，不为每个节点复制全部图片。检出可沿最近公共祖先撤回再应用；恢复在隔离状态中完成并一次发布，不能暴露中间节点画面。
 - 检查点和结构共享是可测量的优化点，具体间隔由性能数据决定，不先写复杂持久化集合或历史数据库。
 - 查询旧节点只物化只读状态，不改变活动头或选择。检出后失效的 UI 选择按 ID 清理，不把清理动作记成历史。
@@ -173,7 +180,9 @@ flowchart LR
   Plan --> Export
 ```
 
-application 负责从项目生成预览投影，调用 rendering 和 preview 的公开输入接口。preview 根据兼容描述将元素放入游戏场景，返回 SceneInstanceId 与 DocumentId 映射；编辑器选中实例后才进一步命中图层。若场景位置由游戏控制，控制柄不能暗示能直接拖动游戏对象，编辑参数仍属于元素文档。
+application 负责从项目生成只读投影，经其定义的端口请求合成与预览；适配器调用 rendering／preview 的公开接口。preview 根据兼容描述生成场景及实例／文档映射；编辑器选中实例后可选择文档、图层或组件节点。若场景位置由游戏控制，控制柄不能暗示能直接拖动游戏对象，编辑参数仍属于明确的文档／组件空间。
+
+上图是逻辑数据流，不表示 application 搬运 GPU 像素或持有纹理。控制结果经 application 返回来源与 FrameKey；桌面呈现桥在共享 GPU 上下文中解析该标识并绘制，捕获另走直接回读任务。图层合成、最终场景纹理和 egui 登记有各自所有者，待提交绘制／GPU 完成及捕获租约结束后才允许退休资源复用。
 
 图层合成语义在 rendering 内保持一致：文档尺寸、排序、局部/组变换、裁切、透明度、alpha 约定、色彩空间及采样方式均可测试。CPU 导出与 GPU 预览可以有不同执行后端，但使用相同合成计划和有容差的对照测试；不能维护两套互不验证的合成规则。
 
@@ -200,6 +209,8 @@ preview 按已验证规则输出图像／图层变换边界、拖动约束、GUI
 游戏输入只有在交互工具、适当焦点和允许的运行状态下进入 preview。编辑输入由 application 的命令入口处理；暂停期间到达的游戏输入直接丢弃，恢复时重置输入边沿与计时锚点。编辑器暂停/返回按钮走控制通道，不能被游戏输入冻结。
 
 后端公开 PreviewCapabilities，例如 sceneSwitch、interaction、pauseSimulation、hotReloadWhilePaused、playtest、fullscreen、capture。首版只实现占位后端；后续添加兼容后端或真实外部测试适配器，但不预制插件加载系统。外部客户端缺少某项能力时返回 UnsupportedCapability，不伪装成功。
+
+时间轴预留 absolute seek、小节／拍吸附与细调，见 [预览时间轴](PREVIEW_TRANSPORT.md)。时间定位、场景重建和统计准确重建是分别可查询的能力；经预览控制端口协调新代次、旧 PCM／自动输入作废及冻结确认，不改项目历史。跳转后分数／ACC／combo 的具体展示模式待讨论，来源与有效性必须可辨认。
 
 预览器按皮肤编辑所需的最小本地能力实现，范围见 [精简功能边界](p0/PREVIEW_SCOPE.md)。必要场景允许注入明确的本地测试状态，省去账号、联机、商店与完整曲库等流程；素材、动画、声音及实际游玩所需行为仍按声明范围验收。外部 stable 是完整客户端对照样本，不作为待裁剪的产品依赖。
 
@@ -258,6 +269,10 @@ AI 能查看指定历史状态、提交事务、检出节点和请求预览，�
 | D17 | 已采纳，2026-10-20 | 首轮范围 v1：standard／No Mod，P2 占位编辑，首兼容增量 15 个静态文件；完整 standard 游玩包含滑条／spinner 等，按阶段验收 | 增加元素／配置／玩法前扩展范围与兼容证据，不改写已有通过范围 |
 | D18 | 已采纳，2026-10-20 | [P0 决策收口](p0/P0_EXIT_REVIEW.md)允许进入 P1 无窗口核心；未测硬件、产品预算、兼容／游玩有明确后续门槛。P1 禁止依赖 P0 实验、UI／GPU／设备 | 新证据影响核心可行性时重审；对应功能未过门槛不得标支持 |
 | D19 | 开发预算基线，待产品验证 | [预算 v1](p0/RESOURCE_BUDGET.md)保留原目标并新增私有提交／GPU／播放 CPU 警戒，不回填旧成绩；超预算不删历史或改素材／导出语义 | 正式集成、依赖／后端／平台变化或预算失败时复测并显式重审 |
+| D20 | 已采纳边界，待 P2 实现 | application 通过自己定义的预览／渲染端口编排，不导入其运行时；desktop 组装适配器及独立 GPU 呈现桥 | P2 的实际端口、同设备呈现、回收与无窗口 fake 测试；不能仅以更新架构图验收 |
+| D21 | 已采纳需求，待实现 | 组可嵌套与整体变换；跨元素组件保留独立输出与共享合成计划，不能静默使用不可导出的组效果 | P1 不变量、P2 交互与 P3/P4 多输出验证 |
+| D22 | 已采纳寻址约束，待 P1-3 | 会话＋固定大小节点 ID；短地址有长度上限，不存完整祖先路径，分支索引成本可测 | 深历史、宽分叉、溢出、规范解析与成本测试 |
+| D23 | 能力预留，统计策略待定 | 自动播放时间轴支持精细定位方向；时间／状态／统计恢复分开，lazer 只作设计参考 | 各玩法定时证据、音频／长物件恢复和跳转后统计产品决策 |
 
 重大调整在这里记录问题、选择、后果和重审条件；只有决策规模明显增加时再拆分独立 ADR 文件。不能只更新文字而不调整相应依赖与测试。
 

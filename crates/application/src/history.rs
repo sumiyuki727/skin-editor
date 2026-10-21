@@ -120,8 +120,14 @@ impl Patch {
         self.configuration.is_some()
     }
 
+    #[cfg(test)]
     pub fn apply(&self, project: &SkinProject, forward: bool) -> Result<SkinProject, ModelError> {
         let mut input = definition(project);
+        self.apply_definition(&mut input, forward);
+        SkinProject::from_definition(input)
+    }
+
+    fn apply_definition(&self, input: &mut ProjectDefinition, forward: bool) {
         for change in &self.assets {
             input.assets.retain(|a| a.id() != change.id);
             input.assets.extend(
@@ -155,7 +161,6 @@ impl Patch {
         if let Some((old, new)) = &self.outputs {
             input.outputs = if forward { new } else { old }.clone();
         }
-        SkinProject::from_definition(input)
     }
 }
 
@@ -350,7 +355,7 @@ impl History {
                 right = self.parent(right)?;
             }
         }
-        let mut candidate = current.clone();
+        let mut candidate = definition(current);
         for (id, forward) in undo
             .into_iter()
             .map(|id| (id, false))
@@ -363,11 +368,11 @@ impl History {
                 .ok_or(HistoryQueryError::InvalidHistory(ModelError::InvalidValue(
                     "history_patch",
                 )))?;
-            candidate = patch
-                .apply(&candidate, forward)
-                .map_err(HistoryQueryError::InvalidHistory)?;
+            patch.apply_definition(&mut candidate, forward);
         }
-        Ok(candidate)
+        // Published patches were already validated when committed. Replay is
+        // private: validate the assembled destination once before exposing it.
+        SkinProject::from_definition(candidate).map_err(HistoryQueryError::InvalidHistory)
     }
 }
 
@@ -379,6 +384,43 @@ mod tests {
         ConfigInterpretation, ConfigRecord, LayerId, LayerKind, LayerNode, LayerTree, Opacity,
         OutputId, OutputPath, PixelSize, ProjectId,
     };
+
+    #[test]
+    fn invalid_restored_project_is_rejected_even_when_all_node_patches_exist() {
+        let root = SkinProject::empty(ProjectId::new(1).unwrap());
+        let document = ElementDocument::new(
+            DocumentId::new(1).unwrap(),
+            PixelSize::new(1, 1).unwrap(),
+            LayerTree::new(
+                vec![LayerId::new(1).unwrap()],
+                vec![LayerNode {
+                    id: LayerId::new(1).unwrap(),
+                    local: Affine2::IDENTITY,
+                    opacity: Opacity::OPAQUE,
+                    visible: true,
+                    kind: LayerKind::Image {
+                        asset: AssetId::new(1).unwrap(),
+                    },
+                }],
+            )
+            .unwrap(),
+        );
+        let mut patch = Patch::between(&root, &root);
+        patch.documents.push(Change {
+            id: document.id(),
+            before: None,
+            after: Some(document),
+        });
+        let mut history = History::new(root.clone());
+        let plan = history.plan_append(NodeId::new(1).unwrap()).unwrap();
+        let id = plan.id;
+        history.append(plan, patch, RequestId::new(1).unwrap());
+        assert!(matches!(
+            history.materialize(id),
+            Err(HistoryQueryError::InvalidHistory(_))
+        ));
+        assert_eq!(history.root, root);
+    }
 
     #[test]
     fn depth_ordinal_and_branch_exhaustion_reject_before_appending() {

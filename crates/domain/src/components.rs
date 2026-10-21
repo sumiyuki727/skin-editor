@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+use std::sync::Arc;
 
 use crate::forest::{ForestIndex, index_forest};
 use crate::{Affine2, ComponentId, DocumentId, ModelError, ObjectId};
@@ -34,6 +35,11 @@ impl ComponentNode {
 
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct ComponentTree {
+    data: Arc<ComponentStorage>,
+}
+
+#[derive(Debug, Default, PartialEq)]
+struct ComponentStorage {
     roots: Vec<ComponentId>,
     nodes: BTreeMap<ComponentId, ComponentNode>,
     index: ForestIndex<ComponentId>,
@@ -88,40 +94,46 @@ impl ComponentTree {
             }
         }
         Ok(Self {
-            roots,
-            nodes,
-            index,
-            worlds,
-            members,
-            content_transforms,
+            data: Arc::new(ComponentStorage {
+                roots,
+                nodes,
+                index,
+                worlds,
+                members,
+                content_transforms,
+            }),
         })
     }
 
     pub fn roots(&self) -> &[ComponentId] {
-        &self.roots
+        &self.data.roots
     }
 
     pub fn node(&self, id: ComponentId) -> Option<&ComponentNode> {
-        self.nodes.get(&id)
+        self.data.nodes.get(&id)
     }
 
     pub fn parent(&self, id: ComponentId) -> Option<Option<ComponentId>> {
-        self.index.parents.get(&id).copied()
+        self.data.index.parents.get(&id).copied()
     }
 
     pub fn world_transform(&self, id: ComponentId) -> Option<Affine2> {
-        self.worlds.get(&id).copied()
+        self.data.worlds.get(&id).copied()
     }
 
     pub fn member(&self, document: DocumentId) -> Option<ComponentId> {
-        self.members.get(&document).copied()
+        self.data.members.get(&document).copied()
     }
 
     pub fn document_content_transform(&self, document: DocumentId) -> Option<Affine2> {
-        self.content_transforms.get(&document).copied()
+        self.data.content_transforms.get(&document).copied()
     }
 
     pub fn iter(&self) -> impl ExactSizeIterator<Item = &ComponentNode> {
-        self.index.preorder.iter().map(|id| &self.nodes[id])
+        self.data
+            .index
+            .preorder
+            .iter()
+            .map(|id| &self.data.nodes[id])
     }
 }

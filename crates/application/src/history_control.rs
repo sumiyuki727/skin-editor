@@ -22,6 +22,9 @@ impl ProjectSession {
                 _ => Err(HistoryError::RequestIdReused),
             };
         }
+        if let Some(draft) = &self.draft {
+            return Err(HistoryError::Busy(draft.state.id));
+        }
         if self.receipts.len() >= self.limits.retained_requests {
             return Err(HistoryError::ResourceLimit("retained_requests"));
         }

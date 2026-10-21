@@ -56,7 +56,7 @@ pub struct ExpectedState {
     pub revision: u64,
 }
 
-/// v3 is a closed value protocol. New-object IDs are explicit candidates;
+/// v4 is a closed value protocol. New-object IDs are explicit candidates;
 /// application admits them once per session, and never reuses a committed ID.
 /// Positions are zero-based; moves index the destination AFTER detaching.
 #[derive(Clone, Debug, PartialEq)]
@@ -224,6 +224,7 @@ pub enum CommandError {
     },
     ResourceLimit(&'static str),
     History(HistoryQueryError),
+    Busy(crate::DraftId),
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -347,6 +348,7 @@ pub enum HistoryError {
     },
     MissingPinnedResource(skin_editor_domain::BlobRef),
     ResourceLimit(&'static str),
+    Busy(crate::DraftId),
 }
 impl From<HistoryQueryError> for HistoryError {
     fn from(error: HistoryQueryError) -> Self {

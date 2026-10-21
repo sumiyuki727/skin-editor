@@ -1,0 +1,18 @@
+[package]
+name = "skin-editor-core-cost"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95"
+publish = false
+
+# Independent diagnostic workspace; never imported by the product core.
+[workspace]
+
+[dependencies]
+skin-editor-application = { path = "../../crates/application" }
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+all = "warn"

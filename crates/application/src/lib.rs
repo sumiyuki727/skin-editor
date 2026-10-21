@@ -3,6 +3,8 @@
 
 mod address;
 mod contract;
+mod draft;
+mod draft_contract;
 mod execute;
 mod history;
 mod history_control;
@@ -23,6 +25,10 @@ pub use contract::{
     HistoryResult, HistorySessionId, HistoryStatistics, HistoryStatus, HistorySummary,
     MAX_HISTORY_PAGE, NodeId, RequestId, ValidationResult,
 };
+pub use draft_contract::{
+    DraftAction, DraftError, DraftId, DraftInfo, DraftOutcome, DraftRequest, DraftResult,
+    DraftSnapshot, DraftState,
+};
 pub use resources::{BlobLease, ResourceError, ResourceStore};
 
 /// Pure values needed to form commands through the application dependency.
@@ -37,7 +43,7 @@ pub mod values {
 }
 
 /// Current version of the owned application query values.
-pub const API_VERSION: u16 = 3;
+pub const API_VERSION: u16 = 4;
 
 /// A structured lifecycle validation error, usable without UI types.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -103,6 +109,10 @@ enum Receipt {
         request: HistoryRequest,
         outcome: Result<HistoryResult, HistoryError>,
     },
+    Draft {
+        request: DraftRequest,
+        outcome: Result<DraftResult, DraftError>,
+    },
 }
 
 /// Owns the active validated project. No whole-state replacement is exposed.
@@ -127,6 +137,8 @@ pub struct ProjectSession {
     pins: BTreeMap<BlobRef, Arc<dyn BlobLease>>,
     resources: Box<dyn ResourceStore>,
     limits: SessionLimits,
+    draft: Option<draft::Draft>,
+    next_draft_id: u64,
 }
 
 impl ProjectSession {
@@ -174,6 +186,8 @@ impl ProjectSession {
             resources,
             pins: BTreeMap::new(),
             limits,
+            draft: None,
+            next_draft_id: 1,
         })
     }
 
@@ -264,11 +278,12 @@ impl ProjectSession {
 
     fn prepare(
         &self,
-        request: &CommandRequest,
+        expected: ExpectedState,
+        commands: &[Command],
     ) -> Result<(SkinProject, BTreeSet<ObjectId>), CommandError> {
-        if request.expected != self.state {
+        if expected != self.state {
             return Err(CommandError::Conflict {
-                expected: request.expected,
+                expected,
                 actual: self.state,
             });
         }
@@ -277,7 +292,7 @@ impl ProjectSession {
         }
         let mut candidate = self.project.clone();
         let mut used = self.used_ids.clone();
-        for (index, command) in request.commands.iter().enumerate() {
+        for (index, command) in commands.iter().enumerate() {
             candidate = execute::apply(&candidate, command, &mut used)
                 .map_err(|reason| CommandError::Command { index, reason })?;
         }
@@ -308,7 +323,7 @@ impl ProjectSession {
                 cached: true,
             });
         }
-        let (candidate, _) = self.prepare(request)?;
+        let (candidate, _) = self.prepare(request.expected, &request.commands)?;
         let would_change = candidate != self.project;
         Ok(ValidationResult {
             api_version: API_VERSION,
@@ -323,8 +338,8 @@ impl ProjectSession {
         })
     }
 
-    /// The only public active-content write operation. A successful effective
-    /// batch atomically publishes one project, revision and history node.
+    /// Commits a content batch through the same publication path as draft
+    /// completion. An effective batch publishes one revision and history node.
     ///
     /// Adapters need only the application's public contract:
     /// ```
@@ -349,6 +364,9 @@ impl ProjectSession {
         if let Some(receipt) = self.cached(&request)? {
             return receipt.clone();
         }
+        if let Some(draft) = &self.draft {
+            return Err(CommandError::Busy(draft.state.id));
+        }
         // Never exceed the receipt cap even when recording rejection.
         if self.receipts.len() >= self.limits.retained_requests {
             return Err(CommandError::ResourceLimit("retained_requests"));
@@ -365,17 +383,58 @@ impl ProjectSession {
     }
 
     fn commit(&mut self, request: &CommandRequest) -> Result<CommandResult, CommandError> {
-        let (candidate, used) = self.prepare(request)?;
+        let (candidate, used) = self.prepare(request.expected, &request.commands)?;
+        self.publish(request.request_id, candidate, used, &BTreeMap::new())
+    }
+
+    fn pin_candidate(
+        &self,
+        candidate: &SkinProject,
+        temporary: &BTreeMap<BlobRef, Arc<dyn BlobLease>>,
+    ) -> Result<BTreeMap<BlobRef, Arc<dyn BlobLease>>, CommandError> {
+        let mut pins = BTreeMap::new();
+        for asset in candidate.assets().iter() {
+            let blob = asset.blob();
+            if !self.pins.contains_key(&blob) && !pins.contains_key(&blob) {
+                let pin = match temporary.get(&blob) {
+                    Some(pin) => pin.clone(),
+                    None => self
+                        .resources
+                        .pin(blob)
+                        .map_err(|error| CommandError::Resource { blob, error })?,
+                };
+                if pin.reference() != blob {
+                    return Err(CommandError::Resource {
+                        blob,
+                        error: ResourceError::ReferenceMismatch,
+                    });
+                }
+                pins.insert(blob, pin);
+            }
+        }
+        Ok(pins)
+    }
+
+    fn publish(
+        &mut self,
+        request_id: RequestId,
+        candidate: SkinProject,
+        used: BTreeSet<ObjectId>,
+        temporary: &BTreeMap<BlobRef, Arc<dyn BlobLease>>,
+    ) -> Result<CommandResult, CommandError> {
         if candidate == self.project {
             return Ok(CommandResult {
                 api_version: API_VERSION,
                 session_id: self.session_id,
-                request_id: request.request_id,
+                request_id,
                 state: self.state,
                 status: CommandStatus::NoChange,
                 changed_objects: Vec::new(),
                 configuration_changed: false,
             });
+        }
+        if self.history.nodes.len() >= self.limits.history_nodes {
+            return Err(CommandError::ResourceLimit("history_nodes"));
         }
         let plan = self.history.plan_append(self.state.head)?;
         let id = plan.id;
@@ -385,34 +444,18 @@ impl ProjectSession {
             .checked_add(1)
             .ok_or(CommandError::ResourceLimit("revision"))?;
         let patch = history::Patch::between(&self.project, &candidate);
-        let mut new_pins = BTreeMap::new();
-        for asset in candidate.assets().iter() {
-            let blob = asset.blob();
-            if !self.pins.contains_key(&blob) && !new_pins.contains_key(&blob) {
-                let pin = self
-                    .resources
-                    .pin(blob)
-                    .map_err(|error| CommandError::Resource { blob, error })?;
-                if pin.reference() != blob {
-                    return Err(CommandError::Resource {
-                        blob,
-                        error: ResourceError::ReferenceMismatch,
-                    });
-                }
-                new_pins.insert(blob, pin);
-            }
-        }
+        let new_pins = self.pin_candidate(&candidate, temporary)?;
         let result = CommandResult {
             api_version: API_VERSION,
             session_id: self.session_id,
-            request_id: request.request_id,
+            request_id,
             state: ExpectedState { head: id, revision },
             status: CommandStatus::Committed,
             changed_objects: patch.changed.clone(),
             configuration_changed: patch.configuration_changed(),
         };
         // All fallible validation/acquisition is complete before publishing.
-        self.history.append(plan, patch, request.request_id);
+        self.history.append(plan, patch, request_id);
         self.project = candidate;
         self.state = result.state;
         self.used_ids = used;

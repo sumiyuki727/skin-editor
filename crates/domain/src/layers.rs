@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+use std::sync::Arc;
 
 use crate::forest::{ForestIndex, index_forest};
 use crate::{Affine2, AssetId, DocumentId, LayerId, ModelError, ObjectId, Opacity, PixelSize};
@@ -41,6 +42,13 @@ impl LayerNode {
 /// ```
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct LayerTree {
+    data: Arc<LayerStorage>,
+}
+
+// Flat, validated and immutable. Candidate/history clones share all indexes;
+// editing reconstructs a new tree through new(), never mutates this storage.
+#[derive(Debug, Default, PartialEq)]
+struct LayerStorage {
     roots: Vec<LayerId>,
     nodes: BTreeMap<LayerId, LayerNode>,
     index: ForestIndex<LayerId>,
@@ -68,31 +76,37 @@ impl LayerTree {
             worlds.insert(*id, parent_world.compose(nodes[id].local)?);
         }
         Ok(Self {
-            roots,
-            nodes,
-            index,
-            worlds,
+            data: Arc::new(LayerStorage {
+                roots,
+                nodes,
+                index,
+                worlds,
+            }),
         })
     }
 
     pub fn roots(&self) -> &[LayerId] {
-        &self.roots
+        &self.data.roots
     }
 
     pub fn node(&self, id: LayerId) -> Option<&LayerNode> {
-        self.nodes.get(&id)
+        self.data.nodes.get(&id)
     }
 
     pub fn parent(&self, id: LayerId) -> Option<Option<LayerId>> {
-        self.index.parents.get(&id).copied()
+        self.data.index.parents.get(&id).copied()
     }
 
     pub fn world_transform(&self, id: LayerId) -> Option<Affine2> {
-        self.worlds.get(&id).copied()
+        self.data.worlds.get(&id).copied()
     }
 
     pub fn iter(&self) -> impl ExactSizeIterator<Item = &LayerNode> {
-        self.index.preorder.iter().map(|id| &self.nodes[id])
+        self.data
+            .index
+            .preorder
+            .iter()
+            .map(|id| &self.data.nodes[id])
     }
 }
 

@@ -1,0 +1,840 @@
+{
+  "schema": 1,
+  "date": "2026-10-29",
+  "scope": "interaction-tool-selection-admission",
+  "source": {
+    "AGENTS.md": "09a03bec2903a89babb1ea47a71cef060af1d1f0637dc2bf0553cd45ce4870fa",
+    "Cargo.lock": "fdea10e6bcd7d2a31574a89f0044a762efe0388e74901f354c115dd4f87106da",
+    "Cargo.toml": "f2145d08a75e10b117cbb8154f6911d2664caa708fb24790d950e2e174cd8401",
+    "crates/application/Cargo.toml": "7613f8f871bb60d0bdfec79d18ac6c2b64bebff403ee3fb3533d2f1a4a35061a",
+    "crates/application/src/address.rs": "d6d1ba60051876c653bbb829caa243b1e166514f3256de37e9b227ccfcf07c0b",
+    "crates/application/src/audio_editor.rs": "87247d6c14bfa4972c64ecdc87e1a2ec483bec65bda94cc0adc0ee4871524d03",
+    "crates/application/src/audio_port.rs": "4ce375c8689d82f51a715ca8d0d403e134521aefddc796f0c469e57e5d18d6bc",
+    "crates/application/src/contract.rs": "6c2ba57f8b6f4406f9366c6561e7ca0560d84fd74797bcce08ea713cdc86df31",
+    "crates/application/src/draft.rs": "06a2c4c2cad35c54201ae681aba9559d41c2d8e8482581d0442f3062c59e8b7b",
+    "crates/application/src/draft_contract.rs": "9ca0e3fba10f8b8545511ed45fa649523e5fc07d6f538ce9ccc85f5175538bd7",
+    "crates/application/src/execute.rs": "735cbc5a56ac1256123ad9e69d74fae321b79a398fa43b6730de63b4a4f029dc",
+    "crates/application/src/history.rs": "44c9c53b29e6e63b30ddf6ba6dcde360f3d2885d21b40178c0a89de81e3a49cf",
+    "crates/application/src/history_control.rs": "c63f63027d347bd747730eacc2c02c7037df1105cf4dfb7deabf49ce1e3b8d44",
+    "crates/application/src/history_queries.rs": "461058962269de64d73f4002065f75b6dbdfdc970abc4ad9d529078445ba0741",
+    "crates/application/src/lib.rs": "9ee6850d37829100ec5d9fd304939f5db5f7d918eddee7b94290fdcd08082a03",
+    "crates/application/src/preview_port.rs": "9dec4f42efc8201c4dc6bbbb784548e4beba30cac7fe8de305473bbefabd21aa",
+    "crates/application/src/resources.rs": "b21d2808b96457ea6fd35cdfdc3e45c89c61e4d69fe92f64477105e33c117770",
+    "crates/domain/Cargo.toml": "ebfc5fb45af16bc7219eeef7a79f00d4a9780e9bee2a79fefd91dd7035328052",
+    "crates/domain/src/assets.rs": "6daa3625dab9205497dd9230a460fa55441da022d83a237e644ce07c35e850a5",
+    "crates/domain/src/audio.rs": "807d2cbd247406d0e7a9a6305884e6c6122518f9eab919a3d43beb44db5efb7d",
+    "crates/domain/src/components.rs": "93276309ce2ccdcc165843633d26b2f90176d67fc02a6068fd0cfbfc8529d3c6",
+    "crates/domain/src/configuration.rs": "2472c94b2fac0fcb69ed967d361bd6a1feecc3137af31bf54138dbf6030418fa",
+    "crates/domain/src/forest.rs": "07731db4e0302b768fd995f297dc332aeda2f821f1b29055b1355a1df3ac7827",
+    "crates/domain/src/geometry.rs": "21ce8edbfb4ad963525dfe5ecfb79c7cef3cb8a53c8fc930939bff887335f4c9",
+    "crates/domain/src/identity.rs": "410d53bc95072343060772cac51c19c694cbb691f1cf3587aa3eaeec84e74b56",
+    "crates/domain/src/layers.rs": "ebefe1ea28a4e079c434469a7f4ed5e112acc9b60ca34f7675c4a2592f8e87df",
+    "crates/domain/src/lib.rs": "886b26f31d907a7aab8156624acb9a592a7b596ff9d08bc8b6fa5ac81c2f472d",
+    "crates/domain/src/output.rs": "238e5deb808cf3b5fd4064a5684e869406075cc45409bb8173a4f341d024f95a",
+    "crates/domain/src/project.rs": "bd371fad3ef3fa50939a9481ea6481ef789f5485dd7ea22cb8feed4dbbe077df",
+    "desktop/audio/Cargo.toml": "43d8f8e2ffb20dad93347f9afd05eaa2b3c71ca7a8c518344fdeb5ddd705e0ee",
+    "desktop/audio/src/background.rs": "248ce86de90fa360a9ae192a82ef8329928020c5f0f7ed633b806f86f6882939",
+    "desktop/audio/src/lib.rs": "7b33755598b139f0abf2446c72ca0b0ae5bac8bdbf0e09a0b0126fc3300c66e5",
+    "desktop/audio/src/pcm.rs": "82506312e2dbe9b99af37cf2e0577cbd4e2dc79ab9930af3f70d762a964ef2b2",
+    "desktop/audio/src/runtime.rs": "d9d6f02fa1c0338b5fabf4d125c48f0295966d18effafce7bf785111f9bba549",
+    "desktop/audio/src/separated_model.rs": "be42cddee960a8ecc71863ee78dcbbbff7b2c79701c1b83f10cc73269665ecc6",
+    "desktop/audio/src/voice/tests.rs": "cc6eac010777b6f586cdc101ab7197ed8a9f136f03b4138cca31588c7806841c",
+    "desktop/audio/src/voice.rs": "ee77f17309e0bf8b86ce29ddd386eca15bec107e3d6f419e866b35ef5a009c79",
+    "desktop/Cargo.lock": "857556f141ea845cdaaec3f41313bce00e54e5556c3c37239d291d22dca46460",
+    "desktop/Cargo.toml": "a7623cdabef5e9010922340a7c92e134ebd9b0dda437e452f4551a0c6e2e8266",
+    "desktop/host/Cargo.toml": "0a7c99ab8c0bca529a51c980f8fb096a3e1f2d4d90e83b7aee0e6ae912676f73",
+    "desktop/host/src/audio_verification.rs": "a5a8875300972ed936e2c11f2dddd9dba930a939e30592dd217424771d1b43aa",
+    "desktop/host/src/combined_verification/cadence.rs": "075198b815ada0a2d60624fb2519a8ede00563563a58db41adc2c9dfa8666abc",
+    "desktop/host/src/combined_verification/phase.rs": "bf4bb995fd29529c9e2783e152a1cd6de0926b0bdbb5e6b5aa1ca68a06ff8417",
+    "desktop/host/src/combined_verification/recovery.rs": "0e72b10ee5560b2c11154af705af42637841ed1d128f718ba1c853cd474161a9",
+    "desktop/host/src/combined_verification.rs": "9c1434fa4f37ab7a68ac87f8cf743697fbd46b3e941e4153ea32ff4ee3a71e85",
+    "desktop/host/src/edit_verification.rs": "56f235f658eba65e001d34ec64910fda5a7291f12ba68c7a2146b39994988535",
+    "desktop/host/src/editor_audio/combined/plan.rs": "4d0a042c05d091400a23aef673d8d7464cce60eab5eb211a6579cc6e07ba7a33",
+    "desktop/host/src/editor_audio/combined/probes.rs": "3b3b1d23aeac551c67ce4ff7b4cf227b342e7083a3da030e2184cb9bda01a089",
+    "desktop/host/src/editor_audio/combined/report.rs": "66b985dd048174117853d7ba32b921ce8cbfff23a5fe93b8fbda758349faef2c",
+    "desktop/host/src/editor_audio/combined.rs": "2623d072283d0b0d108778cd65015c6f2c21f87bdeb2cb38b12437b7485d44ce",
+    "desktop/host/src/editor_audio/cycles/plan.rs": "b62bad83b6acf59ab69dfacca4bcba931fc26c4ef90fc20fa7cd83e1352fb0eb",
+    "desktop/host/src/editor_audio/cycles/report.rs": "9f9e9e425face993a97c17ba5b2055183c5f304c786c8ce05f0c398c4f8f9ebb",
+    "desktop/host/src/editor_audio/cycles.rs": "cec41998b1ebfd17b92d94f2c0aefd8861b26c95c019037a8fd4ca8b883b329b",
+    "desktop/host/src/editor_audio/faults.rs": "e96049d64d823c4436ffa468c19ad4ed5391e22bf09dad9b2ee3b0cf46dee063",
+    "desktop/host/src/editor_audio/gui_verification.rs": "6092029d59f2ab17bac7e11ea22b1371e17b6c38f094e876b37b0f28a01d6f47",
+    "desktop/host/src/editor_audio/stability.rs": "6f0ec073ad0e19343bbed01d484b6bfe7a9199c236d2112e84c62b57552dc510",
+    "desktop/host/src/editor_audio/window_recovery/activity.rs": "8b49782855c46608211acd713beede1c7697f8d914834ecf28b55f98a8c71cb5",
+    "desktop/host/src/editor_audio/window_recovery/backend.rs": "e1cc23b0f6a65dce13e2037d7b44ff3f4fd42bad65c198f79746c1c50bd14c81",
+    "desktop/host/src/editor_audio/window_recovery/fault.rs": "74267a1c2c39ea14c2d0e2b9a72838c44902e2397f88f379ae262f1c61044c57",
+    "desktop/host/src/editor_audio/window_recovery/init_failure/activity_tests.rs": "23afc5da0cbf35e1b8f58edf8816d8fde616f9c79acff1ed7aa196e9ded37e79",
+    "desktop/host/src/editor_audio/window_recovery/init_failure/endpoint_tests.rs": "7403cee2ecdfd21aaf102b85a0adb5c4dce96bbe0a319d0cef14052205d4c296",
+    "desktop/host/src/editor_audio/window_recovery/init_failure.rs": "abc71b88e015c311491113bb75df8c7eab56a1ac7168e84714f6620424f379c6",
+    "desktop/host/src/editor_audio/window_recovery/report.rs": "8d95a5a571130d79d6b7727e3300d32744ef71cf1f301f4d3d831753122070b5",
+    "desktop/host/src/editor_audio/window_recovery/restore.rs": "e42d50e55afebebc6daa23bfb3c51fe278557a27d962f77db3a4cf9d62fc581c",
+    "desktop/host/src/editor_audio/window_recovery/sound.rs": "d10194feba9e75cd636aa4e5044fde9c73e26db53bc6ac85b1c6de02ba7eeed7",
+    "desktop/host/src/editor_audio/window_recovery.rs": "793e406179414d0893b7d43c645f4aef0b37631289ffd391fd5a5333f6808769",
+    "desktop/host/src/editor_audio.rs": "dcd97c38640b9243e82c6b7fb08410064b62d994b284570bb9cefcf2ef4d5575",
+    "desktop/host/src/frame_worker.rs": "1d998bcc095d6203186592a4e879de77f4de1ab842f86e72704dd7c3396da3d8",
+    "desktop/host/src/framework_trace/event_loop.rs": "968b3037000249bf2b567d9fc5118a7b32c7849e6f425cb51df5211897cf0fea",
+    "desktop/host/src/framework_trace.rs": "eeb315f916ad2f49e0a07e30eae8cdfc75911b9445119737c8786d91cd251d5f",
+    "desktop/host/src/gpu_observation.rs": "2b7124cebeaddf47ea5efc8ebbb1379ed4a487cd67f8815a4f9f8e93b0d44539",
+    "desktop/host/src/gpu_path.rs": "e98e617aa59cd215a09c35820ff37a814a37d7985cd9b4e172ac528c8b4ffcf7",
+    "desktop/host/src/graphics_faults.rs": "fa802f4d7d69d013dfd587be9871288d04235c861e69b921726d2c5f82db1755",
+    "desktop/host/src/gui_baseline.rs": "53f25c94cdf1b50f6b8f1d922866dcfcf00e86df1f3684e2170290a279bb11f1",
+    "desktop/host/src/import_worker.rs": "3de9d526bb6054b7f5509fe19acb7fc3ea480a2dc2f389450414ab3d86f2e657",
+    "desktop/host/src/load_verification.rs": "027cd28ab97469a397d00e1303edb3645866122afa34e4191b136fd6fba4eac4",
+    "desktop/host/src/main.rs": "360fb8a8e5d7f82b482213caf2313a0e757b72ca6bf8309a679f7521047040ae",
+    "desktop/host/src/main_work.rs": "6804c2244f7c05523a8568c42dc1b9f571dffcb109f93a41ae4e853833609021",
+    "desktop/host/src/mesh_replay.rs": "a9da791430adac35d129b9b13b69e1eca2c6cb0d086bcd1624bebb00625919c0",
+    "desktop/host/src/presentation.rs": "ccc5f167c8ab723d0d651dd4f2a9ba95bfd37aae04659f0e9b358fb742d7fe3c",
+    "desktop/host/src/product_policy.rs": "ca8e4332dc4716557112c713951faeeda4ce9ec6276c811b81f0536a6066be7e",
+    "desktop/host/src/rebuild_stages.rs": "c268dd0e22e2865cc484f0e67ecc6f237e2536aeac1c9894aa64554356463f6d",
+    "desktop/host/src/repaint_deadline.rs": "30d414e7b1f123fd722025d5328ea554aad8253a8d5768d440b46b7fdf147a2f",
+    "desktop/host/src/repaint_observation.rs": "2e76ba14c4d259371fb1d1484a50de952ec3c643fb833642920fee7b264ed62e",
+    "desktop/host/src/separated_verification.rs": "f74a963795c653dab876560a3c2fd271b012a2295f1de7dac1dd8e63ae26f2dc",
+    "desktop/host/src/stable_window.rs": "9b86a0b221a7c2b168e14e4124e03540247a465916932a3933be532df648c1b6",
+    "desktop/host/src/stream_fixture.rs": "3e98cdf75fbabd09bb75690363c8180c6ba703c9a18f33a446ffa6d9ee77839a",
+    "desktop/host/src/supply_verification.rs": "50794c81837f82c9a80094975488948e1fb9e30b8eb99e7361168e357ddd5e15",
+    "desktop/host/src/text_work.rs": "9ed16d38ed2e3b19ce19b6d1316fd997c605d7239cbb221c458c56b2e6074c71",
+    "desktop/host/src/verification.rs": "a8ba5cc9c13fe54bc0d269acd724bf2125100e72564dfb7055c854ebdb63f1dc",
+    "desktop/host/src/worker_verification.rs": "5114480b6dddfa58d244fa61c426e50503ef46c280cedbadc884b5f6f501976a",
+    "desktop/infrastructure/Cargo.toml": "5fae623c62758569c235b1ba0ce7461221f4e4faaae6d9e0f0c3e86bf89a7e87",
+    "desktop/infrastructure/src/audio_playback.rs": "9850c36db4f8ac81e2235312623cd007e5825f27bcaee0ad8889b6e4bfa69b62",
+    "desktop/infrastructure/src/audio_preparation.rs": "2ab4390e787c6eb1a0e5986b75908e52aac83ba77d762e7cea6bb2bb64c745b6",
+    "desktop/infrastructure/src/audio_supply/tests/separated/streaming.rs": "8aaf9e92433394bd19ed9937e17c36770f4703a874894cfb4df88320d0f1bcdb",
+    "desktop/infrastructure/src/audio_supply/tests/separated.rs": "4bf0663ed1aed07e754e7f8a147d62a518f9dcff25e9a5dfb734ebfdcbfe87d4",
+    "desktop/infrastructure/src/audio_supply.rs": "55d737f08f14d056aa177ec9d56005122dcc7984a8666fce1896478365aa95b0",
+    "desktop/infrastructure/src/audio_worker.rs": "f4fa422ccf7a0239d0ef634f0e1d1d75e51ebd8b6154ff04af750d8ba5aac461",
+    "desktop/infrastructure/src/background_input.rs": "cbdf7b3a5c7a89b4fb8364a2257ece2c9e87557d515d9ea6b01d567946da77dd",
+    "desktop/infrastructure/src/background_stream/tests.rs": "3f0964fdb64d5d6e840aa082b30ca218657633f279f5b8067d55e9da50013498",
+    "desktop/infrastructure/src/background_stream.rs": "c6f2a9c40dd736b99d05bc7c5d34acebc953b87346b252b9816552717d5aeec3",
+    "desktop/infrastructure/src/blobs.rs": "e1cf32b28f77dbcc3f80a3d2ac6a8653b41d4e54b9837de3814f0a16e74c87f8",
+    "desktop/infrastructure/src/byte_budget.rs": "db073b247cf1a004b57c3d1878b4357aa854dcba64cdb8786b7a95a5e711ebcd",
+    "desktop/infrastructure/src/callback_audit.rs": "5679aaa4ef92ac999436a64e7f6184c2b51f560ec126bd320696afe15cfca3aa",
+    "desktop/infrastructure/src/lib.rs": "06ab467fe7d3af17660cc4bdd376c6a1aa6cfa0fb42fb223e7819b28ac819f2e",
+    "desktop/infrastructure/src/native_audio.rs": "6af374ab3a0f84307b5a551ed6da3a41d19ecec86b0217864af12a2f68deb0f4",
+    "desktop/infrastructure/src/output_fence.rs": "ee205d7078d8b35955fa5dc3c673f60f98c415dc1e6cb18a1bffc8e01578315b",
+    "desktop/infrastructure/src/separated_native/tests.rs": "fd6a121eae16d1c49058ef85a1d9689a9298d00664ff1a9cae4ae49fbfb9c3da",
+    "desktop/infrastructure/src/separated_native.rs": "e5613c5951ce4182f771d8ade02e4b710e636be62845c29142bf85af2dfa6d27",
+    "desktop/infrastructure/src/separated_output/control.rs": "273b5c16cbfa91333e6e90407633891ae1d47d985df8638d5128d5c4b986fd39",
+    "desktop/infrastructure/src/separated_output/tests/resume_race.rs": "907415fbc38d2b5cdb419cc4780c0c6782551699a194adf6e091a0357e7b3588",
+    "desktop/infrastructure/src/separated_output/tests/worker_fence.rs": "5dd944287e743b6929bc5a0d6151ca49b29482e2b46c30c71a271c17d1a24f5c",
+    "desktop/infrastructure/src/separated_output/tests.rs": "fa6bda82c6de023f508cd473a2c8a810e40cc2e7f82da484accfe4114bff846b",
+    "desktop/infrastructure/src/separated_output.rs": "ec96a2edd20e44cadb114ffc5c805967bccdebfdc54fb2f2bf060858e660e214",
+    "desktop/infrastructure/src/skin_audio.rs": "78505d256f616354f0c4914904a1260c82c85c03bcd9afe13de7614a8d1f2ab5",
+    "desktop/infrastructure/src/submission_trace.rs": "d6e6eac1212b1a379257e7bd705c697e847beac9fc7f61b136f70708780a2f96",
+    "desktop/infrastructure/src/supply_output.rs": "e18b4cb53aec6292b185a37df4b6a0f824ee7efe2bbe1089e1105b5f215e2f0f",
+    "desktop/infrastructure/src/voice_handoff/tests/runtime_bridge.rs": "72953ce16539722005b1c90540608f6925a09d8d11bb7767c010b76b20a9afbc",
+    "desktop/infrastructure/src/voice_handoff/tests.rs": "c6e7ee2bfb9f09acdf83cdad44cadbd7b3f5c7a5313b21a9167ca7c3d1ccfed2",
+    "desktop/infrastructure/src/voice_handoff.rs": "0eb4942ec2f55a3fc249d48569aca18963b6a9a5d13f4ab29dc54ed160f55cb2",
+    "desktop/infrastructure/src/wav.rs": "756bc6a2d7c02f3667d8595d7a29b31801d6544d8e80a2385cd1026c498f223b",
+    "desktop/preview/Cargo.toml": "6331b4af9692c3f4d16220de8810e992990b6032a2184fac0198e72efedd31fc",
+    "desktop/preview/src/lib.rs": "c519ed1f4e1afa8d570ad14b66ddb1b8291d0de98dca38e599ba1cc8d6e204b6",
+    "desktop/rendering/Cargo.toml": "e5b4c833b136d8bb07790c7a307f91b3fb74da7d55ce48df315f65248f02a636",
+    "desktop/rendering/src/gpu.rs": "faf66adcf12bd092ec6152c204077a68f80f99ed2dd1eeb4c544410d37076510",
+    "desktop/rendering/src/lib.rs": "f1cc267f1074d40905b1633fd27e46ce6d0a4ce35dd6f8967ce8994c5d33856b",
+    "desktop/rendering/src/pixels.rs": "aef38cb0f676ff263eb7a40b3570264398215baba60c9668a2b0f0bcc4420b45",
+    "desktop/rendering/src/upload.rs": "e6797b54b1268cf7a45874b405a65488bc1c59b8b4196e30910edea5b55dac45",
+    "desktop/ui/Cargo.toml": "94e5a78db5fad807428f965606128c3d49705a3e8d045f2841775befcac54a33",
+    "desktop/ui/src/audio.rs": "36836d2eb11d2c22cda933081ea1b98f8d45030022c6552f52d426ce6a0b0b6d",
+    "desktop/ui/src/gestures.rs": "bf77f1f30831035a2868b5e81b00dd9bf5c70b442a5839b96e0d1af3f29aeb05",
+    "desktop/ui/src/lib.rs": "efe299499460a9d87c5b741ac1ec69f2b0d923af5762a93d198fdfb57a4fdeb3",
+    "desktop/ui/src/observation.rs": "7c3648912494b52a589d3bf95011005441785f11bc3afd894094db078b94151f",
+    "desktop/ui/src/picking.rs": "6398124bd7ede861d4417603ef348e62c34550f03d404c00603b360df68bae9b",
+    "desktop/ui/src/selection.rs": "6eb87e1b3bdd99a480a025b92339c8be49b2b6a754e3f8247e34fd46c4a566e7",
+    "desktop/ui/src/shortcuts.rs": "1205803c298aaadb6b055532e91b9ffc27032d5169123fccd77c8f76c72fe00b",
+    "desktop/ui/src/tests/gesture_controls.rs": "d844dcabd85daba1a7f53e7eb995036dbdb58c33fd38c519642264b387677b47",
+    "desktop/ui/src/tests/input.rs": "4021387ccf2245178d4698f3828251c8c673f4187772a69e50fbeca5ce6a634d",
+    "desktop/ui/src/tests/interaction.rs": "adbfb1ed02a6c43bb10522110443e5f6268c81b40b923db70a5e96c03569e565",
+    "desktop/ui/src/tests/joint_selection.rs": "4eae139148411aa9b136b514c525d2511de85e260567708185d4b7dc2ac71def",
+    "desktop/ui/src/tests.rs": "4f83d3fdba3ca106a572e6c51af2e00168d4b431623631db1143da6cd1b9c2e6",
+    "rust-toolchain.toml": "7d21c66a15f41bad66b82ed06a289f5dc8a6e3751951d2696bbf20ce296f2b0f",
+    "tools/check_core.py": "c7cd91465685a852498d7753db9a90fd7322799d167eb0d6ffb816ac6619e9cb",
+    "tools/check_core_architecture.py": "6e4fa6ee969655f97a230f148396685a0a3905e8ca567cc4a79f03d2233a221f",
+    "tools/check_core_cost.py": "32c83b988fefbde7cf2c3384252a9d5e52cc51a458d2e8341cf7b12780075cf0",
+    "tools/check_desktop.py": "f767655c446d875252ee5ad96e86ff94ceaf3b2b0022906d735304613f3b55aa",
+    "tools/check_desktop_architecture.py": "c84ac8a30b32c5fd445345bdbe064423abc8e46cce6e4bedd4a19da1df22e0e4",
+    "tools/check_p0.py": "371d68565eeaf7959c2062aae48b39565678dcd4c4efc7fff43d719f449216cc",
+    "tools/check_p0_audio_adaptation.py": "39b26ef5964c436f9b9aef4c18ba475efaf4fa982da1d78b882d0f1da22aa1b0",
+    "tools/check_p0_combined_soak.py": "aab795ccfde5837ed87725d9d3d114a9a201ec5b73999026552923cb08de157a",
+    "tools/check_p0_composition.py": "277358084e319fb70afe1f406ba3365c500275dcfe6e18e6ea038badbe5a15af",
+    "tools/check_p0_compressed.py": "874a7710c6c6149ae7d4ab4854abe2fd180e7be3ff3352a2eb0e98b9d6218472",
+    "tools/check_p0_compressed_soak.py": "20155196ec6f20d579e412f701ebdbbaa11311b256ca045cb307beca1a3f125b",
+    "tools/check_p0_desktop.py": "de2093b6d5f0882b338d3ec41e7c0dad2023018647bef84947fc7907249318b2",
+    "tools/check_p0_edit_composition.py": "0bdb32f65e6828a0da95572c5cf639e8517c5030e070a189e826c5fc6bbf5936",
+    "tools/check_p0_gpu_memory.py": "c15fe78c3412b20dc6e02bc2c4523aa8448a8d48c4fd9759607f19b8428bd1af",
+    "tools/check_p0_gui.py": "030fac0ecdc08237297e151f8229302b94ea868701d95fdf8133ca9aa1ad1764",
+    "tools/check_p0_interaction.py": "927504336ebc4b2187d9adc8ccf6320127ab68af9446cb4f7606cde9bb64a02b",
+    "tools/check_p0_lifetime.py": "5d6d08b91ceffcf10cd973df2380fd50f39968e944087ec325c20872d951fa2f",
+    "tools/check_p0_media.py": "de300b5143a5406c4755efbd6f3358169a7252085514dd2f7248358342410c34",
+    "tools/check_p0_pcm.py": "c9bfbca3c53fab2c0000ace59bfca47af676836db203d917eccdf8921b632e01",
+    "tools/check_p0_recovery.py": "28306d06d06b4f7600bb6ef1ecfff118d60edcb136eb107688837e199301d211",
+    "tools/check_p0_resource_cycles.py": "49cb900d16f2486ab826ae4d05e1b6e607ee7beaa342b873455830877bf576c1",
+    "tools/check_p0_stream_output.py": "0e9eb58b66898d2422a2243deb1afb214565c063d2ca260d4f9b6a65d274d7c9",
+    "tools/check_p0_streaming.py": "6e031e3a2e1de901ca5e7d2a9bddb7e41a659e47fb901755c0f58bcde8320912",
+    "tools/check_p0_switch.py": "c7ea7be526ada9ab8f3ce342e5cf420ad133f01d36d7b2574c5d312ac8138ed1",
+    "tools/check_p0_switch_audio.py": "4c5dca5d6fd0a7ccbd6040857515b0a0298558ce4f9b0abf652d10ed8de54d89",
+    "tools/check_p0_transport.py": "2ef7ffba6e87dafac947a38f11f53ece2c93e811814859e133ef551385045fc8",
+    "tools/check_repository.py": "d939f80eb8b55bc69a3de2521d0492ae7aac17635e9158922eac7f5cf304e62c",
+    "tools/measure_audio_edit.py": "3a8853fdfec9ebe16757cd23d9524b15d067a88ac0ae187843555c0325b296cd",
+    "tools/measure_audio_load.py": "10e59df96fdc055f2747828e645d11d1728cdf9eb3d6b7d286ee10a0adbef0b1",
+    "tools/measure_audio_startup.py": "a116b8131c9b2b4d7479624e26879d311ed2ac027c4968a5c9a7d530f4e8d41e",
+    "tools/measure_automatic_closeout.py": "ea0abdf53cd5395760622e7eab89c0c531c0e5de823c84df98db393e6203d621",
+    "tools/measure_background_stream.py": "4a6fa5407111bf6265e6e9f56a3497d93d5433ca9aaf7d0a90ca06d78cc775b5",
+    "tools/measure_budget_review.py": "e33f44be4e444fa19793db83e9ce8bafcc29f525d6ed29734a25dab8da612f20",
+    "tools/measure_combined.py": "63f92e8d9971467da98049c8d3b65cceb68ae0b7f885e66290644e53aaf61bb4",
+    "tools/measure_controlled_recovery.py": "ea0cc721a6b20c76c754a4750a58f51360c0d0cb07d5ff961a8bb95a2b7935ca",
+    "tools/measure_cpu_accounting.py": "4c9ceb02a4307d60d8d6a465ba923068fd5b9faa4586be2c86be5cb9e7adf47f",
+    "tools/measure_cpu_threads.py": "b3d2933de64599d6e88925df69b7f5ad9c84f163b0efc8bce80954779a021870",
+    "tools/measure_current_combined.py": "280c88fddeb51a89314be4a1a3c1bef6cb534badd8076f6bfc9776d8fc8f0cd6",
+    "tools/measure_event_loop_ui.py": "f5e651348d6329c1d5d0eee5bff1f899e6de98cc5a0232257b49607df6018555",
+    "tools/measure_fault_rebuild.py": "5a64b5f8827ba7fc9ebf2228e85ce83f7eea8235ad07b21368453989873f6433",
+    "tools/measure_frame_dispatch.py": "a431502401e4095952752dab0f620928f62bcbdf6e08f6c99e2df8fc99b10656",
+    "tools/measure_framework_baseline.py": "5a7113c08d08a46604db13ae944f111a5ff291a654c5ce7d128941235657f2de",
+    "tools/measure_gpu_path.py": "d689efc91d146c91f450d1ba679a096c5d7292576d005c8d5354631ab4b125bf",
+    "tools/measure_gui_base.py": "f591b5a79d53eb2fc08cadfec6fd4e30a01a5179da74b39f2a207f018954cc9d",
+    "tools/measure_gui_candidate.py": "995f3f66a523c3e44cf74c0798bf148b168d23cbadb678c1ae829ad4e44a5899",
+    "tools/measure_gui_cpu.py": "24c24d74f18b888d5d02248ad1b0d6df524fbd28475bd558a13ad4cbe41fc682",
+    "tools/measure_independent_cpu.py": "3e8da64bda3c9cdd2a2d78674b227f186430b4e97318ca34348c98db85dfec42",
+    "tools/measure_main_work.py": "19c6810fb73811d78aa18910bcea54e65f2742891821a349eb9c02b10e9cc194",
+    "tools/measure_mesh_replay.py": "ea5efa814e2841b7fb4bc27b7e91a315140133cd2600f4cf31f3382600f7068d",
+    "tools/measure_painter_cpu.py": "acebe7480df8d3b2454d98f2ce9808378d6c10c1d8d1def41b8fe9df08f5b62f",
+    "tools/measure_present_fault.py": "3c51c7744bed387b0c4dc581c61d609a3867375c9832b2cfb040341630aac140",
+    "tools/measure_rebuild_attribution.py": "11e7481b5680e0cb2505cf8f06ed407594ff858341b9ac3d6f0fc79dda1cf5db",
+    "tools/measure_rebuild_policy.py": "3d40a5b6ecf61763d5718c34626f16f11a002784385ff606c9e7fc1794701e3c",
+    "tools/measure_repaint.py": "19b4cc56192f706893a7ab6b5283a9ed3344b9e6623cbf9f7846e6f15022144b",
+    "tools/measure_resource_cycles.py": "261a69b4a16b83b8106560f02ff6e63d8f5114b54eaa1549755cee04cb06e458",
+    "tools/measure_scheduling.py": "e864943979989328d7e673ad82e18963238198bad44203a18463b7ca28c8996b",
+    "tools/measure_separated_native.py": "11fbe962e8ec747f66d300ce86279dd019e6269005c4d8a39abbece10dcc611c",
+    "tools/measure_stable_window.py": "3353e0fd63a935622b04dad0dabe1ee6044bf4bf3dab65339d319904740569d2",
+    "tools/measure_staging_recovery.py": "9b22cf72dacf4e59542c51e6ceeb2c1b943ef8ea07e6e7579d85b71b6a248155",
+    "tools/measure_supply_recovery.py": "afebd6c334a562991c101db6dc62bd837342efd0a83f356161e5bde985b7b0c0",
+    "tools/measure_text_work.py": "aeee1730317f5311c4328e7f99294fe1aa8c824a0281198e0b11bbf86eb132f5",
+    "tools/measure_thread_sampling.py": "47fe7460838e72c92330f6be767152590f8588a46f259de2a95acd1f8175a701",
+    "tools/measure_ui_wall.py": "fbde4286b833dc4991a150b6556d8a12629639622cccd5545a5a7ca33efeacf0",
+    "tools/measure_voice_cpu.py": "6c9b974cac8009d6f3e205f186ef5feecafc0e6febca616d7201e1273475c632",
+    "tools/measure_voice_phase.py": "4ad378ef4eb8263f5a2bf1befe89fd5cf10e13845e659da2f15518982c1e07d7",
+    "tools/measure_window_recovery.py": "640553dda937dbf754d1c53d88f82e9efb25d3a1d8b3078fabe886b6bfc59445",
+    "tools/measure_worker_native.py": "5b6120cfb1d2f843265c5fcc848b8ce51db7cd466c69bfc0729e4916ecd167b6",
+    "tools/test_check_audio_edit.py": "b6baa91860f1bdf18314493da960d4c399199205104eb34bedef098f4e4303cd",
+    "tools/test_check_audio_load.py": "db23c219092ae1bdfd78d2c6efb5e2002b7e0eb9c3aa44dcfb5bcc6cc8da05df",
+    "tools/test_check_audio_startup.py": "5f2cbdd09841597faf574c240b33131f9d4c1bae9c079847fddc9fd05f8d4a28",
+    "tools/test_check_automatic_closeout.py": "56ad8dd62a08d84703ff3b579eedb1d68f8750caabd90fbbfc636f707b2f2174",
+    "tools/test_check_background_stream.py": "6b1b0cf0b181ee306ea0c721c0761a91d9d43c9ec83eadf18fa06b5a2c485e2e",
+    "tools/test_check_budget_review.py": "a878cdc44af5c5a2244d383b79f3f0bf1d4467f35b30e526dbdd0a04ef20b584",
+    "tools/test_check_combined.py": "34c0173a098916f3fd52998b76c2cd471a2bddcc86e4e97fac9c61f741ec7672",
+    "tools/test_check_controlled_recovery.py": "cc16833fdfec0a0d9a443da5b01b31fdf765feb17a051269df2978c42b2b360c",
+    "tools/test_check_core_architecture.py": "fb8226852e9fbaaf925a7e9fd17b8ec8fecc46f64b98e219b42031851eab7a32",
+    "tools/test_check_core_cost.py": "dbe75725a39a53476f81936f7f4b12d5032d672f2e329befcfc823f3b681aa57",
+    "tools/test_check_core_environment.py": "df4d661b681b27d21a1a02071c01e25c4d7f3577d830b48d269fa34a77499d61",
+    "tools/test_check_cpu_accounting.py": "79aa2e5bd416f90419518abd19947a1ae2c89f2975f90fe4865d38cb74f6ae84",
+    "tools/test_check_cpu_threads.py": "87d77c04adb8a2186ab9418863fe9d74459f75e3b6a6a1b3c13204acf5f53444",
+    "tools/test_check_current_combined.py": "28f9de11b2aba1999356112417b0f8744d810f74350bc680e67a51ed7af86ba5",
+    "tools/test_check_desktop_architecture.py": "82c9423c1774c412647d20228161f5151c493c1ec3c755c688d1d36b0d10e53f",
+    "tools/test_check_event_loop.py": "4cb2d44974263d73479f29357da97f4a4a812a178cfc82315624c5febfa2baf3",
+    "tools/test_check_fault_rebuild.py": "538c7e60405e0863573e453f5517187833fa7591b654186e606b63145055b155",
+    "tools/test_check_frame_dispatch.py": "68d1f504010004c644bde95a1687fd6f67181d01dd0c2879f671d75a25d2b157",
+    "tools/test_check_framework_baseline.py": "dec05e52ed95121c17039d65985cf913041c32f3d69807e834b337276e72c0c2",
+    "tools/test_check_gpu_path.py": "5917eec5307d4a3d00ae86cc958c2a63337e6f55230e1d277d9eb4a764e3918e",
+    "tools/test_check_gui_base.py": "f09aab3f605bdf1acb10ff7b5fcea03fb9063ba666f19acfa7bea3a839ea8eb2",
+    "tools/test_check_gui_candidate.py": "acd1e66821308799d31f41dd01c6dee4bd8dfb341e08187db61e8f72b4f1060e",
+    "tools/test_check_gui_cpu.py": "1448cff978416498ba9114aa7eb446063e5ab5a95c2ff11d74f02c475039336f",
+    "tools/test_check_independent_cpu.py": "fc3da03c5a70262e1b729dfe2c65fcfdb2809af12a54576ed0defc2ec13c8769",
+    "tools/test_check_main_work.py": "0fc9374246dd38ae5791b33254bd6abad72157c17e1ee805c3881ebaaa1ca9a3",
+    "tools/test_check_mesh_replay.py": "c2eaaab1afb3fea7098ee9182ca25d6061b2779b458bbea23b5b82c910237040",
+    "tools/test_check_painter_cpu.py": "206e66d3cb1bd37be96850e298d8cc34828dec14fa8e3db89b0101fce21975f8",
+    "tools/test_check_rebuild_attribution.py": "17bc35c61bf8fe339a27a09a324263bbe9811e695652cc576f06066351643eb3",
+    "tools/test_check_rebuild_policy.py": "0598fa88861ce49659af49867c09589ab6b43b697d8262fe849a44c28ae8de12",
+    "tools/test_check_repaint.py": "a268a9204592961450c83fcfb419ed61e0d7a8c9879b1c04560e92b5cdc6ef0d",
+    "tools/test_check_repository.py": "6918c19beecc9bce89fbf0fe989d8ebc1869d29db6b35cebaff0a8be47947e88",
+    "tools/test_check_resource_cycles.py": "a690673cb5cc9c5ef0101987a9319fbf7d89d34d157863261a2ff613d90f3121",
+    "tools/test_check_scheduling.py": "30fe35ec1bb8ee045d109c15fa015652ca5799acdd2c3803c20414668df2a2ad",
+    "tools/test_check_separated_native.py": "12c35a4dafb9d61d6c9582b00809f03843328c3d35ab3e53b0d517a272ee2b24",
+    "tools/test_check_stable_window.py": "34f72c635faa60313dff091f4b8748d30d18a32cb6e2b005bb97836e40114450",
+    "tools/test_check_staging_recovery.py": "bed24773a8bb4f88607f474fefd811c295698635bff3a7bf872a528f42f6f24d",
+    "tools/test_check_supply_recovery.py": "6bb7baccbf52113dc914ec8f1c4c81e2392bb6f4967f579ad8d513c1802820be",
+    "tools/test_check_text_work.py": "98265bd26303b45a15bfa01998f414e01e642f3daedbf095ca6c060a94568cc1",
+    "tools/test_check_thread_sampling.py": "2fc6c89afef67a0d7b9d85250c00d7d8367c31f4b02ab50d24461d3a8ce1be91",
+    "tools/test_check_ui_wall.py": "ec12cce81c16e11dfd66bdb52d171ccbf7725191a96c913b024a7602dcb3a159",
+    "tools/test_check_voice_cpu.py": "92ea736245c8c189c540ce71e02c5dbd4caafd433b67c1757de0903513906be5",
+    "tools/test_check_voice_phase.py": "b0e93006b4461b0687f2993262618df32fd7c57002fffb221ea045fd5f054044",
+    "tools/test_check_window_recovery.py": "ca66cc111aa6ed6059ad09edf72bde3ef95237c7cfd2dab2e641c1b8a6951c6f",
+    "tools/test_check_worker_native.py": "bf02e577797f2db7826843d3057f216e3f649d8b6e099a5cae894e6396da3ebb"
+  },
+  "changed_source_paths": [
+    "AGENTS.md",
+    "desktop/ui/src/lib.rs",
+    "desktop/ui/src/selection.rs",
+    "desktop/ui/src/shortcuts.rs",
+    "desktop/ui/src/tests.rs",
+    "desktop/ui/src/tests/interaction.rs"
+  ],
+  "profile": "release",
+  "requested_features": [],
+  "binary_sha256": "7a95fb004d3e87662e4cc8034c2a94de4a3a89ce66c0e46ebff62f7708449430",
+  "preview_api_version": 2,
+  "command_api_version": 6,
+  "project_schema_changed": false,
+  "checks": {
+    "core_python": 339,
+    "core_rust": 136,
+    "core_total": 475,
+    "desktop_default": 477,
+    "desktop_all_features": 485,
+    "ui": 72,
+    "format": true,
+    "clippy": true,
+    "boundaries": true
+  },
+  "regression_failed_before_fix": 4,
+  "previous_json_count": 110,
+  "previous_json_unchanged": true,
+  "pixels": [
+    {
+      "name": "pixels-default",
+      "report": {
+        "schema": 1,
+        "gpu_memory_usage_hint": false,
+        "reusable_staging": false,
+        "pixel_trace_sizes": [
+          [
+            256,
+            256
+          ],
+          [
+            256,
+            256
+          ],
+          [
+            256,
+            256
+          ],
+          [
+            256,
+            256
+          ],
+          [
+            256,
+            256
+          ],
+          [
+            256,
+            256
+          ],
+          [
+            257,
+            193
+          ]
+        ],
+        "adapter": "NVIDIA GeForce RTX 2060",
+        "max_channel_error": 1,
+        "paused_draft_refresh": true,
+        "cancel_exact_restore": true,
+        "branch_restore": true,
+        "stale_viewport_rejected": true,
+        "unchanged_uploads": 0,
+        "audio_ui_native_audition": false,
+        "audio_ui_submitted_nonzero_samples": 0,
+        "audio_ui_library_nonzero_samples": 0,
+        "audio_ui_library_readonly": false,
+        "monitor_volume_permille": null,
+        "source_uploads": 1,
+        "shutdown_held_frame_tracked": true,
+        "source_buffer_queue_order_verified": true,
+        "allocations": 8,
+        "publications": 8
+      },
+      "pixel_trace_sha256": "bee8433fe9c6c6530704fbd6f5ca794e4b900ca16ea5371a14c3f922bceb2270"
+    },
+    {
+      "name": "pixels-memory",
+      "report": {
+        "schema": 1,
+        "gpu_memory_usage_hint": true,
+        "reusable_staging": false,
+        "pixel_trace_sizes": [
+          [
+            256,
+            256
+          ],
+          [
+            256,
+            256
+          ],
+          [
+            256,
+            256
+          ],
+          [
+            256,
+            256
+          ],
+          [
+            256,
+            256
+          ],
+          [
+            256,
+            256
+          ],
+          [
+            257,
+            193
+          ]
+        ],
+        "adapter": "NVIDIA GeForce RTX 2060",
+        "max_channel_error": 1,
+        "paused_draft_refresh": true,
+        "cancel_exact_restore": true,
+        "branch_restore": true,
+        "stale_viewport_rejected": true,
+        "unchanged_uploads": 0,
+        "audio_ui_native_audition": false,
+        "audio_ui_submitted_nonzero_samples": 0,
+        "audio_ui_library_nonzero_samples": 0,
+        "audio_ui_library_readonly": false,
+        "monitor_volume_permille": null,
+        "source_uploads": 1,
+        "shutdown_held_frame_tracked": true,
+        "source_buffer_queue_order_verified": true,
+        "allocations": 8,
+        "publications": 8
+      },
+      "pixel_trace_sha256": "bee8433fe9c6c6530704fbd6f5ca794e4b900ca16ea5371a14c3f922bceb2270"
+    }
+  ],
+  "active_edit": [
+    {
+      "plan": "draft-gpu",
+      "proof": "artifacts/p2/interaction-mode/active-edit/draft-gpu/proof.json",
+      "analysis": {
+        "checks": {
+          "process_budget": true,
+          "pixels_and_project": true,
+          "final_leases": true,
+          "window_0": true,
+          "retirement_0": true,
+          "live_0_dedicated": true,
+          "live_0_shared": true,
+          "window_1": true,
+          "retirement_1": true,
+          "live_1_dedicated": true,
+          "live_1_shared": true,
+          "background_anchor": true,
+          "native_window_actions": true,
+          "dpi_binding": true,
+          "all_known_gpu_dedicated": true,
+          "all_known_gpu_shared": true,
+          "present_boundary": true,
+          "fault_errors_classified": true,
+          "old_draw_rejected": true,
+          "new_window_healthy": true,
+          "failed_creation_scope": true,
+          "post_consumption_stage": true,
+          "history_path_after_retry": true,
+          "failed_attempt_kept_copy_anchor": true,
+          "failed_frame_key_evidence": true,
+          "failed_attempt_audio_health": true,
+          "active_edit_interleaving": true
+        },
+        "component_passed": true,
+        "latency_ms": [
+          [
+            {
+              "count": 32,
+              "p50": 8.305200000000001,
+              "p95": 12.359,
+              "p99": 12.5024,
+              "max": 12.5024
+            },
+            {
+              "count": 32,
+              "p50": 7.4958,
+              "p95": 12.2473,
+              "p99": 13.3555,
+              "max": 13.3555
+            }
+          ],
+          [
+            {
+              "count": 32,
+              "p50": 7.691199999999999,
+              "p95": 11.200999999999999,
+              "p99": 12.1244,
+              "max": 12.1244
+            },
+            {
+              "count": 32,
+              "p50": 8.6534,
+              "p95": 12.1691,
+              "p99": 12.7745,
+              "max": 12.7745
+            }
+          ]
+        ],
+        "gpu": {
+          "dedicated": {
+            "max_bytes": 108662784,
+            "unknown": 1
+          },
+          "shared": {
+            "max_bytes": 49790976,
+            "unknown": 1
+          }
+        },
+        "memory": {
+          "private_bytes": 272121856,
+          "working_set_bytes": 189251584,
+          "lifetime_peak_working_set_bytes": 201203712,
+          "lifetime_peak_pagefile_bytes": 277450752
+        },
+        "physical_dpi_exercised": true,
+        "c4_accepted": false,
+        "p2_accepted": false,
+        "cpu_goal_met": null
+      },
+      "missing_frames": [
+        0,
+        0
+      ],
+      "final_leases": {
+        "raw_final": 0,
+        "rgba_final": 0,
+        "pcm_final": 0
+      }
+    },
+    {
+      "plan": "draft-audio",
+      "proof": "artifacts/p2/interaction-mode/active-edit/draft-audio/proof.json",
+      "analysis": {
+        "checks": {
+          "process_budget": true,
+          "pixels_and_project": true,
+          "final_leases": true,
+          "window_0": true,
+          "retirement_0": true,
+          "live_0_dedicated": true,
+          "live_0_shared": true,
+          "window_1": true,
+          "retirement_1": true,
+          "live_1_dedicated": true,
+          "live_1_shared": true,
+          "background_anchor": true,
+          "native_window_actions": true,
+          "dpi_binding": true,
+          "all_known_gpu_dedicated": true,
+          "all_known_gpu_shared": true,
+          "present_boundary": true,
+          "fault_errors_classified": true,
+          "old_draw_rejected": true,
+          "new_window_healthy": true,
+          "failed_creation_scope": true,
+          "post_consumption_stage": true,
+          "history_path_after_retry": true,
+          "failed_attempt_kept_copy_anchor": true,
+          "failed_frame_key_evidence": true,
+          "failed_attempt_audio_health": true,
+          "active_edit_interleaving": true
+        },
+        "component_passed": true,
+        "latency_ms": [
+          [
+            {
+              "count": 32,
+              "p50": 5.893,
+              "p95": 10.8995,
+              "p99": 13.8958,
+              "max": 13.8958
+            },
+            {
+              "count": 32,
+              "p50": 6.1651,
+              "p95": 12.7145,
+              "p99": 13.3697,
+              "max": 13.3697
+            }
+          ],
+          [
+            {
+              "count": 32,
+              "p50": 8.2599,
+              "p95": 12.4346,
+              "p99": 13.873,
+              "max": 13.873
+            },
+            {
+              "count": 32,
+              "p50": 7.494800000000001,
+              "p95": 12.1205,
+              "p99": 12.4878,
+              "max": 12.4878
+            }
+          ]
+        ],
+        "gpu": {
+          "dedicated": {
+            "max_bytes": 118976512,
+            "unknown": 1
+          },
+          "shared": {
+            "max_bytes": 49790976,
+            "unknown": 1
+          }
+        },
+        "memory": {
+          "private_bytes": 258547712,
+          "working_set_bytes": 183181312,
+          "lifetime_peak_working_set_bytes": 207380480,
+          "lifetime_peak_pagefile_bytes": 289505280
+        },
+        "physical_dpi_exercised": true,
+        "c4_accepted": false,
+        "p2_accepted": false,
+        "cpu_goal_met": null
+      },
+      "missing_frames": [
+        0,
+        0
+      ],
+      "final_leases": {
+        "raw_final": 0,
+        "rgba_final": 0,
+        "pcm_final": 0
+      }
+    },
+    {
+      "plan": "draft-both",
+      "proof": "artifacts/p2/interaction-mode/active-edit/draft-both/proof.json",
+      "analysis": {
+        "checks": {
+          "process_budget": true,
+          "pixels_and_project": true,
+          "final_leases": true,
+          "window_0": true,
+          "retirement_0": true,
+          "live_0_dedicated": true,
+          "live_0_shared": true,
+          "window_1": true,
+          "retirement_1": true,
+          "live_1_dedicated": true,
+          "live_1_shared": true,
+          "background_anchor": true,
+          "native_window_actions": true,
+          "dpi_binding": true,
+          "all_known_gpu_dedicated": true,
+          "all_known_gpu_shared": true,
+          "present_boundary": true,
+          "fault_errors_classified": true,
+          "old_draw_rejected": true,
+          "new_window_healthy": true,
+          "failed_creation_scope": true,
+          "post_consumption_stage": true,
+          "history_path_after_retry": true,
+          "failed_attempt_kept_copy_anchor": true,
+          "failed_frame_key_evidence": true,
+          "failed_attempt_audio_health": true,
+          "active_edit_interleaving": true
+        },
+        "component_passed": true,
+        "latency_ms": [
+          [
+            {
+              "count": 32,
+              "p50": 6.2914,
+              "p95": 10.561,
+              "p99": 12.7281,
+              "max": 12.7281
+            },
+            {
+              "count": 32,
+              "p50": 8.8285,
+              "p95": 12.9871,
+              "p99": 13.1046,
+              "max": 13.1046
+            }
+          ],
+          [
+            {
+              "count": 32,
+              "p50": 6.2398,
+              "p95": 11.3256,
+              "p99": 12.7363,
+              "max": 12.7363
+            },
+            {
+              "count": 32,
+              "p50": 6.5326,
+              "p95": 12.0894,
+              "p99": 13.133000000000001,
+              "max": 13.133000000000001
+            }
+          ]
+        ],
+        "gpu": {
+          "dedicated": {
+            "max_bytes": 127528960,
+            "unknown": 1
+          },
+          "shared": {
+            "max_bytes": 49790976,
+            "unknown": 1
+          }
+        },
+        "memory": {
+          "private_bytes": 259493888,
+          "working_set_bytes": 183181312,
+          "lifetime_peak_working_set_bytes": 209715200,
+          "lifetime_peak_pagefile_bytes": 285769728
+        },
+        "physical_dpi_exercised": true,
+        "c4_accepted": false,
+        "p2_accepted": false,
+        "cpu_goal_met": null
+      },
+      "missing_frames": [
+        0,
+        0
+      ],
+      "final_leases": {
+        "raw_final": 0,
+        "rgba_final": 0,
+        "pcm_final": 0
+      }
+    }
+  ],
+  "projections": [
+    {
+      "name": "cadence-single",
+      "report": {
+        "schema": 1,
+        "scope": "offscreen-ui-worker-publications-no-surface",
+        "steps": 120,
+        "requested_hz": 60,
+        "joint": false,
+        "selected_before_clear": 1,
+        "component_nodes": 0,
+        "clear_kept_project": true,
+        "max_channel_error": 1,
+        "during_publications": 119,
+        "allocations": 122,
+        "source_uploads": 1,
+        "one_history_node": true,
+        "final_source_current": true,
+        "shutdown_targets": 0
+      },
+      "gpu": {
+        "dedicated": {
+          "known": 16,
+          "unknown": 1,
+          "max_bytes": 37797888,
+          "sampled_within_budget": true
+        },
+        "shared": {
+          "known": 16,
+          "unknown": 1,
+          "max_bytes": 14217216,
+          "sampled_within_budget": true
+        }
+      },
+      "memory": {
+        "private_bytes": 117731328,
+        "working_set_bytes": 81989632,
+        "lifetime_peak_pagefile_bytes": 126484480,
+        "lifetime_peak_working_set_bytes": 89395200
+      },
+      "cpu_validated": false,
+      "full_gpu_peak_accepted": false,
+      "physical_fps_accepted": false
+    },
+    {
+      "name": "cadence-joint",
+      "report": {
+        "schema": 1,
+        "scope": "offscreen-ui-worker-publications-no-surface",
+        "steps": 120,
+        "requested_hz": 60,
+        "joint": true,
+        "selected_before_clear": 2,
+        "component_nodes": 0,
+        "clear_kept_project": true,
+        "max_channel_error": 1,
+        "during_publications": 119,
+        "allocations": 122,
+        "source_uploads": 1,
+        "one_history_node": true,
+        "final_source_current": true,
+        "shutdown_targets": 0
+      },
+      "gpu": {
+        "dedicated": {
+          "known": 22,
+          "unknown": 1,
+          "max_bytes": 37797888,
+          "sampled_within_budget": true
+        },
+        "shared": {
+          "known": 22,
+          "unknown": 1,
+          "max_bytes": 14217216,
+          "sampled_within_budget": true
+        }
+      },
+      "memory": {
+        "private_bytes": 121257984,
+        "working_set_bytes": 81715200,
+        "lifetime_peak_pagefile_bytes": 127819776,
+        "lifetime_peak_working_set_bytes": 89608192
+      },
+      "cpu_validated": false,
+      "full_gpu_peak_accepted": false,
+      "physical_fps_accepted": false
+    }
+  ],
+  "artifacts": {
+    "artifacts/p2/interaction-mode/before.json": "2b5f3e752a2778d167e4ca72d208b680e876ee9a918a94b0de2ac1c80af6bea3",
+    "artifacts/p2/interaction-mode/review.diff": "3ee35689f5835b7542cf88807ab56d08dbbc37034bc74291167b0554c6a25085",
+    "artifacts/p2/interaction-mode/ui-tests-1.log": "4e8f0d7d2218a222c6fa963751f05b8888e1793243033bee871a4ee38c620782",
+    "artifacts/p2/interaction-mode/ui-tests-2.log": "e89c00aaa27ea0497155dd8ea8ec9986f7b8770b9d535089b0fd850ed0a16418",
+    "artifacts/p2/interaction-mode/ui-tests-3.log": "86e4bbda7bc7756dff2f76baf37f0c50692602598742ca78c724be24639acdad",
+    "artifacts/p2/interaction-mode/native.json": "6a4d4a6a052449ca2d09776c3a6bd34c1dff51ca3f53920c0f0f04516ed4b256",
+    "artifacts/p2/interaction-mode/projections.json": "e19eba0a9f910264d6f1d43815568899ddfe5393f8f7530c9afd17271508e0a9",
+    "artifacts/p2/interaction-mode/manual-session.json": "7101c074f98668d483663967876b43fbb3d47673290b954a88da645bd88e75ea",
+    "artifacts/p2/interaction-mode/recheck-session.json": "f0211f35f1c3e3aafe95e58955d49abfbbc7f8d8e8f4c913f67954141c1a168a",
+    "artifacts/p2/interaction-mode/checked/core.log": "33e52a6acb8adedf9199d5bf483d2312d74614eb1d13875f95e3274c3a2021d1",
+    "artifacts/p2/interaction-mode/checked/desktop.log": "8a8f3e0b3398d1c28a7b870e6d21c00bb1a432cd148d4fc8d6f7a53ea20825d5",
+    "artifacts/p2/interaction-mode/checked/build-frozen.json": "11b33c532d8a3c0d4fa95273d3aaecd588427ec1078ed28f5bffec2f92b5d727",
+    "artifacts/p2/interaction-mode/checked/checks.json": "321a4ac45a5ef0e6aec8be7bb758a8e00935121c71eea9a64410fb3f17bc88e0",
+    "artifacts/p2/interaction-mode/checked/release-1.log": "d6400fe9e34f8cd8da1ae3488b25cafd45012684d15b3ccbe5d080eb44e49b5d",
+    "artifacts/p2/interaction-mode/checked/release-2.log": "e0f7e5f03e5f9e1a44bad93c6accbe34bce8db42b19e10617c1cf525f90bc731",
+    "artifacts/p2/manual-fix-20261029-9a66eabb/session.json": "f3e35d92c75ab739b3cbd831502ac3ba70aa14a9e12e870fb40da914dfb193e8",
+    "artifacts/p2/manual-recheck-20261029-5ed97110/session.json": "d22adaec7a501d865a2ef52c23f0fe195af7b30f4ebb925c4fa4f616ac35ecaf",
+    "artifacts/p2/manual-recheck-20261029-5ed97110/feedback-001.json": "ac1dedd3214c41995722d9719ac95100a201ff00c850c4d1e97ef3a1a866d89d",
+    "artifacts/p2/manual-fix-20261029-f0aae5a2/feedback-001.json": "3c63f8e4cc0b9ce45ff8a533f2d37f7bff17f6133de6782eea6ee1f6b040a7f2",
+    "artifacts/p2/interaction-mode/active-edit/draft-gpu/proof.json": "156d86df768deb55d8703ffc62a8746bff5144688a0f2c452c585af01652a487",
+    "artifacts/p2/interaction-mode/active-edit/draft-audio/proof.json": "60c9cff8b7f121be8620b95e2b14d1d5a0e4f0b0613de745f1daa48006195c42",
+    "artifacts/p2/interaction-mode/active-edit/draft-both/proof.json": "156ba2aa5f5e2bc4d1a04e553b90c2c6e670f14d89852be4a685f7a810aef2f9",
+    "artifacts/p2/interaction-mode/cadence-single/report.json": "4fc7722f9dc98c804e9398cf19273cefc43c7a1f4a88772e2f7f2e45c34c70be",
+    "artifacts/p2/interaction-mode/cadence-single/cadence.csv": "0385ba2fe3a72d46e6d49d47ec1489cc449f20f4212bef1c9a1909bb15153558",
+    "artifacts/p2/interaction-mode/cadence-single/final.rgba": "faae9720b0b4a80144c6241d71368fee90a1b09c547b3b928257d6a3870d96b3",
+    "artifacts/p2/interaction-mode/cadence-single-observation.json": "e2594f433aa4bb741f510706feb5b69c1ac675bb23ce096c1bfcdb8f57dfc524",
+    "artifacts/p2/interaction-mode/cadence-joint/report.json": "8e75de6a131573a08376ea955a74aef18116c02bce8adb6948de406e8aebb49f",
+    "artifacts/p2/interaction-mode/cadence-joint/cadence.csv": "2be5308040f57cfa80e4ef0ef8b1b0aa8889ec60263e160e154d89db80afbe02",
+    "artifacts/p2/interaction-mode/cadence-joint/final.rgba": "6c6b2850711654a39ca3d7b59db3567f50591635427f39e4c103adc831163fa5",
+    "artifacts/p2/interaction-mode/cadence-joint-observation.json": "96e889bf96f5ab0213444e05a6b73300742fb0cbd74589c106033305428922a8"
+  },
+  "manual_session": "manual-fix-20261029-9a66eabb",
+  "manual_title": "Skin Editor · P2 [FIX 9a66eabb]",
+  "manual_token": {
+    "elevated": 0,
+    "restricted": false
+  },
+  "recheck_session": "manual-recheck-20261029-5ed97110",
+  "current_manual_mode_passed": false,
+  "p2_accepted": false,
+  "c4_accepted": false,
+  "standard_long_load_repeated": false,
+  "resource_cycles_repeated": false,
+  "independent_cpu_accepted": false,
+  "physical_fps_accepted": false,
+  "cross_platform_accepted": false,
+  "uac_started": false,
+  "git_staged": false,
+  "git_committed": false,
+  "p3_started": false
+}

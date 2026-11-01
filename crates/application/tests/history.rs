@@ -10,6 +10,126 @@ fn record(value: &str) -> ConfigRecord {
 fn value(session: &ProjectSession) -> Vec<u8> {
     session.snapshot().project.configuration().to_bytes()
 }
+
+#[test]
+fn plain_undo_redo_remembers_each_fork_in_the_undone_path() {
+    let mut d = Driver::new();
+    let a = d.set("A").state.head;
+    let b = d.set("B").state.head;
+    let c = d.set("C").state.head;
+    d.checkout(a);
+    let other = d.set("other").state.head;
+    d.checkout(b);
+    let newer = d.set("newer").state.head;
+    let saved = d.session.history_snapshot(d.scope(), c).unwrap();
+    d.checkout(c);
+    d.navigate(HistoryAction::Undo);
+    d.navigate(HistoryAction::Undo);
+    assert_eq!(d.session.project_info().state.head, a);
+    assert_eq!(
+        d.session
+            .history_statistics(d.scope())
+            .unwrap()
+            .redo_preference_entries,
+        2
+    );
+    assert_eq!(
+        d.navigate(HistoryAction::Redo { child: None }).state.head,
+        b
+    );
+    assert_eq!(
+        d.navigate(HistoryAction::Redo { child: None }).state.head,
+        c
+    );
+    assert_ne!(c, newer);
+    d.checkout(other);
+    d.navigate(HistoryAction::Undo);
+    assert_eq!(
+        d.navigate(HistoryAction::Redo { child: None }).state.head,
+        other
+    );
+    assert_eq!(d.session.history_snapshot(d.scope(), c).unwrap(), saved);
+    assert_eq!(d.session.history_len(), 6);
+}
+
+#[test]
+fn failed_no_change_and_cached_navigation_do_not_replace_the_remembered_child() {
+    let mut d = Driver::new();
+    let a = d.set("A").state.head;
+    let b = d.set("B").state.head;
+    d.checkout(a);
+    let c = d.set("C").state.head;
+    d.checkout(b);
+    let undo = d.history_request(HistoryAction::Undo);
+    let old = d.session.navigate(undo.clone()).unwrap();
+    assert_eq!(d.checkout(a).status, HistoryStatus::NoChange);
+    let mut conflict = d.history_request(HistoryAction::Checkout { node: c });
+    conflict.expected.revision += 1;
+    assert!(matches!(
+        d.session.navigate(conflict),
+        Err(HistoryError::Conflict { .. })
+    ));
+    assert_eq!(
+        d.navigate(HistoryAction::Redo { child: None }).state.head,
+        b
+    );
+    d.checkout(c);
+    d.navigate(HistoryAction::Undo);
+    let before = d.session.snapshot();
+    assert_eq!(d.session.navigate(undo).unwrap(), old);
+    assert_eq!(d.session.snapshot(), before);
+    assert_eq!(
+        d.navigate(HistoryAction::Redo { child: None }).state.head,
+        c
+    );
+    d.checkout(a);
+    assert_eq!(
+        d.session
+            .history_statistics(d.scope())
+            .unwrap()
+            .redo_preference_entries,
+        0
+    );
+    let redo = d.history_request(HistoryAction::Redo { child: None });
+    assert_eq!(
+        d.session.navigate(redo),
+        Err(HistoryError::AmbiguousRedo { child_count: 2 })
+    );
+}
+
+#[test]
+fn ten_thousand_linear_undo_redo_steps_need_no_fork_preference_or_ancestor_address() {
+    let mut d = Driver::new();
+    let root = d.session.project_info().state.head;
+    for i in 0..10_000 {
+        d.set(&format!("step-{i}"));
+    }
+    let end = d.session.project_info().state.head;
+    for _ in 0..10_000 {
+        d.navigate(HistoryAction::Undo);
+    }
+    assert_eq!(d.session.project_info().state.head, root);
+    assert_eq!(
+        d.session
+            .history_statistics(d.scope())
+            .unwrap()
+            .redo_preference_entries,
+        0
+    );
+    for _ in 0..10_000 {
+        d.navigate(HistoryAction::Redo { child: None });
+    }
+    assert_eq!(d.session.project_info().state.head, end);
+    assert_eq!(
+        d.session
+            .history_statistics(d.scope())
+            .unwrap()
+            .redo_preference_entries,
+        0
+    );
+    assert_eq!(d.session.history_len(), 10_001);
+    assert!(end.short_address().len() <= MAX_NODE_ADDRESS);
+}
 struct Driver {
     session: ProjectSession,
     next: u128,

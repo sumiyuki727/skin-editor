@@ -125,6 +125,7 @@ impl ProjectSession {
             max_depth: self.history.max_depth,
             retained_blobs: self.pins.len(),
             retained_requests: self.receipts.len(),
+            redo_preference_entries: self.redo_preferences.len(),
         })
     }
 }

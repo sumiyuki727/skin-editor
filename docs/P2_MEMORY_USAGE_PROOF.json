@@ -1,0 +1,4569 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-10-22T15:49:54.902743+09:00",
+  "status": "incomplete",
+  "scope": "Windows MemoryUsage two 300s standard static combinations and exact cross-policy GPU readback; not complete P2-A3",
+  "identity": {
+    "binary_sha256": "193905e8e51cbb7e7ca13d36a40b22c00e915a255ffa3cbe872b80cd99050826",
+    "sources": {
+      "AGENTS.md": "83ceef572bafbd6b805817e919ed6aace82c4cc47d708410df5199f36026dd3f",
+      "Cargo.lock": "fdea10e6bcd7d2a31574a89f0044a762efe0388e74901f354c115dd4f87106da",
+      "Cargo.toml": "f2145d08a75e10b117cbb8154f6911d2664caa708fb24790d950e2e174cd8401",
+      "crates/application/Cargo.toml": "7613f8f871bb60d0bdfec79d18ac6c2b64bebff403ee3fb3533d2f1a4a35061a",
+      "crates/application/src/address.rs": "d6d1ba60051876c653bbb829caa243b1e166514f3256de37e9b227ccfcf07c0b",
+      "crates/application/src/audio_editor.rs": "81c14eb800e0e84978c63f3d7c6e21cf1b0a691c7e0fef33932bb6f629464e53",
+      "crates/application/src/audio_port.rs": "4ce375c8689d82f51a715ca8d0d403e134521aefddc796f0c469e57e5d18d6bc",
+      "crates/application/src/contract.rs": "38a08d792c075fe388c3051aa4523df69ff4dcb7daa8a4520a617b560cc272d9",
+      "crates/application/src/draft.rs": "06a2c4c2cad35c54201ae681aba9559d41c2d8e8482581d0442f3062c59e8b7b",
+      "crates/application/src/draft_contract.rs": "9ca0e3fba10f8b8545511ed45fa649523e5fc07d6f538ce9ccc85f5175538bd7",
+      "crates/application/src/execute.rs": "735cbc5a56ac1256123ad9e69d74fae321b79a398fa43b6730de63b4a4f029dc",
+      "crates/application/src/history.rs": "44c9c53b29e6e63b30ddf6ba6dcde360f3d2885d21b40178c0a89de81e3a49cf",
+      "crates/application/src/history_control.rs": "a47dfa5a386cbd0aa6d88df679617b7df1d749c7e614886cb349bc547c510220",
+      "crates/application/src/history_queries.rs": "449dcb6feea8223f590d50374f1bdf5434a6eae7957e5d8bdade8eb7b20c919d",
+      "crates/application/src/lib.rs": "04dd883cfd0cb62fd5f63c80af79c9280327bc90be8af8663621ae80ca4f4440",
+      "crates/application/src/preview_port.rs": "55b255080df829375854fbcdb965195ff66e760a3f3a7492b1431f9f7c9776c0",
+      "crates/application/src/resources.rs": "b21d2808b96457ea6fd35cdfdc3e45c89c61e4d69fe92f64477105e33c117770",
+      "crates/domain/Cargo.toml": "ebfc5fb45af16bc7219eeef7a79f00d4a9780e9bee2a79fefd91dd7035328052",
+      "crates/domain/src/assets.rs": "6daa3625dab9205497dd9230a460fa55441da022d83a237e644ce07c35e850a5",
+      "crates/domain/src/audio.rs": "807d2cbd247406d0e7a9a6305884e6c6122518f9eab919a3d43beb44db5efb7d",
+      "crates/domain/src/components.rs": "93276309ce2ccdcc165843633d26b2f90176d67fc02a6068fd0cfbfc8529d3c6",
+      "crates/domain/src/configuration.rs": "2472c94b2fac0fcb69ed967d361bd6a1feecc3137af31bf54138dbf6030418fa",
+      "crates/domain/src/forest.rs": "07731db4e0302b768fd995f297dc332aeda2f821f1b29055b1355a1df3ac7827",
+      "crates/domain/src/geometry.rs": "21ce8edbfb4ad963525dfe5ecfb79c7cef3cb8a53c8fc930939bff887335f4c9",
+      "crates/domain/src/identity.rs": "410d53bc95072343060772cac51c19c694cbb691f1cf3587aa3eaeec84e74b56",
+      "crates/domain/src/layers.rs": "ebefe1ea28a4e079c434469a7f4ed5e112acc9b60ca34f7675c4a2592f8e87df",
+      "crates/domain/src/lib.rs": "886b26f31d907a7aab8156624acb9a592a7b596ff9d08bc8b6fa5ac81c2f472d",
+      "crates/domain/src/output.rs": "238e5deb808cf3b5fd4064a5684e869406075cc45409bb8173a4f341d024f95a",
+      "crates/domain/src/project.rs": "2be6417cb42a3c8c3cf9db2b60e81c5ae044eeb815b9b51a85738cbb94760dbe",
+      "desktop/audio/Cargo.toml": "43d8f8e2ffb20dad93347f9afd05eaa2b3c71ca7a8c518344fdeb5ddd705e0ee",
+      "desktop/audio/src/background.rs": "248ce86de90fa360a9ae192a82ef8329928020c5f0f7ed633b806f86f6882939",
+      "desktop/audio/src/lib.rs": "37fc9869ba2ff5a3eef26644f1658c50df3fd45be02b8f44bf97c1d6e6b6ba9c",
+      "desktop/audio/src/pcm.rs": "82506312e2dbe9b99af37cf2e0577cbd4e2dc79ab9930af3f70d762a964ef2b2",
+      "desktop/audio/src/runtime.rs": "67cebd16e2e2583703667c4179cbe68fe79119140c790713450f87a4fad613bc",
+      "desktop/Cargo.lock": "379eca6a0762a5439123a13d9aa8c3e96fe88fc4448498fc54495d6e2bd59eb0",
+      "desktop/Cargo.toml": "a7623cdabef5e9010922340a7c92e134ebd9b0dda437e452f4551a0c6e2e8266",
+      "desktop/host/Cargo.toml": "486b1a279eefb1bcb966afdacc00cfbc8c6ab1f3e2cf18cb6f79b0926a38673d",
+      "desktop/host/src/audio_verification.rs": "a5a8875300972ed936e2c11f2dddd9dba930a939e30592dd217424771d1b43aa",
+      "desktop/host/src/combined_verification.rs": "bb377ba3ac861c29368e71096ed5cb2fb58961c2e9f7c1e7c42d9433d3bcbd67",
+      "desktop/host/src/edit_verification.rs": "efb314777f5b6772a12f8821c582b31976339b1e6dd04f7a68ca659a960fc66e",
+      "desktop/host/src/editor_audio.rs": "115af900e00f04ade9b317c07bbc0836754dce73ea598b6055c78e124d37432c",
+      "desktop/host/src/frame_worker.rs": "c3df66400e9504efc6bf89d1c8d2b56277d107172eee4745b77340037fcdf532",
+      "desktop/host/src/gpu_observation.rs": "6b999f868e4d991a4e667fd076dba120382d3f83f6584d841fd59f123b15c821",
+      "desktop/host/src/import_worker.rs": "1db4c8b6dec3349eb72b6bc2758ff7899bfeba7fec7bb375498f380248f99e21",
+      "desktop/host/src/load_verification.rs": "b4f892c38d7c3dd52080404cfbf054a7f57f9096f77ae2cc903351db10ef29b5",
+      "desktop/host/src/main.rs": "d9c2d5f80692b36c31a579da7e3666177e6aa2aacd5da34787ed89fc9286bf2d",
+      "desktop/host/src/presentation.rs": "ebd5b0361161d8a1747ab910eb02f90992157e9708732cb124c196b54478a6b2",
+      "desktop/host/src/supply_verification.rs": "b46c642bbf4020b742fa9a880ff4430ce2b9b311952990ee1b93b665c76a164a",
+      "desktop/host/src/verification.rs": "57e3ffbbd2c5e419ac08b91cb0fcf50d3528e887ec3da04e56eaf99ee9fc167f",
+      "desktop/infrastructure/Cargo.toml": "5fae623c62758569c235b1ba0ce7461221f4e4faaae6d9e0f0c3e86bf89a7e87",
+      "desktop/infrastructure/src/audio_playback.rs": "9850c36db4f8ac81e2235312623cd007e5825f27bcaee0ad8889b6e4bfa69b62",
+      "desktop/infrastructure/src/audio_preparation.rs": "2ab4390e787c6eb1a0e5986b75908e52aac83ba77d762e7cea6bb2bb64c745b6",
+      "desktop/infrastructure/src/audio_supply.rs": "da4c00a27c41b0883808134604295bdb978d965f96f2ab6c04a155169e46b1d6",
+      "desktop/infrastructure/src/audio_worker.rs": "a7fbe3890518b85f0264adf37d8cc5e19fe93ce876cefd17aa68bcf6491f763f",
+      "desktop/infrastructure/src/blobs.rs": "5be7127b22e7276a6db2c435c312df29795af00fa3f3904a4d610a7e8639a9d9",
+      "desktop/infrastructure/src/byte_budget.rs": "0fe47fdea27b76520e3dedad38aa2695421b199ec2a5342ba4e9242bb0e45e15",
+      "desktop/infrastructure/src/lib.rs": "0057a35ffe84e8d2b122e7c94f4dce7166e0551eb986f00c854ef51305138c95",
+      "desktop/infrastructure/src/native_audio.rs": "ba3d307ada269e7f5af18263ea58753cdee4300114ae8e4e344691c23f46e343",
+      "desktop/infrastructure/src/skin_audio.rs": "78505d256f616354f0c4914904a1260c82c85c03bcd9afe13de7614a8d1f2ab5",
+      "desktop/infrastructure/src/wav.rs": "b0cd422952d3e4b7b273d97dc0ebcbd122dab213130e8069c0e57dd0d50e278f",
+      "desktop/preview/Cargo.toml": "6331b4af9692c3f4d16220de8810e992990b6032a2184fac0198e72efedd31fc",
+      "desktop/preview/src/lib.rs": "c519ed1f4e1afa8d570ad14b66ddb1b8291d0de98dca38e599ba1cc8d6e204b6",
+      "desktop/rendering/Cargo.toml": "e5b4c833b136d8bb07790c7a307f91b3fb74da7d55ce48df315f65248f02a636",
+      "desktop/rendering/src/gpu.rs": "1d04df7aa0d824108e8e8b0b55413268a9158af131134beba2ed167e76a1133e",
+      "desktop/rendering/src/lib.rs": "91a440817ac46102a2dc2c1644a1b69b7641536691a20be0942b871ea440ffbe",
+      "desktop/ui/Cargo.toml": "94e5a78db5fad807428f965606128c3d49705a3e8d045f2841775befcac54a33",
+      "desktop/ui/src/audio.rs": "f7163e5a9302460f3d6ffd7dc2db5c063cfc7301ee0b5bbe4a0183bf53027537",
+      "desktop/ui/src/lib.rs": "118bf1df58eb026efe8dfa95a064256bf56027942a473ce9082dba7bf035abdd",
+      "desktop/ui/src/tests.rs": "5fe85e0edd69b81b23bff166bc362063fcf9a59cf1d61c0632a3b69c606002c6",
+      "rust-toolchain.toml": "7d21c66a15f41bad66b82ed06a289f5dc8a6e3751951d2696bbf20ce296f2b0f",
+      "tools/check_core.py": "c7cd91465685a852498d7753db9a90fd7322799d167eb0d6ffb816ac6619e9cb",
+      "tools/check_core_architecture.py": "6e4fa6ee969655f97a230f148396685a0a3905e8ca567cc4a79f03d2233a221f",
+      "tools/check_core_cost.py": "32c83b988fefbde7cf2c3384252a9d5e52cc51a458d2e8341cf7b12780075cf0",
+      "tools/check_desktop.py": "0d20771e22828102be88921bc9496efb1df77d6c4bcbe5c874242d9de98f1520",
+      "tools/check_desktop_architecture.py": "ed4302a32bffd32617cb560346167c3722b0056633adc075087ba576fbcadf5a",
+      "tools/check_p0.py": "371d68565eeaf7959c2062aae48b39565678dcd4c4efc7fff43d719f449216cc",
+      "tools/check_p0_audio_adaptation.py": "39b26ef5964c436f9b9aef4c18ba475efaf4fa982da1d78b882d0f1da22aa1b0",
+      "tools/check_p0_combined_soak.py": "aab795ccfde5837ed87725d9d3d114a9a201ec5b73999026552923cb08de157a",
+      "tools/check_p0_composition.py": "277358084e319fb70afe1f406ba3365c500275dcfe6e18e6ea038badbe5a15af",
+      "tools/check_p0_compressed.py": "874a7710c6c6149ae7d4ab4854abe2fd180e7be3ff3352a2eb0e98b9d6218472",
+      "tools/check_p0_compressed_soak.py": "20155196ec6f20d579e412f701ebdbbaa11311b256ca045cb307beca1a3f125b",
+      "tools/check_p0_desktop.py": "de2093b6d5f0882b338d3ec41e7c0dad2023018647bef84947fc7907249318b2",
+      "tools/check_p0_edit_composition.py": "0bdb32f65e6828a0da95572c5cf639e8517c5030e070a189e826c5fc6bbf5936",
+      "tools/check_p0_gpu_memory.py": "c15fe78c3412b20dc6e02bc2c4523aa8448a8d48c4fd9759607f19b8428bd1af",
+      "tools/check_p0_gui.py": "030fac0ecdc08237297e151f8229302b94ea868701d95fdf8133ca9aa1ad1764",
+      "tools/check_p0_interaction.py": "927504336ebc4b2187d9adc8ccf6320127ab68af9446cb4f7606cde9bb64a02b",
+      "tools/check_p0_lifetime.py": "5d6d08b91ceffcf10cd973df2380fd50f39968e944087ec325c20872d951fa2f",
+      "tools/check_p0_media.py": "de300b5143a5406c4755efbd6f3358169a7252085514dd2f7248358342410c34",
+      "tools/check_p0_pcm.py": "c9bfbca3c53fab2c0000ace59bfca47af676836db203d917eccdf8921b632e01",
+      "tools/check_p0_recovery.py": "28306d06d06b4f7600bb6ef1ecfff118d60edcb136eb107688837e199301d211",
+      "tools/check_p0_resource_cycles.py": "49cb900d16f2486ab826ae4d05e1b6e607ee7beaa342b873455830877bf576c1",
+      "tools/check_p0_stream_output.py": "0e9eb58b66898d2422a2243deb1afb214565c063d2ca260d4f9b6a65d274d7c9",
+      "tools/check_p0_streaming.py": "6e031e3a2e1de901ca5e7d2a9bddb7e41a659e47fb901755c0f58bcde8320912",
+      "tools/check_p0_switch.py": "c7ea7be526ada9ab8f3ce342e5cf420ad133f01d36d7b2574c5d312ac8138ed1",
+      "tools/check_p0_switch_audio.py": "4c5dca5d6fd0a7ccbd6040857515b0a0298558ce4f9b0abf652d10ed8de54d89",
+      "tools/check_p0_transport.py": "2ef7ffba6e87dafac947a38f11f53ece2c93e811814859e133ef551385045fc8",
+      "tools/check_repository.py": "d939f80eb8b55bc69a3de2521d0492ae7aac17635e9158922eac7f5cf304e62c",
+      "tools/measure_audio_edit.py": "3a8853fdfec9ebe16757cd23d9524b15d067a88ac0ae187843555c0325b296cd",
+      "tools/measure_audio_load.py": "3b2371d3c56a1e0487f7e2950e5cd432e12f0a8491c99f2ec506919957e8aa11",
+      "tools/measure_audio_startup.py": "a116b8131c9b2b4d7479624e26879d311ed2ac027c4968a5c9a7d530f4e8d41e",
+      "tools/measure_combined.py": "1c46658e8ff9ae2131b02c0fe84bf3387d3405cb6ba84fc0b7a75d0be1df065e",
+      "tools/test_check_audio_edit.py": "b6baa91860f1bdf18314493da960d4c399199205104eb34bedef098f4e4303cd",
+      "tools/test_check_audio_load.py": "db23c219092ae1bdfd78d2c6efb5e2002b7e0eb9c3aa44dcfb5bcc6cc8da05df",
+      "tools/test_check_audio_startup.py": "5f2cbdd09841597faf574c240b33131f9d4c1bae9c079847fddc9fd05f8d4a28",
+      "tools/test_check_combined.py": "6bc624e4766dd51a99cfe1f0a09196d92f98e9773dce9f973610b241d31bb053",
+      "tools/test_check_core_architecture.py": "fb8226852e9fbaaf925a7e9fd17b8ec8fecc46f64b98e219b42031851eab7a32",
+      "tools/test_check_core_cost.py": "dbe75725a39a53476f81936f7f4b12d5032d672f2e329befcfc823f3b681aa57",
+      "tools/test_check_core_environment.py": "df4d661b681b27d21a1a02071c01e25c4d7f3577d830b48d269fa34a77499d61",
+      "tools/test_check_desktop_architecture.py": "0974e31d4ccb95ccadaa6b4d150e892a88115b63ed2fcdb2317eeeaf4f907551",
+      "tools/test_check_repository.py": "6918c19beecc9bce89fbf0fe989d8ebc1869d29db6b35cebaff0a8be47947e88"
+    }
+  },
+  "execution": {
+    "pixels-before": 0,
+    "long": 1,
+    "pixels-after": 0,
+    "sources_unchanged": true,
+    "binary_unchanged": true
+  },
+  "checks": {
+    "core": {
+      "path": "artifacts/p2/memory-acceptance/core-check-final.log",
+      "sha256": "cc0e6fefff2db1e442fc7a0cd05e35da942d9856aa73b1de6ab5ec4ccaa2a1f7",
+      "rust": 130,
+      "python": 56
+    },
+    "desktop": {
+      "path": "artifacts/p2/memory-acceptance/desktop-check.log",
+      "sha256": "8fd3c93addf2e9bead229fe5a9bc8a4754c58df8ba33561c204c7b7f818fd3e6",
+      "rust": 153,
+      "python": 0
+    }
+  },
+  "total_automated_checks": 339,
+  "unchanged_production_modules": {
+    "audio": true,
+    "infrastructure": true,
+    "rendering": true,
+    "preview": true,
+    "ui": true,
+    "application": true,
+    "domain": true
+  },
+  "production_audio": {
+    "ahead_frames": 768,
+    "supply_sleep_ms": 2,
+    "observer_sleep_ms": 1
+  },
+  "standard_profile_memory_usage": true,
+  "ordinary_application_memory_usage": false,
+  "pixels": {
+    "pixels-before": {
+      "schema": 1,
+      "mode": "pixel-policy-controls-not-performance",
+      "reports": [
+        {
+          "schema": 1,
+          "gpu_memory_usage_hint": false,
+          "pixel_trace_sizes": [
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              257,
+              193
+            ]
+          ],
+          "adapter": "NVIDIA GeForce RTX 2060",
+          "max_channel_error": 1,
+          "paused_draft_refresh": true,
+          "cancel_exact_restore": true,
+          "branch_restore": true,
+          "stale_viewport_rejected": true,
+          "unchanged_uploads": 0,
+          "audio_ui_native_audition": false,
+          "audio_ui_submitted_nonzero_samples": 0,
+          "audio_ui_library_nonzero_samples": 0,
+          "audio_ui_library_readonly": false,
+          "monitor_volume_permille": null,
+          "source_uploads": 1,
+          "shutdown_held_frame_tracked": true,
+          "source_buffer_queue_order_verified": true,
+          "allocations": 8,
+          "publications": 8
+        },
+        {
+          "schema": 1,
+          "gpu_memory_usage_hint": true,
+          "pixel_trace_sizes": [
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              257,
+              193
+            ]
+          ],
+          "adapter": "NVIDIA GeForce RTX 2060",
+          "max_channel_error": 1,
+          "paused_draft_refresh": true,
+          "cancel_exact_restore": true,
+          "branch_restore": true,
+          "stale_viewport_rejected": true,
+          "unchanged_uploads": 0,
+          "audio_ui_native_audition": false,
+          "audio_ui_submitted_nonzero_samples": 0,
+          "audio_ui_library_nonzero_samples": 0,
+          "audio_ui_library_readonly": false,
+          "monitor_volume_permille": null,
+          "source_uploads": 1,
+          "shutdown_held_frame_tracked": true,
+          "source_buffer_queue_order_verified": true,
+          "allocations": 8,
+          "publications": 8
+        }
+      ],
+      "comparison": {
+        "frames": 7,
+        "bytes": 1771268,
+        "exact_match": true,
+        "sha256": "bee8433fe9c6c6530704fbd6f5ca794e4b900ca16ea5371a14c3f922bceb2270",
+        "max_cpu_reference_error": 1
+      },
+      "sources_unchanged": true
+    },
+    "pixels-after": {
+      "schema": 1,
+      "mode": "pixel-policy-controls-not-performance",
+      "reports": [
+        {
+          "schema": 1,
+          "gpu_memory_usage_hint": false,
+          "pixel_trace_sizes": [
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              257,
+              193
+            ]
+          ],
+          "adapter": "NVIDIA GeForce RTX 2060",
+          "max_channel_error": 1,
+          "paused_draft_refresh": true,
+          "cancel_exact_restore": true,
+          "branch_restore": true,
+          "stale_viewport_rejected": true,
+          "unchanged_uploads": 0,
+          "audio_ui_native_audition": false,
+          "audio_ui_submitted_nonzero_samples": 0,
+          "audio_ui_library_nonzero_samples": 0,
+          "audio_ui_library_readonly": false,
+          "monitor_volume_permille": null,
+          "source_uploads": 1,
+          "shutdown_held_frame_tracked": true,
+          "source_buffer_queue_order_verified": true,
+          "allocations": 8,
+          "publications": 8
+        },
+        {
+          "schema": 1,
+          "gpu_memory_usage_hint": true,
+          "pixel_trace_sizes": [
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              257,
+              193
+            ]
+          ],
+          "adapter": "NVIDIA GeForce RTX 2060",
+          "max_channel_error": 1,
+          "paused_draft_refresh": true,
+          "cancel_exact_restore": true,
+          "branch_restore": true,
+          "stale_viewport_rejected": true,
+          "unchanged_uploads": 0,
+          "audio_ui_native_audition": false,
+          "audio_ui_submitted_nonzero_samples": 0,
+          "audio_ui_library_nonzero_samples": 0,
+          "audio_ui_library_readonly": false,
+          "monitor_volume_permille": null,
+          "source_uploads": 1,
+          "shutdown_held_frame_tracked": true,
+          "source_buffer_queue_order_verified": true,
+          "allocations": 8,
+          "publications": 8
+        }
+      ],
+      "comparison": {
+        "frames": 7,
+        "bytes": 1771268,
+        "exact_match": true,
+        "sha256": "bee8433fe9c6c6530704fbd6f5ca794e4b900ca16ea5371a14c3f922bceb2270",
+        "max_cpu_reference_error": 1
+      },
+      "sources_unchanged": true
+    }
+  },
+  "runs": [
+    {
+      "completed": true,
+      "phases": {
+        "playing": {
+          "sample_count": 2728,
+          "sample_span_seconds": 299.9690000000046,
+          "cpu_seconds": 8.96875,
+          "cpu_one_logical_core_percent": 2.989892288869804,
+          "working_set_bytes_max": 355893248,
+          "private_bytes_max": 429383680
+        },
+        "closed": {
+          "sample_count": 19,
+          "sample_span_seconds": 2.0,
+          "cpu_seconds": 0.09375,
+          "cpu_one_logical_core_percent": 4.6875,
+          "working_set_bytes_max": 264134656,
+          "private_bytes_max": 334577664
+        }
+      },
+      "gpu": {
+        "playing": {
+          "dedicated": {
+            "valid_samples": 2728,
+            "missing_samples": 0,
+            "max_bytes": 115257344
+          },
+          "shared": {
+            "valid_samples": 2728,
+            "missing_samples": 0,
+            "max_bytes": 46759936
+          }
+        },
+        "closed": {
+          "dedicated": {
+            "valid_samples": 19,
+            "missing_samples": 0,
+            "max_bytes": 72773632
+          },
+          "shared": {
+            "valid_samples": 19,
+            "missing_samples": 0,
+            "max_bytes": 46759936
+          }
+        }
+      },
+      "allocator": [
+        {
+          "stage": "before_editor",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 12582912,
+          "unused_capacity_bytes": 12024752,
+          "categories": {
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_5": 64,
+            "egui_vertex_buffer": 20496,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_2": 64,
+            "egui_index_buffer": 12288,
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.049
+        },
+        {
+          "stage": "editor_created",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 12582912,
+          "unused_capacity_bytes": 12024752,
+          "categories": {
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_5": 64,
+            "egui_vertex_buffer": 20496,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_2": 64,
+            "egui_index_buffer": 12288,
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.0389
+        },
+        {
+          "stage": "playing_start",
+          "supported": true,
+          "allocated_bytes": 47879992,
+          "reserved_bytes": 54525952,
+          "unused_capacity_bytes": 6645960,
+          "categories": {
+            "egui_index_buffer": 24576,
+            "(wgpu internal) zero init buffer": 524288,
+            "composition ops": 4160,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "composition params": 64,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_3": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_1": 64,
+            "candidate preview": 4228080,
+            "egui_texture_flags_0": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_2": 64,
+            "source pixels": 41943040,
+            "(wgpu internal) Staging": 65224
+          },
+          "capture_ms": 0.0524
+        },
+        {
+          "stage": "playing_2s",
+          "supported": true,
+          "allocated_bytes": 45754824,
+          "reserved_bytes": 54525952,
+          "unused_capacity_bytes": 8771128,
+          "categories": {
+            "egui_index_buffer": 24576,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_3": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_1": 64,
+            "candidate preview": 2114544,
+            "egui_texture_flags_0": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_2": 64,
+            "source pixels": 41943040,
+            "(wgpu internal) Staging": 57816
+          },
+          "capture_ms": 0.0342
+        },
+        {
+          "stage": "playing_60s",
+          "supported": true,
+          "allocated_bytes": 45753816,
+          "reserved_bytes": 54525952,
+          "unused_capacity_bytes": 8772136,
+          "categories": {
+            "egui_index_buffer": 24576,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "candidate preview": 2113536,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_3": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_1": 64,
+            "egui_texture_flags_0": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_2": 64,
+            "source pixels": 41943040,
+            "(wgpu internal) Staging": 57816
+          },
+          "capture_ms": 0.0335
+        },
+        {
+          "stage": "playing_200s",
+          "supported": true,
+          "allocated_bytes": 45756528,
+          "reserved_bytes": 54525952,
+          "unused_capacity_bytes": 8769424,
+          "categories": {
+            "egui_index_buffer": 24576,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "candidate preview": 2113536,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_3": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_1": 64,
+            "egui_texture_flags_0": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_2": 64,
+            "source pixels": 41943040,
+            "(wgpu internal) Staging": 60528
+          },
+          "capture_ms": 0.0388
+        },
+        {
+          "stage": "playing_299s",
+          "supported": true,
+          "allocated_bytes": 45757536,
+          "reserved_bytes": 54525952,
+          "unused_capacity_bytes": 8768416,
+          "categories": {
+            "egui_index_buffer": 24576,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_3": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_1": 64,
+            "candidate preview": 2114544,
+            "egui_texture_flags_0": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_2": 64,
+            "source pixels": 41943040,
+            "(wgpu internal) Staging": 60528
+          },
+          "capture_ms": 0.0425
+        },
+        {
+          "stage": "after_shutdown",
+          "supported": true,
+          "allocated_bytes": 1639424,
+          "reserved_bytes": 12582912,
+          "unused_capacity_bytes": 10943488,
+          "categories": {
+            "egui_index_buffer": 24576,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_3": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_1": 64,
+            "egui_texture_flags_0": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_2": 64
+          },
+          "capture_ms": 0.036000000000000004
+        },
+        {
+          "stage": "report",
+          "supported": true,
+          "allocated_bytes": 1639424,
+          "reserved_bytes": 12582912,
+          "unused_capacity_bytes": 10943488,
+          "categories": {
+            "egui_index_buffer": 24576,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_3": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_1": 64,
+            "egui_texture_flags_0": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_2": 64
+          },
+          "capture_ms": 0.0579
+        }
+      ],
+      "latency_ms": [
+        {
+          "count": 64,
+          "p50": 16.135199999999998,
+          "p95": 17.2106,
+          "p99": 17.8854,
+          "max": 17.8854
+        },
+        {
+          "count": 64,
+          "p50": 11.1151,
+          "p95": 12.461500000000001,
+          "p99": 20.5532,
+          "max": 20.5532
+        }
+      ],
+      "submission": [
+        {
+          "lower_ms": {
+            "count": 64,
+            "p50": 14.617099999999999,
+            "p95": 15.547099999999999,
+            "p99": 15.8826,
+            "max": 15.8826
+          },
+          "upper_ms": {
+            "count": 64,
+            "p50": 16.135199999999998,
+            "p95": 17.2106,
+            "p99": 17.8854,
+            "max": 17.8854
+          },
+          "uncertainty_ms": {
+            "count": 64,
+            "p50": 1.8003999999999998,
+            "p95": 2.027000000000001,
+            "p99": 2.2857000000000003,
+            "max": 2.2857000000000003
+          },
+          "request_to_receipt_ms": {
+            "count": 64,
+            "p50": 1.908,
+            "p95": 2.9509,
+            "p99": 2.9728,
+            "max": 2.9728
+          },
+          "after_receipt_lower_ms": {
+            "count": 64,
+            "p50": 13.1041,
+            "p95": 14.4456,
+            "p99": 15.0531,
+            "max": 15.0531
+          },
+          "p95_classification": "confirmed_within",
+          "individually_confirmed_over_20": 0,
+          "individually_straddling_20": 0
+        },
+        {
+          "lower_ms": {
+            "count": 64,
+            "p50": 9.7497,
+            "p95": 10.6701,
+            "p99": 19.0355,
+            "max": 19.0355
+          },
+          "upper_ms": {
+            "count": 64,
+            "p50": 11.1151,
+            "p95": 12.461500000000001,
+            "p99": 20.5532,
+            "max": 20.5532
+          },
+          "uncertainty_ms": {
+            "count": 64,
+            "p50": 1.528500000000001,
+            "p95": 2.0292000000000012,
+            "p99": 2.046199999999999,
+            "max": 2.046199999999999
+          },
+          "request_to_receipt_ms": {
+            "count": 64,
+            "p50": 2.0056000000000003,
+            "p95": 3.0617,
+            "p99": 3.1881,
+            "max": 3.1881
+          },
+          "after_receipt_lower_ms": {
+            "count": 64,
+            "p50": 8.0232,
+            "p95": 10.2162,
+            "p99": 16.0855,
+            "max": 16.0855
+          },
+          "p95_classification": "confirmed_within",
+          "individually_confirmed_over_20": 0,
+          "individually_straddling_20": 3
+        }
+      ],
+      "edit_ms": {
+        "count": 300,
+        "p50": 7.7403,
+        "p95": 10.322700000000001,
+        "p99": 11.2487,
+        "max": 13.4346
+      },
+      "cpu_frame_ms": {
+        "count": 3945,
+        "p50": 2.267400035634637,
+        "p95": 4.910299554467201,
+        "p99": 5.615899804979563,
+        "max": 11.252299882471561
+      },
+      "graphics_request_to_publication_ms": {
+        "count": 322,
+        "p50": 5.042899999993097,
+        "p95": 72.69159999999101,
+        "p99": 94.51499999999942,
+        "max": 102.90200000000186
+      },
+      "cpu_frames_over_16_7_ms": 0,
+      "lifetime_peak_working_set_bytes": 360992768,
+      "lifetime_peak_pagefile_bytes": 462307328,
+      "checks": {
+        "continuous_native_submission_300s": true,
+        "no_underflow_including_startup": true,
+        "ready_both_lanes_under_graphics_p95_le_20_ms": true,
+        "edit_activation_p95_le_50_ms": true,
+        "cpu_playing_one_core_le_15_percent": true,
+        "cpu_frame_p95_le_16_7_ms": true,
+        "cpu_frame_max_le_16_7_ms": true,
+        "working_set_private_le_512_mib": true,
+        "gpu_pid_budget": true,
+        "bounded_managed_resources": true,
+        "old_resources_released": true,
+        "unchanged_sources_reused": true,
+        "source_allocation_reused": true,
+        "dual_channel_isolation": true,
+        "draft_history_cleanup": true,
+        "all_graphics_changes_published": true
+      },
+      "report": {
+        "schema": 1,
+        "gpu_memory_usage_hint": true,
+        "seconds": 300,
+        "rate": 48000,
+        "channels": 2,
+        "period_frames": 480,
+        "original_pngs": 100,
+        "documents": 10,
+        "layers": 500,
+        "triggers": 2400,
+        "edits": 300,
+        "switches": 20,
+        "native_play_frames": 14400480,
+        "empty_frames": 0,
+        "empty_callbacks": 0,
+        "max_empty_callback_frames": 0,
+        "callbacks": 30038,
+        "max_callback_frames": 1056,
+        "latency_upper_bound_ms": [
+          [
+            15.626199999999999,
+            17.111500000000003,
+            16.3443,
+            16.4866,
+            16.0668,
+            17.2106,
+            15.803700000000001,
+            16.277900000000002,
+            15.7204,
+            15.554699999999999,
+            15.9731,
+            16.5502,
+            16.315199999999997,
+            15.698,
+            16.1589,
+            15.923199999999998,
+            16.1391,
+            15.6816,
+            15.978,
+            16.135199999999998,
+            17.6828,
+            15.925999999999998,
+            17.4319,
+            15.769600000000002,
+            16.676,
+            15.6211,
+            16.1708,
+            15.9277,
+            16.7498,
+            17.1078,
+            16.7259,
+            17.0442,
+            15.568200000000001,
+            15.716999999999999,
+            16.0407,
+            16.236,
+            16.8625,
+            15.5106,
+            16.6029,
+            16.1365,
+            17.209,
+            16.241100000000003,
+            16.043000000000003,
+            15.1939,
+            16.6279,
+            15.4674,
+            16.0023,
+            15.5216,
+            16.5947,
+            16.745199999999997,
+            15.851899999999999,
+            16.9896,
+            17.8854,
+            15.643299999999998,
+            16.5976,
+            16.217499999999998,
+            15.364700000000001,
+            15.652,
+            16.2368,
+            16.4121,
+            15.662700000000001,
+            14.9274,
+            15.6105,
+            14.9254
+          ],
+          [
+            11.689400000000001,
+            10.4596,
+            11.3345,
+            12.3959,
+            10.100100000000001,
+            10.455,
+            11.0299,
+            11.5824,
+            10.6162,
+            10.6191,
+            12.201,
+            12.323,
+            10.8437,
+            10.6228,
+            10.4962,
+            11.905000000000001,
+            11.578899999999999,
+            11.5885,
+            12.461500000000001,
+            11.0891,
+            10.7788,
+            11.9056,
+            11.585099999999999,
+            12.4576,
+            10.9739,
+            10.9228,
+            12.0228,
+            11.543700000000001,
+            11.6578,
+            10.9453,
+            11.8505,
+            10.2799,
+            11.1029,
+            10.7532,
+            11.088799999999999,
+            10.86,
+            10.995,
+            10.4899,
+            11.7694,
+            11.5693,
+            11.5618,
+            10.9841,
+            12.0583,
+            20.5532,
+            12.0858,
+            11.300799999999999,
+            11.1151,
+            10.7887,
+            10.509400000000001,
+            12.0659,
+            12.1909,
+            11.2087,
+            10.9108,
+            20.3445,
+            10.632000000000001,
+            10.5147,
+            12.218100000000002,
+            10.0181,
+            11.385299999999999,
+            11.158700000000001,
+            10.949800000000002,
+            10.0672,
+            10.549,
+            20.503500000000003
+          ]
+        ],
+        "submission_intervals_ms": [
+          [
+            [
+              14.065100000000001,
+              15.626199999999999,
+              2.9229,
+              2.935,
+              626.0016
+            ],
+            [
+              15.101099999999999,
+              17.111500000000003,
+              1.9915000000000003,
+              2.0100000000000002,
+              4625.741899999999
+            ],
+            [
+              15.2678,
+              16.3443,
+              1.0049,
+              1.0291000000000001,
+              8625.567200000001
+            ],
+            [
+              14.4984,
+              16.4866,
+              1.3943,
+              1.4181000000000001,
+              12625.653
+            ],
+            [
+              14.2401,
+              16.0668,
+              0.9267000000000001,
+              0.9359000000000001,
+              16625.9404
+            ],
+            [
+              15.2173,
+              17.2106,
+              1.9482,
+              1.9570999999999998,
+              20625.641900000002
+            ],
+            [
+              14.2719,
+              15.803700000000001,
+              0.9510000000000001,
+              0.9639,
+              24625.4624
+            ],
+            [
+              14.2668,
+              16.277900000000002,
+              2.9442,
+              2.9548,
+              28625.8487
+            ],
+            [
+              14.6541,
+              15.7204,
+              2.9214,
+              2.949,
+              32625.638600000002
+            ],
+            [
+              14.0354,
+              15.554699999999999,
+              0.9247,
+              0.9354,
+              36625.432799999995
+            ],
+            [
+              14.9317,
+              15.9731,
+              0.9449000000000001,
+              0.9556,
+              40625.4849
+            ],
+            [
+              14.5498,
+              16.5502,
+              1.9754,
+              1.9892,
+              44625.6613
+            ],
+            [
+              15.2966,
+              16.315199999999997,
+              1.9644,
+              1.9845000000000002,
+              48625.6907
+            ],
+            [
+              14.6772,
+              15.698,
+              0.4523,
+              0.4824,
+              52625.797
+            ],
+            [
+              14.5779,
+              16.1589,
+              0.9198000000000001,
+              0.9307,
+              56625.332800000004
+            ],
+            [
+              14.9009,
+              15.923199999999998,
+              0.9688,
+              0.9875999999999999,
+              60625.6154
+            ],
+            [
+              14.3387,
+              16.1391,
+              0.9682999999999999,
+              0.9814999999999999,
+              64625.3203
+            ],
+            [
+              14.6351,
+              15.6816,
+              2.9121,
+              2.9292,
+              68625.81090000001
+            ],
+            [
+              14.0986,
+              15.978,
+              2.9728,
+              3.0009,
+              72625.75289999999
+            ],
+            [
+              14.6305,
+              16.135199999999998,
+              1.9446999999999999,
+              1.9723000000000002,
+              76625.7592
+            ],
+            [
+              15.686300000000001,
+              17.6828,
+              0.6332,
+              0.6488,
+              80625.1932
+            ],
+            [
+              13.9385,
+              15.925999999999998,
+              1.4493,
+              1.4745,
+              84625.6923
+            ],
+            [
+              15.352400000000001,
+              17.4319,
+              1.9737,
+              1.9869,
+              88625.54299999999
+            ],
+            [
+              14.7512,
+              15.769600000000002,
+              2.9604000000000004,
+              2.9718,
+              92625.5106
+            ],
+            [
+              14.633000000000001,
+              16.676,
+              1.908,
+              1.9365,
+              96625.4963
+            ],
+            [
+              13.3354,
+              15.6211,
+              0.8047,
+              0.8151,
+              100625.262
+            ],
+            [
+              14.6462,
+              16.1708,
+              2.9449,
+              2.9627999999999997,
+              104625.39649999999
+            ],
+            [
+              14.907200000000001,
+              15.9277,
+              2.9509,
+              2.9665,
+              108625.9598
+            ],
+            [
+              14.751999999999999,
+              16.7498,
+              0.46959999999999996,
+              0.48040000000000005,
+              112625.1783
+            ],
+            [
+              15.1242,
+              17.1078,
+              0.4395,
+              0.4512,
+              116625.57979999999
+            ],
+            [
+              14.7506,
+              16.7259,
+              1.4546999999999999,
+              1.4630999999999998,
+              120625.59229999999
+            ],
+            [
+              15.547099999999999,
+              17.0442,
+              0.9867999999999999,
+              1.0069000000000001,
+              124625.1994
+            ],
+            [
+              14.059999999999999,
+              15.568200000000001,
+              0.4883,
+              0.5011,
+              128625.48899999999
+            ],
+            [
+              14.6812,
+              15.716999999999999,
+              0.5209,
+              0.5400999999999999,
+              132625.9124
+            ],
+            [
+              14.040199999999999,
+              16.0407,
+              0.6143000000000001,
+              0.636,
+              136625.5411
+            ],
+            [
+              14.2197,
+              16.236,
+              0.5297000000000001,
+              0.5408999999999999,
+              140625.6238
+            ],
+            [
+              14.8355,
+              16.8625,
+              1.9554,
+              1.9725,
+              144625.7555
+            ],
+            [
+              13.504800000000001,
+              15.5106,
+              2.9442,
+              2.9591000000000003,
+              148626.0783
+            ],
+            [
+              14.5997,
+              16.6029,
+              0.5473,
+              0.5593,
+              152625.50809999998
+            ],
+            [
+              14.1174,
+              16.1365,
+              1.976,
+              1.9880000000000002,
+              156625.2093
+            ],
+            [
+              15.2334,
+              17.209,
+              2.9379,
+              2.9495,
+              160625.2547
+            ],
+            [
+              14.261,
+              16.241100000000003,
+              0.9393,
+              0.9592999999999999,
+              164625.6501
+            ],
+            [
+              14.970600000000001,
+              16.043000000000003,
+              0.525,
+              0.5524,
+              168625.14959999998
+            ],
+            [
+              14.155100000000001,
+              15.1939,
+              1.9312,
+              1.944,
+              172625.9445
+            ],
+            [
+              14.624500000000001,
+              16.6279,
+              2.9423,
+              2.953,
+              176625.2628
+            ],
+            [
+              14.089300000000001,
+              15.4674,
+              0.8905000000000001,
+              0.901,
+              180625.4711
+            ],
+            [
+              14.0972,
+              16.0023,
+              0.8931,
+              0.9219,
+              184625.2467
+            ],
+            [
+              14.4884,
+              15.5216,
+              1.9685000000000001,
+              1.9776,
+              188625.7081
+            ],
+            [
+              15.577499999999999,
+              16.5947,
+              2.9602,
+              2.9757,
+              192625.28459999998
+            ],
+            [
+              14.770999999999999,
+              16.745199999999997,
+              1.9948000000000001,
+              2.0092,
+              196625.5117
+            ],
+            [
+              13.8336,
+              15.851899999999999,
+              2.9233000000000002,
+              2.9339,
+              200625.9756
+            ],
+            [
+              15.4454,
+              16.9896,
+              2.6508,
+              2.6778,
+              204625.09829999998
+            ],
+            [
+              15.8826,
+              17.8854,
+              1.9269999999999998,
+              1.9398,
+              208625.2046
+            ],
+            [
+              14.6249,
+              15.643299999999998,
+              1.9300000000000002,
+              1.9616,
+              212625.5894
+            ],
+            [
+              14.5737,
+              16.5976,
+              0.9495,
+              0.9641,
+              216625.0968
+            ],
+            [
+              14.409999999999998,
+              16.217499999999998,
+              1.1322999999999999,
+              1.1525,
+              220625.2968
+            ],
+            [
+              13.3474,
+              15.364700000000001,
+              2.7843,
+              2.7956,
+              224626.1503
+            ],
+            [
+              14.617099999999999,
+              15.652,
+              0.5055,
+              0.516,
+              228625.5731
+            ],
+            [
+              14.2241,
+              16.2368,
+              1.9734000000000003,
+              1.9835,
+              232625.4415
+            ],
+            [
+              15.3361,
+              16.4121,
+              0.9886999999999999,
+              1.0007,
+              236625.15350000001
+            ],
+            [
+              14.6476,
+              15.662700000000001,
+              1.9388,
+              1.9536000000000002,
+              240625.9239
+            ],
+            [
+              13.8717,
+              14.9274,
+              0.9512999999999999,
+              0.9803999999999999,
+              244625.8617
+            ],
+            [
+              14.562999999999999,
+              15.6105,
+              1.9287,
+              1.9396,
+              248625.4405
+            ],
+            [
+              13.8786,
+              14.9254,
+              2.937,
+              2.957,
+              252626.0783
+            ]
+          ],
+          [
+            [
+              10.6701,
+              11.689400000000001,
+              0.45389999999999997,
+              0.4754,
+              250.1619
+            ],
+            [
+              8.9454,
+              10.4596,
+              2.0484,
+              2.0679000000000003,
+              4250.9083
+            ],
+            [
+              9.6319,
+              11.3345,
+              0.5797000000000001,
+              0.5905,
+              8250.6432
+            ],
+            [
+              10.4635,
+              12.3959,
+              2.0447,
+              2.052,
+              12250.444599999999
+            ],
+            [
+              9.082099999999999,
+              10.100100000000001,
+              1.0363,
+              1.0456,
+              16251.2959
+            ],
+            [
+              8.947099999999999,
+              10.455,
+              3.0476,
+              3.0595000000000003,
+              20250.5476
+            ],
+            [
+              10.0058,
+              11.0299,
+              1.0758,
+              1.0958,
+              24250.5057
+            ],
+            [
+              9.577399999999999,
+              11.5824,
+              3.0476,
+              3.0647,
+              28250.3955
+            ],
+            [
+              9.0794,
+              10.6162,
+              0.5418000000000001,
+              0.5601999999999999,
+              32250.807199999996
+            ],
+            [
+              9.5873,
+              10.6191,
+              3.0431999999999997,
+              3.0688,
+              36250.4963
+            ],
+            [
+              10.197799999999999,
+              12.201,
+              0.4711,
+              0.4878,
+              40250.5643
+            ],
+            [
+              10.2883,
+              12.323,
+              3.0617,
+              3.0728999999999997,
+              44250.3229
+            ],
+            [
+              9.829600000000001,
+              10.8437,
+              0.4665,
+              0.4819,
+              48250.2427
+            ],
+            [
+              9.556000000000001,
+              10.6228,
+              1.0093,
+              1.021,
+              52250.441199999994
+            ],
+            [
+              8.980699999999999,
+              10.4962,
+              1.0736999999999999,
+              1.0859,
+              56250.4202
+            ],
+            [
+              9.8925,
+              11.905000000000001,
+              2.084,
+              2.1119,
+              60250.559199999996
+            ],
+            [
+              10.5437,
+              11.578899999999999,
+              1.0549,
+              1.0823,
+              64250.309700000005
+            ],
+            [
+              9.573599999999999,
+              11.5885,
+              2.1895000000000002,
+              2.1998,
+              68250.8111
+            ],
+            [
+              10.4675,
+              12.461500000000001,
+              2.1631,
+              2.1752,
+              72250.46759999999
+            ],
+            [
+              9.0818,
+              11.0891,
+              0.49720000000000003,
+              0.5065,
+              76250.2959
+            ],
+            [
+              9.7296,
+              10.7788,
+              2.2195,
+              2.2564,
+              80250.4314
+            ],
+            [
+              9.9116,
+              11.9056,
+              1.044,
+              1.0621999999999998,
+              84250.7222
+            ],
+            [
+              10.2421,
+              11.585099999999999,
+              0.8051,
+              0.8143,
+              88250.3875
+            ],
+            [
+              10.456800000000001,
+              12.4576,
+              3.1881,
+              3.2537,
+              92250.1745
+            ],
+            [
+              9.9116,
+              10.9739,
+              0.6725,
+              0.6976,
+              96250.4859
+            ],
+            [
+              9.8983,
+              10.9228,
+              0.6901999999999999,
+              0.71,
+              100250.4888
+            ],
+            [
+              9.9805,
+              12.0228,
+              1.7014,
+              1.7437,
+              104250.1737
+            ],
+            [
+              9.540099999999999,
+              11.543700000000001,
+              2.0391,
+              2.0649,
+              108250.6012
+            ],
+            [
+              10.1331,
+              11.6578,
+              2.0693,
+              2.0778,
+              112250.503
+            ],
+            [
+              9.9269,
+              10.9453,
+              2.0101,
+              2.0206,
+              116250.54539999999
+            ],
+            [
+              9.8505,
+              11.8505,
+              3.0206999999999997,
+              3.0324,
+              120250.5266
+            ],
+            [
+              8.7119,
+              10.2799,
+              2.0212,
+              2.0324,
+              124250.54160000001
+            ],
+            [
+              9.091999999999999,
+              11.1029,
+              1.0688,
+              1.08,
+              128251.01699999999
+            ],
+            [
+              9.2258,
+              10.7532,
+              1.0682,
+              1.0805,
+              132250.1378
+            ],
+            [
+              10.0044,
+              11.088799999999999,
+              3.0321,
+              3.0496999999999996,
+              136250.1309
+            ],
+            [
+              9.6244,
+              10.86,
+              2.0194,
+              2.0303999999999998,
+              140250.41189999998
+            ],
+            [
+              9.9028,
+              10.995,
+              2.077,
+              2.093,
+              144250.46050000002
+            ],
+            [
+              9.051699999999999,
+              10.4899,
+              0.7793,
+              0.8013,
+              148250.54890000002
+            ],
+            [
+              9.7497,
+              11.7694,
+              1.5415999999999999,
+              1.5610000000000002,
+              152250.5299
+            ],
+            [
+              9.581299999999999,
+              11.5693,
+              2.0111,
+              2.0237,
+              156250.55969999998
+            ],
+            [
+              9.542,
+              11.5618,
+              2.2295000000000003,
+              2.2416,
+              160250.463
+            ],
+            [
+              9.9679,
+              10.9841,
+              3.0453,
+              3.0637,
+              164250.3285
+            ],
+            [
+              10.0625,
+              12.0583,
+              3.1567000000000003,
+              3.1681,
+              168250.47799999997
+            ],
+            [
+              19.0355,
+              20.5532,
+              2.9499999999999997,
+              2.9654,
+              172251.0497
+            ],
+            [
+              10.088,
+              12.0858,
+              2.0056000000000003,
+              2.0141,
+              176250.4807
+            ],
+            [
+              9.8162,
+              11.300799999999999,
+              2.0170000000000003,
+              2.0435000000000003,
+              180250.257
+            ],
+            [
+              9.2779,
+              11.1151,
+              0.6027,
+              0.6149,
+              184250.3035
+            ],
+            [
+              9.681000000000001,
+              10.7887,
+              2.9834,
+              2.9962,
+              188250.375
+            ],
+            [
+              8.9809,
+              10.509400000000001,
+              1.0688,
+              1.0769,
+              192250.4705
+            ],
+            [
+              10.0197,
+              12.0659,
+              0.545,
+              0.5568,
+              196250.35919999998
+            ],
+            [
+              10.172,
+              12.1909,
+              0.871,
+              0.8832,
+              200250.35629999998
+            ],
+            [
+              9.2112,
+              11.2087,
+              3.0496,
+              3.0698000000000003,
+              204250.5303
+            ],
+            [
+              9.8937,
+              10.9108,
+              0.6918,
+              0.7067,
+              208250.40910000002
+            ],
+            [
+              18.3402,
+              20.3445,
+              2.9173,
+              2.9346,
+              212250.9817
+            ],
+            [
+              9.518199999999998,
+              10.632000000000001,
+              1.5729,
+              1.5834,
+              216250.44030000002
+            ],
+            [
+              8.990599999999999,
+              10.5147,
+              1.5782,
+              1.603,
+              220250.50329999998
+            ],
+            [
+              10.2135,
+              12.218100000000002,
+              1.052,
+              1.0736999999999999,
+              224250.3283
+            ],
+            [
+              8.5083,
+              10.0181,
+              2.0297,
+              2.039,
+              228250.6321
+            ],
+            [
+              9.365699999999999,
+              11.385299999999999,
+              1.0412,
+              1.0697,
+              232250.62589999998
+            ],
+            [
+              9.1295,
+              11.158700000000001,
+              1.8619,
+              1.8822,
+              236250.4722
+            ],
+            [
+              9.8932,
+              10.949800000000002,
+              3.1336,
+              3.1428,
+              240250.4784
+            ],
+            [
+              8.4774,
+              10.0672,
+              2.1711,
+              2.1829,
+              244250.8522
+            ],
+            [
+              9.4534,
+              10.549,
+              0.5419999999999999,
+              0.5535,
+              248250.3677
+            ],
+            [
+              18.4933,
+              20.503500000000003,
+              3.0116,
+              3.0206,
+              252251.1496
+            ]
+          ]
+        ],
+        "presentation": {
+          "physical_size": [
+            1180.0,
+            800.0
+          ],
+          "surface_config_utf8": [
+            83,
+            111,
+            109,
+            101,
+            40,
+            83,
+            117,
+            114,
+            102,
+            97,
+            99,
+            101,
+            67,
+            111,
+            110,
+            102,
+            105,
+            103,
+            32,
+            123,
+            32,
+            112,
+            114,
+            101,
+            115,
+            101,
+            110,
+            116,
+            95,
+            109,
+            111,
+            100,
+            101,
+            58,
+            32,
+            65,
+            117,
+            116,
+            111,
+            86,
+            115,
+            121,
+            110,
+            99,
+            44,
+            32,
+            100,
+            101,
+            115,
+            105,
+            114,
+            101,
+            100,
+            95,
+            109,
+            97,
+            120,
+            105,
+            109,
+            117,
+            109,
+            95,
+            102,
+            114,
+            97,
+            109,
+            101,
+            95,
+            108,
+            97,
+            116,
+            101,
+            110,
+            99,
+            121,
+            58,
+            32,
+            83,
+            111,
+            109,
+            101,
+            40,
+            49,
+            41,
+            32,
+            125,
+            41
+          ]
+        },
+        "peak_voices": 8,
+        "max_trigger_lateness_ms": 4.0124,
+        "pcm_peak_bytes": 5667200,
+        "pcm_final_bytes": 0,
+        "raw_peak_bytes": 5134981,
+        "raw_final_bytes": 0,
+        "rgba_peak_bytes": 71303168,
+        "rgba_final_bytes": 0,
+        "max_targets": 2,
+        "final_targets": 0,
+        "allocations": 322,
+        "publications": 322,
+        "source_uploads": 21,
+        "source_cache_final_bytes": 0,
+        "source_allocations": 1,
+        "max_probe_poll_gap_ms": 2.4846,
+        "max_supply_gap_micros": 7578,
+        "underrun_observations": [],
+        "slow_ui_ms": [],
+        "trace_overflow": false,
+        "dual_channel_isolation": true,
+        "draft_history_cleanup": true,
+        "resources_released": true,
+        "adapter_utf8": [
+          65,
+          100,
+          97,
+          112,
+          116,
+          101,
+          114,
+          73,
+          110,
+          102,
+          111,
+          32,
+          123,
+          32,
+          110,
+          97,
+          109,
+          101,
+          58,
+          32,
+          34,
+          78,
+          86,
+          73,
+          68,
+          73,
+          65,
+          32,
+          71,
+          101,
+          70,
+          111,
+          114,
+          99,
+          101,
+          32,
+          82,
+          84,
+          88,
+          32,
+          50,
+          48,
+          54,
+          48,
+          34,
+          44,
+          32,
+          118,
+          101,
+          110,
+          100,
+          111,
+          114,
+          58,
+          32,
+          52,
+          51,
+          49,
+          56,
+          44,
+          32,
+          100,
+          101,
+          118,
+          105,
+          99,
+          101,
+          58,
+          32,
+          55,
+          57,
+          53,
+          55,
+          44,
+          32,
+          100,
+          101,
+          118,
+          105,
+          99,
+          101,
+          95,
+          116,
+          121,
+          112,
+          101,
+          58,
+          32,
+          68,
+          105,
+          115,
+          99,
+          114,
+          101,
+          116,
+          101,
+          71,
+          112,
+          117,
+          44,
+          32,
+          100,
+          101,
+          118,
+          105,
+          99,
+          101,
+          95,
+          112,
+          99,
+          105,
+          95,
+          98,
+          117,
+          115,
+          95,
+          105,
+          100,
+          58,
+          32,
+          34,
+          48,
+          48,
+          48,
+          48,
+          58,
+          48,
+          49,
+          58,
+          48,
+          48,
+          46,
+          48,
+          34,
+          44,
+          32,
+          100,
+          114,
+          105,
+          118,
+          101,
+          114,
+          58,
+          32,
+          34,
+          78,
+          86,
+          73,
+          68,
+          73,
+          65,
+          34,
+          44,
+          32,
+          100,
+          114,
+          105,
+          118,
+          101,
+          114,
+          95,
+          105,
+          110,
+          102,
+          111,
+          58,
+          32,
+          34,
+          53,
+          54,
+          48,
+          46,
+          57,
+          52,
+          34,
+          44,
+          32,
+          98,
+          97,
+          99,
+          107,
+          101,
+          110,
+          100,
+          58,
+          32,
+          86,
+          117,
+          108,
+          107,
+          97,
+          110,
+          44,
+          32,
+          115,
+          117,
+          98,
+          103,
+          114,
+          111,
+          117,
+          112,
+          95,
+          109,
+          105,
+          110,
+          95,
+          115,
+          105,
+          122,
+          101,
+          58,
+          32,
+          51,
+          50,
+          44,
+          32,
+          115,
+          117,
+          98,
+          103,
+          114,
+          111,
+          117,
+          112,
+          95,
+          109,
+          97,
+          120,
+          95,
+          115,
+          105,
+          122,
+          101,
+          58,
+          32,
+          51,
+          50,
+          44,
+          32,
+          116,
+          114,
+          97,
+          110,
+          115,
+          105,
+          101,
+          110,
+          116,
+          95,
+          115,
+          97,
+          118,
+          101,
+          115,
+          95,
+          109,
+          101,
+          109,
+          111,
+          114,
+          121,
+          58,
+          32,
+          83,
+          111,
+          109,
+          101,
+          40,
+          102,
+          97,
+          108,
+          115,
+          101,
+          41,
+          44,
+          32,
+          108,
+          105,
+          109,
+          105,
+          116,
+          95,
+          98,
+          117,
+          99,
+          107,
+          101,
+          116,
+          58,
+          32,
+          78,
+          111,
+          110,
+          101,
+          32,
+          125
+        ]
+      },
+      "cold_publish_ms": {
+        "count": 21,
+        "p50": 74.36530000000494,
+        "p95": 99.22679999999673,
+        "p99": 102.90200000000186,
+        "max": 102.90200000000186
+      },
+      "warm_publish_ms": {
+        "count": 301,
+        "p50": 5.0168999999878,
+        "p95": 5.615399999995134,
+        "p99": 5.897299999953248,
+        "max": 6.426500000001397
+      },
+      "all_phase_gpu": {
+        "cleanup": {
+          "dedicated": {
+            "max_bytes": 114798592,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 46759936,
+            "missing_samples": 0
+          }
+        },
+        "closed": {
+          "dedicated": {
+            "max_bytes": 72773632,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 46759936,
+            "missing_samples": 0
+          }
+        },
+        "done": {
+          "dedicated": {
+            "max_bytes": 2248704,
+            "missing_samples": 1
+          },
+          "shared": {
+            "max_bytes": 12980224,
+            "missing_samples": 1
+          }
+        },
+        "loading": {
+          "dedicated": {
+            "max_bytes": 113152000,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 42745856,
+            "missing_samples": 0
+          }
+        },
+        "playing": {
+          "dedicated": {
+            "max_bytes": 115257344,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 46759936,
+            "missing_samples": 0
+          }
+        }
+      }
+    },
+    {
+      "completed": true,
+      "phases": {
+        "playing": {
+          "sample_count": 2728,
+          "sample_span_seconds": 299.95300000000134,
+          "cpu_seconds": 7.46875,
+          "cpu_one_logical_core_percent": 2.489973429170559,
+          "working_set_bytes_max": 309768192,
+          "private_bytes_max": 421085184
+        },
+        "closed": {
+          "sample_count": 19,
+          "sample_span_seconds": 2.0,
+          "cpu_seconds": 0.03125,
+          "cpu_one_logical_core_percent": 1.5625,
+          "working_set_bytes_max": 255049728,
+          "private_bytes_max": 326184960
+        }
+      },
+      "gpu": {
+        "playing": {
+          "dedicated": {
+            "valid_samples": 2728,
+            "missing_samples": 0,
+            "max_bytes": 156741632
+          },
+          "shared": {
+            "valid_samples": 2728,
+            "missing_samples": 0,
+            "max_bytes": 46759936
+          }
+        },
+        "closed": {
+          "dedicated": {
+            "valid_samples": 19,
+            "missing_samples": 0,
+            "max_bytes": 72773632
+          },
+          "shared": {
+            "valid_samples": 19,
+            "missing_samples": 0,
+            "max_bytes": 46759936
+          }
+        }
+      },
+      "allocator": [
+        {
+          "stage": "before_editor",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 12582912,
+          "unused_capacity_bytes": 12024752,
+          "categories": {
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_4": 64,
+            "egui_vertex_buffer": 20496,
+            "egui_index_buffer": 12288,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_0": 64,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_2": 64,
+            "egui_texture_flags_3": 64,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.0387
+        },
+        {
+          "stage": "editor_created",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 12582912,
+          "unused_capacity_bytes": 12024752,
+          "categories": {
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_4": 64,
+            "egui_vertex_buffer": 20496,
+            "egui_index_buffer": 12288,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_0": 64,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_2": 64,
+            "egui_texture_flags_3": 64,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.035500000000000004
+        },
+        {
+          "stage": "playing_start",
+          "supported": true,
+          "allocated_bytes": 47879992,
+          "reserved_bytes": 54525952,
+          "unused_capacity_bytes": 6645960,
+          "categories": {
+            "composition params": 64,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_4": 64,
+            "egui_index_buffer": 24576,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_0": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "composition ops": 4160,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "candidate preview": 4228080,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_2": 64,
+            "egui_uniform_buffer": 96,
+            "source pixels": 41943040,
+            "(wgpu internal) Staging": 65224
+          },
+          "capture_ms": 0.0385
+        },
+        {
+          "stage": "playing_2s",
+          "supported": true,
+          "allocated_bytes": 45754824,
+          "reserved_bytes": 54525952,
+          "unused_capacity_bytes": 8771128,
+          "categories": {
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_4": 64,
+            "egui_index_buffer": 24576,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_0": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_2": 64,
+            "egui_uniform_buffer": 96,
+            "candidate preview": 2114544,
+            "source pixels": 41943040,
+            "(wgpu internal) Staging": 57816
+          },
+          "capture_ms": 0.0349
+        },
+        {
+          "stage": "playing_60s",
+          "supported": true,
+          "allocated_bytes": 45753816,
+          "reserved_bytes": 54525952,
+          "unused_capacity_bytes": 8772136,
+          "categories": {
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_4": 64,
+            "egui_index_buffer": 24576,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_0": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "candidate preview": 2113536,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_2": 64,
+            "egui_uniform_buffer": 96,
+            "source pixels": 41943040,
+            "(wgpu internal) Staging": 57816
+          },
+          "capture_ms": 0.061
+        },
+        {
+          "stage": "playing_200s",
+          "supported": true,
+          "allocated_bytes": 45756528,
+          "reserved_bytes": 54525952,
+          "unused_capacity_bytes": 8769424,
+          "categories": {
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_4": 64,
+            "egui_index_buffer": 24576,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_0": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "candidate preview": 2113536,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_2": 64,
+            "egui_uniform_buffer": 96,
+            "source pixels": 41943040,
+            "(wgpu internal) Staging": 60528
+          },
+          "capture_ms": 0.13190000000000002
+        },
+        {
+          "stage": "playing_299s",
+          "supported": true,
+          "allocated_bytes": 45757536,
+          "reserved_bytes": 54525952,
+          "unused_capacity_bytes": 8768416,
+          "categories": {
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_4": 64,
+            "egui_index_buffer": 24576,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_0": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_2": 64,
+            "egui_uniform_buffer": 96,
+            "candidate preview": 2114544,
+            "source pixels": 41943040,
+            "(wgpu internal) Staging": 60528
+          },
+          "capture_ms": 0.045000000000000005
+        },
+        {
+          "stage": "after_shutdown",
+          "supported": true,
+          "allocated_bytes": 1639424,
+          "reserved_bytes": 12582912,
+          "unused_capacity_bytes": 10943488,
+          "categories": {
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_4": 64,
+            "egui_index_buffer": 24576,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_0": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_2": 64,
+            "egui_uniform_buffer": 96
+          },
+          "capture_ms": 0.032799999999999996
+        },
+        {
+          "stage": "report",
+          "supported": true,
+          "allocated_bytes": 1639424,
+          "reserved_bytes": 12582912,
+          "unused_capacity_bytes": 10943488,
+          "categories": {
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_4": 64,
+            "egui_index_buffer": 24576,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_0": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_2": 64,
+            "egui_uniform_buffer": 96
+          },
+          "capture_ms": 0.045399999999999996
+        }
+      ],
+      "latency_ms": [
+        {
+          "count": 64,
+          "p50": 14.4297,
+          "p95": 15.4002,
+          "p99": 15.957200000000002,
+          "max": 15.957200000000002
+        },
+        {
+          "count": 64,
+          "p50": 18.566,
+          "p95": 20.4448,
+          "p99": 21.1983,
+          "max": 21.1983
+        }
+      ],
+      "submission": [
+        {
+          "lower_ms": {
+            "count": 64,
+            "p50": 12.8621,
+            "p95": 13.9094,
+            "p99": 14.014000000000001,
+            "max": 14.014000000000001
+          },
+          "upper_ms": {
+            "count": 64,
+            "p50": 14.4297,
+            "p95": 15.4002,
+            "p99": 15.957200000000002,
+            "max": 15.957200000000002
+          },
+          "uncertainty_ms": {
+            "count": 64,
+            "p50": 1.697799999999999,
+            "p95": 2.0280000000000005,
+            "p99": 2.035300000000001,
+            "max": 2.035300000000001
+          },
+          "request_to_receipt_ms": {
+            "count": 64,
+            "p50": 1.9318,
+            "p95": 2.9739,
+            "p99": 2.9999,
+            "max": 2.9999
+          },
+          "after_receipt_lower_ms": {
+            "count": 64,
+            "p50": 11.1636,
+            "p95": 12.6111,
+            "p99": 13.3943,
+            "max": 13.3943
+          },
+          "p95_classification": "confirmed_within",
+          "individually_confirmed_over_20": 0,
+          "individually_straddling_20": 0
+        },
+        {
+          "lower_ms": {
+            "count": 64,
+            "p50": 17.087999999999997,
+            "p95": 18.4439,
+            "p99": 18.767,
+            "max": 18.767
+          },
+          "upper_ms": {
+            "count": 64,
+            "p50": 18.566,
+            "p95": 20.4448,
+            "p99": 21.1983,
+            "max": 21.1983
+          },
+          "uncertainty_ms": {
+            "count": 64,
+            "p50": 1.5488999999999988,
+            "p95": 2.0396,
+            "p99": 2.4313000000000002,
+            "max": 2.4313000000000002
+          },
+          "request_to_receipt_ms": {
+            "count": 64,
+            "p50": 1.409,
+            "p95": 2.9478999999999997,
+            "p99": 3.0336,
+            "max": 3.0336
+          },
+          "after_receipt_lower_ms": {
+            "count": 64,
+            "p50": 14.054399999999998,
+            "p95": 16.5743,
+            "p99": 17.1697,
+            "max": 17.1697
+          },
+          "p95_classification": "unresolved",
+          "individually_confirmed_over_20": 0,
+          "individually_straddling_20": 7
+        }
+      ],
+      "edit_ms": {
+        "count": 300,
+        "p50": 7.7043,
+        "p95": 10.7212,
+        "p99": 12.370199999999999,
+        "max": 14.8118
+      },
+      "cpu_frame_ms": {
+        "count": 3909,
+        "p50": 2.3363998625427485,
+        "p95": 4.917300306260586,
+        "p99": 5.743499845266342,
+        "max": 11.316699907183647
+      },
+      "graphics_request_to_publication_ms": {
+        "count": 322,
+        "p50": 5.145599999988917,
+        "p95": 70.9823000000033,
+        "p99": 82.07999999999993,
+        "max": 98.3185999999987
+      },
+      "cpu_frames_over_16_7_ms": 0,
+      "lifetime_peak_working_set_bytes": 352120832,
+      "lifetime_peak_pagefile_bytes": 452255744,
+      "checks": {
+        "continuous_native_submission_300s": true,
+        "no_underflow_including_startup": true,
+        "ready_both_lanes_under_graphics_p95_le_20_ms": false,
+        "edit_activation_p95_le_50_ms": true,
+        "cpu_playing_one_core_le_15_percent": true,
+        "cpu_frame_p95_le_16_7_ms": true,
+        "cpu_frame_max_le_16_7_ms": true,
+        "working_set_private_le_512_mib": true,
+        "gpu_pid_budget": true,
+        "bounded_managed_resources": true,
+        "old_resources_released": true,
+        "unchanged_sources_reused": true,
+        "source_allocation_reused": true,
+        "dual_channel_isolation": true,
+        "draft_history_cleanup": true,
+        "all_graphics_changes_published": true
+      },
+      "report": {
+        "schema": 1,
+        "gpu_memory_usage_hint": true,
+        "seconds": 300,
+        "rate": 48000,
+        "channels": 2,
+        "period_frames": 480,
+        "original_pngs": 100,
+        "documents": 10,
+        "layers": 500,
+        "triggers": 2400,
+        "edits": 300,
+        "switches": 20,
+        "native_play_frames": 14400000,
+        "empty_frames": 0,
+        "empty_callbacks": 0,
+        "max_empty_callback_frames": 0,
+        "callbacks": 30036,
+        "max_callback_frames": 1056,
+        "latency_upper_bound_ms": [
+          [
+            14.2628,
+            14.367899999999999,
+            15.957200000000002,
+            14.1327,
+            14.251399999999999,
+            13.8865,
+            14.984,
+            14.3432,
+            13.934999999999999,
+            15.4002,
+            14.860999999999999,
+            15.0493,
+            14.132,
+            15.804599999999999,
+            15.2016,
+            14.534099999999999,
+            14.8772,
+            13.6355,
+            14.8771,
+            15.0186,
+            14.299900000000001,
+            15.9123,
+            14.5983,
+            15.1234,
+            14.5525,
+            14.7365,
+            15.1825,
+            14.542,
+            13.3309,
+            14.1545,
+            14.5622,
+            13.7888,
+            15.1805,
+            14.5319,
+            15.1276,
+            13.408700000000001,
+            13.8545,
+            14.5448,
+            14.072700000000001,
+            14.2948,
+            13.558499999999999,
+            14.1061,
+            15.364299999999998,
+            14.4297,
+            13.517100000000001,
+            13.7003,
+            14.8757,
+            13.5484,
+            14.0243,
+            14.649600000000001,
+            13.534600000000001,
+            14.0804,
+            13.528500000000001,
+            14.016,
+            15.0317,
+            15.3255,
+            13.2733,
+            15.1083,
+            13.7485,
+            14.6185,
+            14.0991,
+            14.6541,
+            13.9334,
+            14.799700000000001
+          ],
+          [
+            8.5799,
+            9.5046,
+            20.0184,
+            10.6823,
+            18.1425,
+            21.1983,
+            9.159199999999998,
+            9.8527,
+            10.6133,
+            10.6762,
+            9.3043,
+            19.1002,
+            10.561,
+            8.961,
+            19.0406,
+            19.0276,
+            19.0784,
+            10.667,
+            19.257,
+            19.2422,
+            9.4353,
+            18.3295,
+            8.988100000000001,
+            9.576400000000001,
+            19.8781,
+            19.4629,
+            19.2792,
+            10.1071,
+            20.6034,
+            8.9639,
+            20.1413,
+            18.8535,
+            9.5123,
+            19.4289,
+            20.4448,
+            19.5492,
+            19.782999999999998,
+            8.9978,
+            9.0624,
+            10.391499999999999,
+            18.6038,
+            10.6431,
+            20.4755,
+            19.6485,
+            19.6444,
+            10.0611,
+            8.029,
+            9.2354,
+            10.5131,
+            18.831,
+            18.9912,
+            9.5295,
+            19.1756,
+            18.566,
+            19.7645,
+            19.124599999999997,
+            18.2108,
+            18.7669,
+            19.190700000000003,
+            19.3236,
+            18.9859,
+            8.0404,
+            9.2186,
+            20.0585
+          ]
+        ],
+        "submission_intervals_ms": [
+          [
+            [
+              13.1344,
+              14.2628,
+              2.9327,
+              2.9407,
+              625.6311
+            ],
+            [
+              12.3752,
+              14.367899999999999,
+              2.9458,
+              2.9583,
+              4626.0448
+            ],
+            [
+              13.9528,
+              15.957200000000002,
+              2.4386,
+              2.4549,
+              8625.1508
+            ],
+            [
+              13.0375,
+              14.1327,
+              0.8698999999999999,
+              0.8851,
+              12625.6087
+            ],
+            [
+              12.548,
+              14.251399999999999,
+              2.8902,
+              2.9011,
+              16625.8864
+            ],
+            [
+              12.8621,
+              13.8865,
+              0.9358,
+              0.9449000000000001,
+              20625.649400000002
+            ],
+            [
+              12.953299999999999,
+              14.984,
+              2.8043,
+              2.8229,
+              24625.618899999998
+            ],
+            [
+              13.3209,
+              14.3432,
+              1.9318,
+              1.957,
+              28625.615400000002
+            ],
+            [
+              12.8512,
+              13.934999999999999,
+              2.9489,
+              2.9599,
+              32625.4243
+            ],
+            [
+              13.398,
+              15.4002,
+              2.8689,
+              2.8968000000000003,
+              36625.922099999996
+            ],
+            [
+              12.8484,
+              14.860999999999999,
+              2.5437,
+              2.5528999999999997,
+              40625.9548
+            ],
+            [
+              14.000200000000001,
+              15.0493,
+              1.9457,
+              1.9593000000000003,
+              44625.2577
+            ],
+            [
+              12.1204,
+              14.132,
+              2.2019,
+              2.2122,
+              48626.2149
+            ],
+            [
+              13.8139,
+              15.804599999999999,
+              0.5973,
+              0.6095,
+              52625.1586
+            ],
+            [
+              13.1917,
+              15.2016,
+              1.9556,
+              1.9675,
+              56625.1815
+            ],
+            [
+              13.2274,
+              14.534099999999999,
+              1.8994000000000002,
+              1.9107,
+              60625.489100000006
+            ],
+            [
+              12.860399999999998,
+              14.8772,
+              0.46599999999999997,
+              0.4753,
+              64625.57940000001
+            ],
+            [
+              12.6074,
+              13.6355,
+              2.9164,
+              2.9305,
+              68626.0225
+            ],
+            [
+              13.854800000000001,
+              14.8771,
+              1.45,
+              1.4584000000000001,
+              72625.2556
+            ],
+            [
+              13.0417,
+              15.0186,
+              0.4306,
+              0.4798,
+              76625.37310000001
+            ],
+            [
+              12.303400000000002,
+              14.299900000000001,
+              1.9027,
+              1.9194,
+              80625.3507
+            ],
+            [
+              13.9094,
+              15.9123,
+              0.5151,
+              0.5259,
+              84625.17850000001
+            ],
+            [
+              12.584100000000001,
+              14.5983,
+              2.9098,
+              2.9226,
+              88625.3961
+            ],
+            [
+              13.1363,
+              15.1234,
+              0.5685,
+              0.5794,
+              92625.99470000001
+            ],
+            [
+              13.0241,
+              14.5525,
+              1.1261,
+              1.138,
+              96625.48060000001
+            ],
+            [
+              13.235,
+              14.7365,
+              2.9711999999999996,
+              2.9871,
+              100625.2767
+            ],
+            [
+              13.2816,
+              15.1825,
+              0.4814,
+              0.5003,
+              104625.5621
+            ],
+            [
+              12.5391,
+              14.542,
+              1.9409,
+              1.9791,
+              108625.2334
+            ],
+            [
+              12.0324,
+              13.3309,
+              2.9999,
+              3.0100000000000002,
+              112625.8951
+            ],
+            [
+              13.0634,
+              14.1545,
+              2.9251,
+              2.9521,
+              116625.74549999999
+            ],
+            [
+              13.0231,
+              14.5622,
+              2.9349,
+              2.9543999999999997,
+              120625.7546
+            ],
+            [
+              12.2397,
+              13.7888,
+              1.4974,
+              1.5234999999999999,
+              124625.4048
+            ],
+            [
+              13.6661,
+              15.1805,
+              1.4861,
+              1.5099,
+              128625.33920000002
+            ],
+            [
+              12.9945,
+              14.5319,
+              0.7404,
+              0.7641,
+              132625.1327
+            ],
+            [
+              13.620999999999999,
+              15.1276,
+              2.1803999999999997,
+              2.1967000000000003,
+              136625.1395
+            ],
+            [
+              11.4114,
+              13.408700000000001,
+              2.9090000000000003,
+              2.9172,
+              140625.8462
+            ],
+            [
+              12.343,
+              13.8545,
+              2.222,
+              2.2394,
+              144625.4749
+            ],
+            [
+              12.996,
+              14.5448,
+              0.7173,
+              0.726,
+              148625.33289999998
+            ],
+            [
+              13.054,
+              14.072700000000001,
+              2.9714,
+              2.9838999999999998,
+              152625.9883
+            ],
+            [
+              12.562800000000001,
+              14.2948,
+              1.9128999999999998,
+              1.9215,
+              156625.3112
+            ],
+            [
+              12.032,
+              13.558499999999999,
+              0.5295,
+              0.5479,
+              160625.8517
+            ],
+            [
+              12.1188,
+              14.1061,
+              0.9552,
+              0.9825,
+              164625.3622
+            ],
+            [
+              13.3597,
+              15.364299999999998,
+              1.9195,
+              1.9342000000000001,
+              168625.53819999998
+            ],
+            [
+              12.4245,
+              14.4297,
+              2.9739,
+              2.9857,
+              172625.6397
+            ],
+            [
+              12.499,
+              13.517100000000001,
+              2.9761,
+              2.9884999999999997,
+              176625.9644
+            ],
+            [
+              12.1099,
+              13.7003,
+              0.9527,
+              0.966,
+              180625.37399999998
+            ],
+            [
+              12.8446,
+              14.8757,
+              0.5073,
+              0.5203,
+              184626.052
+            ],
+            [
+              12.4879,
+              13.5484,
+              0.47140000000000004,
+              0.4819,
+              188625.8162
+            ],
+            [
+              12.9913,
+              14.0243,
+              2.782,
+              2.7894,
+              192625.6028
+            ],
+            [
+              12.6474,
+              14.649600000000001,
+              2.943,
+              2.9702,
+              196625.27159999998
+            ],
+            [
+              12.0858,
+              13.534600000000001,
+              0.6177999999999999,
+              0.6302,
+              200625.549
+            ],
+            [
+              13.0136,
+              14.0804,
+              1.91,
+              1.9232,
+              204625.2397
+            ],
+            [
+              11.629499999999998,
+              13.528500000000001,
+              2.5658,
+              2.5779,
+              208626.0197
+            ],
+            [
+              12.8879,
+              14.016,
+              0.5061,
+              0.5331,
+              212625.2686
+            ],
+            [
+              14.014000000000001,
+              15.0317,
+              2.4637000000000002,
+              2.4766,
+              216625.12029999998
+            ],
+            [
+              13.3216,
+              15.3255,
+              1.9913999999999998,
+              2.0014999999999996,
+              220625.4212
+            ],
+            [
+              12.1753,
+              13.2733,
+              0.8562,
+              0.876,
+              224625.79539999997
+            ],
+            [
+              13.1404,
+              15.1083,
+              1.949,
+              1.9569,
+              228625.30140000003
+            ],
+            [
+              11.7433,
+              13.7485,
+              0.5035000000000001,
+              0.523,
+              232626.059
+            ],
+            [
+              12.590499999999999,
+              14.6185,
+              2.9049,
+              2.9169,
+              236625.17690000002
+            ],
+            [
+              12.1072,
+              14.0991,
+              1.9036000000000002,
+              1.9138,
+              240626.0535
+            ],
+            [
+              12.9563,
+              14.6541,
+              0.9739,
+              0.9909999999999999,
+              244625.5374
+            ],
+            [
+              11.9555,
+              13.9334,
+              2.9859999999999998,
+              2.9979999999999998,
+              248625.5044
+            ],
+            [
+              12.7644,
+              14.799700000000001,
+              0.9609,
+              0.9707,
+              252625.4423
+            ]
+          ],
+          [
+            [
+              7.0409,
+              8.5799,
+              0.6182,
+              0.6298,
+              250.90099999999998
+            ],
+            [
+              7.4638,
+              9.5046,
+              1.1007,
+              1.1093,
+              4250.3637
+            ],
+            [
+              18.506600000000002,
+              20.0184,
+              2.0235000000000003,
+              2.0411,
+              8250.3124
+            ],
+            [
+              8.6925,
+              10.6823,
+              0.7240000000000001,
+              0.7351000000000001,
+              12250.1703
+            ],
+            [
+              16.6233,
+              18.1425,
+              2.8401,
+              2.8652,
+              16251.2117
+            ],
+            [
+              18.767,
+              21.1983,
+              2.9539,
+              2.9613,
+              20250.7649
+            ],
+            [
+              7.4803999999999995,
+              9.159199999999998,
+              1.399,
+              1.4063999999999999,
+              24250.647
+            ],
+            [
+              7.8481000000000005,
+              9.8527,
+              1.3483,
+              1.3668,
+              28250.3253
+            ],
+            [
+              8.6137,
+              10.6133,
+              1.1836,
+              1.2011999999999998,
+              32250.329700000002
+            ],
+            [
+              8.6577,
+              10.6762,
+              1.1077000000000001,
+              1.1214,
+              36250.5198
+            ],
+            [
+              8.2848,
+              9.3043,
+              0.5326000000000001,
+              0.5454,
+              40250.422999999995
+            ],
+            [
+              17.7423,
+              19.1002,
+              1.4757,
+              1.4841,
+              44250.4228
+            ],
+            [
+              8.561300000000001,
+              10.561,
+              0.6052,
+              0.6171,
+              48250.6556
+            ],
+            [
+              7.4474,
+              8.961,
+              0.5567000000000001,
+              0.5688,
+              52251.008499999996
+            ],
+            [
+              18.0026,
+              19.0406,
+              1.1883,
+              1.1999,
+              56250.517799999994
+            ],
+            [
+              17.5262,
+              19.0276,
+              2.9168000000000003,
+              2.9429,
+              60250.956600000005
+            ],
+            [
+              17.0994,
+              19.0784,
+              2.9369,
+              2.9472,
+              64251.0527
+            ],
+            [
+              8.6349,
+              10.667,
+              1.1820000000000002,
+              1.1904000000000001,
+              68250.6231
+            ],
+            [
+              18.1766,
+              19.257,
+              1.9074,
+              1.9159,
+              72250.4545
+            ],
+            [
+              18.1956,
+              19.2422,
+              1.9307,
+              1.9387,
+              76250.54819999999
+            ],
+            [
+              7.9167000000000005,
+              9.4353,
+              1.0875,
+              1.0975,
+              80250.0934
+            ],
+            [
+              16.7938,
+              18.3295,
+              2.9135,
+              2.9404000000000003,
+              84251.0465
+            ],
+            [
+              7.9664,
+              8.988100000000001,
+              1.2041,
+              1.217,
+              88250.9408
+            ],
+            [
+              7.5591,
+              9.576400000000001,
+              1.1100999999999999,
+              1.1374,
+              92251.0558
+            ],
+            [
+              17.8674,
+              19.8781,
+              2.9334000000000002,
+              2.9492,
+              96250.3844
+            ],
+            [
+              17.087999999999997,
+              19.4629,
+              3.0336,
+              3.0587,
+              100251.0482
+            ],
+            [
+              17.788999999999998,
+              19.2792,
+              1.9182,
+              1.9373,
+              104251.1495
+            ],
+            [
+              8.0675,
+              10.1071,
+              1.1959,
+              1.2249999999999999,
+              108250.6102
+            ],
+            [
+              18.579700000000003,
+              20.6034,
+              2.0054,
+              2.0378000000000003,
+              112250.851
+            ],
+            [
+              7.4458,
+              8.9639,
+              1.2606,
+              1.2983,
+              116250.91519999999
+            ],
+            [
+              18.1204,
+              20.1413,
+              1.9335,
+              1.9543999999999997,
+              120250.8681
+            ],
+            [
+              17.7995,
+              18.8535,
+              1.9502,
+              1.9853,
+              124250.6547
+            ],
+            [
+              7.963400000000001,
+              9.5123,
+              1.2052,
+              1.2228,
+              128250.16560000001
+            ],
+            [
+              18.3888,
+              19.4289,
+              1.3079999999999998,
+              1.3192,
+              132250.1526
+            ],
+            [
+              18.4345,
+              20.4448,
+              1.2648,
+              1.2731000000000001,
+              136250.2578
+            ],
+            [
+              17.5244,
+              19.5492,
+              1.409,
+              1.4252,
+              140250.9906
+            ],
+            [
+              17.7479,
+              19.782999999999998,
+              2.9264,
+              2.9518,
+              144251.1543
+            ],
+            [
+              7.0254,
+              8.9978,
+              0.7841,
+              0.7998000000000001,
+              148251.00280000002
+            ],
+            [
+              7.3515999999999995,
+              9.0624,
+              0.5932,
+              0.6029,
+              152250.7927
+            ],
+            [
+              8.3937,
+              10.391499999999999,
+              1.0452000000000001,
+              1.0556,
+              156250.4717
+            ],
+            [
+              17.5841,
+              18.6038,
+              2.9182,
+              2.9307,
+              160250.7414
+            ],
+            [
+              8.622599999999998,
+              10.6431,
+              1.0522,
+              1.0704,
+              164250.3188
+            ],
+            [
+              18.4439,
+              20.4755,
+              1.9605,
+              2.0073,
+              168250.3917
+            ],
+            [
+              17.6281,
+              19.6485,
+              2.9156,
+              2.9261999999999997,
+              172250.5152
+            ],
+            [
+              17.6443,
+              19.6444,
+              2.8914,
+              2.9001,
+              176250.8528
+            ],
+            [
+              8.055299999999999,
+              10.0611,
+              0.6267999999999999,
+              0.6378,
+              180250.3472
+            ],
+            [
+              7.0046,
+              8.029,
+              0.5651999999999999,
+              0.5861,
+              184251.0881
+            ],
+            [
+              7.681699999999999,
+              9.2354,
+              0.7026,
+              0.7282000000000001,
+              188250.67390000002
+            ],
+            [
+              8.5051,
+              10.5131,
+              0.6462,
+              0.6558,
+              192250.2929
+            ],
+            [
+              17.7562,
+              18.831,
+              1.8995,
+              1.9102999999999999,
+              196250.3865
+            ],
+            [
+              17.9734,
+              18.9912,
+              2.8784,
+              2.8882,
+              200250.8249
+            ],
+            [
+              8.47,
+              9.5295,
+              1.0923,
+              1.1055,
+              204250.3327
+            ],
+            [
+              18.1556,
+              19.1756,
+              2.9478999999999997,
+              2.9593000000000003,
+              208250.6329
+            ],
+            [
+              17.505699999999997,
+              18.566,
+              1.8189,
+              1.8374000000000001,
+              212251.06199999998
+            ],
+            [
+              18.2543,
+              19.7645,
+              2.9459999999999997,
+              2.9764,
+              216250.40670000002
+            ],
+            [
+              17.994,
+              19.124599999999997,
+              2.9537,
+              2.9632,
+              220250.35080000001
+            ],
+            [
+              16.750999999999998,
+              18.2108,
+              2.9068,
+              2.9266,
+              224251.0567
+            ],
+            [
+              17.7242,
+              18.7669,
+              2.8871,
+              2.8946,
+              228250.40480000002
+            ],
+            [
+              18.1567,
+              19.190700000000003,
+              2.9328000000000003,
+              2.9523,
+              232250.39330000003
+            ],
+            [
+              17.302999999999997,
+              19.3236,
+              2.9426,
+              2.9683,
+              236250.5096
+            ],
+            [
+              17.9692,
+              18.9859,
+              2.9177999999999997,
+              2.9263000000000003,
+              240250.7707
+            ],
+            [
+              6.5043999999999995,
+              8.0404,
+              1.213,
+              1.2413999999999998,
+              244251.01419999998
+            ],
+            [
+              7.5522,
+              9.2186,
+              0.5731999999999999,
+              0.5856,
+              248250.4715
+            ],
+            [
+              18.0602,
+              20.0585,
+              2.9453,
+              2.9567,
+              252250.4626
+            ]
+          ]
+        ],
+        "presentation": {
+          "physical_size": [
+            1180.0,
+            800.0
+          ],
+          "surface_config_utf8": [
+            83,
+            111,
+            109,
+            101,
+            40,
+            83,
+            117,
+            114,
+            102,
+            97,
+            99,
+            101,
+            67,
+            111,
+            110,
+            102,
+            105,
+            103,
+            32,
+            123,
+            32,
+            112,
+            114,
+            101,
+            115,
+            101,
+            110,
+            116,
+            95,
+            109,
+            111,
+            100,
+            101,
+            58,
+            32,
+            65,
+            117,
+            116,
+            111,
+            86,
+            115,
+            121,
+            110,
+            99,
+            44,
+            32,
+            100,
+            101,
+            115,
+            105,
+            114,
+            101,
+            100,
+            95,
+            109,
+            97,
+            120,
+            105,
+            109,
+            117,
+            109,
+            95,
+            102,
+            114,
+            97,
+            109,
+            101,
+            95,
+            108,
+            97,
+            116,
+            101,
+            110,
+            99,
+            121,
+            58,
+            32,
+            83,
+            111,
+            109,
+            101,
+            40,
+            49,
+            41,
+            32,
+            125,
+            41
+          ]
+        },
+        "peak_voices": 8,
+        "max_trigger_lateness_ms": 4.1992,
+        "pcm_peak_bytes": 5667200,
+        "pcm_final_bytes": 0,
+        "raw_peak_bytes": 5134981,
+        "raw_final_bytes": 0,
+        "rgba_peak_bytes": 71303168,
+        "rgba_final_bytes": 0,
+        "max_targets": 2,
+        "final_targets": 0,
+        "allocations": 322,
+        "publications": 322,
+        "source_uploads": 21,
+        "source_cache_final_bytes": 0,
+        "source_allocations": 1,
+        "max_probe_poll_gap_ms": 2.4868,
+        "max_supply_gap_micros": 4843,
+        "underrun_observations": [],
+        "slow_ui_ms": [],
+        "trace_overflow": false,
+        "dual_channel_isolation": true,
+        "draft_history_cleanup": true,
+        "resources_released": true,
+        "adapter_utf8": [
+          65,
+          100,
+          97,
+          112,
+          116,
+          101,
+          114,
+          73,
+          110,
+          102,
+          111,
+          32,
+          123,
+          32,
+          110,
+          97,
+          109,
+          101,
+          58,
+          32,
+          34,
+          78,
+          86,
+          73,
+          68,
+          73,
+          65,
+          32,
+          71,
+          101,
+          70,
+          111,
+          114,
+          99,
+          101,
+          32,
+          82,
+          84,
+          88,
+          32,
+          50,
+          48,
+          54,
+          48,
+          34,
+          44,
+          32,
+          118,
+          101,
+          110,
+          100,
+          111,
+          114,
+          58,
+          32,
+          52,
+          51,
+          49,
+          56,
+          44,
+          32,
+          100,
+          101,
+          118,
+          105,
+          99,
+          101,
+          58,
+          32,
+          55,
+          57,
+          53,
+          55,
+          44,
+          32,
+          100,
+          101,
+          118,
+          105,
+          99,
+          101,
+          95,
+          116,
+          121,
+          112,
+          101,
+          58,
+          32,
+          68,
+          105,
+          115,
+          99,
+          114,
+          101,
+          116,
+          101,
+          71,
+          112,
+          117,
+          44,
+          32,
+          100,
+          101,
+          118,
+          105,
+          99,
+          101,
+          95,
+          112,
+          99,
+          105,
+          95,
+          98,
+          117,
+          115,
+          95,
+          105,
+          100,
+          58,
+          32,
+          34,
+          48,
+          48,
+          48,
+          48,
+          58,
+          48,
+          49,
+          58,
+          48,
+          48,
+          46,
+          48,
+          34,
+          44,
+          32,
+          100,
+          114,
+          105,
+          118,
+          101,
+          114,
+          58,
+          32,
+          34,
+          78,
+          86,
+          73,
+          68,
+          73,
+          65,
+          34,
+          44,
+          32,
+          100,
+          114,
+          105,
+          118,
+          101,
+          114,
+          95,
+          105,
+          110,
+          102,
+          111,
+          58,
+          32,
+          34,
+          53,
+          54,
+          48,
+          46,
+          57,
+          52,
+          34,
+          44,
+          32,
+          98,
+          97,
+          99,
+          107,
+          101,
+          110,
+          100,
+          58,
+          32,
+          86,
+          117,
+          108,
+          107,
+          97,
+          110,
+          44,
+          32,
+          115,
+          117,
+          98,
+          103,
+          114,
+          111,
+          117,
+          112,
+          95,
+          109,
+          105,
+          110,
+          95,
+          115,
+          105,
+          122,
+          101,
+          58,
+          32,
+          51,
+          50,
+          44,
+          32,
+          115,
+          117,
+          98,
+          103,
+          114,
+          111,
+          117,
+          112,
+          95,
+          109,
+          97,
+          120,
+          95,
+          115,
+          105,
+          122,
+          101,
+          58,
+          32,
+          51,
+          50,
+          44,
+          32,
+          116,
+          114,
+          97,
+          110,
+          115,
+          105,
+          101,
+          110,
+          116,
+          95,
+          115,
+          97,
+          118,
+          101,
+          115,
+          95,
+          109,
+          101,
+          109,
+          111,
+          114,
+          121,
+          58,
+          32,
+          83,
+          111,
+          109,
+          101,
+          40,
+          102,
+          97,
+          108,
+          115,
+          101,
+          41,
+          44,
+          32,
+          108,
+          105,
+          109,
+          105,
+          116,
+          95,
+          98,
+          117,
+          99,
+          107,
+          101,
+          116,
+          58,
+          32,
+          78,
+          111,
+          110,
+          101,
+          32,
+          125
+        ]
+      },
+      "cold_publish_ms": {
+        "count": 21,
+        "p50": 72.58430000000226,
+        "p95": 96.73600000000442,
+        "p99": 98.3185999999987,
+        "max": 98.3185999999987
+      },
+      "warm_publish_ms": {
+        "count": 301,
+        "p50": 5.105999999970663,
+        "p95": 5.9146999999939,
+        "p99": 6.244599999990896,
+        "max": 6.830499999981839
+      },
+      "all_phase_gpu": {
+        "cleanup": {
+          "dedicated": {
+            "max_bytes": 114798592,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 46759936,
+            "missing_samples": 0
+          }
+        },
+        "closed": {
+          "dedicated": {
+            "max_bytes": 72773632,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 46759936,
+            "missing_samples": 0
+          }
+        },
+        "done": {
+          "dedicated": {
+            "max_bytes": 2248704,
+            "missing_samples": 1
+          },
+          "shared": {
+            "max_bytes": 12980224,
+            "missing_samples": 1
+          }
+        },
+        "loading": {
+          "dedicated": {
+            "max_bytes": 113152000,
+            "missing_samples": 1
+          },
+          "shared": {
+            "max_bytes": 42614784,
+            "missing_samples": 1
+          }
+        },
+        "playing": {
+          "dedicated": {
+            "max_bytes": 156741632,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 46759936,
+            "missing_samples": 0
+          }
+        }
+      }
+    }
+  ],
+  "standard_checks_passed": false,
+  "preserved_proofs": {
+    "docs/P2_AUDIO_CORE_PROOF.json": "0233a706a68fda7129698f4f935d4e61272296ee8a99dff7d77013802a220495",
+    "docs/P2_AUDIO_EDIT_PROOF.json": "3489c044f93da364fb95b86f243b874e8b55123e635ee87456edc48cd581d818",
+    "docs/P2_AUDIO_LIBRARY_PROOF.json": "faae41499f5871630cb59e6ebb11f344a62cf46bbae1542922dc5b56e90ddd25",
+    "docs/P2_AUDIO_LOAD_PROOF.json": "011db2daf8e5359eb072244ba1c3baf325d6a1ff0a0809a9826d0ee95e0151d0",
+    "docs/P2_AUDIO_NATIVE_PROOF.json": "062888a55213a52dc5387c8ce28ab471cc675620aeec5e3d13c49730a2aac9e1",
+    "docs/P2_AUDIO_RESOURCES_PROOF.json": "02a57944693e5d17e89368a95804dcc0b1dee68256bd8668915b3198df123f4f",
+    "docs/P2_AUDIO_RUNTIME_PROOF.json": "3ead10f09df8f926bf79ca8b487381b834829c6b24cea5b0b82b90500539541c",
+    "docs/P2_AUDIO_STARTUP_PROOF.json": "24035cc573f79d7484f7661c6202e73a57d9345d9f0fc70a3d4e0be27f8856b4",
+    "docs/P2_AUDIO_SUPPLY_PROOF.json": "2d81e51003e2070c00db020a9c14ffce489905ce6ef585a2406159bbcd217201",
+    "docs/P2_AUDIO_UI_PROOF.json": "7c365495eb764f8c375d7080c331e3fb4b7f6e68affede9a17bd2fd8e070c811",
+    "docs/P2_COMBINED_PROOF.json": "eb3ce7975c24250201fce59bc308ccce170975ee7426b2d3d83f612d0a1ce46c",
+    "docs/P2_FRAME_PREPARATION_PROOF.json": "e34ee1e176aa1e4e6f14212d2e4f8567e022da65b7326c854575d5553c67b69f",
+    "docs/P2_NATIVE_PROOF.json": "9bad4e2ae408839a7a6bbc39356491edc561283d4da646993095cf337e52bab6",
+    "docs/P2_RESOURCE_ATTRIBUTION_PROOF.json": "2aa378e0d762fa5b9abcd7fc0ef17ed5b9191dd1e8e027739672813e24f44fd5"
+  },
+  "git_head": "18f74f306a537894b91bad50eef7710ff9223a53",
+  "git_index_sha256": "68e7520badf911f52c8c19a193b3bfc9602aaeaa052f3f66346cd24f67feb2b1",
+  "artifacts_sha256": {
+    "artifacts/p2/memory-acceptance/build.log": "0a842ef579dcd8673e8caef1378a3120ae8c5482ceb4fb4c4cce31fcb10ed020",
+    "artifacts/p2/memory-acceptance/core-check-final.log": "cc0e6fefff2db1e442fc7a0cd05e35da942d9856aa73b1de6ab5ec4ccaa2a1f7",
+    "artifacts/p2/memory-acceptance/core-check.log": "edaadc5817d6014477e5b756eebc51dc6d3afc24839fe3980c576367bcbe6129",
+    "artifacts/p2/memory-acceptance/desktop-check.log": "8fd3c93addf2e9bead229fe5a9bc8a4754c58df8ba33561c204c7b7f818fd3e6",
+    "artifacts/p2/memory-acceptance/execution.json": "b59da748e7ba6829b4d2e66f69a132445449b46eb5a740a2fcafa6b620ee44ae",
+    "artifacts/p2/memory-acceptance/identity.json": "3dd95c2a7e53709e1e6e5c43ee161e9a08652c1e7507b47cbfc625e3d46cae64",
+    "artifacts/p2/memory-acceptance/long.log": "6b4a75241d02947585875626e6f95e9bd61351357a6f5be4ade424b32ca41e4c",
+    "artifacts/p2/memory-acceptance/pixels-after.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/p2/memory-acceptance/pixels-before.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/p2/memory-acceptance/long/identity.json": "3c9c4161cbe6b3e3811b6995ee259fcbe8f0928f5776940754501cfbed560c11",
+    "artifacts/p2/memory-acceptance/long/metrics.json": "bd3a193f00e82fa01cb96ce8c28fefa84495cd5f197379c52c6c39a8bee9facc",
+    "artifacts/p2/memory-acceptance/long/run-01-observation.json": "f87aef5a0f126dad2f0090984f26d08f86e7ea31bb167db1b339e4c81cc4286d",
+    "artifacts/p2/memory-acceptance/long/run-01-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/p2/memory-acceptance/long/run-02-observation.json": "e5926b32a38108674ee2d81ebf43f6be152c6cfedfc70843bc35ef28e8a007b5",
+    "artifacts/p2/memory-acceptance/long/run-02-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/p2/memory-acceptance/long/run-01/report.json": "cb3d3a5cb9e319b43536fc13c9d8a475aa2cc64d5693305b28346acfc09420e5",
+    "artifacts/p2/memory-acceptance/long/run-01/self-000.png": "d92f619f5c896cde55daa4208cc1c61d75fde4fcbe67310daa59c575aef7f5cd",
+    "artifacts/p2/memory-acceptance/long/run-01/self-001.png": "a0596751b55d86e0962dab5ef487aea2ce82567d8fbacc64ded8da8cb55491e1",
+    "artifacts/p2/memory-acceptance/long/run-01/self-002.png": "8c1703b24b90eba5bbe0f9ecc85eaf00f9d08acdc668991b6b7d970401f9695f",
+    "artifacts/p2/memory-acceptance/long/run-01/self-003.png": "86db58e5079631132a8073f5aa89587f550000a4c0700e2066a947b181301d27",
+    "artifacts/p2/memory-acceptance/long/run-01/self-004.png": "bc3978f0c1bda18744fe7063dd40147c3236f176bc5bc7ecaf4865081e0313f6",
+    "artifacts/p2/memory-acceptance/long/run-01/self-005.png": "f8dde53c6769899ae4cbc15ca8582b000090adbf99a1f959d590f76ef5cf6f19",
+    "artifacts/p2/memory-acceptance/long/run-01/self-006.png": "87b5c58b2150bf8cf405bce9471adea05bc7aa3b63266292e831b751538a3303",
+    "artifacts/p2/memory-acceptance/long/run-01/self-007.png": "5bcd300c709df26a7067a5ad92a0509256bc8c8ad935947c52680fceebbb10d7",
+    "artifacts/p2/memory-acceptance/long/run-01/self-008.png": "9befaa2d8fd80b7afa8c65bab906e269be77199f3c9b63d2b14129719a6e9e83",
+    "artifacts/p2/memory-acceptance/long/run-01/self-009.png": "386f131939aa6191f8d74f3bc47e412894f77db04e2b32f69d5964d77cd1e4ff",
+    "artifacts/p2/memory-acceptance/long/run-01/self-010.png": "5cf392216c55210e24143d22db44b583d0a4326075758f11fdc218b69667caed",
+    "artifacts/p2/memory-acceptance/long/run-01/self-011.png": "eaa71512ec74a12c8c0603c4f4698a273b5a7ce28b07e16cb36279b3995e6ac3",
+    "artifacts/p2/memory-acceptance/long/run-01/self-012.png": "a87d462caf3aa3f4022ed42affcd20e98601cd7a8aade6f51f0b001a0f1be116",
+    "artifacts/p2/memory-acceptance/long/run-01/self-013.png": "f963489c5d295d9ef0baf76d45ae19274d58163354a4e7f2acb7b591d2764463",
+    "artifacts/p2/memory-acceptance/long/run-01/self-014.png": "4c644f07342418aee117fcb87115a3243491d491378b6b676b53d0f88ac2fc2d",
+    "artifacts/p2/memory-acceptance/long/run-01/self-015.png": "99af159315fdf3567ae97beee5ed7a8664ae179d642a9b21a4e04d25967055c6",
+    "artifacts/p2/memory-acceptance/long/run-01/self-016.png": "fdd226fd142646f5cead1a125d11bb3f0f95cf63e68c0fbe76f0f7735ebe039b",
+    "artifacts/p2/memory-acceptance/long/run-01/self-017.png": "8c1df18666bf407b621672ca10ac281b04bc806e4e8ab207b7ebd00ee46c36fa",
+    "artifacts/p2/memory-acceptance/long/run-01/self-018.png": "b279a6d696a2ce1c92202aa49c6fdbd0c54507dcd7b200603d1b3769802d1602",
+    "artifacts/p2/memory-acceptance/long/run-01/self-019.png": "bd3856ec181392c9e8b9811a4c4fee36c9566abbb6c31e04ae95f47ddffde8f2",
+    "artifacts/p2/memory-acceptance/long/run-01/self-020.png": "627d12c2593d023f1f71a11e85eaab21094a05f4ff65c52dc61e9fa19d4fb1c4",
+    "artifacts/p2/memory-acceptance/long/run-01/self-021.png": "7c80a99bd94ff2d39d3c06ce75a7d4dab4373f2f4da174ecb91b5a0c9766be80",
+    "artifacts/p2/memory-acceptance/long/run-01/self-022.png": "35a95f307122b6e36b5c4e213c361531529759f411c97c8253e1eea9f03df148",
+    "artifacts/p2/memory-acceptance/long/run-01/self-023.png": "c9a0e7dc29835d55a5e0486479a2fba4e8427628da76a77ff831b55d9d9236d7",
+    "artifacts/p2/memory-acceptance/long/run-01/self-024.png": "354afd3a095d3ef115a5c0b6cbd527b72fc8e47a31c99cb7ededc94cd04bb5d8",
+    "artifacts/p2/memory-acceptance/long/run-01/self-025.png": "6aeb89ca38c2b556b53caccad28eb77d20bd7584f72e95ea7729a02b63b0e175",
+    "artifacts/p2/memory-acceptance/long/run-01/self-026.png": "db7cd4478161b428d31d6da2a8750381cf82793bf3ebf66cbe7e4fbbee581478",
+    "artifacts/p2/memory-acceptance/long/run-01/self-027.png": "e9405db65f9127890964824e8f2d0befb29ca78a0657663ecc6f7ce375ed267c",
+    "artifacts/p2/memory-acceptance/long/run-01/self-028.png": "b97c90b0bf591644f161fb6e9e4e20d87431f31c4dccc79ea97bd494b63313ca",
+    "artifacts/p2/memory-acceptance/long/run-01/self-029.png": "12eb3eafd0f0eefba4910219f43c91a0c2fe9dc21f6cf383ccac52abcc5d08fb",
+    "artifacts/p2/memory-acceptance/long/run-01/self-030.png": "34fdbb43996626ce4b51dec31de4cb4e847de49037c607c95b1f0352cd03456a",
+    "artifacts/p2/memory-acceptance/long/run-01/self-031.png": "a1ce6182ec646680e0aadbedf140e52c80cafc3f79ff2f3cd7a7adcbbb48537a",
+    "artifacts/p2/memory-acceptance/long/run-01/self-032.png": "4fc2ad42b420e07f66fbcd93de8a4143fb7fe46ecc888a2f4ed8deef27fa58b4",
+    "artifacts/p2/memory-acceptance/long/run-01/self-033.png": "f93c253d2cbead4d619a6983dbddeda34331dc3238397490446b1e03f881314e",
+    "artifacts/p2/memory-acceptance/long/run-01/self-034.png": "3d39887373204e9b64ee471801c8d0a586ce4f03e8a0d85bb00f812dc0d60bb7",
+    "artifacts/p2/memory-acceptance/long/run-01/self-035.png": "ae90375a1dd16a4e6b07bbb7a9a17701c30b1c115d4e39ba378921b7c792c6dc",
+    "artifacts/p2/memory-acceptance/long/run-01/self-036.png": "365c550fcf3d5fe2bbc9158539d173fbf83aad092ea4c600099e5726bbbe04a1",
+    "artifacts/p2/memory-acceptance/long/run-01/self-037.png": "53c3600d19e83e1ee4d9346834cdf0e5a76af41f9fed55a37077fa0a3e607c45",
+    "artifacts/p2/memory-acceptance/long/run-01/self-038.png": "7f76fb1533d51aeea670fe2727c8c51432b76c9685fa16ee05766f9e0eb5ae1a",
+    "artifacts/p2/memory-acceptance/long/run-01/self-039.png": "d67c795bced6a6f2f32c3adc973c5bbfbd763448df03a82525193ab963fb7e8c",
+    "artifacts/p2/memory-acceptance/long/run-01/self-040.png": "c5b084557e0d254944b6e07597bc7cdea71d373c0f1946f0bc8596435944cf39",
+    "artifacts/p2/memory-acceptance/long/run-01/self-041.png": "9fb6b0e60f56aedc38aa20b03bd0a40ddc38273e3cb8962457443d7c4f743d3a",
+    "artifacts/p2/memory-acceptance/long/run-01/self-042.png": "b9f44158c52712799f346cccebae2dbfdfd015facd42300a4af856b4f9bf2ceb",
+    "artifacts/p2/memory-acceptance/long/run-01/self-043.png": "bd886b2880b7afd7f63f618ad27cb9f350a3e640477606d9703ddaab5ece4bb6",
+    "artifacts/p2/memory-acceptance/long/run-01/self-044.png": "3740e8f62ee0c21cbdce8d32d39d52e5b69438bb72d7f3262a92a6ae233ac3c0",
+    "artifacts/p2/memory-acceptance/long/run-01/self-045.png": "e241a8e8fdb186d19a569a70b0ea636e00cc0ee371cfc3f68db9fadaa3adb83f",
+    "artifacts/p2/memory-acceptance/long/run-01/self-046.png": "0e5dbe98f6098284cca9c06611b2211303cb51ef6e9b0743071b08b955ab3727",
+    "artifacts/p2/memory-acceptance/long/run-01/self-047.png": "43ae645f2f1b183307c48212773cab95561c71c62d622bf5685539bb860164c3",
+    "artifacts/p2/memory-acceptance/long/run-01/self-048.png": "8af5f329fd1e2cb2ed2509f185786534a2e0eb59839cc90eeff31db17de88fff",
+    "artifacts/p2/memory-acceptance/long/run-01/self-049.png": "123d30975d4c3d91c40491b5943d8a6408b7bf747614980d9c49f379fa448707",
+    "artifacts/p2/memory-acceptance/long/run-01/self-050.png": "9e1c9bfe1b9254bdef82ed267c098de6882ba530f2cd27f6a972761ae3234a0f",
+    "artifacts/p2/memory-acceptance/long/run-01/self-051.png": "531b306c98349bcae019272e3de811cd4f9c91446f9d4bc889c127464e5a5873",
+    "artifacts/p2/memory-acceptance/long/run-01/self-052.png": "4c3010b393a40e007e71ba14e51448c5eea9dac1b4ae7a10dbe8d061e7d272b1",
+    "artifacts/p2/memory-acceptance/long/run-01/self-053.png": "23359791a8a2c7799cee3126f0ff5ecfbf8d5c66cd42f0abc1157410f816f58e",
+    "artifacts/p2/memory-acceptance/long/run-01/self-054.png": "4e90c14aceb568c4401e236de9e0032753fdc07a67372ef4e959c47842fa6ab7",
+    "artifacts/p2/memory-acceptance/long/run-01/self-055.png": "749f24259cb64237c6c7f2481992d5b5e69dd6cad85659507cc11d8becc0153a",
+    "artifacts/p2/memory-acceptance/long/run-01/self-056.png": "33a29ee21c579d603a3c443d23c8cefb5bd5863372589d290550403cf74539f5",
+    "artifacts/p2/memory-acceptance/long/run-01/self-057.png": "9d93d6f83a253b973ea9ede3301126c654c258eef58383b5089883db6b407935",
+    "artifacts/p2/memory-acceptance/long/run-01/self-058.png": "9b7eb471934f630fd1b6918e89c8cd099bf74767bb6be7e22dfdd69d02295c40",
+    "artifacts/p2/memory-acceptance/long/run-01/self-059.png": "023475d595b5fc9b097b5ae1e622ee87cd2b8cb565b5285596c6eb7596ab153e",
+    "artifacts/p2/memory-acceptance/long/run-01/self-060.png": "1c135533c3943014998b3995cf8b4658bced8cc15d3a88b7c3b4c72ca29bddb9",
+    "artifacts/p2/memory-acceptance/long/run-01/self-061.png": "a766fd2b5f4282238a1931da2421fad19f44f874f4d3c6652f042e1c22822a50",
+    "artifacts/p2/memory-acceptance/long/run-01/self-062.png": "f5d0307af9ecd1f3da5bf010d42bddc11abc05cc50ea9cc86b2e9bf6246b07a6",
+    "artifacts/p2/memory-acceptance/long/run-01/self-063.png": "05b043bc7fd69c915a62233b8cbbfb834bc4d3b5cc0a053433e4ce51207c4416",
+    "artifacts/p2/memory-acceptance/long/run-01/self-064.png": "145a8681a0065fe63c3d536ab5c46b9d4809112f82c162f5ddf1b4790d7dd045",
+    "artifacts/p2/memory-acceptance/long/run-01/self-065.png": "dc91349e6bc425c330076ef8f8bdc4100d59b20c4161bc57490fa2292650200d",
+    "artifacts/p2/memory-acceptance/long/run-01/self-066.png": "1f992a1e848185435876ea136840b787bf9a7f8c6acd64449f23a86785ba083b",
+    "artifacts/p2/memory-acceptance/long/run-01/self-067.png": "822839eb9e74bd570c7115d0db1390dce092d962a6006ad860196799957d7b8f",
+    "artifacts/p2/memory-acceptance/long/run-01/self-068.png": "3e68ddd5831bbcdc1b937916dbbf0a8e113d65945f7114491b4c4f929ccf4646",
+    "artifacts/p2/memory-acceptance/long/run-01/self-069.png": "9ecd18c84d9e37a070d70c43763cac18338c40eda2a532caddbac6730135f567",
+    "artifacts/p2/memory-acceptance/long/run-01/self-070.png": "7683ceb0003c6166428cc776a7322e719db28bf64d51f75f0e0a2d2c2365975e",
+    "artifacts/p2/memory-acceptance/long/run-01/self-071.png": "ad79b07c6375c50e45ad8981c8182d96b22bb1dc08a0b8f099dee9478f23b303",
+    "artifacts/p2/memory-acceptance/long/run-01/self-072.png": "a7a828796b4366874ece3d89c1157df6ea612e31640e987c944ca8d2cdbba675",
+    "artifacts/p2/memory-acceptance/long/run-01/self-073.png": "1b3e92f688695516f6ede6e014a4fde4021b7e294055f3f347c621dfe323da0d",
+    "artifacts/p2/memory-acceptance/long/run-01/self-074.png": "ac9d830782305a092be48346c6b54a3d28c16eacec4927dfea1d7d8617593b4d",
+    "artifacts/p2/memory-acceptance/long/run-01/self-075.png": "e4a4a1f57106199a9dd35e1e45a38277236ac2e86146e6c073b6e44b717320e2",
+    "artifacts/p2/memory-acceptance/long/run-01/self-076.png": "596340ad37ad2ff7f3350400730f6b0231f4f8a9e2df09fc92bbfae8b5060ea1",
+    "artifacts/p2/memory-acceptance/long/run-01/self-077.png": "55804bda78c3fca9a7237cb8a5ef6bec8de0897c19eeb59ee513d1adf8184ce6",
+    "artifacts/p2/memory-acceptance/long/run-01/self-078.png": "d9e2968c6f71c36e0d783bcb03a3077254582c3a535c94987fdf7caf569f5b9c",
+    "artifacts/p2/memory-acceptance/long/run-01/self-079.png": "141e9007bf1f9c8f132c5e3cd8da0b293bfba3901ced81329dd6b561ebf2ded3",
+    "artifacts/p2/memory-acceptance/long/run-01/self-080.png": "d9c5b8bef73e5c4d239b748338763e71012aa2ea5b781449aa6a0fd80a3335ca",
+    "artifacts/p2/memory-acceptance/long/run-01/self-081.png": "404e407e60921b31dbe24ec80fe351829a7a7894296cd59041519705499af58c",
+    "artifacts/p2/memory-acceptance/long/run-01/self-082.png": "0647331ba2c7489b72ddf2ca19236eaffb02576202091368d9ddfd5ef9dac7fc",
+    "artifacts/p2/memory-acceptance/long/run-01/self-083.png": "1b9d0d8b5730833f875c75202e78e2c7fd7ea7ae2705a5c74495397a7905e47e",
+    "artifacts/p2/memory-acceptance/long/run-01/self-084.png": "f3a1b5203540a8f9bbcd3db1b9bd660e9aae5a02e3e5e9b176fb01404ec7461e",
+    "artifacts/p2/memory-acceptance/long/run-01/self-085.png": "fa00d97d33b9bb7a7cf5b867a69571b4c18e01bd94c1bc82f3e17b60ef3ea3f6",
+    "artifacts/p2/memory-acceptance/long/run-01/self-086.png": "14c0545e50cac1fffa4e3b6c165364df05502a18f7484d347a5c092ae65739f2",
+    "artifacts/p2/memory-acceptance/long/run-01/self-087.png": "d3f6ed56a3525b6a9c80ff9c8cd681fd4febe37bea08d44b5dba8c6dc707bd10",
+    "artifacts/p2/memory-acceptance/long/run-01/self-088.png": "e02a7a22d40925c734ba5dd9af54fbfec31fb4af646224dc04a73a45703faa1f",
+    "artifacts/p2/memory-acceptance/long/run-01/self-089.png": "029b526086ba4f7495d1468c2b9bd0698af2420d1cbab76e02b89dc87fc1d85a",
+    "artifacts/p2/memory-acceptance/long/run-01/self-090.png": "c5a297eb0901e862afa14a62dc7dc32fc5e79de7f5d46cb9ff8dd01f9f49b2a8",
+    "artifacts/p2/memory-acceptance/long/run-01/self-091.png": "062b3dcfe3c38afa78539d42e5d29ca630eeca94bd3c8ff66d8894f50a42a91f",
+    "artifacts/p2/memory-acceptance/long/run-01/self-092.png": "767b1bd80aef1d092295f14e39e037f40f99e8e475b8eedc786bc83b0595b879",
+    "artifacts/p2/memory-acceptance/long/run-01/self-093.png": "9c1ba775625ad135e22a7fe5177306bc7c14e8290cb883a9263642351e2ef040",
+    "artifacts/p2/memory-acceptance/long/run-01/self-094.png": "bd688f8645e44907b6358384a9c22ef8df59c71693f8ecb0dd19eef2c00dbe7a",
+    "artifacts/p2/memory-acceptance/long/run-01/self-095.png": "ae0b7a6794b83dd8d11520e504e12dd9caab81fff0b21272bb04161a67a8ebeb",
+    "artifacts/p2/memory-acceptance/long/run-01/self-096.png": "e872e0726b6555dd044e8960fda1f6193edb97a52291f43d9afed0fe923f10d7",
+    "artifacts/p2/memory-acceptance/long/run-01/self-097.png": "ebe97a03a9b0bc35c3fbdd6e3e5122cef2b8396b3c5455eb690ef3be818c25da",
+    "artifacts/p2/memory-acceptance/long/run-01/self-098.png": "1490404b34a03f1b185b284dc2c83b62fabad7843f63e1937dd300d020ea657f",
+    "artifacts/p2/memory-acceptance/long/run-01/self-099.png": "3d7d46a71437fe9d572396b25e8e77e2c7a9a881add5ce22c09afa58ec2240ae",
+    "artifacts/p2/memory-acceptance/long/run-02/report.json": "5aa14f52aedf75563003111c6cd40d47ceebbb2740ae14ec804fdc4dcf54f6c7",
+    "artifacts/p2/memory-acceptance/long/run-02/self-000.png": "d92f619f5c896cde55daa4208cc1c61d75fde4fcbe67310daa59c575aef7f5cd",
+    "artifacts/p2/memory-acceptance/long/run-02/self-001.png": "a0596751b55d86e0962dab5ef487aea2ce82567d8fbacc64ded8da8cb55491e1",
+    "artifacts/p2/memory-acceptance/long/run-02/self-002.png": "8c1703b24b90eba5bbe0f9ecc85eaf00f9d08acdc668991b6b7d970401f9695f",
+    "artifacts/p2/memory-acceptance/long/run-02/self-003.png": "86db58e5079631132a8073f5aa89587f550000a4c0700e2066a947b181301d27",
+    "artifacts/p2/memory-acceptance/long/run-02/self-004.png": "bc3978f0c1bda18744fe7063dd40147c3236f176bc5bc7ecaf4865081e0313f6",
+    "artifacts/p2/memory-acceptance/long/run-02/self-005.png": "f8dde53c6769899ae4cbc15ca8582b000090adbf99a1f959d590f76ef5cf6f19",
+    "artifacts/p2/memory-acceptance/long/run-02/self-006.png": "87b5c58b2150bf8cf405bce9471adea05bc7aa3b63266292e831b751538a3303",
+    "artifacts/p2/memory-acceptance/long/run-02/self-007.png": "5bcd300c709df26a7067a5ad92a0509256bc8c8ad935947c52680fceebbb10d7",
+    "artifacts/p2/memory-acceptance/long/run-02/self-008.png": "9befaa2d8fd80b7afa8c65bab906e269be77199f3c9b63d2b14129719a6e9e83",
+    "artifacts/p2/memory-acceptance/long/run-02/self-009.png": "386f131939aa6191f8d74f3bc47e412894f77db04e2b32f69d5964d77cd1e4ff",
+    "artifacts/p2/memory-acceptance/long/run-02/self-010.png": "5cf392216c55210e24143d22db44b583d0a4326075758f11fdc218b69667caed",
+    "artifacts/p2/memory-acceptance/long/run-02/self-011.png": "eaa71512ec74a12c8c0603c4f4698a273b5a7ce28b07e16cb36279b3995e6ac3",
+    "artifacts/p2/memory-acceptance/long/run-02/self-012.png": "a87d462caf3aa3f4022ed42affcd20e98601cd7a8aade6f51f0b001a0f1be116",
+    "artifacts/p2/memory-acceptance/long/run-02/self-013.png": "f963489c5d295d9ef0baf76d45ae19274d58163354a4e7f2acb7b591d2764463",
+    "artifacts/p2/memory-acceptance/long/run-02/self-014.png": "4c644f07342418aee117fcb87115a3243491d491378b6b676b53d0f88ac2fc2d",
+    "artifacts/p2/memory-acceptance/long/run-02/self-015.png": "99af159315fdf3567ae97beee5ed7a8664ae179d642a9b21a4e04d25967055c6",
+    "artifacts/p2/memory-acceptance/long/run-02/self-016.png": "fdd226fd142646f5cead1a125d11bb3f0f95cf63e68c0fbe76f0f7735ebe039b",
+    "artifacts/p2/memory-acceptance/long/run-02/self-017.png": "8c1df18666bf407b621672ca10ac281b04bc806e4e8ab207b7ebd00ee46c36fa",
+    "artifacts/p2/memory-acceptance/long/run-02/self-018.png": "b279a6d696a2ce1c92202aa49c6fdbd0c54507dcd7b200603d1b3769802d1602",
+    "artifacts/p2/memory-acceptance/long/run-02/self-019.png": "bd3856ec181392c9e8b9811a4c4fee36c9566abbb6c31e04ae95f47ddffde8f2",
+    "artifacts/p2/memory-acceptance/long/run-02/self-020.png": "627d12c2593d023f1f71a11e85eaab21094a05f4ff65c52dc61e9fa19d4fb1c4",
+    "artifacts/p2/memory-acceptance/long/run-02/self-021.png": "7c80a99bd94ff2d39d3c06ce75a7d4dab4373f2f4da174ecb91b5a0c9766be80",
+    "artifacts/p2/memory-acceptance/long/run-02/self-022.png": "35a95f307122b6e36b5c4e213c361531529759f411c97c8253e1eea9f03df148",
+    "artifacts/p2/memory-acceptance/long/run-02/self-023.png": "c9a0e7dc29835d55a5e0486479a2fba4e8427628da76a77ff831b55d9d9236d7",
+    "artifacts/p2/memory-acceptance/long/run-02/self-024.png": "354afd3a095d3ef115a5c0b6cbd527b72fc8e47a31c99cb7ededc94cd04bb5d8",
+    "artifacts/p2/memory-acceptance/long/run-02/self-025.png": "6aeb89ca38c2b556b53caccad28eb77d20bd7584f72e95ea7729a02b63b0e175",
+    "artifacts/p2/memory-acceptance/long/run-02/self-026.png": "db7cd4478161b428d31d6da2a8750381cf82793bf3ebf66cbe7e4fbbee581478",
+    "artifacts/p2/memory-acceptance/long/run-02/self-027.png": "e9405db65f9127890964824e8f2d0befb29ca78a0657663ecc6f7ce375ed267c",
+    "artifacts/p2/memory-acceptance/long/run-02/self-028.png": "b97c90b0bf591644f161fb6e9e4e20d87431f31c4dccc79ea97bd494b63313ca",
+    "artifacts/p2/memory-acceptance/long/run-02/self-029.png": "12eb3eafd0f0eefba4910219f43c91a0c2fe9dc21f6cf383ccac52abcc5d08fb",
+    "artifacts/p2/memory-acceptance/long/run-02/self-030.png": "34fdbb43996626ce4b51dec31de4cb4e847de49037c607c95b1f0352cd03456a",
+    "artifacts/p2/memory-acceptance/long/run-02/self-031.png": "a1ce6182ec646680e0aadbedf140e52c80cafc3f79ff2f3cd7a7adcbbb48537a",
+    "artifacts/p2/memory-acceptance/long/run-02/self-032.png": "4fc2ad42b420e07f66fbcd93de8a4143fb7fe46ecc888a2f4ed8deef27fa58b4",
+    "artifacts/p2/memory-acceptance/long/run-02/self-033.png": "f93c253d2cbead4d619a6983dbddeda34331dc3238397490446b1e03f881314e",
+    "artifacts/p2/memory-acceptance/long/run-02/self-034.png": "3d39887373204e9b64ee471801c8d0a586ce4f03e8a0d85bb00f812dc0d60bb7",
+    "artifacts/p2/memory-acceptance/long/run-02/self-035.png": "ae90375a1dd16a4e6b07bbb7a9a17701c30b1c115d4e39ba378921b7c792c6dc",
+    "artifacts/p2/memory-acceptance/long/run-02/self-036.png": "365c550fcf3d5fe2bbc9158539d173fbf83aad092ea4c600099e5726bbbe04a1",
+    "artifacts/p2/memory-acceptance/long/run-02/self-037.png": "53c3600d19e83e1ee4d9346834cdf0e5a76af41f9fed55a37077fa0a3e607c45",
+    "artifacts/p2/memory-acceptance/long/run-02/self-038.png": "7f76fb1533d51aeea670fe2727c8c51432b76c9685fa16ee05766f9e0eb5ae1a",
+    "artifacts/p2/memory-acceptance/long/run-02/self-039.png": "d67c795bced6a6f2f32c3adc973c5bbfbd763448df03a82525193ab963fb7e8c",
+    "artifacts/p2/memory-acceptance/long/run-02/self-040.png": "c5b084557e0d254944b6e07597bc7cdea71d373c0f1946f0bc8596435944cf39",
+    "artifacts/p2/memory-acceptance/long/run-02/self-041.png": "9fb6b0e60f56aedc38aa20b03bd0a40ddc38273e3cb8962457443d7c4f743d3a",
+    "artifacts/p2/memory-acceptance/long/run-02/self-042.png": "b9f44158c52712799f346cccebae2dbfdfd015facd42300a4af856b4f9bf2ceb",
+    "artifacts/p2/memory-acceptance/long/run-02/self-043.png": "bd886b2880b7afd7f63f618ad27cb9f350a3e640477606d9703ddaab5ece4bb6",
+    "artifacts/p2/memory-acceptance/long/run-02/self-044.png": "3740e8f62ee0c21cbdce8d32d39d52e5b69438bb72d7f3262a92a6ae233ac3c0",
+    "artifacts/p2/memory-acceptance/long/run-02/self-045.png": "e241a8e8fdb186d19a569a70b0ea636e00cc0ee371cfc3f68db9fadaa3adb83f",
+    "artifacts/p2/memory-acceptance/long/run-02/self-046.png": "0e5dbe98f6098284cca9c06611b2211303cb51ef6e9b0743071b08b955ab3727",
+    "artifacts/p2/memory-acceptance/long/run-02/self-047.png": "43ae645f2f1b183307c48212773cab95561c71c62d622bf5685539bb860164c3",
+    "artifacts/p2/memory-acceptance/long/run-02/self-048.png": "8af5f329fd1e2cb2ed2509f185786534a2e0eb59839cc90eeff31db17de88fff",
+    "artifacts/p2/memory-acceptance/long/run-02/self-049.png": "123d30975d4c3d91c40491b5943d8a6408b7bf747614980d9c49f379fa448707",
+    "artifacts/p2/memory-acceptance/long/run-02/self-050.png": "9e1c9bfe1b9254bdef82ed267c098de6882ba530f2cd27f6a972761ae3234a0f",
+    "artifacts/p2/memory-acceptance/long/run-02/self-051.png": "531b306c98349bcae019272e3de811cd4f9c91446f9d4bc889c127464e5a5873",
+    "artifacts/p2/memory-acceptance/long/run-02/self-052.png": "4c3010b393a40e007e71ba14e51448c5eea9dac1b4ae7a10dbe8d061e7d272b1",
+    "artifacts/p2/memory-acceptance/long/run-02/self-053.png": "23359791a8a2c7799cee3126f0ff5ecfbf8d5c66cd42f0abc1157410f816f58e",
+    "artifacts/p2/memory-acceptance/long/run-02/self-054.png": "4e90c14aceb568c4401e236de9e0032753fdc07a67372ef4e959c47842fa6ab7",
+    "artifacts/p2/memory-acceptance/long/run-02/self-055.png": "749f24259cb64237c6c7f2481992d5b5e69dd6cad85659507cc11d8becc0153a",
+    "artifacts/p2/memory-acceptance/long/run-02/self-056.png": "33a29ee21c579d603a3c443d23c8cefb5bd5863372589d290550403cf74539f5",
+    "artifacts/p2/memory-acceptance/long/run-02/self-057.png": "9d93d6f83a253b973ea9ede3301126c654c258eef58383b5089883db6b407935",
+    "artifacts/p2/memory-acceptance/long/run-02/self-058.png": "9b7eb471934f630fd1b6918e89c8cd099bf74767bb6be7e22dfdd69d02295c40",
+    "artifacts/p2/memory-acceptance/long/run-02/self-059.png": "023475d595b5fc9b097b5ae1e622ee87cd2b8cb565b5285596c6eb7596ab153e",
+    "artifacts/p2/memory-acceptance/long/run-02/self-060.png": "1c135533c3943014998b3995cf8b4658bced8cc15d3a88b7c3b4c72ca29bddb9",
+    "artifacts/p2/memory-acceptance/long/run-02/self-061.png": "a766fd2b5f4282238a1931da2421fad19f44f874f4d3c6652f042e1c22822a50",
+    "artifacts/p2/memory-acceptance/long/run-02/self-062.png": "f5d0307af9ecd1f3da5bf010d42bddc11abc05cc50ea9cc86b2e9bf6246b07a6",
+    "artifacts/p2/memory-acceptance/long/run-02/self-063.png": "05b043bc7fd69c915a62233b8cbbfb834bc4d3b5cc0a053433e4ce51207c4416",
+    "artifacts/p2/memory-acceptance/long/run-02/self-064.png": "145a8681a0065fe63c3d536ab5c46b9d4809112f82c162f5ddf1b4790d7dd045",
+    "artifacts/p2/memory-acceptance/long/run-02/self-065.png": "dc91349e6bc425c330076ef8f8bdc4100d59b20c4161bc57490fa2292650200d",
+    "artifacts/p2/memory-acceptance/long/run-02/self-066.png": "1f992a1e848185435876ea136840b787bf9a7f8c6acd64449f23a86785ba083b",
+    "artifacts/p2/memory-acceptance/long/run-02/self-067.png": "822839eb9e74bd570c7115d0db1390dce092d962a6006ad860196799957d7b8f",
+    "artifacts/p2/memory-acceptance/long/run-02/self-068.png": "3e68ddd5831bbcdc1b937916dbbf0a8e113d65945f7114491b4c4f929ccf4646",
+    "artifacts/p2/memory-acceptance/long/run-02/self-069.png": "9ecd18c84d9e37a070d70c43763cac18338c40eda2a532caddbac6730135f567",
+    "artifacts/p2/memory-acceptance/long/run-02/self-070.png": "7683ceb0003c6166428cc776a7322e719db28bf64d51f75f0e0a2d2c2365975e",
+    "artifacts/p2/memory-acceptance/long/run-02/self-071.png": "ad79b07c6375c50e45ad8981c8182d96b22bb1dc08a0b8f099dee9478f23b303",
+    "artifacts/p2/memory-acceptance/long/run-02/self-072.png": "a7a828796b4366874ece3d89c1157df6ea612e31640e987c944ca8d2cdbba675",
+    "artifacts/p2/memory-acceptance/long/run-02/self-073.png": "1b3e92f688695516f6ede6e014a4fde4021b7e294055f3f347c621dfe323da0d",
+    "artifacts/p2/memory-acceptance/long/run-02/self-074.png": "ac9d830782305a092be48346c6b54a3d28c16eacec4927dfea1d7d8617593b4d",
+    "artifacts/p2/memory-acceptance/long/run-02/self-075.png": "e4a4a1f57106199a9dd35e1e45a38277236ac2e86146e6c073b6e44b717320e2",
+    "artifacts/p2/memory-acceptance/long/run-02/self-076.png": "596340ad37ad2ff7f3350400730f6b0231f4f8a9e2df09fc92bbfae8b5060ea1",
+    "artifacts/p2/memory-acceptance/long/run-02/self-077.png": "55804bda78c3fca9a7237cb8a5ef6bec8de0897c19eeb59ee513d1adf8184ce6",
+    "artifacts/p2/memory-acceptance/long/run-02/self-078.png": "d9e2968c6f71c36e0d783bcb03a3077254582c3a535c94987fdf7caf569f5b9c",
+    "artifacts/p2/memory-acceptance/long/run-02/self-079.png": "141e9007bf1f9c8f132c5e3cd8da0b293bfba3901ced81329dd6b561ebf2ded3",
+    "artifacts/p2/memory-acceptance/long/run-02/self-080.png": "d9c5b8bef73e5c4d239b748338763e71012aa2ea5b781449aa6a0fd80a3335ca",
+    "artifacts/p2/memory-acceptance/long/run-02/self-081.png": "404e407e60921b31dbe24ec80fe351829a7a7894296cd59041519705499af58c",
+    "artifacts/p2/memory-acceptance/long/run-02/self-082.png": "0647331ba2c7489b72ddf2ca19236eaffb02576202091368d9ddfd5ef9dac7fc",
+    "artifacts/p2/memory-acceptance/long/run-02/self-083.png": "1b9d0d8b5730833f875c75202e78e2c7fd7ea7ae2705a5c74495397a7905e47e",
+    "artifacts/p2/memory-acceptance/long/run-02/self-084.png": "f3a1b5203540a8f9bbcd3db1b9bd660e9aae5a02e3e5e9b176fb01404ec7461e",
+    "artifacts/p2/memory-acceptance/long/run-02/self-085.png": "fa00d97d33b9bb7a7cf5b867a69571b4c18e01bd94c1bc82f3e17b60ef3ea3f6",
+    "artifacts/p2/memory-acceptance/long/run-02/self-086.png": "14c0545e50cac1fffa4e3b6c165364df05502a18f7484d347a5c092ae65739f2",
+    "artifacts/p2/memory-acceptance/long/run-02/self-087.png": "d3f6ed56a3525b6a9c80ff9c8cd681fd4febe37bea08d44b5dba8c6dc707bd10",
+    "artifacts/p2/memory-acceptance/long/run-02/self-088.png": "e02a7a22d40925c734ba5dd9af54fbfec31fb4af646224dc04a73a45703faa1f",
+    "artifacts/p2/memory-acceptance/long/run-02/self-089.png": "029b526086ba4f7495d1468c2b9bd0698af2420d1cbab76e02b89dc87fc1d85a",
+    "artifacts/p2/memory-acceptance/long/run-02/self-090.png": "c5a297eb0901e862afa14a62dc7dc32fc5e79de7f5d46cb9ff8dd01f9f49b2a8",
+    "artifacts/p2/memory-acceptance/long/run-02/self-091.png": "062b3dcfe3c38afa78539d42e5d29ca630eeca94bd3c8ff66d8894f50a42a91f",
+    "artifacts/p2/memory-acceptance/long/run-02/self-092.png": "767b1bd80aef1d092295f14e39e037f40f99e8e475b8eedc786bc83b0595b879",
+    "artifacts/p2/memory-acceptance/long/run-02/self-093.png": "9c1ba775625ad135e22a7fe5177306bc7c14e8290cb883a9263642351e2ef040",
+    "artifacts/p2/memory-acceptance/long/run-02/self-094.png": "bd688f8645e44907b6358384a9c22ef8df59c71693f8ecb0dd19eef2c00dbe7a",
+    "artifacts/p2/memory-acceptance/long/run-02/self-095.png": "ae0b7a6794b83dd8d11520e504e12dd9caab81fff0b21272bb04161a67a8ebeb",
+    "artifacts/p2/memory-acceptance/long/run-02/self-096.png": "e872e0726b6555dd044e8960fda1f6193edb97a52291f43d9afed0fe923f10d7",
+    "artifacts/p2/memory-acceptance/long/run-02/self-097.png": "ebe97a03a9b0bc35c3fbdd6e3e5122cef2b8396b3c5455eb690ef3be818c25da",
+    "artifacts/p2/memory-acceptance/long/run-02/self-098.png": "1490404b34a03f1b185b284dc2c83b62fabad7843f63e1937dd300d020ea657f",
+    "artifacts/p2/memory-acceptance/long/run-02/self-099.png": "3d7d46a71437fe9d572396b25e8e77e2c7a9a881add5ce22c09afa58ec2240ae",
+    "artifacts/p2/memory-acceptance/pixels-after/identity.json": "920a262f47b8bdf13a7ae5aad07f5d1ba07f490a26e730b36537aa90bcacece1",
+    "artifacts/p2/memory-acceptance/pixels-after/memory.log": "ed5141fc7201ae8b458e54c3874d1387148c717985f1153243dd2d04009709c9",
+    "artifacts/p2/memory-acceptance/pixels-after/metrics.json": "06cd623ead54005caa26215c042e75276472fe6623a5ad1d7bff9d427140d57f",
+    "artifacts/p2/memory-acceptance/pixels-after/original.log": "bcb9ee8adfec8bc9461d082252d08008a3aea524f445004df1918f0f39121bf3",
+    "artifacts/p2/memory-acceptance/pixels-after/memory/editor.png": "d96c84434c26d7083c799cabc0e4770196f63ad6bd491c2eff0d97291e6db04e",
+    "artifacts/p2/memory-acceptance/pixels-after/memory/pixel_trace.rgba": "bee8433fe9c6c6530704fbd6f5ca794e4b900ca16ea5371a14c3f922bceb2270",
+    "artifacts/p2/memory-acceptance/pixels-after/memory/preview.png": "db6ed930023a8e5d67b450cf801eae4b8a59ff509da595fca814afd9f1b2a4f1",
+    "artifacts/p2/memory-acceptance/pixels-after/memory/report.json": "9ffb30e192ad1301d2ef7ada0a32ec28534f217cde20e7f1216e6c99b880d268",
+    "artifacts/p2/memory-acceptance/pixels-after/original/editor.png": "d96c84434c26d7083c799cabc0e4770196f63ad6bd491c2eff0d97291e6db04e",
+    "artifacts/p2/memory-acceptance/pixels-after/original/pixel_trace.rgba": "bee8433fe9c6c6530704fbd6f5ca794e4b900ca16ea5371a14c3f922bceb2270",
+    "artifacts/p2/memory-acceptance/pixels-after/original/preview.png": "db6ed930023a8e5d67b450cf801eae4b8a59ff509da595fca814afd9f1b2a4f1",
+    "artifacts/p2/memory-acceptance/pixels-after/original/report.json": "56087f45b172e1fd98f23b1ddde70520b8b515ac6004f61c0420390a5450acb8",
+    "artifacts/p2/memory-acceptance/pixels-before/identity.json": "920a262f47b8bdf13a7ae5aad07f5d1ba07f490a26e730b36537aa90bcacece1",
+    "artifacts/p2/memory-acceptance/pixels-before/memory.log": "ed5141fc7201ae8b458e54c3874d1387148c717985f1153243dd2d04009709c9",
+    "artifacts/p2/memory-acceptance/pixels-before/metrics.json": "06cd623ead54005caa26215c042e75276472fe6623a5ad1d7bff9d427140d57f",
+    "artifacts/p2/memory-acceptance/pixels-before/original.log": "bcb9ee8adfec8bc9461d082252d08008a3aea524f445004df1918f0f39121bf3",
+    "artifacts/p2/memory-acceptance/pixels-before/memory/editor.png": "d96c84434c26d7083c799cabc0e4770196f63ad6bd491c2eff0d97291e6db04e",
+    "artifacts/p2/memory-acceptance/pixels-before/memory/pixel_trace.rgba": "bee8433fe9c6c6530704fbd6f5ca794e4b900ca16ea5371a14c3f922bceb2270",
+    "artifacts/p2/memory-acceptance/pixels-before/memory/preview.png": "db6ed930023a8e5d67b450cf801eae4b8a59ff509da595fca814afd9f1b2a4f1",
+    "artifacts/p2/memory-acceptance/pixels-before/memory/report.json": "9ffb30e192ad1301d2ef7ada0a32ec28534f217cde20e7f1216e6c99b880d268",
+    "artifacts/p2/memory-acceptance/pixels-before/original/editor.png": "d96c84434c26d7083c799cabc0e4770196f63ad6bd491c2eff0d97291e6db04e",
+    "artifacts/p2/memory-acceptance/pixels-before/original/pixel_trace.rgba": "bee8433fe9c6c6530704fbd6f5ca794e4b900ca16ea5371a14c3f922bceb2270",
+    "artifacts/p2/memory-acceptance/pixels-before/original/preview.png": "db6ed930023a8e5d67b450cf801eae4b8a59ff509da595fca814afd9f1b2a4f1",
+    "artifacts/p2/memory-acceptance/pixels-before/original/report.json": "56087f45b172e1fd98f23b1ddde70520b8b515ac6004f61c0420390a5450acb8"
+  },
+  "limits": [
+    "No acoustic or device-consumption latency claim.",
+    "20 ms upper-bound, CPU/frame and process/GPU budgets unchanged.",
+    "MemoryUsage is explicit diagnostic configuration; ordinary application default unchanged.",
+    "Allocator capacity is not PDH dedicated residency.",
+    "Two-second shutdown observation is not stable idle or 20 complete lifecycle cycles.",
+    "No real song stream/stable kernel, device rebuild, Linux/macOS, manual UI or P3 file export acceptance."
+  ]
+}

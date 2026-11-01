@@ -1,0 +1,16 @@
+{
+  "rust_items": 771,
+  "rust_methods": 1781,
+  "source_files": 353,
+  "source_lines": 95511,
+  "by_crate": {
+    "skin_editor_domain": 42,
+    "skin_editor_application": 99,
+    "skin_editor_audio": 48,
+    "skin_editor_rendering": 37,
+    "skin_editor_preview": 2,
+    "skin_editor_infrastructure": 158,
+    "skin_editor_ui": 37,
+    "skin_editor_desktop": 348
+  }
+}

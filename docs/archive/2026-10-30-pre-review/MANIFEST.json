@@ -1,0 +1,109 @@
+{
+  "schema": 1,
+  "date": "2026-10-30",
+  "purpose": "exact pre-review document snapshots; relative links are interpreted from original path",
+  "entries": [
+    {
+      "original": "README.md",
+      "archive": "docs/archive/2026-10-30-pre-review/README.md.txt",
+      "sha256": "bd2efa1bae14cbc3866fb8fb2809f0f3213bd6db7cce3297bc6c6b228a86205e",
+      "bytes": 50309
+    },
+    {
+      "original": "docs/ARCHITECTURE.md",
+      "archive": "docs/archive/2026-10-30-pre-review/docs__ARCHITECTURE.md.txt",
+      "sha256": "987581153555bacec9ca0d842e1fae94af734bc4df3c783f22ac7cf2fb9a08f0",
+      "bytes": 112159
+    },
+    {
+      "original": "docs/TECH_STACK.md",
+      "archive": "docs/archive/2026-10-30-pre-review/docs__TECH_STACK.md.txt",
+      "sha256": "f3320ea889062536e706e7879eda2a09a198a818829699b9e82bf10802bc4b7d",
+      "bytes": 34898
+    },
+    {
+      "original": "docs/ROADMAP.md",
+      "archive": "docs/archive/2026-10-30-pre-review/docs__ROADMAP.md.txt",
+      "sha256": "bb9b621455e5e8209c0c388c0bbe6d09444641351d7a91080c0d3d2b8aaabb4f",
+      "bytes": 59848
+    },
+    {
+      "original": "docs/P2_PROGRESS.md",
+      "archive": "docs/archive/2026-10-30-pre-review/docs__P2_PROGRESS.md.txt",
+      "sha256": "126140b2687035fc483b8138a0d4d6bd85ea0c5f9e65f93d2abe2e4140abfdd3",
+      "bytes": 98413
+    },
+    {
+      "original": "docs/P2_CLOSEOUT.md",
+      "archive": "docs/archive/2026-10-30-pre-review/docs__P2_CLOSEOUT.md.txt",
+      "sha256": "a6def0cca82d8110266a556a2b9c72de33a0e94ec631f842fe5fc98c42f880b2",
+      "bytes": 19877
+    },
+    {
+      "original": "docs/P2_STAGE_GATE.md",
+      "archive": "docs/archive/2026-10-30-pre-review/docs__P2_STAGE_GATE.md.txt",
+      "sha256": "3218c79dc1271ba778a08cb65ff571ece9ba38742ead78c6220a1c81beb31ee4",
+      "bytes": 7895
+    },
+    {
+      "original": "docs/COMMANDS.md",
+      "archive": "docs/archive/2026-10-30-pre-review/docs__COMMANDS.md.txt",
+      "sha256": "4c620b0abc105d86c28fe693040139ac1e8df20eac56299e381f5ab4f1f66797",
+      "bytes": 9190
+    },
+    {
+      "original": "docs/DRAFTS.md",
+      "archive": "docs/archive/2026-10-30-pre-review/docs__DRAFTS.md.txt",
+      "sha256": "a8a48c9f96c93243c44a023acfdf2a4c90d017e5afa64b013e9513871ba932d7",
+      "bytes": 5576
+    },
+    {
+      "original": "docs/HISTORY_ADDRESSING.md",
+      "archive": "docs/archive/2026-10-30-pre-review/docs__HISTORY_ADDRESSING.md.txt",
+      "sha256": "20dc79224ce62d59587ce1d3842e159834005e033db65f3fdbdf078e224bee00",
+      "bytes": 6606
+    },
+    {
+      "original": "docs/REQUIREMENTS.md",
+      "archive": "docs/archive/2026-10-30-pre-review/docs__REQUIREMENTS.md.txt",
+      "sha256": "f6b4c93b6d53d7242ed7bd6b183cfa2643d2176e1406b9acc768ecf883c92396",
+      "bytes": 27375
+    },
+    {
+      "original": "docs/PREVIEW_SETTINGS.md",
+      "archive": "docs/archive/2026-10-30-pre-review/docs__PREVIEW_SETTINGS.md.txt",
+      "sha256": "905080f149e25b61e86b08373fd3b04019361f5c1863c1202f05739da5676601",
+      "bytes": 10394
+    },
+    {
+      "original": "docs/PREVIEW_TRANSPORT.md",
+      "archive": "docs/archive/2026-10-30-pre-review/docs__PREVIEW_TRANSPORT.md.txt",
+      "sha256": "c2df8bba449dea13d92ce960eaf38268e9740be805daba17825920917acf3e82",
+      "bytes": 6158
+    },
+    {
+      "original": "docs/PRESENTATION_CONTRACT.md",
+      "archive": "docs/archive/2026-10-30-pre-review/docs__PRESENTATION_CONTRACT.md.txt",
+      "sha256": "a083d2c24952ed1f350835637f77910814d56a338e03d7e4c05fe8c64ab026b9",
+      "bytes": 23197
+    },
+    {
+      "original": "docs/COMPONENT_MODEL.md",
+      "archive": "docs/archive/2026-10-30-pre-review/docs__COMPONENT_MODEL.md.txt",
+      "sha256": "a14364b4f4a283dfa9e89c0bdeb43cc815f431bd88c804bfce8d524bf0c55df5",
+      "bytes": 7522
+    },
+    {
+      "original": "docs/AUDIO_EDITING_REVIEW.md",
+      "archive": "docs/archive/2026-10-30-pre-review/docs__AUDIO_EDITING_REVIEW.md.txt",
+      "sha256": "81b2a438cf62c7aa22f589101e7f0417964ae4262a4922b123f5f44f5c9f43b3",
+      "bytes": 25795
+    },
+    {
+      "original": "docs/P1_PROGRESS.md",
+      "archive": "docs/archive/2026-10-30-pre-review/docs__P1_PROGRESS.md.txt",
+      "sha256": "5f3b7050aa244d47da8c00889b2e57b8bf45bbe244649e27880ccc041f30674a",
+      "bytes": 11464
+    }
+  ]
+}

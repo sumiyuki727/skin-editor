@@ -1,0 +1,5327 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-10-22T14:31:19.936546+09:00",
+  "status": "incomplete",
+  "scope": "P2-A3 attribution; callback submission brackets and GPU allocator/PDH controls, not acoustic output or complete P2",
+  "identity": {
+    "binary_sha256": "bdc2a7f91f2b091334fe5afce228e2b0025b5b451f5d0cd78728700406dbcb2a",
+    "sources": {
+      "AGENTS.md": "83ceef572bafbd6b805817e919ed6aace82c4cc47d708410df5199f36026dd3f",
+      "Cargo.lock": "fdea10e6bcd7d2a31574a89f0044a762efe0388e74901f354c115dd4f87106da",
+      "Cargo.toml": "f2145d08a75e10b117cbb8154f6911d2664caa708fb24790d950e2e174cd8401",
+      "crates/application/Cargo.toml": "7613f8f871bb60d0bdfec79d18ac6c2b64bebff403ee3fb3533d2f1a4a35061a",
+      "crates/application/src/address.rs": "d6d1ba60051876c653bbb829caa243b1e166514f3256de37e9b227ccfcf07c0b",
+      "crates/application/src/audio_editor.rs": "81c14eb800e0e84978c63f3d7c6e21cf1b0a691c7e0fef33932bb6f629464e53",
+      "crates/application/src/audio_port.rs": "4ce375c8689d82f51a715ca8d0d403e134521aefddc796f0c469e57e5d18d6bc",
+      "crates/application/src/contract.rs": "38a08d792c075fe388c3051aa4523df69ff4dcb7daa8a4520a617b560cc272d9",
+      "crates/application/src/draft.rs": "06a2c4c2cad35c54201ae681aba9559d41c2d8e8482581d0442f3062c59e8b7b",
+      "crates/application/src/draft_contract.rs": "9ca0e3fba10f8b8545511ed45fa649523e5fc07d6f538ce9ccc85f5175538bd7",
+      "crates/application/src/execute.rs": "735cbc5a56ac1256123ad9e69d74fae321b79a398fa43b6730de63b4a4f029dc",
+      "crates/application/src/history.rs": "44c9c53b29e6e63b30ddf6ba6dcde360f3d2885d21b40178c0a89de81e3a49cf",
+      "crates/application/src/history_control.rs": "a47dfa5a386cbd0aa6d88df679617b7df1d749c7e614886cb349bc547c510220",
+      "crates/application/src/history_queries.rs": "449dcb6feea8223f590d50374f1bdf5434a6eae7957e5d8bdade8eb7b20c919d",
+      "crates/application/src/lib.rs": "04dd883cfd0cb62fd5f63c80af79c9280327bc90be8af8663621ae80ca4f4440",
+      "crates/application/src/preview_port.rs": "55b255080df829375854fbcdb965195ff66e760a3f3a7492b1431f9f7c9776c0",
+      "crates/application/src/resources.rs": "b21d2808b96457ea6fd35cdfdc3e45c89c61e4d69fe92f64477105e33c117770",
+      "crates/domain/Cargo.toml": "ebfc5fb45af16bc7219eeef7a79f00d4a9780e9bee2a79fefd91dd7035328052",
+      "crates/domain/src/assets.rs": "6daa3625dab9205497dd9230a460fa55441da022d83a237e644ce07c35e850a5",
+      "crates/domain/src/audio.rs": "807d2cbd247406d0e7a9a6305884e6c6122518f9eab919a3d43beb44db5efb7d",
+      "crates/domain/src/components.rs": "93276309ce2ccdcc165843633d26b2f90176d67fc02a6068fd0cfbfc8529d3c6",
+      "crates/domain/src/configuration.rs": "2472c94b2fac0fcb69ed967d361bd6a1feecc3137af31bf54138dbf6030418fa",
+      "crates/domain/src/forest.rs": "07731db4e0302b768fd995f297dc332aeda2f821f1b29055b1355a1df3ac7827",
+      "crates/domain/src/geometry.rs": "21ce8edbfb4ad963525dfe5ecfb79c7cef3cb8a53c8fc930939bff887335f4c9",
+      "crates/domain/src/identity.rs": "410d53bc95072343060772cac51c19c694cbb691f1cf3587aa3eaeec84e74b56",
+      "crates/domain/src/layers.rs": "ebefe1ea28a4e079c434469a7f4ed5e112acc9b60ca34f7675c4a2592f8e87df",
+      "crates/domain/src/lib.rs": "886b26f31d907a7aab8156624acb9a592a7b596ff9d08bc8b6fa5ac81c2f472d",
+      "crates/domain/src/output.rs": "238e5deb808cf3b5fd4064a5684e869406075cc45409bb8173a4f341d024f95a",
+      "crates/domain/src/project.rs": "2be6417cb42a3c8c3cf9db2b60e81c5ae044eeb815b9b51a85738cbb94760dbe",
+      "desktop/audio/Cargo.toml": "43d8f8e2ffb20dad93347f9afd05eaa2b3c71ca7a8c518344fdeb5ddd705e0ee",
+      "desktop/audio/src/background.rs": "248ce86de90fa360a9ae192a82ef8329928020c5f0f7ed633b806f86f6882939",
+      "desktop/audio/src/lib.rs": "37fc9869ba2ff5a3eef26644f1658c50df3fd45be02b8f44bf97c1d6e6b6ba9c",
+      "desktop/audio/src/pcm.rs": "82506312e2dbe9b99af37cf2e0577cbd4e2dc79ab9930af3f70d762a964ef2b2",
+      "desktop/audio/src/runtime.rs": "67cebd16e2e2583703667c4179cbe68fe79119140c790713450f87a4fad613bc",
+      "desktop/Cargo.lock": "379eca6a0762a5439123a13d9aa8c3e96fe88fc4448498fc54495d6e2bd59eb0",
+      "desktop/Cargo.toml": "a7623cdabef5e9010922340a7c92e134ebd9b0dda437e452f4551a0c6e2e8266",
+      "desktop/host/Cargo.toml": "486b1a279eefb1bcb966afdacc00cfbc8c6ab1f3e2cf18cb6f79b0926a38673d",
+      "desktop/host/src/audio_verification.rs": "a5a8875300972ed936e2c11f2dddd9dba930a939e30592dd217424771d1b43aa",
+      "desktop/host/src/combined_verification.rs": "ab543c5b794d9dbfa681ff2a88ce0700f3f9997437e952cc754d6fee90a55005",
+      "desktop/host/src/edit_verification.rs": "efb314777f5b6772a12f8821c582b31976339b1e6dd04f7a68ca659a960fc66e",
+      "desktop/host/src/editor_audio.rs": "115af900e00f04ade9b317c07bbc0836754dce73ea598b6055c78e124d37432c",
+      "desktop/host/src/frame_worker.rs": "c3df66400e9504efc6bf89d1c8d2b56277d107172eee4745b77340037fcdf532",
+      "desktop/host/src/gpu_observation.rs": "d563f458837ce58b4cec213a0cc5005b6afba225fe668bb6336674f42e515d91",
+      "desktop/host/src/import_worker.rs": "1db4c8b6dec3349eb72b6bc2758ff7899bfeba7fec7bb375498f380248f99e21",
+      "desktop/host/src/load_verification.rs": "b4f892c38d7c3dd52080404cfbf054a7f57f9096f77ae2cc903351db10ef29b5",
+      "desktop/host/src/main.rs": "f9b4d654c9712c63e042df8f2a39cdbbb0d9bcb196374283fcf4c18ee42fb6ee",
+      "desktop/host/src/presentation.rs": "ebd5b0361161d8a1747ab910eb02f90992157e9708732cb124c196b54478a6b2",
+      "desktop/host/src/supply_verification.rs": "b46c642bbf4020b742fa9a880ff4430ce2b9b311952990ee1b93b665c76a164a",
+      "desktop/host/src/verification.rs": "32ee7a4eee9326e005d04bdaf012f9a6256f88012a5635a53220d7a4ae1aa761",
+      "desktop/infrastructure/Cargo.toml": "5fae623c62758569c235b1ba0ce7461221f4e4faaae6d9e0f0c3e86bf89a7e87",
+      "desktop/infrastructure/src/audio_playback.rs": "9850c36db4f8ac81e2235312623cd007e5825f27bcaee0ad8889b6e4bfa69b62",
+      "desktop/infrastructure/src/audio_preparation.rs": "2ab4390e787c6eb1a0e5986b75908e52aac83ba77d762e7cea6bb2bb64c745b6",
+      "desktop/infrastructure/src/audio_supply.rs": "da4c00a27c41b0883808134604295bdb978d965f96f2ab6c04a155169e46b1d6",
+      "desktop/infrastructure/src/audio_worker.rs": "a7fbe3890518b85f0264adf37d8cc5e19fe93ce876cefd17aa68bcf6491f763f",
+      "desktop/infrastructure/src/blobs.rs": "5be7127b22e7276a6db2c435c312df29795af00fa3f3904a4d610a7e8639a9d9",
+      "desktop/infrastructure/src/byte_budget.rs": "0fe47fdea27b76520e3dedad38aa2695421b199ec2a5342ba4e9242bb0e45e15",
+      "desktop/infrastructure/src/lib.rs": "0057a35ffe84e8d2b122e7c94f4dce7166e0551eb986f00c854ef51305138c95",
+      "desktop/infrastructure/src/native_audio.rs": "ba3d307ada269e7f5af18263ea58753cdee4300114ae8e4e344691c23f46e343",
+      "desktop/infrastructure/src/skin_audio.rs": "78505d256f616354f0c4914904a1260c82c85c03bcd9afe13de7614a8d1f2ab5",
+      "desktop/infrastructure/src/wav.rs": "b0cd422952d3e4b7b273d97dc0ebcbd122dab213130e8069c0e57dd0d50e278f",
+      "desktop/preview/Cargo.toml": "6331b4af9692c3f4d16220de8810e992990b6032a2184fac0198e72efedd31fc",
+      "desktop/preview/src/lib.rs": "c519ed1f4e1afa8d570ad14b66ddb1b8291d0de98dca38e599ba1cc8d6e204b6",
+      "desktop/rendering/Cargo.toml": "e5b4c833b136d8bb07790c7a307f91b3fb74da7d55ce48df315f65248f02a636",
+      "desktop/rendering/src/gpu.rs": "1d04df7aa0d824108e8e8b0b55413268a9158af131134beba2ed167e76a1133e",
+      "desktop/rendering/src/lib.rs": "91a440817ac46102a2dc2c1644a1b69b7641536691a20be0942b871ea440ffbe",
+      "desktop/ui/Cargo.toml": "94e5a78db5fad807428f965606128c3d49705a3e8d045f2841775befcac54a33",
+      "desktop/ui/src/audio.rs": "f7163e5a9302460f3d6ffd7dc2db5c063cfc7301ee0b5bbe4a0183bf53027537",
+      "desktop/ui/src/lib.rs": "118bf1df58eb026efe8dfa95a064256bf56027942a473ce9082dba7bf035abdd",
+      "desktop/ui/src/tests.rs": "5fe85e0edd69b81b23bff166bc362063fcf9a59cf1d61c0632a3b69c606002c6",
+      "rust-toolchain.toml": "7d21c66a15f41bad66b82ed06a289f5dc8a6e3751951d2696bbf20ce296f2b0f",
+      "tools/check_core.py": "c7cd91465685a852498d7753db9a90fd7322799d167eb0d6ffb816ac6619e9cb",
+      "tools/check_core_architecture.py": "6e4fa6ee969655f97a230f148396685a0a3905e8ca567cc4a79f03d2233a221f",
+      "tools/check_core_cost.py": "32c83b988fefbde7cf2c3384252a9d5e52cc51a458d2e8341cf7b12780075cf0",
+      "tools/check_desktop.py": "795887f44bb00ef8659041e093389736376a86965b59c4b68f00c6ffb69de103",
+      "tools/check_desktop_architecture.py": "ed4302a32bffd32617cb560346167c3722b0056633adc075087ba576fbcadf5a",
+      "tools/check_p0.py": "371d68565eeaf7959c2062aae48b39565678dcd4c4efc7fff43d719f449216cc",
+      "tools/check_p0_audio_adaptation.py": "39b26ef5964c436f9b9aef4c18ba475efaf4fa982da1d78b882d0f1da22aa1b0",
+      "tools/check_p0_combined_soak.py": "aab795ccfde5837ed87725d9d3d114a9a201ec5b73999026552923cb08de157a",
+      "tools/check_p0_composition.py": "277358084e319fb70afe1f406ba3365c500275dcfe6e18e6ea038badbe5a15af",
+      "tools/check_p0_compressed.py": "874a7710c6c6149ae7d4ab4854abe2fd180e7be3ff3352a2eb0e98b9d6218472",
+      "tools/check_p0_compressed_soak.py": "20155196ec6f20d579e412f701ebdbbaa11311b256ca045cb307beca1a3f125b",
+      "tools/check_p0_desktop.py": "de2093b6d5f0882b338d3ec41e7c0dad2023018647bef84947fc7907249318b2",
+      "tools/check_p0_edit_composition.py": "0bdb32f65e6828a0da95572c5cf639e8517c5030e070a189e826c5fc6bbf5936",
+      "tools/check_p0_gpu_memory.py": "c15fe78c3412b20dc6e02bc2c4523aa8448a8d48c4fd9759607f19b8428bd1af",
+      "tools/check_p0_gui.py": "030fac0ecdc08237297e151f8229302b94ea868701d95fdf8133ca9aa1ad1764",
+      "tools/check_p0_interaction.py": "927504336ebc4b2187d9adc8ccf6320127ab68af9446cb4f7606cde9bb64a02b",
+      "tools/check_p0_lifetime.py": "5d6d08b91ceffcf10cd973df2380fd50f39968e944087ec325c20872d951fa2f",
+      "tools/check_p0_media.py": "de300b5143a5406c4755efbd6f3358169a7252085514dd2f7248358342410c34",
+      "tools/check_p0_pcm.py": "c9bfbca3c53fab2c0000ace59bfca47af676836db203d917eccdf8921b632e01",
+      "tools/check_p0_recovery.py": "28306d06d06b4f7600bb6ef1ecfff118d60edcb136eb107688837e199301d211",
+      "tools/check_p0_resource_cycles.py": "49cb900d16f2486ab826ae4d05e1b6e607ee7beaa342b873455830877bf576c1",
+      "tools/check_p0_stream_output.py": "0e9eb58b66898d2422a2243deb1afb214565c063d2ca260d4f9b6a65d274d7c9",
+      "tools/check_p0_streaming.py": "6e031e3a2e1de901ca5e7d2a9bddb7e41a659e47fb901755c0f58bcde8320912",
+      "tools/check_p0_switch.py": "c7ea7be526ada9ab8f3ce342e5cf420ad133f01d36d7b2574c5d312ac8138ed1",
+      "tools/check_p0_switch_audio.py": "4c5dca5d6fd0a7ccbd6040857515b0a0298558ce4f9b0abf652d10ed8de54d89",
+      "tools/check_p0_transport.py": "2ef7ffba6e87dafac947a38f11f53ece2c93e811814859e133ef551385045fc8",
+      "tools/check_repository.py": "d939f80eb8b55bc69a3de2521d0492ae7aac17635e9158922eac7f5cf304e62c",
+      "tools/measure_audio_edit.py": "3a8853fdfec9ebe16757cd23d9524b15d067a88ac0ae187843555c0325b296cd",
+      "tools/measure_audio_load.py": "3b2371d3c56a1e0487f7e2950e5cd432e12f0a8491c99f2ec506919957e8aa11",
+      "tools/measure_audio_startup.py": "a116b8131c9b2b4d7479624e26879d311ed2ac027c4968a5c9a7d530f4e8d41e",
+      "tools/measure_combined.py": "c049754d0c1c87f691c53176677a3e04fc1d17800f63f6d0619e6edd95e36dfe",
+      "tools/test_check_audio_edit.py": "b6baa91860f1bdf18314493da960d4c399199205104eb34bedef098f4e4303cd",
+      "tools/test_check_audio_load.py": "db23c219092ae1bdfd78d2c6efb5e2002b7e0eb9c3aa44dcfb5bcc6cc8da05df",
+      "tools/test_check_audio_startup.py": "5f2cbdd09841597faf574c240b33131f9d4c1bae9c079847fddc9fd05f8d4a28",
+      "tools/test_check_combined.py": "566c5a6d09b726b3e79d1c102cfc8107b9daa36a378903480d5fb9494ba04a05",
+      "tools/test_check_core_architecture.py": "fb8226852e9fbaaf925a7e9fd17b8ec8fecc46f64b98e219b42031851eab7a32",
+      "tools/test_check_core_cost.py": "dbe75725a39a53476f81936f7f4b12d5032d672f2e329befcfc823f3b681aa57",
+      "tools/test_check_core_environment.py": "df4d661b681b27d21a1a02071c01e25c4d7f3577d830b48d269fa34a77499d61",
+      "tools/test_check_desktop_architecture.py": "0974e31d4ccb95ccadaa6b4d150e892a88115b63ed2fcdb2317eeeaf4f907551",
+      "tools/test_check_repository.py": "6918c19beecc9bce89fbf0fe989d8ebc1869d29db6b35cebaff0a8be47947e88"
+    }
+  },
+  "execution": {
+    "controls": 0,
+    "long": 1,
+    "sources_unchanged": true,
+    "binary_unchanged": true
+  },
+  "checks": {
+    "core": {
+      "path": "artifacts/p2/attribution-acceptance/core-check.log",
+      "sha256": "21daf938eec552565f7e1756b097d5d5da26c49073f70663fb842fc62a861265",
+      "rust": 130,
+      "python": 53
+    },
+    "desktop": {
+      "path": "artifacts/p2/attribution-desktop-check-02.log",
+      "sha256": "eb539a617732e63fade929fb13572b607e0e72f84ac3e8897d87d29c54b2fdc1",
+      "rust": 152,
+      "python": 0
+    }
+  },
+  "total_automated_checks": 335,
+  "unchanged_production_modules": {
+    "audio": true,
+    "infrastructure": true,
+    "rendering": true,
+    "preview": true,
+    "ui": true
+  },
+  "production_audio": {
+    "ahead_frames": 768,
+    "supply_sleep_ms": 2,
+    "observer_sleep_ms": 1
+  },
+  "gpu_memory_usage_hint_production": false,
+  "controls": [
+    {
+      "argument": "--verify-gpu-cost",
+      "gpu_memory_usage_hint": false,
+      "physical_size": [
+        1180.0,
+        800.0
+      ],
+      "gpu": {
+        "blank": {
+          "dedicated": {
+            "max_bytes": 239661056,
+            "missing_samples": 1
+          },
+          "shared": {
+            "max_bytes": 44875776,
+            "missing_samples": 1
+          }
+        }
+      },
+      "allocator": [
+        {
+          "stage": "created",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 200768432,
+          "categories": {
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_3": 64,
+            "egui_vertex_buffer": 20496,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_1": 64,
+            "egui_texture_flags_5": 64,
+            "egui_index_buffer": 12288,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_2": 64,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.0537
+        },
+        {
+          "stage": "presented",
+          "supported": true,
+          "allocated_bytes": 1609672,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 199716920,
+          "categories": {
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_4": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_3": 64,
+            "egui_vertex_buffer": 20496,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_1": 64,
+            "egui_texture_flags_5": 64,
+            "egui_index_buffer": 12288,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_2": 64,
+            "(wgpu internal) Staging": 3016
+          },
+          "capture_ms": 0.032499999999999994
+        }
+      ]
+    },
+    {
+      "argument": "--verify-gpu-cost",
+      "gpu_memory_usage_hint": false,
+      "physical_size": [
+        1180.0,
+        800.0
+      ],
+      "gpu": {
+        "blank": {
+          "dedicated": {
+            "max_bytes": 239661056,
+            "missing_samples": 1
+          },
+          "shared": {
+            "max_bytes": 44875776,
+            "missing_samples": 1
+          }
+        },
+        "setup": {
+          "dedicated": {
+            "max_bytes": 149299200,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 23703552,
+            "missing_samples": 0
+          }
+        }
+      },
+      "allocator": [
+        {
+          "stage": "created",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 200768432,
+          "categories": {
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_uniform_buffer": 96,
+            "egui_index_buffer": 12288,
+            "egui_texture_flags_2": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_vertex_buffer": 20496,
+            "egui_texture_flags_1": 64,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_0": 64,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.0351
+        },
+        {
+          "stage": "presented",
+          "supported": true,
+          "allocated_bytes": 1609672,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 199716920,
+          "categories": {
+            "egui_texture_flags_4": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_uniform_buffer": 96,
+            "egui_index_buffer": 12288,
+            "egui_texture_flags_2": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_vertex_buffer": 20496,
+            "egui_texture_flags_1": 64,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_0": 64,
+            "(wgpu internal) Staging": 3016
+          },
+          "capture_ms": 0.06830000000000001
+        }
+      ]
+    },
+    {
+      "argument": "--verify-gpu-cost-large",
+      "gpu_memory_usage_hint": false,
+      "physical_size": [
+        1480.0,
+        1000.0
+      ],
+      "gpu": {
+        "blank": {
+          "dedicated": {
+            "max_bytes": 253108224,
+            "missing_samples": 1
+          },
+          "shared": {
+            "max_bytes": 44875776,
+            "missing_samples": 1
+          }
+        },
+        "setup": {
+          "dedicated": {
+            "max_bytes": 149299200,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 23703552,
+            "missing_samples": 0
+          }
+        }
+      },
+      "allocator": [
+        {
+          "stage": "created",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 200768432,
+          "categories": {
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_0": 64,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_5": 64,
+            "egui_index_buffer": 12288,
+            "(wgpu internal) default external texture params buffer": 256,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_2": 64,
+            "egui_texture_flags_1": 64,
+            "egui_texture_flags_3": 64,
+            "egui_vertex_buffer": 20496,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.0393
+        },
+        {
+          "stage": "presented",
+          "supported": true,
+          "allocated_bytes": 1609672,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 199716920,
+          "categories": {
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_0": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_5": 64,
+            "egui_index_buffer": 12288,
+            "(wgpu internal) default external texture params buffer": 256,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_2": 64,
+            "egui_texture_flags_1": 64,
+            "egui_texture_flags_3": 64,
+            "egui_vertex_buffer": 20496,
+            "(wgpu internal) Staging": 3016
+          },
+          "capture_ms": 0.0679
+        }
+      ]
+    },
+    {
+      "argument": "--verify-gpu-cost-large",
+      "gpu_memory_usage_hint": false,
+      "physical_size": [
+        1480.0,
+        1000.0
+      ],
+      "gpu": {
+        "blank": {
+          "dedicated": {
+            "max_bytes": 247013376,
+            "missing_samples": 1
+          },
+          "shared": {
+            "max_bytes": 44875776,
+            "missing_samples": 1
+          }
+        },
+        "setup": {
+          "dedicated": {
+            "max_bytes": 222556160,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 40226816,
+            "missing_samples": 0
+          }
+        }
+      },
+      "allocator": [
+        {
+          "stage": "created",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 200768432,
+          "categories": {
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_0": 64,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_3": 64,
+            "egui_index_buffer": 12288,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_2": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_4": 64,
+            "egui_vertex_buffer": 20496,
+            "(wgpu internal) default external texture params buffer": 256,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.036199999999999996
+        },
+        {
+          "stage": "presented",
+          "supported": true,
+          "allocated_bytes": 1609672,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 199716920,
+          "categories": {
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_0": 64,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_3": 64,
+            "egui_index_buffer": 12288,
+            "egui_texture_flags_5": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_2": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_4": 64,
+            "egui_vertex_buffer": 20496,
+            "(wgpu internal) default external texture params buffer": 256,
+            "(wgpu internal) Staging": 3016
+          },
+          "capture_ms": 0.052500000000000005
+        }
+      ]
+    },
+    {
+      "argument": "--verify-combined-control",
+      "gpu_memory_usage_hint": false,
+      "physical_size": [
+        1180.0,
+        800.0
+      ],
+      "gpu": {
+        "cleanup": {
+          "dedicated": {
+            "max_bytes": 266211328,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 46759936,
+            "missing_samples": 0
+          }
+        },
+        "closed": {
+          "dedicated": {
+            "max_bytes": 266211328,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 46759936,
+            "missing_samples": 0
+          }
+        },
+        "done": {
+          "dedicated": {
+            "max_bytes": 6504448,
+            "missing_samples": 1
+          },
+          "shared": {
+            "max_bytes": 12980224,
+            "missing_samples": 1
+          }
+        },
+        "loading": {
+          "dedicated": {
+            "max_bytes": 264105984,
+            "missing_samples": 1
+          },
+          "shared": {
+            "max_bytes": 42745856,
+            "missing_samples": 1
+          }
+        },
+        "playing": {
+          "dedicated": {
+            "max_bytes": 266211328,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 46759936,
+            "missing_samples": 0
+          }
+        }
+      },
+      "allocator": [
+        {
+          "stage": "before_editor",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 200768432,
+          "categories": {
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_4": 64,
+            "egui_texture_flags_5": 64,
+            "egui_vertex_buffer": 20496,
+            "egui_texture_flags_2": 64,
+            "egui_index_buffer": 12288,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_1": 64,
+            "egui_uniform_buffer": 96,
+            "(wgpu internal) zero init buffer": 524288,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_0": 64,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.0395
+        },
+        {
+          "stage": "editor_created",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 200768432,
+          "categories": {
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_4": 64,
+            "egui_texture_flags_5": 64,
+            "egui_vertex_buffer": 20496,
+            "egui_texture_flags_2": 64,
+            "egui_index_buffer": 12288,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_1": 64,
+            "egui_uniform_buffer": 96,
+            "(wgpu internal) zero init buffer": 524288,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_0": 64,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.0352
+        },
+        {
+          "stage": "playing_start",
+          "supported": true,
+          "allocated_bytes": 47871592,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 153455000,
+          "categories": {
+            "source pixels": 41943040,
+            "egui_texture_flags_5": 64,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_2": 64,
+            "egui_texture_flags_1": 64,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_0": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "candidate preview": 4228080,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_index_buffer": 24576,
+            "egui_uniform_buffer": 96,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "(wgpu internal) Staging": 61048
+          },
+          "capture_ms": 0.032
+        },
+        {
+          "stage": "playing_2s",
+          "supported": true,
+          "allocated_bytes": 45754824,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 155571768,
+          "categories": {
+            "source pixels": 41943040,
+            "egui_texture_flags_5": 64,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_2": 64,
+            "egui_texture_flags_1": 64,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_0": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "candidate preview": 2114544,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_index_buffer": 24576,
+            "egui_uniform_buffer": 96,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "(wgpu internal) Staging": 57816
+          },
+          "capture_ms": 0.0738
+        },
+        {
+          "stage": "after_shutdown",
+          "supported": true,
+          "allocated_bytes": 1639424,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 199687168,
+          "categories": {
+            "egui_texture_flags_5": 64,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_2": 64,
+            "egui_texture_flags_1": 64,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_0": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_index_buffer": 24576,
+            "egui_uniform_buffer": 96,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) default external texture params buffer": 256
+          },
+          "capture_ms": 0.027200000000000002
+        },
+        {
+          "stage": "report",
+          "supported": true,
+          "allocated_bytes": 1639424,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 199687168,
+          "categories": {
+            "egui_texture_flags_5": 64,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_2": 64,
+            "egui_texture_flags_1": 64,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_0": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_index_buffer": 24576,
+            "egui_uniform_buffer": 96,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) default external texture params buffer": 256
+          },
+          "capture_ms": 0.0262
+        }
+      ]
+    },
+    {
+      "argument": "--verify-combined-control",
+      "gpu_memory_usage_hint": false,
+      "physical_size": [
+        1180.0,
+        800.0
+      ],
+      "gpu": {
+        "cleanup": {
+          "dedicated": {
+            "max_bytes": 266215424,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 46759936,
+            "missing_samples": 0
+          }
+        },
+        "closed": {
+          "dedicated": {
+            "max_bytes": 266215424,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 46759936,
+            "missing_samples": 0
+          }
+        },
+        "done": {
+          "dedicated": {
+            "max_bytes": 6512640,
+            "missing_samples": 1
+          },
+          "shared": {
+            "max_bytes": 12980224,
+            "missing_samples": 1
+          }
+        },
+        "loading": {
+          "dedicated": {
+            "max_bytes": 264101888,
+            "missing_samples": 1
+          },
+          "shared": {
+            "max_bytes": 41775104,
+            "missing_samples": 1
+          }
+        },
+        "playing": {
+          "dedicated": {
+            "max_bytes": 266215424,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 46759936,
+            "missing_samples": 0
+          }
+        }
+      },
+      "allocator": [
+        {
+          "stage": "before_editor",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 200768432,
+          "categories": {
+            "egui_texture_flags_0": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_2": 64,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_4": 64,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_1": 64,
+            "egui_vertex_buffer": 20496,
+            "egui_index_buffer": 12288,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.035800000000000005
+        },
+        {
+          "stage": "editor_created",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 200768432,
+          "categories": {
+            "egui_texture_flags_0": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_2": 64,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_4": 64,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_1": 64,
+            "egui_vertex_buffer": 20496,
+            "egui_index_buffer": 12288,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.034100000000000005
+        },
+        {
+          "stage": "playing_start",
+          "supported": true,
+          "allocated_bytes": 47879992,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 153446600,
+          "categories": {
+            "egui_texture_flags_0": 64,
+            "composition params": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_3": 64,
+            "egui_vertex_buffer": 40976,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_4": 64,
+            "egui_texture_flags_1": 64,
+            "egui_index_buffer": 24576,
+            "candidate preview": 4228080,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_2": 64,
+            "source pixels": 41943040,
+            "egui_uniform_buffer": 96,
+            "composition ops": 4160,
+            "(wgpu internal) Staging": 65224
+          },
+          "capture_ms": 0.0375
+        },
+        {
+          "stage": "playing_2s",
+          "supported": true,
+          "allocated_bytes": 45754824,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 155571768,
+          "categories": {
+            "egui_texture_flags_0": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_3": 64,
+            "egui_vertex_buffer": 40976,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_4": 64,
+            "egui_texture_flags_1": 64,
+            "egui_index_buffer": 24576,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_2": 64,
+            "source pixels": 41943040,
+            "candidate preview": 2114544,
+            "egui_uniform_buffer": 96,
+            "(wgpu internal) Staging": 57816
+          },
+          "capture_ms": 0.0316
+        },
+        {
+          "stage": "after_shutdown",
+          "supported": true,
+          "allocated_bytes": 1639424,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 199687168,
+          "categories": {
+            "egui_texture_flags_0": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_3": 64,
+            "egui_vertex_buffer": 40976,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_4": 64,
+            "egui_texture_flags_1": 64,
+            "egui_index_buffer": 24576,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_2": 64,
+            "egui_uniform_buffer": 96
+          },
+          "capture_ms": 0.041999999999999996
+        },
+        {
+          "stage": "report",
+          "supported": true,
+          "allocated_bytes": 1639424,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 199687168,
+          "categories": {
+            "egui_texture_flags_0": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_3": 64,
+            "egui_vertex_buffer": 40976,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_4": 64,
+            "egui_texture_flags_1": 64,
+            "egui_index_buffer": 24576,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_2": 64,
+            "egui_uniform_buffer": 96
+          },
+          "capture_ms": 0.0451
+        }
+      ]
+    },
+    {
+      "argument": "--verify-gpu-cost-memory",
+      "gpu_memory_usage_hint": true,
+      "physical_size": [
+        1180.0,
+        800.0
+      ],
+      "gpu": {
+        "blank": {
+          "dedicated": {
+            "max_bytes": 50946048,
+            "missing_samples": 1
+          },
+          "shared": {
+            "max_bytes": 44875776,
+            "missing_samples": 1
+          }
+        },
+        "setup": {
+          "dedicated": {
+            "max_bytes": 23490560,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 24227840,
+            "missing_samples": 0
+          }
+        }
+      },
+      "allocator": [
+        {
+          "stage": "created",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 12582912,
+          "unused_capacity_bytes": 12024752,
+          "categories": {
+            "egui_index_buffer": 12288,
+            "egui_texture_flags_4": 64,
+            "egui_texture_flags_1": 64,
+            "egui_uniform_buffer": 96,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_vertex_buffer": 20496,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_2": 64,
+            "egui_texture_flags_3": 64,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.0369
+        },
+        {
+          "stage": "presented",
+          "supported": true,
+          "allocated_bytes": 1609672,
+          "reserved_bytes": 12582912,
+          "unused_capacity_bytes": 10973240,
+          "categories": {
+            "egui_index_buffer": 12288,
+            "egui_texture_flags_4": 64,
+            "egui_texture_flags_1": 64,
+            "egui_uniform_buffer": 96,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_vertex_buffer": 20496,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_5": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_2": 64,
+            "egui_texture_flags_3": 64,
+            "(wgpu internal) Staging": 3016
+          },
+          "capture_ms": 0.0707
+        }
+      ]
+    },
+    {
+      "argument": "--verify-gpu-cost-memory",
+      "gpu_memory_usage_hint": true,
+      "physical_size": [
+        1180.0,
+        800.0
+      ],
+      "gpu": {
+        "blank": {
+          "dedicated": {
+            "max_bytes": 50946048,
+            "missing_samples": 1
+          },
+          "shared": {
+            "max_bytes": 44875776,
+            "missing_samples": 1
+          }
+        },
+        "setup": {
+          "dedicated": {
+            "max_bytes": 27697152,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 24227840,
+            "missing_samples": 0
+          }
+        }
+      },
+      "allocator": [
+        {
+          "stage": "created",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 12582912,
+          "unused_capacity_bytes": 12024752,
+          "categories": {
+            "egui_texture_flags_2": 64,
+            "egui_vertex_buffer": 20496,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_5": 64,
+            "egui_index_buffer": 12288,
+            "egui_texture_flags_0": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_4": 64,
+            "egui_texture_flags_1": 64,
+            "egui_texture_flags_3": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.0376
+        },
+        {
+          "stage": "presented",
+          "supported": true,
+          "allocated_bytes": 1609672,
+          "reserved_bytes": 12582912,
+          "unused_capacity_bytes": 10973240,
+          "categories": {
+            "egui_texture_flags_2": 64,
+            "egui_vertex_buffer": 20496,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_5": 64,
+            "egui_index_buffer": 12288,
+            "egui_texture_flags_0": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_4": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_1": 64,
+            "egui_texture_flags_3": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "(wgpu internal) Staging": 3016
+          },
+          "capture_ms": 0.031900000000000005
+        }
+      ]
+    },
+    {
+      "argument": "--verify-combined-control-memory",
+      "gpu_memory_usage_hint": true,
+      "physical_size": [
+        1180.0,
+        800.0
+      ],
+      "gpu": {
+        "cleanup": {
+          "dedicated": {
+            "max_bytes": 119517184,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 46759936,
+            "missing_samples": 0
+          }
+        },
+        "closed": {
+          "dedicated": {
+            "max_bytes": 77492224,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 46759936,
+            "missing_samples": 0
+          }
+        },
+        "done": {
+          "dedicated": {
+            "max_bytes": 6508544,
+            "missing_samples": 1
+          },
+          "shared": {
+            "max_bytes": 12980224,
+            "missing_samples": 1
+          }
+        },
+        "loading": {
+          "dedicated": {
+            "max_bytes": 155164672,
+            "missing_samples": 1
+          },
+          "shared": {
+            "max_bytes": 42614784,
+            "missing_samples": 1
+          }
+        },
+        "playing": {
+          "dedicated": {
+            "max_bytes": 119517184,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 46759936,
+            "missing_samples": 0
+          }
+        }
+      },
+      "allocator": [
+        {
+          "stage": "before_editor",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 12582912,
+          "unused_capacity_bytes": 12024752,
+          "categories": {
+            "egui_texture_flags_4": 64,
+            "egui_texture_flags_2": 64,
+            "egui_vertex_buffer": 20496,
+            "egui_texture_flags_0": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_3": 64,
+            "egui_uniform_buffer": 96,
+            "egui_index_buffer": 12288,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.0407
+        },
+        {
+          "stage": "editor_created",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 12582912,
+          "unused_capacity_bytes": 12024752,
+          "categories": {
+            "egui_texture_flags_4": 64,
+            "egui_texture_flags_2": 64,
+            "egui_vertex_buffer": 20496,
+            "egui_texture_flags_0": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_3": 64,
+            "egui_uniform_buffer": 96,
+            "egui_index_buffer": 12288,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.0359
+        },
+        {
+          "stage": "playing_start",
+          "supported": true,
+          "allocated_bytes": 47879992,
+          "reserved_bytes": 54525952,
+          "unused_capacity_bytes": 6645960,
+          "categories": {
+            "egui_texture_flags_2": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "composition ops": 4160,
+            "egui_uniform_buffer": 96,
+            "egui_index_buffer": 24576,
+            "egui_texture_flags_4": 64,
+            "egui_vertex_buffer": 40976,
+            "composition params": 64,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texid_Managed(0)": 1048816,
+            "candidate preview": 4228080,
+            "egui_texture_flags_3": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_1": 64,
+            "source pixels": 41943040,
+            "(wgpu internal) Staging": 65224
+          },
+          "capture_ms": 0.0369
+        },
+        {
+          "stage": "playing_2s",
+          "supported": true,
+          "allocated_bytes": 45754824,
+          "reserved_bytes": 54525952,
+          "unused_capacity_bytes": 8771128,
+          "categories": {
+            "egui_texture_flags_2": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_uniform_buffer": 96,
+            "egui_index_buffer": 24576,
+            "egui_texture_flags_4": 64,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texid_Managed(0)": 1048816,
+            "candidate preview": 2114544,
+            "egui_texture_flags_3": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_1": 64,
+            "source pixels": 41943040,
+            "(wgpu internal) Staging": 57816
+          },
+          "capture_ms": 0.0333
+        },
+        {
+          "stage": "after_shutdown",
+          "supported": true,
+          "allocated_bytes": 1639424,
+          "reserved_bytes": 12582912,
+          "unused_capacity_bytes": 10943488,
+          "categories": {
+            "egui_texture_flags_2": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_uniform_buffer": 96,
+            "egui_index_buffer": 24576,
+            "egui_texture_flags_4": 64,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_3": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_1": 64
+          },
+          "capture_ms": 0.030199999999999998
+        },
+        {
+          "stage": "report",
+          "supported": true,
+          "allocated_bytes": 1639424,
+          "reserved_bytes": 12582912,
+          "unused_capacity_bytes": 10943488,
+          "categories": {
+            "egui_texture_flags_2": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_uniform_buffer": 96,
+            "egui_index_buffer": 24576,
+            "egui_texture_flags_4": 64,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_3": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_1": 64
+          },
+          "capture_ms": 0.0577
+        }
+      ]
+    },
+    {
+      "argument": "--verify-combined-control-memory",
+      "gpu_memory_usage_hint": true,
+      "physical_size": [
+        1180.0,
+        800.0
+      ],
+      "gpu": {
+        "cleanup": {
+          "dedicated": {
+            "max_bytes": 115257344,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 46759936,
+            "missing_samples": 0
+          }
+        },
+        "closed": {
+          "dedicated": {
+            "max_bytes": 73232384,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 46759936,
+            "missing_samples": 0
+          }
+        },
+        "done": {
+          "dedicated": {
+            "max_bytes": 2248704,
+            "missing_samples": 1
+          },
+          "shared": {
+            "max_bytes": 12980224,
+            "missing_samples": 1
+          }
+        },
+        "loading": {
+          "dedicated": {
+            "max_bytes": 71122944,
+            "missing_samples": 1
+          },
+          "shared": {
+            "max_bytes": 41775104,
+            "missing_samples": 1
+          }
+        },
+        "playing": {
+          "dedicated": {
+            "max_bytes": 115257344,
+            "missing_samples": 0
+          },
+          "shared": {
+            "max_bytes": 46759936,
+            "missing_samples": 0
+          }
+        }
+      },
+      "allocator": [
+        {
+          "stage": "before_editor",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 12582912,
+          "unused_capacity_bytes": 12024752,
+          "categories": {
+            "egui_index_buffer": 12288,
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_4": 64,
+            "egui_vertex_buffer": 20496,
+            "egui_texture_flags_2": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.039
+        },
+        {
+          "stage": "editor_created",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 12582912,
+          "unused_capacity_bytes": 12024752,
+          "categories": {
+            "egui_index_buffer": 12288,
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_4": 64,
+            "egui_vertex_buffer": 20496,
+            "egui_texture_flags_2": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.0343
+        },
+        {
+          "stage": "playing_start",
+          "supported": true,
+          "allocated_bytes": 47879992,
+          "reserved_bytes": 54525952,
+          "unused_capacity_bytes": 6645960,
+          "categories": {
+            "(wgpu internal) zero init buffer": 524288,
+            "composition params": 64,
+            "egui_texture_flags_2": 64,
+            "composition ops": 4160,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_index_buffer": 24576,
+            "egui_texture_flags_5": 64,
+            "candidate preview": 4228080,
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_4": 64,
+            "egui_vertex_buffer": 40976,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_0": 64,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_3": 64,
+            "source pixels": 41943040,
+            "(wgpu internal) Staging": 65224
+          },
+          "capture_ms": 0.0632
+        },
+        {
+          "stage": "playing_2s",
+          "supported": true,
+          "allocated_bytes": 45754824,
+          "reserved_bytes": 54525952,
+          "unused_capacity_bytes": 8771128,
+          "categories": {
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_2": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_index_buffer": 24576,
+            "egui_texture_flags_5": 64,
+            "candidate preview": 2114544,
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_4": 64,
+            "egui_vertex_buffer": 40976,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_0": 64,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_3": 64,
+            "source pixels": 41943040,
+            "(wgpu internal) Staging": 57816
+          },
+          "capture_ms": 0.0614
+        },
+        {
+          "stage": "after_shutdown",
+          "supported": true,
+          "allocated_bytes": 1639424,
+          "reserved_bytes": 12582912,
+          "unused_capacity_bytes": 10943488,
+          "categories": {
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_2": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_index_buffer": 24576,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_4": 64,
+            "egui_vertex_buffer": 40976,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_0": 64,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_3": 64
+          },
+          "capture_ms": 0.0466
+        },
+        {
+          "stage": "report",
+          "supported": true,
+          "allocated_bytes": 1639424,
+          "reserved_bytes": 12582912,
+          "unused_capacity_bytes": 10943488,
+          "categories": {
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_2": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_index_buffer": 24576,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_4": 64,
+            "egui_vertex_buffer": 40976,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_0": 64,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_3": 64
+          },
+          "capture_ms": 0.0574
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "completed": true,
+      "phases": {
+        "playing": {
+          "sample_count": 2736,
+          "sample_span_seconds": 299.9690000000046,
+          "cpu_seconds": 38.0,
+          "cpu_one_logical_core_percent": 12.66797569082119,
+          "working_set_bytes_max": 317321216,
+          "private_bytes_max": 531312640
+        },
+        "closed": {
+          "sample_count": 20,
+          "sample_span_seconds": 2.0940000000045984,
+          "cpu_seconds": 0.09375,
+          "cpu_one_logical_core_percent": 4.477077363887016,
+          "working_set_bytes_max": 264007680,
+          "private_bytes_max": 477605888
+        }
+      },
+      "gpu": {
+        "playing": {
+          "dedicated": {
+            "valid_samples": 2736,
+            "missing_samples": 0,
+            "max_bytes": 261951488
+          },
+          "shared": {
+            "valid_samples": 2736,
+            "missing_samples": 0,
+            "max_bytes": 46759936
+          }
+        },
+        "closed": {
+          "dedicated": {
+            "valid_samples": 20,
+            "missing_samples": 0,
+            "max_bytes": 261492736
+          },
+          "shared": {
+            "valid_samples": 20,
+            "missing_samples": 0,
+            "max_bytes": 46759936
+          }
+        }
+      },
+      "allocator": [
+        {
+          "stage": "before_editor",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 200768432,
+          "categories": {
+            "egui_index_buffer": 12288,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_4": 64,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_2": 64,
+            "egui_uniform_buffer": 96,
+            "egui_vertex_buffer": 20496,
+            "(wgpu internal) default external texture params buffer": 256,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.0369
+        },
+        {
+          "stage": "editor_created",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 200768432,
+          "categories": {
+            "egui_index_buffer": 12288,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_4": 64,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_2": 64,
+            "egui_uniform_buffer": 96,
+            "egui_vertex_buffer": 20496,
+            "(wgpu internal) default external texture params buffer": 256,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.034999999999999996
+        },
+        {
+          "stage": "playing_start",
+          "supported": true,
+          "allocated_bytes": 47879992,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 153446600,
+          "categories": {
+            "egui_index_buffer": 24576,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_1": 64,
+            "source pixels": 41943040,
+            "candidate preview": 4228080,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_5": 64,
+            "composition ops": 4160,
+            "(wgpu internal) zero init buffer": 524288,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_4": 64,
+            "egui_texture_flags_0": 64,
+            "composition params": 64,
+            "egui_texture_flags_2": 64,
+            "egui_uniform_buffer": 96,
+            "(wgpu internal) default external texture params buffer": 256,
+            "(wgpu internal) Staging": 65224
+          },
+          "capture_ms": 0.0475
+        },
+        {
+          "stage": "playing_2s",
+          "supported": true,
+          "allocated_bytes": 45754824,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 155571768,
+          "categories": {
+            "egui_index_buffer": 24576,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_1": 64,
+            "source pixels": 41943040,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_5": 64,
+            "candidate preview": 2114544,
+            "(wgpu internal) zero init buffer": 524288,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_4": 64,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_2": 64,
+            "egui_uniform_buffer": 96,
+            "(wgpu internal) default external texture params buffer": 256,
+            "(wgpu internal) Staging": 57816
+          },
+          "capture_ms": 0.0769
+        },
+        {
+          "stage": "playing_60s",
+          "supported": true,
+          "allocated_bytes": 45753816,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 155572776,
+          "categories": {
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_1": 64,
+            "source pixels": 41943040,
+            "(wgpu internal) zero init buffer": 524288,
+            "candidate preview": 2113536,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_index_buffer": 24576,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_4": 64,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_2": 64,
+            "egui_uniform_buffer": 96,
+            "(wgpu internal) Staging": 57816
+          },
+          "capture_ms": 0.054
+        },
+        {
+          "stage": "playing_200s",
+          "supported": true,
+          "allocated_bytes": 45756528,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 155570064,
+          "categories": {
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_1": 64,
+            "source pixels": 41943040,
+            "(wgpu internal) zero init buffer": 524288,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_index_buffer": 24576,
+            "candidate preview": 2113536,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_4": 64,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_2": 64,
+            "egui_uniform_buffer": 96,
+            "(wgpu internal) Staging": 60528
+          },
+          "capture_ms": 0.0543
+        },
+        {
+          "stage": "playing_299s",
+          "supported": true,
+          "allocated_bytes": 45757536,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 155569056,
+          "categories": {
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_1": 64,
+            "source pixels": 41943040,
+            "candidate preview": 2114544,
+            "(wgpu internal) zero init buffer": 524288,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_index_buffer": 24576,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_4": 64,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_2": 64,
+            "egui_uniform_buffer": 96,
+            "(wgpu internal) Staging": 60528
+          },
+          "capture_ms": 0.055
+        },
+        {
+          "stage": "after_shutdown",
+          "supported": true,
+          "allocated_bytes": 1639424,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 199687168,
+          "categories": {
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_index_buffer": 24576,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_4": 64,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_2": 64,
+            "egui_uniform_buffer": 96
+          },
+          "capture_ms": 0.0288
+        },
+        {
+          "stage": "report",
+          "supported": true,
+          "allocated_bytes": 1639424,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 199687168,
+          "categories": {
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_1": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "(wgpu internal) default external texture params buffer": 256,
+            "egui_index_buffer": 24576,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_4": 64,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_2": 64,
+            "egui_uniform_buffer": 96
+          },
+          "capture_ms": 0.027800000000000002
+        }
+      ],
+      "latency_ms": [
+        {
+          "count": 64,
+          "p50": 10.9933,
+          "p95": 20.6889,
+          "p99": 21.313599999999997,
+          "max": 21.313599999999997
+        },
+        {
+          "count": 64,
+          "p50": 15.2714,
+          "p95": 16.130599999999998,
+          "p99": 16.2469,
+          "max": 16.2469
+        }
+      ],
+      "submission": [
+        {
+          "lower_ms": {
+            "count": 64,
+            "p50": 9.1976,
+            "p95": 18.8703,
+            "p99": 19.3414,
+            "max": 19.3414
+          },
+          "upper_ms": {
+            "count": 64,
+            "p50": 10.9933,
+            "p95": 20.6889,
+            "p99": 21.313599999999997,
+            "max": 21.313599999999997
+          },
+          "uncertainty_ms": {
+            "count": 64,
+            "p50": 1.9354999999999993,
+            "p95": 2.1357999999999997,
+            "p99": 2.440199999999999,
+            "max": 2.440199999999999
+          },
+          "request_to_receipt_ms": {
+            "count": 64,
+            "p50": 1.9969,
+            "p95": 3.1624000000000003,
+            "p99": 3.2519,
+            "max": 3.2519
+          },
+          "after_receipt_lower_ms": {
+            "count": 64,
+            "p50": 8.197300000000002,
+            "p95": 16.304199999999998,
+            "p99": 16.7517,
+            "max": 16.7517
+          },
+          "p95_classification": "unresolved",
+          "individually_confirmed_over_20": 0,
+          "individually_straddling_20": 20
+        },
+        {
+          "lower_ms": {
+            "count": 64,
+            "p50": 13.4009,
+            "p95": 14.1961,
+            "p99": 14.246699999999999,
+            "max": 14.246699999999999
+          },
+          "upper_ms": {
+            "count": 64,
+            "p50": 15.2714,
+            "p95": 16.130599999999998,
+            "p99": 16.2469,
+            "max": 16.2469
+          },
+          "uncertainty_ms": {
+            "count": 64,
+            "p50": 1.9598999999999993,
+            "p95": 2.1799,
+            "p99": 2.3580999999999985,
+            "max": 2.3580999999999985
+          },
+          "request_to_receipt_ms": {
+            "count": 64,
+            "p50": 1.9017000000000002,
+            "p95": 3.0297,
+            "p99": 3.3005999999999998,
+            "max": 3.3005999999999998
+          },
+          "after_receipt_lower_ms": {
+            "count": 64,
+            "p50": 11.478100000000001,
+            "p95": 13.5031,
+            "p99": 13.764,
+            "max": 13.764
+          },
+          "p95_classification": "confirmed_within",
+          "individually_confirmed_over_20": 0,
+          "individually_straddling_20": 0
+        }
+      ],
+      "edit_ms": {
+        "count": 300,
+        "p50": 7.5945,
+        "p95": 9.6914,
+        "p99": 10.250399999999999,
+        "max": 10.8273
+      },
+      "cpu_frame_ms": {
+        "count": 3833,
+        "p50": 2.4120996240526438,
+        "p95": 4.505999851971865,
+        "p99": 5.692299455404282,
+        "max": 7.230699993669987
+      },
+      "graphics_request_to_publication_ms": {
+        "count": 322,
+        "p50": 3.3027000000001863,
+        "p95": 52.47239999999874,
+        "p99": 60.173299999994924,
+        "max": 84.86200000000008
+      },
+      "cpu_frames_over_16_7_ms": 0,
+      "lifetime_peak_working_set_bytes": 317902848,
+      "lifetime_peak_pagefile_bytes": 531697664,
+      "checks": {
+        "continuous_native_submission_300s": true,
+        "no_underflow_including_startup": true,
+        "ready_both_lanes_under_graphics_p95_le_20_ms": false,
+        "edit_activation_p95_le_50_ms": true,
+        "cpu_playing_one_core_le_15_percent": true,
+        "cpu_frame_p95_le_16_7_ms": true,
+        "cpu_frame_max_le_16_7_ms": true,
+        "working_set_private_le_512_mib": true,
+        "gpu_pid_budget": true,
+        "bounded_managed_resources": true,
+        "old_resources_released": true,
+        "unchanged_sources_reused": true,
+        "source_allocation_reused": true,
+        "dual_channel_isolation": true,
+        "draft_history_cleanup": true,
+        "all_graphics_changes_published": true
+      },
+      "report": {
+        "schema": 1,
+        "gpu_memory_usage_hint": false,
+        "seconds": 300,
+        "rate": 48000,
+        "channels": 2,
+        "period_frames": 480,
+        "original_pngs": 100,
+        "documents": 10,
+        "layers": 500,
+        "triggers": 2400,
+        "edits": 300,
+        "switches": 20,
+        "native_play_frames": 14400000,
+        "empty_frames": 0,
+        "empty_callbacks": 0,
+        "max_empty_callback_frames": 0,
+        "callbacks": 30033,
+        "max_callback_frames": 1056,
+        "latency_upper_bound_ms": [
+          [
+            11.3994,
+            12.1382,
+            10.729199999999999,
+            10.5125,
+            9.865300000000001,
+            20.6466,
+            18.8287,
+            20.220599999999997,
+            9.5505,
+            9.8641,
+            20.2729,
+            19.5118,
+            9.113100000000001,
+            10.9318,
+            20.3296,
+            20.5703,
+            19.9566,
+            10.919,
+            10.2769,
+            10.710600000000001,
+            19.915200000000002,
+            10.887300000000002,
+            20.3584,
+            21.313599999999997,
+            8.8751,
+            20.521,
+            19.2888,
+            10.2713,
+            10.9497,
+            10.681,
+            9.981399999999999,
+            10.697099999999999,
+            10.6546,
+            9.1569,
+            20.6888,
+            10.9933,
+            20.956300000000002,
+            10.266900000000001,
+            21.063100000000002,
+            20.3757,
+            19.3799,
+            20.6889,
+            9.6994,
+            10.2393,
+            10.0704,
+            20.1023,
+            11.1364,
+            19.8517,
+            9.7912,
+            10.1069,
+            8.788499999999999,
+            19.5415,
+            20.4317,
+            9.6646,
+            10.5399,
+            20.363300000000002,
+            20.546,
+            20.0159,
+            20.5077,
+            11.046800000000001,
+            9.7812,
+            8.7743,
+            20.2105,
+            10.1389
+          ],
+          [
+            15.907999999999998,
+            14.7361,
+            15.506300000000001,
+            15.4325,
+            15.8171,
+            14.8923,
+            14.0652,
+            15.6083,
+            15.001199999999999,
+            14.4411,
+            15.7231,
+            15.1737,
+            15.0562,
+            15.8073,
+            15.3405,
+            14.230400000000001,
+            15.618699999999999,
+            15.9533,
+            15.5945,
+            15.8218,
+            14.5685,
+            15.3105,
+            16.2469,
+            15.782399999999999,
+            15.316099999999999,
+            14.7688,
+            15.893399999999998,
+            16.130599999999998,
+            14.729199999999999,
+            14.3385,
+            13.871,
+            14.484,
+            15.3835,
+            15.3004,
+            15.861500000000001,
+            16.0819,
+            16.2037,
+            15.038599999999999,
+            14.6725,
+            15.3214,
+            15.291,
+            14.5075,
+            14.6006,
+            15.6628,
+            15.0605,
+            15.359599999999999,
+            15.5626,
+            15.6344,
+            14.8598,
+            15.5949,
+            16.225099999999998,
+            14.2721,
+            14.7015,
+            15.1418,
+            15.359599999999999,
+            15.2599,
+            15.0206,
+            14.5893,
+            14.2014,
+            13.8587,
+            15.110999999999999,
+            14.198,
+            14.2652,
+            15.2714
+          ]
+        ],
+        "submission_intervals_ms": [
+          [
+            [
+              9.8857,
+              11.3994,
+              1.4776,
+              1.4948,
+              625.1927000000001
+            ],
+            [
+              10.0348,
+              12.1382,
+              1.9825,
+              2.0065,
+              4625.3024
+            ],
+            [
+              9.1976,
+              10.729199999999999,
+              0.9967000000000001,
+              1.0124000000000002,
+              8625.527399999999
+            ],
+            [
+              9.477599999999999,
+              10.5125,
+              2.1267,
+              2.1391,
+              12625.2686
+            ],
+            [
+              8.5407,
+              9.865300000000001,
+              1.3606,
+              1.3787,
+              16625.374499999998
+            ],
+            [
+              18.6763,
+              20.6466,
+              1.9246,
+              1.9339,
+              20625.5922
+            ],
+            [
+              17.7821,
+              18.8287,
+              2.9697,
+              3.0056000000000003,
+              24626.0713
+            ],
+            [
+              18.2229,
+              20.220599999999997,
+              2.0593999999999997,
+              2.0745999999999998,
+              28625.5447
+            ],
+            [
+              8.0502,
+              9.5505,
+              0.7535000000000001,
+              0.777,
+              32625.764099999997
+            ],
+            [
+              8.620299999999999,
+              9.8641,
+              1.4507999999999999,
+              1.4877,
+              36625.6477
+            ],
+            [
+              18.6175,
+              20.2729,
+              2.5429,
+              2.5669,
+              40625.5303
+            ],
+            [
+              17.824199999999998,
+              19.5118,
+              2.3852,
+              2.3954,
+              44625.377700000005
+            ],
+            [
+              7.385400000000001,
+              9.113100000000001,
+              0.6558999999999999,
+              0.6719,
+              48626.0214
+            ],
+            [
+              8.716399999999998,
+              10.9318,
+              0.6729,
+              0.6891999999999999,
+              52625.5535
+            ],
+            [
+              18.717000000000002,
+              20.3296,
+              2.8793,
+              2.8890000000000002,
+              56625.977
+            ],
+            [
+              18.5659,
+              20.5703,
+              2.8861999999999997,
+              2.901,
+              60625.7776
+            ],
+            [
+              18.8703,
+              19.9566,
+              2.4301,
+              2.4566000000000003,
+              64625.23009999999
+            ],
+            [
+              9.262599999999999,
+              10.919,
+              1.9969,
+              2.0332000000000003,
+              68625.15070000001
+            ],
+            [
+              8.6852,
+              10.2769,
+              2.0293,
+              2.0541,
+              72625.2149
+            ],
+            [
+              9.0536,
+              10.710600000000001,
+              2.0499,
+              2.0568,
+              76625.2118
+            ],
+            [
+              17.9096,
+              19.915200000000002,
+              3.0074,
+              3.0206,
+              80625.8199
+            ],
+            [
+              8.88,
+              10.887300000000002,
+              0.9177000000000001,
+              0.9429,
+              84625.41679999999
+            ],
+            [
+              18.3446,
+              20.3584,
+              2.9543999999999997,
+              2.9774,
+              88625.5946
+            ],
+            [
+              19.3414,
+              21.313599999999997,
+              3.1388000000000003,
+              3.1721000000000004,
+              92625.55519999999
+            ],
+            [
+              6.434900000000001,
+              8.8751,
+              1.0796000000000001,
+              1.0899,
+              96626.03420000001
+            ],
+            [
+              18.4936,
+              20.521,
+              3.2006,
+              3.2222,
+              100625.5031
+            ],
+            [
+              18.2037,
+              19.2888,
+              2.9709,
+              2.9877,
+              104625.8737
+            ],
+            [
+              8.3358,
+              10.2713,
+              0.6652,
+              0.6747,
+              108625.7732
+            ],
+            [
+              8.962,
+              10.9497,
+              2.0593999999999997,
+              2.0751,
+              112625.37229999999
+            ],
+            [
+              8.6912,
+              10.681,
+              1.1155,
+              1.1756,
+              116625.624
+            ],
+            [
+              7.998399999999999,
+              9.981399999999999,
+              0.5611,
+              0.5708,
+              120626.0785
+            ],
+            [
+              9.0525,
+              10.697099999999999,
+              0.2512,
+              0.26830000000000004,
+              124625.6446
+            ],
+            [
+              8.6608,
+              10.6546,
+              2.1031,
+              2.1266000000000003,
+              128625.23830000001
+            ],
+            [
+              7.9799,
+              9.1569,
+              0.5203,
+              0.5368,
+              132625.6075
+            ],
+            [
+              18.701900000000002,
+              20.6888,
+              2.9442,
+              2.9798,
+              136625.696
+            ],
+            [
+              8.9928,
+              10.9933,
+              0.5717,
+              0.5951,
+              140625.6674
+            ],
+            [
+              18.959,
+              20.956300000000002,
+              2.9092,
+              2.9189,
+              144625.511
+            ],
+            [
+              8.222,
+              10.266900000000001,
+              0.6951,
+              0.7198,
+              148625.9759
+            ],
+            [
+              19.0502,
+              21.063100000000002,
+              3.1833,
+              3.1991,
+              152625.3649
+            ],
+            [
+              18.2399,
+              20.3757,
+              1.9357,
+              1.961,
+              156625.5569
+            ],
+            [
+              18.3127,
+              19.3799,
+              3.0635,
+              3.0865,
+              160625.76619999998
+            ],
+            [
+              18.6904,
+              20.6889,
+              2.9250000000000003,
+              2.9368,
+              164625.79640000002
+            ],
+            [
+              8.645399999999999,
+              9.6994,
+              1.189,
+              1.2052,
+              168625.3339
+            ],
+            [
+              8.222999999999999,
+              10.2393,
+              0.7676000000000001,
+              0.7791,
+              172625.8256
+            ],
+            [
+              8.426599999999999,
+              10.0704,
+              2.0249,
+              2.0490999999999997,
+              176625.41999999998
+            ],
+            [
+              18.5862,
+              20.1023,
+              2.0128,
+              2.0282,
+              180625.1862
+            ],
+            [
+              9.108,
+              11.1364,
+              0.9813999999999999,
+              1.0076,
+              184625.50400000002
+            ],
+            [
+              18.3183,
+              19.8517,
+              2.9156999999999997,
+              2.9311,
+              188625.7466
+            ],
+            [
+              8.286200000000001,
+              9.7912,
+              1.0251,
+              1.0410000000000001,
+              192625.7151
+            ],
+            [
+              9.060699999999999,
+              10.1069,
+              0.9573,
+              0.9728,
+              196625.4251
+            ],
+            [
+              7.723599999999999,
+              8.788499999999999,
+              0.5558,
+              0.5648,
+              200626.0855
+            ],
+            [
+              18.4584,
+              19.5415,
+              2.8871,
+              2.9050000000000002,
+              204625.60880000002
+            ],
+            [
+              18.4219,
+              20.4317,
+              3.2519,
+              3.2891,
+              208625.3838
+            ],
+            [
+              8.1373,
+              9.6646,
+              1.036,
+              1.0610000000000002,
+              212625.9325
+            ],
+            [
+              8.5882,
+              10.5399,
+              0.5573,
+              0.5729,
+              216625.2103
+            ],
+            [
+              18.3508,
+              20.363300000000002,
+              3.1624000000000003,
+              3.1732,
+              220625.37159999998
+            ],
+            [
+              18.7487,
+              20.546,
+              2.8790999999999998,
+              2.9064,
+              224625.527
+            ],
+            [
+              17.978,
+              20.0159,
+              2.872,
+              2.8867,
+              228625.6599
+            ],
+            [
+              18.4988,
+              20.5077,
+              2.9201,
+              2.9356,
+              232625.417
+            ],
+            [
+              8.969700000000001,
+              11.046800000000001,
+              0.7724,
+              0.7882,
+              236625.46750000003
+            ],
+            [
+              7.767399999999999,
+              9.7812,
+              1.0309,
+              1.0455,
+              240625.53209999998
+            ],
+            [
+              7.7298,
+              8.7743,
+              0.6589,
+              0.6819999999999999,
+              244626.0614
+            ],
+            [
+              18.6331,
+              20.2105,
+              2.8955,
+              2.9103000000000003,
+              248625.24769999998
+            ],
+            [
+              7.908399999999999,
+              10.1389,
+              1.2135,
+              1.2287000000000001,
+              252625.6645
+            ]
+          ],
+          [
+            [
+              14.246699999999999,
+              15.907999999999998,
+              0.9626,
+              0.9795999999999999,
+              250.1872
+            ],
+            [
+              13.0601,
+              14.7361,
+              1.8885,
+              1.9038,
+              4251.079
+            ],
+            [
+              13.5277,
+              15.506300000000001,
+              0.9192,
+              0.9433,
+              8250.9688
+            ],
+            [
+              13.4319,
+              15.4325,
+              3.2114000000000003,
+              3.2388999999999997,
+              12250.761199999999
+            ],
+            [
+              13.829899999999999,
+              15.8171,
+              1.2271,
+              1.2436,
+              16250.630099999998
+            ],
+            [
+              13.2172,
+              14.8923,
+              1.9017000000000002,
+              1.9247999999999998,
+              20250.417599999997
+            ],
+            [
+              12.096,
+              14.0652,
+              1.7604,
+              1.7703,
+              24251.3142
+            ],
+            [
+              13.6055,
+              15.6083,
+              0.6076,
+              0.6199,
+              28250.997000000003
+            ],
+            [
+              13.0413,
+              15.001199999999999,
+              2.0524,
+              2.0739,
+              32250.8998
+            ],
+            [
+              12.237100000000002,
+              14.4411,
+              1.9451,
+              1.9684,
+              36250.3379
+            ],
+            [
+              14.0887,
+              15.7231,
+              2.8331,
+              2.8617,
+              40250.351
+            ],
+            [
+              13.1149,
+              15.1737,
+              3.0271999999999997,
+              3.0506,
+              44250.891
+            ],
+            [
+              13.039399999999999,
+              15.0562,
+              3.0297,
+              3.0531,
+              48250.90930000001
+            ],
+            [
+              14.1251,
+              15.8073,
+              0.622,
+              0.6352000000000001,
+              52250.123
+            ],
+            [
+              13.337299999999999,
+              15.3405,
+              0.4333,
+              0.4475,
+              56250.4925
+            ],
+            [
+              12.9702,
+              14.230400000000001,
+              0.9634999999999999,
+              0.98,
+              60250.72870000001
+            ],
+            [
+              13.5805,
+              15.618699999999999,
+              2.5117,
+              2.5344,
+              64250.204699999995
+            ],
+            [
+              14.1944,
+              15.9533,
+              2.9621,
+              2.9849,
+              68250.35509999999
+            ],
+            [
+              13.576400000000001,
+              15.5945,
+              3.137,
+              3.1481999999999997,
+              72250.1812
+            ],
+            [
+              13.6419,
+              15.8218,
+              0.49850000000000005,
+              0.5326000000000001,
+              76250.4503
+            ],
+            [
+              13.303799999999999,
+              14.5685,
+              0.4684,
+              0.49160000000000004,
+              80250.8884
+            ],
+            [
+              13.2791,
+              15.3105,
+              0.4011,
+              0.4174,
+              84250.3677
+            ],
+            [
+              14.2349,
+              16.2469,
+              0.4709,
+              0.508,
+              88250.4472
+            ],
+            [
+              13.617600000000001,
+              15.782399999999999,
+              2.9361,
+              2.9608999999999996,
+              92250.1752
+            ],
+            [
+              13.315499999999998,
+              15.316099999999999,
+              1.8023,
+              1.8252,
+              96250.6659
+            ],
+            [
+              13.719,
+              14.7688,
+              1.9506000000000001,
+              1.9938999999999998,
+              100250.3783
+            ],
+            [
+              13.8973,
+              15.893399999999998,
+              0.9127000000000001,
+              0.923,
+              104250.48719999999
+            ],
+            [
+              14.0981,
+              16.130599999999998,
+              0.6314,
+              0.648,
+              108250.4643
+            ],
+            [
+              12.726899999999999,
+              14.729199999999999,
+              1.9742000000000002,
+              1.9856,
+              112250.53749999999
+            ],
+            [
+              12.8132,
+              14.3385,
+              2.8139,
+              2.8377,
+              116250.4598
+            ],
+            [
+              12.598099999999999,
+              13.871,
+              0.9418,
+              0.9656,
+              120251.0084
+            ],
+            [
+              13.4323,
+              14.484,
+              0.5929000000000001,
+              0.6099,
+              124250.5949
+            ],
+            [
+              13.4009,
+              15.3835,
+              1.1374,
+              1.1525,
+              128250.5788
+            ],
+            [
+              13.3282,
+              15.3004,
+              0.9259999999999999,
+              0.9497000000000001,
+              132250.45549999998
+            ],
+            [
+              14.1813,
+              15.861500000000001,
+              2.9050000000000002,
+              2.9166000000000003,
+              136250.32200000001
+            ],
+            [
+              14.043899999999999,
+              16.0819,
+              0.6116999999999999,
+              0.6286,
+              140250.46180000002
+            ],
+            [
+              14.1961,
+              16.2037,
+              0.5959,
+              0.631,
+              144250.3432
+            ],
+            [
+              13.028599999999999,
+              15.038599999999999,
+              2.9167,
+              2.9356,
+              148250.8727
+            ],
+            [
+              13.6504,
+              14.6725,
+              0.809,
+              0.8248,
+              152250.8478
+            ],
+            [
+              13.8303,
+              15.3214,
+              1.9279,
+              1.9526000000000001,
+              156250.3906
+            ],
+            [
+              13.4471,
+              15.291,
+              1.9689999999999999,
+              2.0117999999999996,
+              160250.7229
+            ],
+            [
+              12.9911,
+              14.5075,
+              2.0195,
+              2.0614000000000003,
+              164250.6273
+            ],
+            [
+              13.5335,
+              14.6006,
+              1.9581999999999997,
+              2.0121,
+              168250.4676
+            ],
+            [
+              13.8173,
+              15.6628,
+              2.6233,
+              2.6643,
+              172250.1374
+            ],
+            [
+              12.7024,
+              15.0605,
+              1.8841,
+              1.9002,
+              176250.4819
+            ],
+            [
+              13.482600000000001,
+              15.359599999999999,
+              1.7883,
+              1.8043,
+              180250.4125
+            ],
+            [
+              13.8281,
+              15.5626,
+              2.5172,
+              2.5537,
+              184250.34769999998
+            ],
+            [
+              14.108600000000001,
+              15.6344,
+              0.6036,
+              0.62,
+              188250.3715
+            ],
+            [
+              13.0002,
+              14.8598,
+              2.0698000000000003,
+              2.1027,
+              192250.8304
+            ],
+            [
+              13.5478,
+              15.5949,
+              2.9348,
+              2.9477,
+              196250.8697
+            ],
+            [
+              14.2146,
+              16.225099999999998,
+              3.3005999999999998,
+              3.3398999999999996,
+              200250.2714
+            ],
+            [
+              12.7606,
+              14.2721,
+              2.932,
+              2.9497999999999998,
+              204250.44700000001
+            ],
+            [
+              12.693100000000001,
+              14.7015,
+              2.1897,
+              2.216,
+              208250.7445
+            ],
+            [
+              13.128,
+              15.1418,
+              0.9342,
+              0.9491999999999999,
+              212250.2504
+            ],
+            [
+              13.352400000000001,
+              15.359599999999999,
+              0.8425,
+              0.8573,
+              216250.1896
+            ],
+            [
+              13.492199999999999,
+              15.2599,
+              1.9143000000000001,
+              1.9426,
+              220250.5312
+            ],
+            [
+              12.7385,
+              15.0206,
+              2.9042,
+              2.9126999999999996,
+              224250.4911
+            ],
+            [
+              13.248899999999999,
+              14.5893,
+              3.0046,
+              3.0252,
+              228250.2007
+            ],
+            [
+              13.1671,
+              14.2014,
+              2.985,
+              3.0016000000000003,
+              232250.4767
+            ],
+            [
+              12.322,
+              13.8587,
+              1.3608,
+              1.3834,
+              236250.6091
+            ],
+            [
+              13.481,
+              15.110999999999999,
+              1.9535,
+              1.9658000000000002,
+              240250.2023
+            ],
+            [
+              13.1585,
+              14.198,
+              1.9911,
+              2.005,
+              244250.62790000002
+            ],
+            [
+              13.1614,
+              14.2652,
+              0.5918,
+              0.6072,
+              248250.5496
+            ],
+            [
+              13.2526,
+              15.2714,
+              0.5797000000000001,
+              0.6057,
+              252250.27349999998
+            ]
+          ]
+        ],
+        "presentation": {
+          "physical_size": [
+            1180.0,
+            800.0
+          ],
+          "surface_config_utf8": [
+            83,
+            111,
+            109,
+            101,
+            40,
+            83,
+            117,
+            114,
+            102,
+            97,
+            99,
+            101,
+            67,
+            111,
+            110,
+            102,
+            105,
+            103,
+            32,
+            123,
+            32,
+            112,
+            114,
+            101,
+            115,
+            101,
+            110,
+            116,
+            95,
+            109,
+            111,
+            100,
+            101,
+            58,
+            32,
+            65,
+            117,
+            116,
+            111,
+            86,
+            115,
+            121,
+            110,
+            99,
+            44,
+            32,
+            100,
+            101,
+            115,
+            105,
+            114,
+            101,
+            100,
+            95,
+            109,
+            97,
+            120,
+            105,
+            109,
+            117,
+            109,
+            95,
+            102,
+            114,
+            97,
+            109,
+            101,
+            95,
+            108,
+            97,
+            116,
+            101,
+            110,
+            99,
+            121,
+            58,
+            32,
+            83,
+            111,
+            109,
+            101,
+            40,
+            49,
+            41,
+            32,
+            125,
+            41
+          ]
+        },
+        "peak_voices": 8,
+        "max_trigger_lateness_ms": 3.6665,
+        "pcm_peak_bytes": 5667200,
+        "pcm_final_bytes": 0,
+        "raw_peak_bytes": 5134981,
+        "raw_final_bytes": 0,
+        "rgba_peak_bytes": 71303168,
+        "rgba_final_bytes": 0,
+        "max_targets": 2,
+        "final_targets": 0,
+        "allocations": 322,
+        "publications": 322,
+        "source_uploads": 21,
+        "source_cache_final_bytes": 0,
+        "source_allocations": 1,
+        "max_probe_poll_gap_ms": 2.506,
+        "max_supply_gap_micros": 4606,
+        "underrun_observations": [],
+        "slow_ui_ms": [],
+        "trace_overflow": false,
+        "dual_channel_isolation": true,
+        "draft_history_cleanup": true,
+        "resources_released": true,
+        "adapter_utf8": [
+          65,
+          100,
+          97,
+          112,
+          116,
+          101,
+          114,
+          73,
+          110,
+          102,
+          111,
+          32,
+          123,
+          32,
+          110,
+          97,
+          109,
+          101,
+          58,
+          32,
+          34,
+          78,
+          86,
+          73,
+          68,
+          73,
+          65,
+          32,
+          71,
+          101,
+          70,
+          111,
+          114,
+          99,
+          101,
+          32,
+          82,
+          84,
+          88,
+          32,
+          50,
+          48,
+          54,
+          48,
+          34,
+          44,
+          32,
+          118,
+          101,
+          110,
+          100,
+          111,
+          114,
+          58,
+          32,
+          52,
+          51,
+          49,
+          56,
+          44,
+          32,
+          100,
+          101,
+          118,
+          105,
+          99,
+          101,
+          58,
+          32,
+          55,
+          57,
+          53,
+          55,
+          44,
+          32,
+          100,
+          101,
+          118,
+          105,
+          99,
+          101,
+          95,
+          116,
+          121,
+          112,
+          101,
+          58,
+          32,
+          68,
+          105,
+          115,
+          99,
+          114,
+          101,
+          116,
+          101,
+          71,
+          112,
+          117,
+          44,
+          32,
+          100,
+          101,
+          118,
+          105,
+          99,
+          101,
+          95,
+          112,
+          99,
+          105,
+          95,
+          98,
+          117,
+          115,
+          95,
+          105,
+          100,
+          58,
+          32,
+          34,
+          48,
+          48,
+          48,
+          48,
+          58,
+          48,
+          49,
+          58,
+          48,
+          48,
+          46,
+          48,
+          34,
+          44,
+          32,
+          100,
+          114,
+          105,
+          118,
+          101,
+          114,
+          58,
+          32,
+          34,
+          78,
+          86,
+          73,
+          68,
+          73,
+          65,
+          34,
+          44,
+          32,
+          100,
+          114,
+          105,
+          118,
+          101,
+          114,
+          95,
+          105,
+          110,
+          102,
+          111,
+          58,
+          32,
+          34,
+          53,
+          54,
+          48,
+          46,
+          57,
+          52,
+          34,
+          44,
+          32,
+          98,
+          97,
+          99,
+          107,
+          101,
+          110,
+          100,
+          58,
+          32,
+          86,
+          117,
+          108,
+          107,
+          97,
+          110,
+          44,
+          32,
+          115,
+          117,
+          98,
+          103,
+          114,
+          111,
+          117,
+          112,
+          95,
+          109,
+          105,
+          110,
+          95,
+          115,
+          105,
+          122,
+          101,
+          58,
+          32,
+          51,
+          50,
+          44,
+          32,
+          115,
+          117,
+          98,
+          103,
+          114,
+          111,
+          117,
+          112,
+          95,
+          109,
+          97,
+          120,
+          95,
+          115,
+          105,
+          122,
+          101,
+          58,
+          32,
+          51,
+          50,
+          44,
+          32,
+          116,
+          114,
+          97,
+          110,
+          115,
+          105,
+          101,
+          110,
+          116,
+          95,
+          115,
+          97,
+          118,
+          101,
+          115,
+          95,
+          109,
+          101,
+          109,
+          111,
+          114,
+          121,
+          58,
+          32,
+          83,
+          111,
+          109,
+          101,
+          40,
+          102,
+          97,
+          108,
+          115,
+          101,
+          41,
+          44,
+          32,
+          108,
+          105,
+          109,
+          105,
+          116,
+          95,
+          98,
+          117,
+          99,
+          107,
+          101,
+          116,
+          58,
+          32,
+          78,
+          111,
+          110,
+          101,
+          32,
+          125
+        ]
+      },
+      "snapshot_max_capture_ms": 0.0769,
+      "cold_publish_ms": {
+        "count": 21,
+        "p50": 56.76450000000477,
+        "p95": 60.746100000003935,
+        "p99": 84.86200000000008,
+        "max": 84.86200000000008
+      },
+      "warm_publish_ms": {
+        "count": 301,
+        "p50": 3.268000000040047,
+        "p95": 5.0138999999908265,
+        "p99": 5.630699999994249,
+        "max": 5.929699999978766
+      }
+    },
+    {
+      "completed": true,
+      "phases": {
+        "playing": {
+          "sample_count": 2736,
+          "sample_span_seconds": 299.9380000000019,
+          "cpu_seconds": 7.96875,
+          "cpu_one_logical_core_percent": 2.6567990718081567,
+          "working_set_bytes_max": 316305408,
+          "private_bytes_max": 534134784
+        },
+        "closed": {
+          "sample_count": 20,
+          "sample_span_seconds": 2.0780000000013388,
+          "cpu_seconds": 0.109375,
+          "cpu_one_logical_core_percent": 5.263474494703058,
+          "working_set_bytes_max": 244600832,
+          "private_bytes_max": 479690752
+        }
+      },
+      "gpu": {
+        "playing": {
+          "dedicated": {
+            "valid_samples": 2736,
+            "missing_samples": 0,
+            "max_bytes": 266211328
+          },
+          "shared": {
+            "valid_samples": 2736,
+            "missing_samples": 0,
+            "max_bytes": 46759936
+          }
+        },
+        "closed": {
+          "dedicated": {
+            "valid_samples": 20,
+            "missing_samples": 0,
+            "max_bytes": 265752576
+          },
+          "shared": {
+            "valid_samples": 20,
+            "missing_samples": 0,
+            "max_bytes": 46759936
+          }
+        }
+      },
+      "allocator": [
+        {
+          "stage": "before_editor",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 200768432,
+          "categories": {
+            "egui_index_buffer": 12288,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_2": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_1": 64,
+            "egui_vertex_buffer": 20496,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.039799999999999995
+        },
+        {
+          "stage": "editor_created",
+          "supported": true,
+          "allocated_bytes": 558160,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 200768432,
+          "categories": {
+            "egui_index_buffer": 12288,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_2": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_3": 64,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_1": 64,
+            "egui_vertex_buffer": 20496,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "(wgpu internal) Staging": 320
+          },
+          "capture_ms": 0.032
+        },
+        {
+          "stage": "playing_start",
+          "supported": true,
+          "allocated_bytes": 47879992,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 153446600,
+          "categories": {
+            "egui_texid_Managed(0)": 1048816,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_5": 64,
+            "composition params": 64,
+            "egui_texture_flags_1": 64,
+            "source pixels": 41943040,
+            "candidate preview": 4228080,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_2": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_3": 64,
+            "egui_index_buffer": 24576,
+            "egui_vertex_buffer": 40976,
+            "composition ops": 4160,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "(wgpu internal) Staging": 65224
+          },
+          "capture_ms": 0.0926
+        },
+        {
+          "stage": "playing_2s",
+          "supported": true,
+          "allocated_bytes": 45754824,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 155571768,
+          "categories": {
+            "egui_texid_Managed(0)": 1048816,
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_5": 64,
+            "egui_texture_flags_1": 64,
+            "source pixels": 41943040,
+            "candidate preview": 2114544,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_2": 64,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_3": 64,
+            "egui_index_buffer": 24576,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "(wgpu internal) Staging": 57816
+          },
+          "capture_ms": 0.07540000000000001
+        },
+        {
+          "stage": "playing_60s",
+          "supported": true,
+          "allocated_bytes": 45753816,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 155572776,
+          "categories": {
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_5": 64,
+            "source pixels": 41943040,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_2": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_1": 64,
+            "egui_index_buffer": 24576,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_3": 64,
+            "egui_vertex_buffer": 40976,
+            "candidate preview": 2113536,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "(wgpu internal) Staging": 57816
+          },
+          "capture_ms": 0.0566
+        },
+        {
+          "stage": "playing_200s",
+          "supported": true,
+          "allocated_bytes": 45756528,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 155570064,
+          "categories": {
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_5": 64,
+            "source pixels": 41943040,
+            "candidate preview": 2113536,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_2": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_1": 64,
+            "egui_index_buffer": 24576,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_3": 64,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "(wgpu internal) Staging": 60528
+          },
+          "capture_ms": 0.08349999999999999
+        },
+        {
+          "stage": "playing_299s",
+          "supported": true,
+          "allocated_bytes": 45757536,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 155569056,
+          "categories": {
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_5": 64,
+            "source pixels": 41943040,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_2": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_1": 64,
+            "candidate preview": 2114544,
+            "egui_index_buffer": 24576,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_3": 64,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) default external texture params buffer": 256,
+            "(wgpu internal) Staging": 60528
+          },
+          "capture_ms": 0.0356
+        },
+        {
+          "stage": "after_shutdown",
+          "supported": true,
+          "allocated_bytes": 1639424,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 199687168,
+          "categories": {
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_2": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_1": 64,
+            "egui_index_buffer": 24576,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_3": 64,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) default external texture params buffer": 256
+          },
+          "capture_ms": 0.0474
+        },
+        {
+          "stage": "report",
+          "supported": true,
+          "allocated_bytes": 1639424,
+          "reserved_bytes": 201326592,
+          "unused_capacity_bytes": 199687168,
+          "categories": {
+            "egui_uniform_buffer": 96,
+            "egui_texture_flags_0": 64,
+            "egui_texture_flags_5": 64,
+            "(wgpu internal) zero init buffer": 524288,
+            "egui_texture_flags_2": 64,
+            "egui_texid_Managed(0)": 1048816,
+            "egui_texture_flags_1": 64,
+            "egui_index_buffer": 24576,
+            "(wgpu internal) Indirect dispatch validation destination buffer": 32,
+            "egui_texture_flags_3": 64,
+            "egui_vertex_buffer": 40976,
+            "egui_texture_flags_4": 64,
+            "(wgpu internal) default external texture params buffer": 256
+          },
+          "capture_ms": 0.0591
+        }
+      ],
+      "latency_ms": [
+        {
+          "count": 64,
+          "p50": 17.2316,
+          "p95": 18.4549,
+          "p99": 18.65,
+          "max": 18.65
+        },
+        {
+          "count": 64,
+          "p50": 12.486600000000001,
+          "p95": 13.5118,
+          "p99": 13.9282,
+          "max": 13.9282
+        }
+      ],
+      "submission": [
+        {
+          "lower_ms": {
+            "count": 64,
+            "p50": 15.530800000000001,
+            "p95": 16.410999999999998,
+            "p99": 16.625600000000002,
+            "max": 16.625600000000002
+          },
+          "upper_ms": {
+            "count": 64,
+            "p50": 17.2316,
+            "p95": 18.4549,
+            "p99": 18.65,
+            "max": 18.65
+          },
+          "uncertainty_ms": {
+            "count": 64,
+            "p50": 1.6736000000000004,
+            "p95": 2.1796999999999986,
+            "p99": 2.315900000000001,
+            "max": 2.315900000000001
+          },
+          "request_to_receipt_ms": {
+            "count": 64,
+            "p50": 1.9236,
+            "p95": 2.9897,
+            "p99": 3.0143,
+            "max": 3.0143
+          },
+          "after_receipt_lower_ms": {
+            "count": 64,
+            "p50": 13.944,
+            "p95": 14.9819,
+            "p99": 15.3538,
+            "max": 15.3538
+          },
+          "p95_classification": "confirmed_within",
+          "individually_confirmed_over_20": 0,
+          "individually_straddling_20": 0
+        },
+        {
+          "lower_ms": {
+            "count": 64,
+            "p50": 10.6296,
+            "p95": 11.5153,
+            "p99": 11.9498,
+            "max": 11.9498
+          },
+          "upper_ms": {
+            "count": 64,
+            "p50": 12.486600000000001,
+            "p95": 13.5118,
+            "p99": 13.9282,
+            "max": 13.9282
+          },
+          "uncertainty_ms": {
+            "count": 64,
+            "p50": 1.9707000000000008,
+            "p95": 2.1075,
+            "p99": 2.386799999999999,
+            "max": 2.386799999999999
+          },
+          "request_to_receipt_ms": {
+            "count": 64,
+            "p50": 1.6007,
+            "p95": 3.3003,
+            "p99": 3.5293,
+            "max": 3.5293
+          },
+          "after_receipt_lower_ms": {
+            "count": 64,
+            "p50": 8.6947,
+            "p95": 10.6179,
+            "p99": 10.831100000000001,
+            "max": 10.831100000000001
+          },
+          "p95_classification": "confirmed_within",
+          "individually_confirmed_over_20": 0,
+          "individually_straddling_20": 0
+        }
+      ],
+      "edit_ms": {
+        "count": 300,
+        "p50": 8.222800000000001,
+        "p95": 9.2487,
+        "p99": 10.194999999999999,
+        "max": 11.1021
+      },
+      "cpu_frame_ms": {
+        "count": 3817,
+        "p50": 3.368099918588996,
+        "p95": 5.550299771130085,
+        "p99": 6.218499969691038,
+        "max": 7.392199710011482
+      },
+      "graphics_request_to_publication_ms": {
+        "count": 322,
+        "p50": 3.2538000000058673,
+        "p95": 46.98489999999583,
+        "p99": 52.24369999999908,
+        "max": 62.2478000000001
+      },
+      "cpu_frames_over_16_7_ms": 0,
+      "lifetime_peak_working_set_bytes": 316436480,
+      "lifetime_peak_pagefile_bytes": 534200320,
+      "checks": {
+        "continuous_native_submission_300s": true,
+        "no_underflow_including_startup": true,
+        "ready_both_lanes_under_graphics_p95_le_20_ms": true,
+        "edit_activation_p95_le_50_ms": true,
+        "cpu_playing_one_core_le_15_percent": true,
+        "cpu_frame_p95_le_16_7_ms": true,
+        "cpu_frame_max_le_16_7_ms": true,
+        "working_set_private_le_512_mib": true,
+        "gpu_pid_budget": true,
+        "bounded_managed_resources": true,
+        "old_resources_released": true,
+        "unchanged_sources_reused": true,
+        "source_allocation_reused": true,
+        "dual_channel_isolation": true,
+        "draft_history_cleanup": true,
+        "all_graphics_changes_published": true
+      },
+      "report": {
+        "schema": 1,
+        "gpu_memory_usage_hint": false,
+        "seconds": 300,
+        "rate": 48000,
+        "channels": 2,
+        "period_frames": 480,
+        "original_pngs": 100,
+        "documents": 10,
+        "layers": 500,
+        "triggers": 2400,
+        "edits": 300,
+        "switches": 20,
+        "native_play_frames": 14400000,
+        "empty_frames": 0,
+        "empty_callbacks": 0,
+        "max_empty_callback_frames": 0,
+        "callbacks": 30033,
+        "max_callback_frames": 1056,
+        "latency_upper_bound_ms": [
+          [
+            16.7091,
+            16.399,
+            17.3565,
+            17.368399999999998,
+            17.5002,
+            17.0857,
+            17.5599,
+            16.673099999999998,
+            18.3352,
+            17.530299999999997,
+            16.427400000000002,
+            16.853199999999998,
+            17.2424,
+            18.65,
+            18.23,
+            17.1245,
+            17.6633,
+            16.2817,
+            17.2798,
+            18.316499999999998,
+            18.4549,
+            18.561799999999998,
+            18.0077,
+            16.634900000000002,
+            16.7958,
+            17.1975,
+            16.9828,
+            17.0803,
+            18.3418,
+            17.7675,
+            16.5285,
+            17.9099,
+            17.3674,
+            16.2401,
+            17.345,
+            16.4779,
+            17.226499999999998,
+            16.6695,
+            17.4518,
+            16.9248,
+            18.0243,
+            17.6238,
+            17.105900000000002,
+            17.3116,
+            17.777,
+            16.315900000000003,
+            18.6385,
+            16.5218,
+            16.5687,
+            16.9728,
+            17.8192,
+            17.353199999999998,
+            17.7478,
+            16.3414,
+            17.2316,
+            17.076999999999998,
+            16.2993,
+            17.365599999999997,
+            17.6926,
+            17.243100000000002,
+            16.2544,
+            15.867099999999999,
+            16.856099999999998,
+            17.0828
+          ],
+          [
+            12.959999999999999,
+            13.339500000000001,
+            13.0404,
+            12.806899999999999,
+            12.6272,
+            12.3971,
+            12.1822,
+            11.4816,
+            11.7181,
+            12.4643,
+            12.741900000000001,
+            13.443800000000001,
+            12.755,
+            11.5196,
+            13.6244,
+            12.5191,
+            12.5601,
+            11.233500000000001,
+            12.4402,
+            12.2722,
+            13.5118,
+            11.4906,
+            12.587299999999999,
+            11.403,
+            12.5025,
+            12.0872,
+            11.8671,
+            11.596499999999999,
+            12.551400000000001,
+            12.4549,
+            13.9282,
+            13.6228,
+            12.6157,
+            12.2656,
+            12.4586,
+            12.862200000000001,
+            12.6531,
+            11.8105,
+            12.2364,
+            11.7944,
+            12.2419,
+            11.5627,
+            12.486600000000001,
+            12.6314,
+            13.113299999999999,
+            12.047600000000001,
+            11.9911,
+            11.201600000000001,
+            12.7248,
+            13.2229,
+            11.444899999999999,
+            13.1815,
+            13.4092,
+            12.689,
+            12.547,
+            12.6723,
+            12.9105,
+            11.448099999999998,
+            11.9959,
+            11.0748,
+            12.5226,
+            12.7855,
+            12.003,
+            11.597100000000001
+          ]
+        ],
+        "submission_intervals_ms": [
+          [
+            [
+              15.529599999999999,
+              16.7091,
+              0.8812,
+              0.8971,
+              625.758
+            ],
+            [
+              15.311200000000001,
+              16.399,
+              1.9529,
+              1.9684,
+              4625.7235
+            ],
+            [
+              15.351999999999999,
+              17.3565,
+              0.9520000000000001,
+              0.9667,
+              8625.4577
+            ],
+            [
+              15.8857,
+              17.368399999999998,
+              0.9037999999999999,
+              0.9118,
+              12625.3986
+            ],
+            [
+              15.8266,
+              17.5002,
+              2.8868,
+              2.9227,
+              16625.5898
+            ],
+            [
+              15.6092,
+              17.0857,
+              0.8894000000000001,
+              0.9081,
+              20625.207599999998
+            ],
+            [
+              15.530800000000001,
+              17.5599,
+              1.9324999999999999,
+              1.9551,
+              24625.226000000002
+            ],
+            [
+              15.4648,
+              16.673099999999998,
+              0.9625,
+              0.9732999999999999,
+              28625.9111
+            ],
+            [
+              16.130300000000002,
+              18.3352,
+              1.9041,
+              1.9327,
+              32625.2499
+            ],
+            [
+              15.530800000000001,
+              17.530299999999997,
+              2.9344,
+              2.9607,
+              36626.1402
+            ],
+            [
+              14.89,
+              16.427400000000002,
+              3.0109999999999997,
+              3.0359,
+              40626.272
+            ],
+            [
+              15.6403,
+              16.853199999999998,
+              0.6584,
+              0.6734,
+              44625.4961
+            ],
+            [
+              15.3361,
+              17.2424,
+              0.5982999999999999,
+              0.6237,
+              48625.7986
+            ],
+            [
+              16.625600000000002,
+              18.65,
+              2.9684,
+              2.9922999999999997,
+              52625.2688
+            ],
+            [
+              16.212799999999998,
+              18.23,
+              2.9337,
+              2.9692,
+              56625.674
+            ],
+            [
+              15.605300000000002,
+              17.1245,
+              1.954,
+              1.9773,
+              60625.0873
+            ],
+            [
+              16.2449,
+              17.6633,
+              2.0074,
+              2.0434,
+              64625.44819999999
+            ],
+            [
+              14.7587,
+              16.2817,
+              0.6421,
+              0.6769999999999999,
+              68625.6465
+            ],
+            [
+              15.7168,
+              17.2798,
+              0.7731,
+              0.7923,
+              72625.15980000001
+            ],
+            [
+              16.3052,
+              18.316499999999998,
+              2.0031,
+              2.4158999999999997,
+              76625.19930000001
+            ],
+            [
+              16.526,
+              18.4549,
+              2.9897,
+              3.0134,
+              80625.30649999999
+            ],
+            [
+              16.5271,
+              18.561799999999998,
+              2.9865,
+              3.0049,
+              84625.2536
+            ],
+            [
+              15.994499999999999,
+              18.0077,
+              1.9444,
+              1.971,
+              88625.3832
+            ],
+            [
+              15.2072,
+              16.634900000000002,
+              0.6005,
+              0.7943,
+              92625.98060000001
+            ],
+            [
+              15.1187,
+              16.7958,
+              0.9335,
+              0.9675,
+              96625.9065
+            ],
+            [
+              15.5622,
+              17.1975,
+              1.8719999999999999,
+              1.8965,
+              100625.31880000001
+            ],
+            [
+              15.0127,
+              16.9828,
+              0.5989,
+              0.6218,
+              104625.58919999999
+            ],
+            [
+              15.703000000000001,
+              17.0803,
+              2.4196999999999997,
+              2.4499,
+              108625.59280000001
+            ],
+            [
+              16.410999999999998,
+              18.3418,
+              2.032,
+              2.1761,
+              112625.3058
+            ],
+            [
+              15.753699999999998,
+              17.7675,
+              0.6099,
+              0.8092,
+              116625.35389999999
+            ],
+            [
+              15.316099999999999,
+              16.5285,
+              0.9293,
+              0.9457,
+              120626.01770000001
+            ],
+            [
+              15.594,
+              17.9099,
+              1.9291,
+              1.953,
+              124625.5429
+            ],
+            [
+              16.198500000000003,
+              17.3674,
+              1.07,
+              1.0971,
+              128625.15869999999
+            ],
+            [
+              14.7403,
+              16.2401,
+              2.9369,
+              2.9692,
+              132625.7223
+            ],
+            [
+              15.3322,
+              17.345,
+              1.4124,
+              1.4361000000000002,
+              136625.325
+            ],
+            [
+              15.0701,
+              16.4779,
+              2.1207000000000003,
+              2.1324,
+              140626.0369
+            ],
+            [
+              15.6924,
+              17.226499999999998,
+              3.0126,
+              3.0282999999999998,
+              144625.5501
+            ],
+            [
+              15.5866,
+              16.6695,
+              0.6398,
+              0.8199000000000001,
+              148625.5748
+            ],
+            [
+              15.4536,
+              17.4518,
+              2.9495,
+              2.9737999999999998,
+              152625.5701
+            ],
+            [
+              15.2911,
+              16.9248,
+              0.6509,
+              0.7565999999999999,
+              156625.78089999998
+            ],
+            [
+              16.0289,
+              18.0243,
+              2.9776,
+              3.0042,
+              160625.5783
+            ],
+            [
+              15.626299999999999,
+              17.6238,
+              2.9401,
+              2.9646999999999997,
+              164625.6509
+            ],
+            [
+              15.7878,
+              17.105900000000002,
+              0.8593999999999999,
+              0.8775000000000001,
+              168625.328
+            ],
+            [
+              15.2844,
+              17.3116,
+              0.6547000000000001,
+              0.6802,
+              172625.4198
+            ],
+            [
+              16.2473,
+              17.777,
+              0.8935,
+              0.9086,
+              176625.1957
+            ],
+            [
+              14.9185,
+              16.315900000000003,
+              0.5915,
+              0.6142,
+              180625.821
+            ],
+            [
+              16.385199999999998,
+              18.6385,
+              1.9236,
+              1.9467,
+              184625.4144
+            ],
+            [
+              15.49,
+              16.5218,
+              0.6103000000000001,
+              0.6234,
+              188625.5889
+            ],
+            [
+              14.556799999999999,
+              16.5687,
+              0.6855,
+              0.7743,
+              192626.0134
+            ],
+            [
+              15.0017,
+              16.9728,
+              0.5996,
+              1.107,
+              196626.1174
+            ],
+            [
+              15.823799999999999,
+              17.8192,
+              1.9804000000000002,
+              2.0075000000000003,
+              200625.7354
+            ],
+            [
+              15.334,
+              17.353199999999998,
+              2.94,
+              2.9711,
+              204625.1887
+            ],
+            [
+              15.7604,
+              17.7478,
+              1.8164,
+              1.8402,
+              208625.48440000002
+            ],
+            [
+              14.9612,
+              16.3414,
+              2.0037000000000003,
+              2.0397000000000003,
+              212625.3559
+            ],
+            [
+              15.7161,
+              17.2316,
+              2.9646999999999997,
+              3.0037000000000003,
+              216625.65230000002
+            ],
+            [
+              15.5609,
+              17.076999999999998,
+              0.9226,
+              0.9398,
+              220625.43310000002
+            ],
+            [
+              15.033299999999999,
+              16.2993,
+              2.0003,
+              2.0306,
+              224625.73979999998
+            ],
+            [
+              15.398200000000001,
+              17.365599999999997,
+              2.2295000000000003,
+              2.254,
+              228625.40569999997
+            ],
+            [
+              15.652800000000001,
+              17.6926,
+              0.6895,
+              0.7123999999999999,
+              232625.20789999998
+            ],
+            [
+              15.2484,
+              17.243100000000002,
+              2.3731999999999998,
+              2.4067,
+              236625.3453
+            ],
+            [
+              14.9027,
+              16.2544,
+              0.6858,
+              0.7036,
+              240625.64059999998
+            ],
+            [
+              14.2939,
+              15.867099999999999,
+              1.9832999999999998,
+              1.9968,
+              244625.94329999998
+            ],
+            [
+              14.9604,
+              16.856099999999998,
+              2.9007,
+              2.9274999999999998,
+              248625.3819
+            ],
+            [
+              14.9031,
+              17.0828,
+              3.0143,
+              3.0328,
+              252625.4724
+            ]
+          ],
+          [
+            [
+              11.4547,
+              12.959999999999999,
+              1.5256,
+              1.549,
+              250.6336
+            ],
+            [
+              11.314400000000001,
+              13.339500000000001,
+              1.4496,
+              1.4614,
+              4250.1801
+            ],
+            [
+              11.6579,
+              13.0404,
+              0.9616,
+              0.9745,
+              8250.107699999999
+            ],
+            [
+              10.7904,
+              12.806899999999999,
+              3.3855,
+              3.3951,
+              12250.8758
+            ],
+            [
+              10.6075,
+              12.6272,
+              2.2794,
+              2.2979,
+              16250.172800000002
+            ],
+            [
+              10.8862,
+              12.3971,
+              1.5917,
+              1.6283,
+              20250.9692
+            ],
+            [
+              10.477,
+              12.1822,
+              3.2005,
+              3.2238,
+              24250.9517
+            ],
+            [
+              10.378200000000001,
+              11.4816,
+              3.1538999999999997,
+              3.1814999999999998,
+              28250.9981
+            ],
+            [
+              10.4162,
+              11.7181,
+              3.2944,
+              3.3178,
+              32251.0338
+            ],
+            [
+              10.8639,
+              12.4643,
+              1.4411999999999998,
+              1.4586,
+              36250.3438
+            ],
+            [
+              10.9179,
+              12.741900000000001,
+              0.6582,
+              0.6715,
+              40250.6345
+            ],
+            [
+              11.434800000000001,
+              13.443800000000001,
+              3.3263,
+              3.3603,
+              44250.3219
+            ],
+            [
+              10.7843,
+              12.755,
+              2.969,
+              2.9838999999999998,
+              48250.4532
+            ],
+            [
+              10.431799999999999,
+              11.5196,
+              3.0125,
+              3.0468,
+              52251.0675
+            ],
+            [
+              11.6614,
+              13.6244,
+              0.9023,
+              0.9183,
+              56250.2772
+            ],
+            [
+              10.523299999999999,
+              12.5191,
+              3.1086,
+              3.1470000000000002,
+              60250.9096
+            ],
+            [
+              10.5324,
+              12.5601,
+              0.9668,
+              1.0002,
+              64250.79750000001
+            ],
+            [
+              9.9207,
+              11.233500000000001,
+              3.1391,
+              3.1755,
+              68251.1502
+            ],
+            [
+              10.402800000000001,
+              12.4402,
+              1.4763,
+              1.5005000000000002,
+              72250.3278
+            ],
+            [
+              10.254600000000002,
+              12.2722,
+              1.0283,
+              1.0529000000000002,
+              76250.25069999999
+            ],
+            [
+              11.5153,
+              13.5118,
+              0.937,
+              0.9534,
+              80250.332
+            ],
+            [
+              10.430200000000001,
+              11.4906,
+              2.1249,
+              2.1498,
+              84250.70409999999
+            ],
+            [
+              10.5785,
+              12.587299999999999,
+              2.0488,
+              2.0736,
+              88250.5706
+            ],
+            [
+              10.3108,
+              11.403,
+              0.6113,
+              0.6223,
+              92250.8315
+            ],
+            [
+              10.5021,
+              12.5025,
+              2.1767000000000003,
+              2.2215,
+              96250.5187
+            ],
+            [
+              10.885499999999999,
+              12.0872,
+              0.4653,
+              0.4904,
+              100250.6008
+            ],
+            [
+              10.7084,
+              11.8671,
+              3.1386000000000003,
+              3.1508,
+              104250.9019
+            ],
+            [
+              10.531699999999999,
+              11.596499999999999,
+              0.43379999999999996,
+              0.4612,
+              108250.5889
+            ],
+            [
+              10.999699999999999,
+              12.551400000000001,
+              2.1959000000000004,
+              2.2188,
+              112250.5708
+            ],
+            [
+              10.8442,
+              12.4549,
+              3.0639,
+              3.0999,
+              116250.412
+            ],
+            [
+              11.9498,
+              13.9282,
+              3.1422,
+              3.1607,
+              120250.2459
+            ],
+            [
+              11.417300000000001,
+              13.6228,
+              0.5862,
+              0.6103999999999999,
+              124250.2971
+            ],
+            [
+              10.674100000000001,
+              12.6157,
+              3.2243,
+              3.2459,
+              128250.69920000002
+            ],
+            [
+              10.295399999999999,
+              12.2656,
+              1.6007,
+              1.6183,
+              132250.9551
+            ],
+            [
+              10.4576,
+              12.4586,
+              2.0576000000000003,
+              2.0831,
+              136250.6275
+            ],
+            [
+              10.869,
+              12.862200000000001,
+              0.4326,
+              0.45080000000000003,
+              140250.2881
+            ],
+            [
+              11.1994,
+              12.6531,
+              1.8047,
+              1.828,
+              144250.1501
+            ],
+            [
+              10.7333,
+              11.8105,
+              1.3016,
+              1.3370000000000002,
+              148250.4564
+            ],
+            [
+              10.7132,
+              12.2364,
+              2.2182,
+              2.2430000000000003,
+              152250.5883
+            ],
+            [
+              9.7743,
+              11.7944,
+              3.1387,
+              3.1547,
+              156250.7614
+            ],
+            [
+              10.2142,
+              12.2419,
+              2.3045999999999998,
+              2.3280000000000003,
+              160250.48760000002
+            ],
+            [
+              10.0119,
+              11.5627,
+              0.9657,
+              0.9955999999999999,
+              164250.9175
+            ],
+            [
+              10.4898,
+              12.486600000000001,
+              2.2417000000000002,
+              2.2659,
+              168250.5396
+            ],
+            [
+              10.6296,
+              12.6314,
+              1.9780000000000002,
+              1.9989000000000001,
+              172250.2447
+            ],
+            [
+              11.1461,
+              13.113299999999999,
+              3.5293,
+              3.5488,
+              176250.2908
+            ],
+            [
+              10.0196,
+              12.047600000000001,
+              0.6897,
+              0.7324,
+              180250.8822
+            ],
+            [
+              10.439,
+              11.9911,
+              1.4509,
+              1.485,
+              184250.1955
+            ],
+            [
+              9.1854,
+              11.201600000000001,
+              0.5720000000000001,
+              0.5965,
+              188251.09209999998
+            ],
+            [
+              10.744399999999999,
+              12.7248,
+              0.6149,
+              0.6484000000000001,
+              192250.2009
+            ],
+            [
+              11.2179,
+              13.2229,
+              2.8306999999999998,
+              2.8567,
+              196250.1677
+            ],
+            [
+              10.3887,
+              11.444899999999999,
+              0.40959999999999996,
+              0.4344,
+              200250.5682
+            ],
+            [
+              10.7947,
+              13.1815,
+              0.6560999999999999,
+              0.6864,
+              204250.6861
+            ],
+            [
+              11.3017,
+              13.4092,
+              0.6838000000000001,
+              0.6996,
+              208250.5637
+            ],
+            [
+              10.6452,
+              12.689,
+              3.2521999999999998,
+              3.2864,
+              212250.362
+            ],
+            [
+              10.5409,
+              12.547,
+              3.0517,
+              3.0703,
+              216251.1189
+            ],
+            [
+              10.4254,
+              12.6723,
+              0.2139,
+              0.2314,
+              220250.7445
+            ],
+            [
+              10.9118,
+              12.9105,
+              0.9467,
+              0.9726,
+              224250.34769999998
+            ],
+            [
+              10.3019,
+              11.448099999999998,
+              0.13999999999999999,
+              0.1638,
+              228250.9573
+            ],
+            [
+              9.9992,
+              11.9959,
+              1.41,
+              1.4266999999999999,
+              232250.2925
+            ],
+            [
+              9.052,
+              11.0748,
+              1.0212999999999999,
+              1.0369000000000002,
+              236251.2
+            ],
+            [
+              11.007,
+              12.5226,
+              2.2104999999999997,
+              2.2367,
+              240250.856
+            ],
+            [
+              10.791,
+              12.7855,
+              0.4663,
+              0.4827,
+              244250.4545
+            ],
+            [
+              10.7729,
+              12.003,
+              3.3003,
+              3.3201,
+              248250.291
+            ],
+            [
+              10.0996,
+              11.597100000000001,
+              2.7001,
+              2.734,
+              252250.7451
+            ]
+          ]
+        ],
+        "presentation": {
+          "physical_size": [
+            1180.0,
+            800.0
+          ],
+          "surface_config_utf8": [
+            83,
+            111,
+            109,
+            101,
+            40,
+            83,
+            117,
+            114,
+            102,
+            97,
+            99,
+            101,
+            67,
+            111,
+            110,
+            102,
+            105,
+            103,
+            32,
+            123,
+            32,
+            112,
+            114,
+            101,
+            115,
+            101,
+            110,
+            116,
+            95,
+            109,
+            111,
+            100,
+            101,
+            58,
+            32,
+            65,
+            117,
+            116,
+            111,
+            86,
+            115,
+            121,
+            110,
+            99,
+            44,
+            32,
+            100,
+            101,
+            115,
+            105,
+            114,
+            101,
+            100,
+            95,
+            109,
+            97,
+            120,
+            105,
+            109,
+            117,
+            109,
+            95,
+            102,
+            114,
+            97,
+            109,
+            101,
+            95,
+            108,
+            97,
+            116,
+            101,
+            110,
+            99,
+            121,
+            58,
+            32,
+            83,
+            111,
+            109,
+            101,
+            40,
+            49,
+            41,
+            32,
+            125,
+            41
+          ]
+        },
+        "peak_voices": 8,
+        "max_trigger_lateness_ms": 3.4226,
+        "pcm_peak_bytes": 5667200,
+        "pcm_final_bytes": 0,
+        "raw_peak_bytes": 5134981,
+        "raw_final_bytes": 0,
+        "rgba_peak_bytes": 71303168,
+        "rgba_final_bytes": 0,
+        "max_targets": 2,
+        "final_targets": 0,
+        "allocations": 322,
+        "publications": 322,
+        "source_uploads": 21,
+        "source_cache_final_bytes": 0,
+        "source_allocations": 1,
+        "max_probe_poll_gap_ms": 2.4705,
+        "max_supply_gap_micros": 5280,
+        "underrun_observations": [],
+        "slow_ui_ms": [],
+        "trace_overflow": false,
+        "dual_channel_isolation": true,
+        "draft_history_cleanup": true,
+        "resources_released": true,
+        "adapter_utf8": [
+          65,
+          100,
+          97,
+          112,
+          116,
+          101,
+          114,
+          73,
+          110,
+          102,
+          111,
+          32,
+          123,
+          32,
+          110,
+          97,
+          109,
+          101,
+          58,
+          32,
+          34,
+          78,
+          86,
+          73,
+          68,
+          73,
+          65,
+          32,
+          71,
+          101,
+          70,
+          111,
+          114,
+          99,
+          101,
+          32,
+          82,
+          84,
+          88,
+          32,
+          50,
+          48,
+          54,
+          48,
+          34,
+          44,
+          32,
+          118,
+          101,
+          110,
+          100,
+          111,
+          114,
+          58,
+          32,
+          52,
+          51,
+          49,
+          56,
+          44,
+          32,
+          100,
+          101,
+          118,
+          105,
+          99,
+          101,
+          58,
+          32,
+          55,
+          57,
+          53,
+          55,
+          44,
+          32,
+          100,
+          101,
+          118,
+          105,
+          99,
+          101,
+          95,
+          116,
+          121,
+          112,
+          101,
+          58,
+          32,
+          68,
+          105,
+          115,
+          99,
+          114,
+          101,
+          116,
+          101,
+          71,
+          112,
+          117,
+          44,
+          32,
+          100,
+          101,
+          118,
+          105,
+          99,
+          101,
+          95,
+          112,
+          99,
+          105,
+          95,
+          98,
+          117,
+          115,
+          95,
+          105,
+          100,
+          58,
+          32,
+          34,
+          48,
+          48,
+          48,
+          48,
+          58,
+          48,
+          49,
+          58,
+          48,
+          48,
+          46,
+          48,
+          34,
+          44,
+          32,
+          100,
+          114,
+          105,
+          118,
+          101,
+          114,
+          58,
+          32,
+          34,
+          78,
+          86,
+          73,
+          68,
+          73,
+          65,
+          34,
+          44,
+          32,
+          100,
+          114,
+          105,
+          118,
+          101,
+          114,
+          95,
+          105,
+          110,
+          102,
+          111,
+          58,
+          32,
+          34,
+          53,
+          54,
+          48,
+          46,
+          57,
+          52,
+          34,
+          44,
+          32,
+          98,
+          97,
+          99,
+          107,
+          101,
+          110,
+          100,
+          58,
+          32,
+          86,
+          117,
+          108,
+          107,
+          97,
+          110,
+          44,
+          32,
+          115,
+          117,
+          98,
+          103,
+          114,
+          111,
+          117,
+          112,
+          95,
+          109,
+          105,
+          110,
+          95,
+          115,
+          105,
+          122,
+          101,
+          58,
+          32,
+          51,
+          50,
+          44,
+          32,
+          115,
+          117,
+          98,
+          103,
+          114,
+          111,
+          117,
+          112,
+          95,
+          109,
+          97,
+          120,
+          95,
+          115,
+          105,
+          122,
+          101,
+          58,
+          32,
+          51,
+          50,
+          44,
+          32,
+          116,
+          114,
+          97,
+          110,
+          115,
+          105,
+          101,
+          110,
+          116,
+          95,
+          115,
+          97,
+          118,
+          101,
+          115,
+          95,
+          109,
+          101,
+          109,
+          111,
+          114,
+          121,
+          58,
+          32,
+          83,
+          111,
+          109,
+          101,
+          40,
+          102,
+          97,
+          108,
+          115,
+          101,
+          41,
+          44,
+          32,
+          108,
+          105,
+          109,
+          105,
+          116,
+          95,
+          98,
+          117,
+          99,
+          107,
+          101,
+          116,
+          58,
+          32,
+          78,
+          111,
+          110,
+          101,
+          32,
+          125
+        ]
+      },
+      "snapshot_max_capture_ms": 0.0926,
+      "cold_publish_ms": {
+        "count": 21,
+        "p50": 49.979699999981676,
+        "p95": 57.01539999999659,
+        "p99": 62.2478000000001,
+        "max": 62.2478000000001
+      },
+      "warm_publish_ms": {
+        "count": 301,
+        "p50": 3.233700000040699,
+        "p95": 4.994099999996251,
+        "p99": 5.2687000000005355,
+        "max": 5.8200000000006185
+      }
+    }
+  ],
+  "standard_checks_passed": false,
+  "preserved_proofs": {
+    "docs\\P2_AUDIO_CORE_PROOF.json": "0233a706a68fda7129698f4f935d4e61272296ee8a99dff7d77013802a220495",
+    "docs\\P2_AUDIO_EDIT_PROOF.json": "3489c044f93da364fb95b86f243b874e8b55123e635ee87456edc48cd581d818",
+    "docs\\P2_AUDIO_LIBRARY_PROOF.json": "faae41499f5871630cb59e6ebb11f344a62cf46bbae1542922dc5b56e90ddd25",
+    "docs\\P2_AUDIO_LOAD_PROOF.json": "011db2daf8e5359eb072244ba1c3baf325d6a1ff0a0809a9826d0ee95e0151d0",
+    "docs\\P2_AUDIO_NATIVE_PROOF.json": "062888a55213a52dc5387c8ce28ab471cc675620aeec5e3d13c49730a2aac9e1",
+    "docs\\P2_AUDIO_RESOURCES_PROOF.json": "02a57944693e5d17e89368a95804dcc0b1dee68256bd8668915b3198df123f4f",
+    "docs\\P2_AUDIO_RUNTIME_PROOF.json": "3ead10f09df8f926bf79ca8b487381b834829c6b24cea5b0b82b90500539541c",
+    "docs\\P2_AUDIO_STARTUP_PROOF.json": "24035cc573f79d7484f7661c6202e73a57d9345d9f0fc70a3d4e0be27f8856b4",
+    "docs\\P2_AUDIO_SUPPLY_PROOF.json": "2d81e51003e2070c00db020a9c14ffce489905ce6ef585a2406159bbcd217201",
+    "docs\\P2_AUDIO_UI_PROOF.json": "7c365495eb764f8c375d7080c331e3fb4b7f6e68affede9a17bd2fd8e070c811",
+    "docs\\P2_COMBINED_PROOF.json": "eb3ce7975c24250201fce59bc308ccce170975ee7426b2d3d83f612d0a1ce46c",
+    "docs\\P2_FRAME_PREPARATION_PROOF.json": "e34ee1e176aa1e4e6f14212d2e4f8567e022da65b7326c854575d5553c67b69f",
+    "docs\\P2_NATIVE_PROOF.json": "9bad4e2ae408839a7a6bbc39356491edc561283d4da646993095cf337e52bab6"
+  },
+  "git_head": "18f74f306a537894b91bad50eef7710ff9223a53",
+  "git_index_sha256": "68e7520badf911f52c8c19a193b3bfc9602aaeaa052f3f66346cd24f67feb2b1",
+  "artifacts_sha256": {
+    "artifacts/p2/attribution-acceptance/build.log": "cbc8681d3712a8063586106de9d4ae8b56c45d6747df06a1d7784140cf3c2cf0",
+    "artifacts/p2/attribution-acceptance/controls.log": "bb21051e03922acf3ee855ca0623ea739c8812362cf63d13e843ba9e520ad69b",
+    "artifacts/p2/attribution-acceptance/core-check.log": "21daf938eec552565f7e1756b097d5d5da26c49073f70663fb842fc62a861265",
+    "artifacts/p2/attribution-acceptance/execution.json": "b23c0efe17b25d40984177d93c3dd4db1a71b27b8f7ae48950796823d09fb119",
+    "artifacts/p2/attribution-acceptance/identity.json": "9536e74da41f8fbc27c678e25396fd9e61789623ff14b73693f4a14d1ae11adb",
+    "artifacts/p2/attribution-acceptance/long.log": "49d46dbfb7866fd1493712071b069bd432b68d0cfffba3829fd68859451624af",
+    "artifacts/p2/attribution-acceptance/controls/combined-control-01-observation.json": "d318e6ac1cbd588aee97fee1a3ad399267dac0af971f4ed7a0a506aebdd56c7d",
+    "artifacts/p2/attribution-acceptance/controls/combined-control-01-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/p2/attribution-acceptance/controls/combined-control-02-observation.json": "e9fad45d83ce29a65e5688175ba02e3ddb2b7001a5384da591ff384cb6ad1426",
+    "artifacts/p2/attribution-acceptance/controls/combined-control-02-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/p2/attribution-acceptance/controls/combined-control-memory-01-observation.json": "b3879c0e140ffaedd752a94c762ce2657d68a5de86213aae8e35334d8b712f5f",
+    "artifacts/p2/attribution-acceptance/controls/combined-control-memory-01-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/p2/attribution-acceptance/controls/combined-control-memory-02-observation.json": "31a38ea5ce81629d5307a8560cb3a394f9eb9d253f7b749a831e9bb600af3b9a",
+    "artifacts/p2/attribution-acceptance/controls/combined-control-memory-02-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/p2/attribution-acceptance/controls/gpu-cost-01-observation.json": "bf4a578a9cf1318913ed3f5296e1206918f3ec540a059fb7da07e727b360fd5b",
+    "artifacts/p2/attribution-acceptance/controls/gpu-cost-01-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/p2/attribution-acceptance/controls/gpu-cost-02-observation.json": "ee501bbe45375b22ac4eabdc0e2e224a324866b3b2ea86d1b2b802aac43eb007",
+    "artifacts/p2/attribution-acceptance/controls/gpu-cost-02-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/p2/attribution-acceptance/controls/gpu-cost-large-01-observation.json": "570fae22e4559a964f66f34d3be3c7ff931840266fe2c1cae2e51e001139f516",
+    "artifacts/p2/attribution-acceptance/controls/gpu-cost-large-01-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/p2/attribution-acceptance/controls/gpu-cost-large-02-observation.json": "66c3024f75854e65d219254a6f6143504dd8274fe09b324a9e5dbdaf245a21d0",
+    "artifacts/p2/attribution-acceptance/controls/gpu-cost-large-02-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/p2/attribution-acceptance/controls/gpu-cost-memory-01-observation.json": "f3c030d25f805143915bbee9d67f9052a27adda9ffe50c9b472b4d6fc5bd945a",
+    "artifacts/p2/attribution-acceptance/controls/gpu-cost-memory-01-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/p2/attribution-acceptance/controls/gpu-cost-memory-02-observation.json": "c3de6fb5a96437402db3d7942a96d6ca7ffd7341f9b75343d21ade09a4289f7c",
+    "artifacts/p2/attribution-acceptance/controls/gpu-cost-memory-02-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/p2/attribution-acceptance/controls/identity.json": "24124f832a55e0981aec3967c8a77c126db5b296b13ae8b626baf5ca9647d6c2",
+    "artifacts/p2/attribution-acceptance/controls/metrics.json": "f7abb8d05b421a6889e5ed68813947c4122768f741678506a55a43bcf229b857",
+    "artifacts/p2/attribution-acceptance/controls/combined-control-01/report.json": "53ead88a08ab0ae1825b08d1bb93c38e5d0d702e05bd0fb6cedd19725e6348e9",
+    "artifacts/p2/attribution-acceptance/controls/combined-control-02/report.json": "5542fbe1a5702cd1c9bc67e1110b56c1b12b19b974eedcd817825dcc675f8f6a",
+    "artifacts/p2/attribution-acceptance/controls/combined-control-memory-01/report.json": "4944bc077822e411fe4c64c0d3f306a8b4aef01adfe54709cff1f5ae74e8a88d",
+    "artifacts/p2/attribution-acceptance/controls/combined-control-memory-02/report.json": "529b937c03fe81a0cdac5d9c3ac6aabace20beceb105c6e4b91dffdfc43cd441",
+    "artifacts/p2/attribution-acceptance/controls/gpu-cost-01/report.json": "858b1f63383a037c55bfa0b6714224d0648b3590fbb523813247cff8776f280f",
+    "artifacts/p2/attribution-acceptance/controls/gpu-cost-02/report.json": "b1eaa9a4cd6049b95ca86414815faef37970c48ff3d74518b0d70956521396e1",
+    "artifacts/p2/attribution-acceptance/controls/gpu-cost-large-01/report.json": "243ded1051e232ce7050fe7aa6ccff701d87574d13913840dd5fb604b91527e1",
+    "artifacts/p2/attribution-acceptance/controls/gpu-cost-large-02/report.json": "3fc281c122680a72c080d5dd33dde48652f6ac5f9d10a79b7c75b2625d1f8fd5",
+    "artifacts/p2/attribution-acceptance/controls/gpu-cost-memory-01/report.json": "7a27eed8fc8a2d0da1cae368c84ec3d2a30dd0f76a9cd6ec29f9b345a55af67c",
+    "artifacts/p2/attribution-acceptance/controls/gpu-cost-memory-02/report.json": "3a6ec3986a38bd64f6e37a3f0f90e0b44c4218abd4f9055d52868f57d7408cf9",
+    "artifacts/p2/attribution-acceptance/long/identity.json": "24124f832a55e0981aec3967c8a77c126db5b296b13ae8b626baf5ca9647d6c2",
+    "artifacts/p2/attribution-acceptance/long/metrics.json": "7eda5d8e9401f8fafb9f47b1dddd5a2fdda61d29575eab9b2efce639c9bc2e67",
+    "artifacts/p2/attribution-acceptance/long/run-01-observation.json": "83dd67ad3a188187a3aba786e2fa59895463ebef5bffa09b7371646e6bcd312b",
+    "artifacts/p2/attribution-acceptance/long/run-01-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/p2/attribution-acceptance/long/run-02-observation.json": "37e31c4a7ce30488dd637148830a96d4bdde8f0feb9312924a7b09f2df77c509",
+    "artifacts/p2/attribution-acceptance/long/run-02-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/p2/attribution-acceptance/long/run-01/report.json": "7a7ca8f1171cf8275d345f619a797870ff7c305871883f155a795782c45c138b",
+    "artifacts/p2/attribution-acceptance/long/run-02/report.json": "e36c1ac5cc514d54ed029ae62ec0aa441fa7ea58798446e464cc1512cea8abd7"
+  },
+  "limits": [
+    "Original 20 ms upper-bound and 256/128 MiB dedicated/shared gates unchanged.",
+    "Allocator reservation is not PDH dedicated residency; swapchain/driver decomposition remains partial.",
+    "MemoryUsage is diagnostic-only; short controls do not approve a production configuration change.",
+    "No real song stream/device-consumption anchor, acoustic measurement, stable kernel, complete lifecycle, Linux/macOS or P3 file export."
+  ]
+}

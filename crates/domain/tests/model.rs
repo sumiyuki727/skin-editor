@@ -93,6 +93,52 @@ fn definition() -> ProjectDefinition {
     input.documents = vec![document(1, &[1], vec![image(1, 1, Affine2::IDENTITY)])];
     input
 }
+
+#[test]
+fn workspace_document_query_preserves_membership_and_includes_member_mapping() {
+    let plain = SkinProject::from_definition(definition()).unwrap();
+    assert_eq!(
+        plain.document_workspace_transform(did(1)),
+        Ok(Affine2::IDENTITY)
+    );
+    assert_eq!(plain.components().iter().len(), 0);
+    assert!(plain.document_workspace_transform(did(99)).is_err());
+    let mut input = definition();
+    let world = affine([0., 2., -3., 0., 40., 50.]);
+    let mapping = affine([2., 0., 0., 0.5, 10., 20.]);
+    input.components = ComponentTree::new(
+        vec![cid(1)],
+        vec![
+            ComponentNode {
+                id: cid(1),
+                local: world,
+                kind: ComponentKind::Group {
+                    children: vec![cid(2)],
+                },
+            },
+            ComponentNode {
+                id: cid(2),
+                local: translation(3., 4.),
+                kind: ComponentKind::Element {
+                    document: did(1),
+                    document_to_component: mapping,
+                },
+            },
+        ],
+    )
+    .unwrap();
+    let project = SkinProject::from_definition(input).unwrap();
+    let before = project.clone();
+    assert_eq!(
+        project.document_workspace_transform(did(1)),
+        Ok(world
+            .compose(translation(3., 4.))
+            .unwrap()
+            .compose(mapping)
+            .unwrap())
+    );
+    assert_eq!(project, before);
+}
 fn output(id: u128, doc: u128, name: &str) -> OutputMapping {
     OutputMapping::new(
         oid(id),

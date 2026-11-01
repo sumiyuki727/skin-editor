@@ -27,3 +27,37 @@ tools/check_repository.py text eol=lf
 tools/test_check_repository.py text eol=lf
 tools/check_core*.py text eol=lf
 tools/test_check_core*.py text eol=lf
+tools/check_desktop*.py text eol=lf
+tools/test_check_desktop*.py text eol=lf
+
+# Review tooling is current source; archived document snapshots retain raw bytes.
+tools/review_inventory.py text eol=lf
+tools/test_check_review_inventory.py text eol=lf
+tools/check_p3_storage.py text eol=lf
+tools/test_check_p3_storage.py text eol=lf
+tools/p3_storage/** text eol=lf
+docs/archive/2026-10-30-pre-review/*.txt -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Historical evidence is byte-addressed by later proofs; no newline conversion.
+docs/*_PROOF.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+docs/P1_CORE_COSTS.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+docs/research/*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Preserve bytes already referenced by P2/P3 and source-review evidence.
+desktop/audio/tests/runtime.rs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/host/src/editor_audio/combined/report.rs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/host/src/editor_audio/cycles/report.rs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/host/src/gpu_observation.rs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/host/src/mesh_replay.rs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+desktop/infrastructure/src/audio_supply/tests/separated.rs -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+docs/P2_HISTORY_PANEL.md -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+docs/P2_INTERACTION_MODE.md -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+docs/P2_MANUAL_RESULTS.md -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+docs/P2_MESH_REPLAY.md -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+docs/P2_TEXT_WORK.md -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tools/p3_storage/golden_v1.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Existing byte-addressed snapshots intentionally end in one extra blank line.
+docs/archive/2026-10-30-pre-review/docs__AUDIO_EDITING_REVIEW.md.txt -text whitespace=blank-at-eol,space-before-tab,cr-at-eol,-blank-at-eof
+docs/review/catalog/SOURCE_FILES.md whitespace=blank-at-eol,space-before-tab,cr-at-eol,-blank-at-eof
+docs/review/catalog/skin_editor_*.md whitespace=blank-at-eol,space-before-tab,cr-at-eol,-blank-at-eof

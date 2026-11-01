@@ -1,56 +1,43 @@
-# 预览控制与 GPU 呈现交接
+# UI—Preview—GPU 呈现交接契约
 
-2026-10-20，P2 集成设计基线 v1，尚未实现。现有 P0 原型证明直接 GPU 呈现可行，但没有替代正式的资源所有权、帧身份和回收契约。
+2026-10-30当前实现核对，PreviewPort／FrameDescriptor版本2。旧版本与逐轮恢复设计已[原样归档](archive/2026-10-30-pre-review/README.md)，详细对象／方法与trait关系见[系统图](review/SYSTEM_MAP.md)。
 
-## 控制通道与呈现通道
+## 三个边界
 
-application 定义小型 PreviewPort／RenderPort，由桌面组装的适配器实现并委托给 preview／rendering；application 不导入其运行时或 GPU 实现。预览端口覆盖只读投影更新、场景／时钟控制、状态查询及捕获请求，渲染端口覆盖文档合成／导出任务。端口使用有版本的值、请求 ID、状态与错误，不包含 egui／wgpu 类型、UI 控件或可变项目引用。只在 P2/P3 的实际用例需要时落地这些端口，不现在创建空实现或公共服务容器。
+| 边界 | 当前接口 | 不传递的权力 |
+| --- | --- | --- |
+| application→宿主适配 | PreviewPort::request(&SkinProject, FrameSource)→FrameDescriptor | 不传可变项目、egui／wgpu句柄或保存职责 |
+| UI→原生呈现 | UI定义Presenter，NativeHost实现；current／paint／thumbnail | 不传可变渲染器、项目写入口或历史身份 |
+| 宿主→GPU／后台 | FrameWorker、Plan、GpuComposer及带租约Draw | 不把TextureId／FrameKey当资源所有权 |
 
-UI／AI 通过 application 获取 `FrameDescriptor`：不透明 FrameKey、源节点／项目修订、可选草稿修订、场景／时间代次、视口／设备代次、尺寸、状态和诊断。它是来源与可用性描述，不携带原生纹理或把每帧像素搬到 CPU。
+FrameSource含HistorySessionId、ExpectedState(head／revision)和PreviewContext：目标Document／Components／Workspace、草稿完整状态、尺寸／视口代次、场景与模拟时间。FrameDescriptor给不透明FrameKey、来源及Pending／Ready；没有外部截图传输服务或真实stable场景保证。
 
-FrameKey 标识一份有明确来源的内容帧，原生 RenderTargetKey 标识资源槽及分配代次，二者不同。并非每个动画帧都要新建 GPU 纹理；可复用完成退休的槽。连续帧的同队列有序使用／缓冲策略在 P2 实测后落地，不能仅因 TextureId 相同就丢弃内容版本与最后使用回执。
+## 准备、激活与显示
 
-桌面 UI 将 FrameKey 和布局尺寸交给 UI 自己定义的窄呈现端口，由 desktop 的 egui 呈现桥完成 native texture 注册及绘制。UI 可保存不透明展示标识，不能操作 Device、Queue、TextureView 或渲染器可变引用；egui::TextureId 只留在原生呈现边界，不进入 application、项目、历史或 AI 协议。这个端口只负责画面展示，不提供项目查询／写入捷径。
+1. ProjectSession选择当前已提交或准确匹配的草稿项目，校验目标／视口，提交只读请求。
+2. NativeHost保留期望来源；FrameWorker准备脱离／只读的图像数据与合成工作，资源先准入再分配。
+3. 任务／GPU完成回执必须与完整期望来源及设备状态匹配；取消、历史、场景、resize／DPI或新草稿使旧候选不可激活。没有目标时清除期望和可呈现旧帧，不靠UI稍后刷新来失效。
+4. 新帧准备成功后切换呈现；UI只能绘制获准FrameKey。旧帧不得被标成新来源；可呈现不等于物理屏幕已经显示。
+5. 注册／纹理／待提交回调／GPU完成租约由宿主管理，最后实际引用和提交结束后才回收。逻辑注册删除不代表GPU、驱动或私有提交归零。
 
-AI／无窗口捕获使用独立的捕获任务，在请求修订就绪后由渲染适配器直接回读，返回带来源的图像产物。它不要求存在 egui 注册或可见桌面窗口，正常屏幕呈现不执行该回读。
+当前普通呈现共享eframe的Device／Queue，无每帧CPU回读。CPU／GPU合成使用同一Plan语义，直接回读是显式验证入口。1024²等能力上限不能当成stable文件规则；导出尚未实现，须复用语义而非另造一套合成。
 
-## 所有权与具体责任
+## 选择与交互
 
-NativeRenderHost 是 desktop 组装的运行时部件，不是新增领域模块或插件框架。使用 eframe 时复用该窗口的 Device／Queue；图层合成器、场景绘制适配器和 egui 呈现桥使用同一 GPU 上下文，不能各自再创建一套设备。多窗口／不同 GPU 属于后续能力，不静默共享跨设备句柄。
+Workspace使未加入持久ComponentTree的文档也能参与编辑投影；临时共同框不创建组件。图层／组边框由局部几何和明确映射生成，独立于游戏判定区。
 
-| 对象／操作 | 唯一责任方 |
-| --- | --- |
-| 窗口 surface、GPU 上下文及设备代次 | desktop／eframe 原生宿主；向实际渲染适配器注入上下文，不向 application 注入 GPU 对象 |
-| 图层源资源、合成缓存与中间图像 | rendering 的 GPU 适配实现，按共享合成计划生成；不负责场景逻辑 |
-| 最终预览离屏纹理与 FrameKey 注册表 | NativeRenderHost 内的场景绘制适配器创建、持有和退休；preview 提供只读场景／绘制状态 |
-| egui::TextureId、绑定与展示引用 | egui 呈现桥注册／注销；每个视口绑定一个明确的帧来源 |
-| 尺寸、DPI、最小化变化 | UI 上报布局；宿主解析物理像素与视口代次，渲染适配器重建目标；UI 不自行分配纹理 |
-| 历史检出／草稿／seek | application 提交新来源；渲染宿主生成候选帧，旧帧按展示引用与提交回执退休 |
+UI连续手势保留最后绝对指针／修饰状态，当前来源成为可呈现帧后再替换草稿，避免不停取消在途准备；松手计算最终结果并一次提交。Esc、失焦／视口变化、目标失效和故障立即取消，不等候新帧。暂停只冻结游戏，仍允许编辑／素材更新。
 
-注册 egui 纹理并不转移我们对原生纹理的所有权。核对本机固定 egui-wgpu 0.37.0 的 `renderer.rs:790–903`：native 注册保存的是绑定并设置 `texture: None`；`free_texture` 会移除登记，只有拥有其内部纹理时才调用 destroy。因此释放 TextureId 与释放我们的离屏纹理必须分别管理。公开 API 亦见 [Renderer](https://docs.rs/egui-wgpu/latest/egui_wgpu/struct.Renderer.html)（本次查阅显示 0.37.0；升级时按锁版本重新核对）。
+## 故障与重建
 
-本机固定 API／源码身份见 [只读核对记录](research/graphics-presentation-20261020.json)；它不构成产品依赖或新增资源测量。
+普通启动遇致命图形故障冻结并诊断，**没有自动重开窗口**；用户已接受该限制。下述完整窗口保留／重建仅在显式受控验证入口中实现，不能描述为普通产品自动恢复。
 
-## 发布、替换与回收
+故障先关闭图形／声音准入、冻结并取消本UI拥有的草稿，清除手势及迟到松开；外部草稿不能冒名取消。音频单独故障也先重选取消后的实际来源，再接纳图形准备。取消不创建历史节点，真实取消回执增长与项目／历史不变分别检查。
 
-1. 收到请求后分配代次，后台结果在上传前核对来源。候选纹理保持私有，不覆盖仍在显示的纹理。
-2. 记录合成／场景命令并提交，取得完成回执；候选完成后再次核对来源，才在 egui 帧边界注册／发布为可显示。已失效的候选进入退休，不因为 GPU 完成就覆盖新画面。
-3. 切换后停止生成对旧 TextureId 的新绘制，旧帧进入 Retiring。注销登记、释放原生引用和池复用分别等待各自条件，不能只在替换变量后立即 destroy。
-4. 旧 ID 不再被任何待提交的 egui 绘制数据使用，最后一次 GPU 读取已完成，且捕获／其他展示租约已结束后，宿主才注销绑定、释放或复用原生资源。每份资源有唯一回收责任方，不依靠 UI 和 preview 分别猜测 Drop 时机。
+退出保留原ProjectSession，不通过快照复制或补偿Command重建历史。初始化Attempt在全部前置条件成功前持有交接，失败返回同一所有者；FrameKey游标和设备代次不得回退。
 
-GPU 完成不等于物理显示完成，也不等于 OS 已立即回收驱动提交。wgpu 的 [Queue::on_submitted_work_done](https://docs.rs/wgpu/30.0.1/wgpu/struct.Queue.html#method.on_submitted_work_done)需要事件循环中的提交／poll 推进；回调只更新短状态并唤醒处理，不在里面改项目或做重操作。稳定暂停时仍须完成有限的退休工作，完成后停止无意义的持续重绘／轮询；不能为等待退休而阻塞 UI 到 GPU 空闲。
+运行时任务／音频／绘制租约清理完成，和框架Renderer／surface／整个Instance退休，是两个独立门槛。Pending保留句柄、端点和所有者，可继续核对真实完成；Terminal保持封锁，不因反复重试变成功。只有同一所有者完成端点finish／实际释放后才允许下一后端，不能先退款或提前丢弃失败返回值。
 
-P2 先采用代次隔离的候选／活动／退休资源，并限制候选数量和退休字节；不能无限积累旧纹理。达到限额时合并请求／背压，维持旧画面并明确 pending。没有证据前不复用已发布 TextureId 指向新来源，亦不把固定帧数或延迟两帧当作 GPU 完成证明。未来原地更新或池复用须新增相应提交依赖和来源测试。
+受控恢复保持背景最终复制锚点和同一来源，恢复后仍暂停，显式播放不补旧输入／声音。复制锚点不是设备消费位置。真实TDR／OOM、永久原生异常、其他平台和声学结果仍未实测，不用受控门闩替代。
 
-## 尺寸、历史、故障与颜色
-
-- 视口 resize／DPI 变化产生新尺寸请求，短时保留并缩放显示旧帧，标明旧视口来源；零尺寸／最小化不创建无效目标。快速 resize 只保留最新请求，按预算控制旧资源退休。
-- 历史检出、取消草稿和时间轴跳转独立增加对应来源代次。旧帧暂留时，其实例映射只能关联旧来源；命中／编辑请求要核对当前修订，不把旧画面坐标直接用于新节点。
-- device lost 使全部旧设备 FrameKey／TextureId 失效，呈现桥先停止引用；失败的捕获返回诊断，不能等待永远不会到达的旧回执。上下文清理后显式重建，旧设备结果不得进入新设备帧。
-- 原生展示纹理需匹配 egui 的格式、alpha 和采样要求。固定版本的 native 注册要求 Rgba8Unorm；展示转换单独处理并做像素对照，不能因此修改导出合成语义、重复预乘或重复色彩转换。
-
-## P2 退出门槛
-
-正式集成必须覆盖：反复 resize／DPI／最小化，冻结下刷新，快速历史／草稿／场景／seek 交错，GPU 与 egui 提交前后旧帧晚到，关闭与 device lost，捕获租约和资源上限。测试核对无悬空 ID、双重回收、旧帧冒充新来源和持续增长；像素／alpha 对照与资源预算单列。fake 提交／租约测试无窗口运行，原生测试用自有回读，不依赖系统窗口捕获。
-
-本轮只有设计与固定源代码/API 核对，不把这一契约写成已实现的产品能力，也不改 P0 的测量结论。
+具体用例和按构建范围见[P2最终验收](P2_FINAL_ACCEPTANCE.md)、[活动编辑故障](P2_ACTIVE_EDIT_FAULTS.md)、[初始化失败](P2_INIT_RECOVERY.md)及[端点归还](P2_ENDPOINT_RETURN.md)。

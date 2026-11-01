@@ -1,0 +1,21 @@
+[workspace]
+members = ["audio", "rendering", "preview", "infrastructure", "ui", "host"]
+resolver = "3"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95"
+publish = false
+
+[workspace.dependencies]
+skin-editor-domain = { path = "../crates/domain" }
+skin-editor-application = { path = "../crates/application" }
+wgpu = { version = "=30.0.1", default-features = false, features = ["std", "wgsl"] }
+egui = { version = "=0.37.0", default-features = false, features = ["default_fonts"] }
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+all = "warn"

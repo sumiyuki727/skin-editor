@@ -59,9 +59,19 @@ impl ProjectSession {
             HistoryAction::Redo { child: None } => match current.children.as_slice() {
                 [] => Ok(self.state.head),
                 [child] => Ok(*child),
-                _ => Err(HistoryError::AmbiguousRedo {
-                    child_count: current.children.len(),
-                }),
+                _ => match self.redo_preferences.get(&self.state.head).copied() {
+                    Some(child) if self.history.node(child)?.parent == Some(self.state.head) => {
+                        Ok(child)
+                    }
+                    Some(_) => Err(HistoryError::Query(
+                        crate::HistoryQueryError::InvalidHistory(
+                            crate::values::ModelError::InvalidValue("redo_preference_not_child"),
+                        ),
+                    )),
+                    None => Err(HistoryError::AmbiguousRedo {
+                        child_count: current.children.len(),
+                    }),
+                },
             },
         }
     }
@@ -74,6 +84,8 @@ impl ProjectSession {
             });
         }
         let target = self.navigation_target(&request.action)?;
+        let remember_undo = matches!(request.action, HistoryAction::Undo)
+            && self.history.node(target)?.children.len() >= 2;
         let previous = self.state;
         if target == self.state.head {
             return Ok(HistoryResult {
@@ -115,8 +127,14 @@ impl ProjectSession {
             configuration_changed: change.configuration_changed(),
         };
         // No fallible work after publishing. IDs, leases and descendants stay.
+        if matches!(request.action, HistoryAction::Checkout { .. }) {
+            self.redo_preferences.clear();
+        } else if remember_undo {
+            self.redo_preferences.insert(target, previous.head);
+        }
         self.project = candidate;
         self.state = result.state;
+        self.navigation_revision = result.state.revision;
         Ok(result)
     }
 }
@@ -125,6 +143,55 @@ impl ProjectSession {
 mod tests {
     use super::*;
     use crate::{Command, CommandRequest, HistoryQueryError, RequestId, SessionLimits, values::*};
+
+    #[test]
+    fn failed_restore_preserves_fork_preference_and_old_api_is_rejected() {
+        let mut s = ProjectSession::new(7, 70).unwrap();
+        let root = s.state.head;
+        let a = edit(&mut s, 1);
+        edit(&mut s, 2);
+        let checkout = request(&s, 3, HistoryAction::Checkout { node: a });
+        s.navigate(checkout).unwrap();
+        let c = edit(&mut s, 4);
+        let undo = request(&s, 5, HistoryAction::Undo);
+        s.navigate(undo).unwrap();
+        assert_eq!(s.redo_preferences.get(&a), Some(&c));
+        let before = s.snapshot();
+        let draft = s
+            .edit_draft(crate::DraftRequest {
+                api_version: API_VERSION,
+                session_id: s.session_id,
+                request_id: RequestId::new(10).unwrap(),
+                action: crate::DraftAction::Begin { expected: s.state },
+            })
+            .unwrap();
+        let crate::DraftOutcome::Active(info) = draft.outcome else {
+            panic!("draft expected")
+        };
+        let busy = request(&s, 11, HistoryAction::Redo { child: None });
+        assert_eq!(s.navigate(busy), Err(HistoryError::Busy(info.state.id)));
+        assert_eq!(s.redo_preferences.get(&a), Some(&c));
+        s.edit_draft(crate::DraftRequest {
+            api_version: API_VERSION,
+            session_id: s.session_id,
+            request_id: RequestId::new(12).unwrap(),
+            action: crate::DraftAction::Cancel {
+                expected: info.state,
+            },
+        })
+        .unwrap();
+        let patch = s.history.nodes.get_mut(&a).unwrap().patch.take();
+        let checkout = request(&s, 6, HistoryAction::Checkout { node: root });
+        assert!(s.navigate(checkout).is_err());
+        assert_eq!(s.snapshot(), before);
+        assert_eq!(s.redo_preferences.get(&a), Some(&c));
+        s.history.nodes.get_mut(&a).unwrap().patch = patch;
+        let mut old = request(&s, 7, HistoryAction::Redo { child: None });
+        old.api_version = 5;
+        assert_eq!(s.navigate(old), Err(HistoryError::UnsupportedVersion(5)));
+        let redo = request(&s, 8, HistoryAction::Redo { child: None });
+        assert_eq!(s.navigate(redo).unwrap().state.head, c);
+    }
 
     fn edit(session: &mut ProjectSession, id: u128) -> NodeId {
         session

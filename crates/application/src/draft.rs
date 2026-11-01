@@ -10,7 +10,7 @@ use std::sync::Arc;
 pub(crate) struct Draft {
     pub state: DraftState,
     commands: Vec<Command>,
-    project: SkinProject,
+    pub(super) project: SkinProject,
     used: BTreeSet<ObjectId>,
     pins: BTreeMap<BlobRef, Arc<dyn BlobLease>>,
 }
@@ -31,7 +31,7 @@ impl ProjectSession {
         }))
     }
 
-    fn expected_draft(&self, expected: DraftState) -> Result<&Draft, DraftError> {
+    pub(super) fn expected_draft(&self, expected: DraftState) -> Result<&Draft, DraftError> {
         let draft = self.draft.as_ref().ok_or(DraftError::NoActiveDraft)?;
         if expected != draft.state {
             return Err(DraftError::Conflict {
@@ -191,6 +191,7 @@ impl ProjectSession {
             }
             DraftAction::Cancel { expected } => {
                 self.expected_draft(*expected)?;
+                self.cancelled_drafts.insert(expected.id);
                 self.draft = None;
                 return Ok(DraftOutcome::Cancelled(*expected));
             }

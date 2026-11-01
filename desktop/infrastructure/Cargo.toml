@@ -1,0 +1,16 @@
+[package]
+name = "skin-editor-infrastructure"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+[dependencies]
+skin-editor-application.workspace = true
+skin-editor-rendering = { path = "../rendering" }
+skin-editor-audio = { path = "../audio" }
+image = { version = "=0.25.10", default-features = false, features = ["png"] }
+sha2 = "=0.10.9"
+cpal = { version = "=0.18.2", default-features = false }
+rtrb = { version = "=0.4.0", default-features = false }
+[lints]
+workspace = true

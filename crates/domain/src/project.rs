@@ -1,13 +1,13 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use crate::{
-    Affine2, Asset, AssetKind, AssetLibrary, Bounds, ComponentId, ComponentKind, ComponentTree,
-    DocumentId, ElementDocument, LayerId, LayerKind, ModelError, ObjectId, OutputMapping,
-    ProjectId, SkinConfiguration,
+    Affine2, Asset, AssetKind, AssetLibrary, AudioComponent, AudioComponentId, Bounds, ComponentId,
+    ComponentKind, ComponentTree, DocumentId, ElementDocument, LayerId, LayerKind, ModelError,
+    ObjectId, OutputMapping, OutputSource, ProjectId, SkinConfiguration,
 };
 
 /// Version of the in-memory definition contract, not a frozen disk file format.
-pub const MODEL_VERSION: u16 = 1;
+pub const MODEL_VERSION: u16 = 2;
 
 /// Untrusted detached input. It cannot replace an application's active project.
 #[derive(Clone, Debug, PartialEq)]
@@ -16,18 +16,43 @@ pub struct ProjectDefinition {
     pub id: ProjectId,
     pub assets: Vec<Asset>,
     pub documents: Vec<ElementDocument>,
+    pub audio_components: Vec<AudioComponent>,
     pub components: ComponentTree,
     pub configuration: SkinConfiguration,
     pub outputs: Vec<OutputMapping>,
 }
 
 impl ProjectDefinition {
+    /// Explicit detached migration, not an active-project write entry point.
+    /// v1 had only visible image documents, opaque attachments and image outputs.
+    pub fn upgrade_v1(mut self) -> Result<Self, ModelError> {
+        if self.model_version != 1 {
+            return Err(ModelError::UnsupportedVersion(self.model_version));
+        }
+        if !self.audio_components.is_empty()
+            || self.documents.iter().any(|d| !d.visible())
+            || self
+                .assets
+                .iter()
+                .any(|a| matches!(a.kind(), AssetKind::Audio(_)))
+            || self
+                .outputs
+                .iter()
+                .any(|o| matches!(o.source(), OutputSource::Audio(_)))
+        {
+            return Err(ModelError::InvalidValue("v1_contains_v2_content"));
+        }
+        self.model_version = MODEL_VERSION;
+        Ok(self)
+    }
+
     pub fn empty(id: ProjectId) -> Self {
         Self {
             model_version: MODEL_VERSION,
             id,
             assets: Vec::new(),
             documents: Vec::new(),
+            audio_components: Vec::new(),
             components: ComponentTree::default(),
             configuration: SkinConfiguration::default(),
             outputs: Vec::new(),
@@ -47,6 +72,7 @@ pub struct SkinProject {
     id: ProjectId,
     assets: AssetLibrary,
     documents: BTreeMap<DocumentId, ElementDocument>,
+    audio_components: BTreeMap<AudioComponentId, AudioComponent>,
     components: ComponentTree,
     configuration: SkinConfiguration,
     outputs: Vec<OutputMapping>,
@@ -59,6 +85,7 @@ impl SkinProject {
             id,
             assets: AssetLibrary::default(),
             documents: BTreeMap::new(),
+            audio_components: BTreeMap::new(),
             components: ComponentTree::default(),
             configuration: SkinConfiguration::default(),
             outputs: Vec::new(),
@@ -137,13 +164,34 @@ impl SkinProject {
                 }
             }
         }
+        let mut audio_components = BTreeMap::new();
+        let mut slots = BTreeSet::new();
+        for component in definition.audio_components {
+            let asset = assets
+                .get(component.asset())
+                .ok_or(ModelError::MissingReference(ObjectId::Asset(
+                    component.asset(),
+                )))?;
+            if matches!(asset.kind(), AssetKind::RasterImage(_)) {
+                return Err(ModelError::InvalidValue("audio_component_asset_kind"));
+            }
+            if !slots.insert(component.slot().clone()) {
+                return Err(ModelError::InvalidValue("duplicate_sound_slot"));
+            }
+            let id = component.id();
+            if audio_components.insert(id, component).is_some() {
+                return Err(ModelError::DuplicateId(ObjectId::AudioComponent(id)));
+            }
+        }
         let mut output_ids = BTreeSet::new();
         let mut paths = BTreeSet::<String>::new();
         for output in &definition.outputs {
-            if !documents.contains_key(&output.document()) {
-                return Err(ModelError::MissingReference(ObjectId::Document(
-                    output.document(),
-                )));
+            let exists = match output.source() {
+                OutputSource::Image(id) => documents.contains_key(&id),
+                OutputSource::Audio(id) => audio_components.contains_key(&id),
+            };
+            if !exists {
+                return Err(ModelError::MissingReference(output.source().object_id()));
             }
             if !output_ids.insert(output.id()) {
                 return Err(ModelError::DuplicateId(ObjectId::Output(output.id())));
@@ -167,6 +215,7 @@ impl SkinProject {
             id: definition.id,
             assets,
             documents,
+            audio_components,
             components: definition.components,
             configuration: definition.configuration,
             outputs: definition.outputs,
@@ -197,6 +246,14 @@ impl SkinProject {
         &self.components
     }
 
+    pub fn audio_component(&self, id: AudioComponentId) -> Option<&AudioComponent> {
+        self.audio_components.get(&id)
+    }
+
+    pub fn audio_components(&self) -> impl ExactSizeIterator<Item = &AudioComponent> {
+        self.audio_components.values()
+    }
+
     pub fn configuration(&self) -> &SkinConfiguration {
         &self.configuration
     }
@@ -214,6 +271,32 @@ impl SkinProject {
             .components
             .document_content_transform(id)
             .unwrap_or(Affine2::IDENTITY))
+    }
+
+    /// Document pixels to the common visual workspace. Unassociated documents
+    /// have identity placement; querying this never creates a component member.
+    pub fn document_workspace_transform(&self, id: DocumentId) -> Result<Affine2, ModelError> {
+        if !self.documents.contains_key(&id) {
+            return Err(ModelError::MissingReference(ObjectId::Document(id)));
+        }
+        let Some(member) = self.components.member(id) else {
+            return Ok(Affine2::IDENTITY);
+        };
+        let node = self
+            .components
+            .node(member)
+            .expect("validated component member");
+        let ComponentKind::Element {
+            document_to_component,
+            ..
+        } = node.kind
+        else {
+            unreachable!("validated component member kind")
+        };
+        self.components
+            .world_transform(member)
+            .expect("validated component world")
+            .compose(document_to_component)
     }
 
     /// Includes full source image rectangles, regardless of visibility/alpha.

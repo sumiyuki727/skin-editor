@@ -1,0 +1,784 @@
+{
+  "date": "2026-11-02",
+  "scope": "P3-0 standalone prototype; not product save integration",
+  "format": "PROJECT_FORMAT_V1.md",
+  "sources_sha256": {
+    "tools/p3_storage/fixtures.py": "5c5bf7d44789fa57cb48edf7165dbeb154d99270bcb16de86058a016cf1b4a3e",
+    "tools/p3_storage/identity.py": "a2d2bb7343f278377f9df6e33946a591e8b2643952249097e0c61619705506ac",
+    "tools/p3_storage/metrics.py": "c2d1d91a462dab41cdef8af90b1f902b91b0e473e79925ca2abcf98735ba86b0",
+    "tools/p3_storage/schema.py": "6ec9cd59758ba66c44a2d3207d1a5eed8b5afb72cd128a1f3dd3f22e77054736",
+    "tools/p3_storage/store.py": "496156e25abab7478ac780d23c49464152e94ca90778292a36d4c841cfc9387e",
+    "tools/p3_storage/values.py": "868948257a576f0c70625973822cbf69fbdf2908cf8331ee4bfed5cae045cbb8",
+    "tools/p3_storage/__init__.py": "d7e7b5eb309a71bdac1c4c9be1b9f1ffbb72794a50d9875d02a38969f095d396",
+    "tools/p3_storage/golden_v1.json": "d9706a1fbcd0c544ff3fe98bc5a3b2f2498b413baa797e90d6839bcd41f2cd44",
+    "tools/check_p3_storage.py": "ae993db2504e173549eaf9676e72295e22beebd80110c1aecf55f7802b5859a9",
+    "tools/test_check_p3_storage.py": "f19ce21ea2ca3e5120c98db363e39e2a715e814731c0972757123b9b8e73d6df"
+  },
+  "checks": {
+    "core": "PASS; format, Clippy, Rust headless tests, 398 Python tool tests, graph/source/private access checks",
+    "desktop": "PASS; default/all-features format, Clippy, headless tests, default build; no GPU/audio opened",
+    "prototype_tests_per_runtime": 39,
+    "controlled_crashes_per_runtime": 7,
+    "cross_runtime_read_only_open": [
+      {
+        "reader": "python3.12",
+        "file": "artifacts/p3-0/run-20261102/bench-py39-r3/scale.skinproj",
+        "result": {
+          "nodes": 20301,
+          "blocks": 20301,
+          "writable": false
+        },
+        "sha256_before_after": "6afbdac2f32b1b469fd375adf29901a54ee1092f2003c4e75523d4bd27460c04"
+      },
+      {
+        "reader": "python3.9",
+        "file": "artifacts/p3-0/run-20261102/bench-py312-r3/scale.skinproj",
+        "result": {
+          "nodes": 20301,
+          "blocks": 20301,
+          "writable": false
+        },
+        "sha256_before_after": "38a1bfe22475a5eeefce3ca46a1e2d1f8c44e34b97d8c1e72e99bac7c0e148ed"
+      }
+    ],
+    "no_git_staging_commit_push": true
+  },
+  "evidence_sha256": {
+    "artifacts/p3-0/run-20261102/bench-py39-r3/result.json": "a31272b5a5290b34072593a9f049c5bcf2c4369e723ed7e62c4d4cade7f5736c",
+    "artifacts/p3-0/run-20261102/bench-py312-r3/result.json": "af52c05357467e919d3b6243b79279af887fcb5d9231e4f38c9fe2d305801257",
+    "artifacts/p3-0/run-20261102/crashes-py39-r3/result.json": "477308b2c753de5a9b000f61e47bc768fd68b8d58ff4a95adcc8599688987273",
+    "artifacts/p3-0/run-20261102/crashes-py312-r3/result.json": "ad053c53f0cd720a5f09f16832bb769ed0f3c2645e81d4f6b1b5fc2a4204dbee",
+    "artifacts/p3-0/run-20261102/check-core.log": "ae565e167ba01bd430c602d9e0a93cca81652c5651ff33719b4808c33bb1bd14",
+    "artifacts/p3-0/run-20261102/check-desktop.log": "765b0cb88687b07779ce64721c16f51846ab1df8ad2a74dbc7502c73ef5b0cb7",
+    "artifacts/p3-0/run-20261102/check-repository.log": "6fc2707999701f886719d195741f03e093b8db084f75f763838e5baac956cfe6",
+    "artifacts/p3-0/run-20261102/tests-py39-final.log": "f6cf427ac7f191e5014104a01d585fab14fe2a5116cbe2c936edc27ccaff4aa0",
+    "artifacts/p3-0/run-20261102/tests-py312-r3.log": "b27ba103ebfe8b48f35650c80b746ebe3d129d9aca606883c14ae595ccd4521b",
+    "artifacts/p3-0/run-20261102/tests-py312-final.log": "5fb1dcd2d21b94751042293f391303cca3a0199958354280beeeb34ef5f5c5c6",
+    "artifacts/p3-0/run-20261102/cross-runtime-r3.json": "27bbe70d0a561bc8b3d5027177b5839fe02749a1503c5f27281faf5d0a6a87aa"
+  },
+  "final_results": {
+    "bench-py39-r3": {
+      "runtime": {
+        "python": "3.9.6",
+        "sqlite": "3.35.5",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "process_clock": "namespace(implementation='GetProcessTimes()', monotonic=True, adjustable=False, resolution=1e-07)"
+      },
+      "fixture": {
+        "raw_bytes": 134227478,
+        "nodes": 20301,
+        "depth": 10300,
+        "wide_children": 10001,
+        "tag_edits": 303,
+        "single_content_edits": 300,
+        "old_nodes_unchanged": 20001,
+        "old_node_records_sha256": "3111ef60ca4fd968a056f58c4e210534ea3a9429a8eb07771c84da87425d3ac9",
+        "file_bytes": 151429120,
+        "blocks": 20301,
+        "metadata_payload_bytes": 7437848
+      },
+      "initial": {
+        "wall_ms": 710.0681,
+        "cpu_ms": 640.625,
+        "read_bytes": 134481558,
+        "write_bytes": 135908092,
+        "private_after": 14663680,
+        "working_after": 22495232,
+        "lifetime_peak_working": 22499328,
+        "lifetime_peak_commit": 14663680
+      },
+      "initial_commit_ms": 682.8149999999999,
+      "phases": {
+        "deep": {
+          "wall_ms": 2695.0094,
+          "cpu_ms": 2343.75,
+          "read_bytes": 1717504,
+          "write_bytes": 86464960,
+          "private_after": 14925824,
+          "working_after": 22831104,
+          "lifetime_peak_working": 22835200,
+          "lifetime_peak_commit": 14925824,
+          "batch_latency": {
+            "count": 40,
+            "median_ms": 53.894200000000225,
+            "p95_ms": 70.46280000000004,
+            "max_ms": 71.47260000000033
+          }
+        },
+        "wide": {
+          "wall_ms": 3527.0662000000007,
+          "cpu_ms": 3125.0,
+          "read_bytes": 35484928,
+          "write_bytes": 155554940,
+          "private_after": 14925824,
+          "working_after": 22835200,
+          "lifetime_peak_working": 22839296,
+          "lifetime_peak_commit": 14925824,
+          "batch_latency": {
+            "count": 40,
+            "median_ms": 75.83729999999989,
+            "p95_ms": 82.49589999999962,
+            "max_ms": 84.61819999999953
+          }
+        },
+        "content_300": {
+          "wall_ms": 1598.5178999999991,
+          "cpu_ms": 1093.75,
+          "read_bytes": 3069312,
+          "write_bytes": 41513616,
+          "private_after": 14925824,
+          "working_after": 22835200,
+          "lifetime_peak_working": 22839296,
+          "lifetime_peak_commit": 14925824,
+          "latency": {
+            "count": 300,
+            "median_ms": 4.768300000000281,
+            "p95_ms": 5.568399999999585,
+            "max_ms": 6.069999999999354
+          }
+        },
+        "tags_300": {
+          "wall_ms": 1182.3584,
+          "cpu_ms": 875.0,
+          "read_bytes": 17792,
+          "write_bytes": 15540360,
+          "private_after": 14925824,
+          "working_after": 22908928,
+          "lifetime_peak_working": 22913024,
+          "lifetime_peak_commit": 14925824,
+          "latency": {
+            "count": 300,
+            "median_ms": 3.497499999999931,
+            "p95_ms": 3.9232000000009037,
+            "max_ms": 5.172500000000468
+          }
+        },
+        "incremental_3": {
+          "wall_ms": 12.278900000000093,
+          "cpu_ms": 0.0,
+          "read_bytes": 69728,
+          "write_bytes": 157372,
+          "private_after": 14925824,
+          "working_after": 22908928,
+          "lifetime_peak_working": 23965696,
+          "lifetime_peak_commit": 16007168
+        },
+        "rewrite_3": {
+          "wall_ms": 496.1562999999991,
+          "cpu_ms": 312.5,
+          "read_bytes": 454677608,
+          "write_bytes": 454444732,
+          "private_after": 15335424,
+          "working_after": 23433216,
+          "lifetime_peak_working": 24817664,
+          "lifetime_peak_commit": 16936960
+        },
+        "verify_full": {
+          "wall_ms": 3184.8539,
+          "cpu_ms": 3187.5,
+          "read_bytes": 345870800,
+          "write_bytes": 0,
+          "private_after": 16125952,
+          "working_after": 24080384,
+          "lifetime_peak_working": 26185728,
+          "lifetime_peak_commit": 19349504
+        }
+      },
+      "closed": {
+        "wall": 13.9406934,
+        "cpu": 12.015625,
+        "memory_source": "GetProcessMemoryInfo; lifetime peaks, not sampled phase peaks",
+        "working": 20705280,
+        "private": 12763136,
+        "lifetime_peak_working": 26185728,
+        "lifetime_peak_commit": 19349504,
+        "read_bytes": 1271142993,
+        "write_bytes": 1175240670,
+        "read_operations": 103618,
+        "write_operations": 179299,
+        "io_source": "GetProcessIoCounters; this process including SQLite journal I/O"
+      },
+      "open_close_cycles": [
+        {
+          "wall_ms": 3162.9503999999997,
+          "cpu_ms": 3125.0,
+          "read_bytes": 345985880,
+          "write_bytes": 0,
+          "private_after": 13328384,
+          "working_after": 20901888,
+          "lifetime_peak_working": 26185728,
+          "lifetime_peak_commit": 19349504
+        },
+        {
+          "wall_ms": 3146.6824000000033,
+          "cpu_ms": 3156.25,
+          "read_bytes": 345985880,
+          "write_bytes": 0,
+          "private_after": 14131200,
+          "working_after": 21032960,
+          "lifetime_peak_working": 26419200,
+          "lifetime_peak_commit": 20021248
+        },
+        {
+          "wall_ms": 3175.559199999999,
+          "cpu_ms": 3171.875,
+          "read_bytes": 345985880,
+          "write_bytes": 0,
+          "private_after": 13271040,
+          "working_after": 21159936,
+          "lifetime_peak_working": 26419200,
+          "lifetime_peak_commit": 20140032
+        },
+        {
+          "wall_ms": 3142.304899999999,
+          "cpu_ms": 3140.625,
+          "read_bytes": 345985880,
+          "write_bytes": 0,
+          "private_after": 13377536,
+          "working_after": 21200896,
+          "lifetime_peak_working": 26419200,
+          "lifetime_peak_commit": 20140032
+        },
+        {
+          "wall_ms": 3135.424099999998,
+          "cpu_ms": 3140.625,
+          "read_bytes": 345985880,
+          "write_bytes": 0,
+          "private_after": 13225984,
+          "working_after": 21118976,
+          "lifetime_peak_working": 26419200,
+          "lifetime_peak_commit": 20140032
+        },
+        {
+          "wall_ms": 3206.6780000000003,
+          "cpu_ms": 3203.125,
+          "read_bytes": 345985880,
+          "write_bytes": 0,
+          "private_after": 13176832,
+          "working_after": 21106688,
+          "lifetime_peak_working": 26583040,
+          "lifetime_peak_commit": 20140032
+        },
+        {
+          "wall_ms": 3150.4098999999997,
+          "cpu_ms": 3156.25,
+          "read_bytes": 345985880,
+          "write_bytes": 0,
+          "private_after": 13152256,
+          "working_after": 21139456,
+          "lifetime_peak_working": 26660864,
+          "lifetime_peak_commit": 20140032
+        },
+        {
+          "wall_ms": 3164.2952999999993,
+          "cpu_ms": 3156.25,
+          "read_bytes": 345985880,
+          "write_bytes": 0,
+          "private_after": 13176832,
+          "working_after": 21184512,
+          "lifetime_peak_working": 26660864,
+          "lifetime_peak_commit": 20140032
+        },
+        {
+          "wall_ms": 3191.0642,
+          "cpu_ms": 3203.125,
+          "read_bytes": 345985880,
+          "write_bytes": 0,
+          "private_after": 13189120,
+          "working_after": 21196800,
+          "lifetime_peak_working": 26660864,
+          "lifetime_peak_commit": 20140032
+        },
+        {
+          "wall_ms": 3155.870799999995,
+          "cpu_ms": 3156.25,
+          "read_bytes": 345985880,
+          "write_bytes": 0,
+          "private_after": 13172736,
+          "working_after": 21200896,
+          "lifetime_peak_working": 26660864,
+          "lifetime_peak_commit": 20140032
+        }
+      ],
+      "limits": {
+        "device_gpu_audio_opened": false,
+        "is_product_cpu_acceptance": false,
+        "fixture_state_is_full_domain_codec": false,
+        "io_includes_journal_and_process_overhead": true,
+        "power_loss_tested": false
+      }
+    },
+    "bench-py312-r3": {
+      "runtime": {
+        "python": "3.12.14",
+        "sqlite": "3.53.1",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "process_clock": "namespace(implementation='GetProcessTimes()', monotonic=True, adjustable=False, resolution=1e-07)"
+      },
+      "fixture": {
+        "raw_bytes": 134227478,
+        "nodes": 20301,
+        "depth": 10300,
+        "wide_children": 10001,
+        "tag_edits": 303,
+        "single_content_edits": 300,
+        "old_nodes_unchanged": 20001,
+        "old_node_records_sha256": "62f8e2678a4595f2870d715e5a52eab8459e579d7728e37872ba8631109a43e4",
+        "file_bytes": 151453696,
+        "blocks": 20301,
+        "metadata_payload_bytes": 7437848
+      },
+      "initial": {
+        "wall_ms": 674.5083999994677,
+        "cpu_ms": 625.0,
+        "read_bytes": 134481558,
+        "write_bytes": 135908092,
+        "private_after": 18616320,
+        "working_after": 27123712,
+        "lifetime_peak_working": 27127808,
+        "lifetime_peak_commit": 18616320
+      },
+      "initial_commit_ms": 650.4528000004939,
+      "phases": {
+        "deep": {
+          "wall_ms": 2544.201900000189,
+          "cpu_ms": 2250.0,
+          "read_bytes": 1799424,
+          "write_bytes": 86414744,
+          "private_after": 18616320,
+          "working_after": 27320320,
+          "lifetime_peak_working": 27324416,
+          "lifetime_peak_commit": 18616320,
+          "batch_latency": {
+            "count": 40,
+            "median_ms": 51.14299999695504,
+            "p95_ms": 65.43869999950402,
+            "max_ms": 72.09049999801209
+          }
+        },
+        "wide": {
+          "wall_ms": 3368.2929999995395,
+          "cpu_ms": 2828.125,
+          "read_bytes": 35640576,
+          "write_bytes": 157441936,
+          "private_after": 18616320,
+          "working_after": 27398144,
+          "lifetime_peak_working": 27402240,
+          "lifetime_peak_commit": 18616320,
+          "batch_latency": {
+            "count": 40,
+            "median_ms": 72.23650000014459,
+            "p95_ms": 79.11170000079437,
+            "max_ms": 80.30389999839826
+          }
+        },
+        "content_300": {
+          "wall_ms": 1597.3783999979787,
+          "cpu_ms": 1218.75,
+          "read_bytes": 3224960,
+          "write_bytes": 42263912,
+          "private_after": 18616320,
+          "working_after": 27406336,
+          "lifetime_peak_working": 27410432,
+          "lifetime_peak_commit": 18616320,
+          "latency": {
+            "count": 300,
+            "median_ms": 4.7574000018357765,
+            "p95_ms": 5.674700001691235,
+            "max_ms": 10.915799997746944
+          }
+        },
+        "tags_300": {
+          "wall_ms": 1195.078000000649,
+          "cpu_ms": 750.0,
+          "read_bytes": 17792,
+          "write_bytes": 15515760,
+          "private_after": 18616320,
+          "working_after": 27406336,
+          "lifetime_peak_working": 27410432,
+          "lifetime_peak_commit": 18616320,
+          "latency": {
+            "count": 300,
+            "median_ms": 3.5534999988158233,
+            "p95_ms": 3.99920000199927,
+            "max_ms": 6.026499999279622
+          }
+        },
+        "incremental_3": {
+          "wall_ms": 12.80169999881764,
+          "cpu_ms": 15.625,
+          "read_bytes": 69728,
+          "write_bytes": 157372,
+          "private_after": 18616320,
+          "working_after": 27406336,
+          "lifetime_peak_working": 28463104,
+          "lifetime_peak_commit": 19693568
+        },
+        "rewrite_3": {
+          "wall_ms": 487.33569999967585,
+          "cpu_ms": 328.125,
+          "read_bytes": 454743144,
+          "write_bytes": 454518460,
+          "private_after": 19202048,
+          "working_after": 27725824,
+          "lifetime_peak_working": 28778496,
+          "lifetime_peak_commit": 20267008
+        },
+        "verify_full": {
+          "wall_ms": 2866.3569999989704,
+          "cpu_ms": 2875.0,
+          "read_bytes": 345377102,
+          "write_bytes": 0,
+          "private_after": 20021248,
+          "working_after": 28467200,
+          "lifetime_peak_working": 30609408,
+          "lifetime_peak_commit": 23207936
+        }
+      },
+      "closed": {
+        "wall": 26159.0160837,
+        "cpu": 11.4375,
+        "memory_source": "GetProcessMemoryInfo; lifetime peaks, not sampled phase peaks",
+        "working": 25337856,
+        "private": 16777216,
+        "lifetime_peak_working": 30609408,
+        "lifetime_peak_commit": 23207936,
+        "read_bytes": 1271726731,
+        "write_bytes": 1177901450,
+        "read_operations": 103756,
+        "write_operations": 180513,
+        "io_source": "GetProcessIoCounters; this process including SQLite journal I/O"
+      },
+      "open_close_cycles": [
+        {
+          "wall_ms": 4005.9083000014652,
+          "cpu_ms": 4000.0,
+          "read_bytes": 345463510,
+          "write_bytes": 0,
+          "private_after": 17817600,
+          "working_after": 25341952,
+          "lifetime_peak_working": 30932992,
+          "lifetime_peak_commit": 24395776
+        },
+        {
+          "wall_ms": 2977.765499999805,
+          "cpu_ms": 2984.375,
+          "read_bytes": 345463510,
+          "write_bytes": 0,
+          "private_after": 17317888,
+          "working_after": 25169920,
+          "lifetime_peak_working": 30932992,
+          "lifetime_peak_commit": 24395776
+        },
+        {
+          "wall_ms": 2912.62099999949,
+          "cpu_ms": 2906.25,
+          "read_bytes": 345463510,
+          "write_bytes": 0,
+          "private_after": 17883136,
+          "working_after": 25260032,
+          "lifetime_peak_working": 30932992,
+          "lifetime_peak_commit": 24403968
+        },
+        {
+          "wall_ms": 2939.7647000005236,
+          "cpu_ms": 2921.875,
+          "read_bytes": 345463510,
+          "write_bytes": 0,
+          "private_after": 17506304,
+          "working_after": 25194496,
+          "lifetime_peak_working": 30969856,
+          "lifetime_peak_commit": 24403968
+        },
+        {
+          "wall_ms": 2936.774300000252,
+          "cpu_ms": 2937.5,
+          "read_bytes": 345463510,
+          "write_bytes": 0,
+          "private_after": 17575936,
+          "working_after": 25448448,
+          "lifetime_peak_working": 30969856,
+          "lifetime_peak_commit": 24403968
+        },
+        {
+          "wall_ms": 2884.286100001191,
+          "cpu_ms": 2875.0,
+          "read_bytes": 345463510,
+          "write_bytes": 0,
+          "private_after": 17747968,
+          "working_after": 25530368,
+          "lifetime_peak_working": 30969856,
+          "lifetime_peak_commit": 24403968
+        },
+        {
+          "wall_ms": 2899.6411000007356,
+          "cpu_ms": 2890.625,
+          "read_bytes": 345463510,
+          "write_bytes": 0,
+          "private_after": 17833984,
+          "working_after": 25161728,
+          "lifetime_peak_working": 31064064,
+          "lifetime_peak_commit": 24403968
+        },
+        {
+          "wall_ms": 2898.7195000008796,
+          "cpu_ms": 2906.25,
+          "read_bytes": 345463510,
+          "write_bytes": 0,
+          "private_after": 17780736,
+          "working_after": 25227264,
+          "lifetime_peak_working": 31064064,
+          "lifetime_peak_commit": 24403968
+        },
+        {
+          "wall_ms": 2876.866999999038,
+          "cpu_ms": 2875.0,
+          "read_bytes": 345463510,
+          "write_bytes": 0,
+          "private_after": 17383424,
+          "working_after": 25374720,
+          "lifetime_peak_working": 31064064,
+          "lifetime_peak_commit": 24412160
+        },
+        {
+          "wall_ms": 2961.3344999997935,
+          "cpu_ms": 2968.75,
+          "read_bytes": 345463510,
+          "write_bytes": 0,
+          "private_after": 17543168,
+          "working_after": 25415680,
+          "lifetime_peak_working": 31244288,
+          "lifetime_peak_commit": 24412160
+        }
+      ],
+      "limits": {
+        "device_gpu_audio_opened": false,
+        "is_product_cpu_acceptance": false,
+        "fixture_state_is_full_domain_codec": false,
+        "io_includes_journal_and_process_overhead": true,
+        "power_loss_tested": false
+      }
+    },
+    "crashes-py39-r3": {
+      "python": "3.9.6",
+      "sqlite": "3.35.5",
+      "cases": [
+        {
+          "phase": "begin",
+          "gate": {
+            "phase": "begin",
+            "journal_exists": false,
+            "main_bytes": 147456
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "a7169e24ddc40d6447a70c8ea21e6684941b2f3b333470b476faced602dc0d6b",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "originals",
+          "gate": {
+            "phase": "originals",
+            "journal_exists": true,
+            "main_bytes": 15290368
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "a7169e24ddc40d6447a70c8ea21e6684941b2f3b333470b476faced602dc0d6b",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "blocks",
+          "gate": {
+            "phase": "blocks",
+            "journal_exists": true,
+            "main_bytes": 15310848
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "a7169e24ddc40d6447a70c8ea21e6684941b2f3b333470b476faced602dc0d6b",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "nodes",
+          "gate": {
+            "phase": "nodes",
+            "journal_exists": true,
+            "main_bytes": 15331328
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "a7169e24ddc40d6447a70c8ea21e6684941b2f3b333470b476faced602dc0d6b",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "tags",
+          "gate": {
+            "phase": "tags",
+            "journal_exists": true,
+            "main_bytes": 15339520
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "a7169e24ddc40d6447a70c8ea21e6684941b2f3b333470b476faced602dc0d6b",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "before_commit",
+          "gate": {
+            "phase": "before_commit",
+            "journal_exists": true,
+            "main_bytes": 15355904
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "a7169e24ddc40d6447a70c8ea21e6684941b2f3b333470b476faced602dc0d6b",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "after_commit",
+          "gate": {
+            "phase": "after_commit",
+            "journal_exists": false,
+            "main_bytes": 17080320
+          },
+          "recovered_nodes": 2,
+          "generation": 2,
+          "root_record_sha256": "a7169e24ddc40d6447a70c8ea21e6684941b2f3b333470b476faced602dc0d6b",
+          "journal_after_recovery": false
+        }
+      ],
+      "controlled_process_kill": true,
+      "kill_inside_commit_syscall": false,
+      "power_loss": false
+    },
+    "crashes-py312-r3": {
+      "python": "3.12.14",
+      "sqlite": "3.53.1",
+      "cases": [
+        {
+          "phase": "begin",
+          "gate": {
+            "phase": "begin",
+            "journal_exists": false,
+            "main_bytes": 147456
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "f8395258fb20ad541643fa51c89f02adc414d3f63dd76be0954ff316146764f9",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "originals",
+          "gate": {
+            "phase": "originals",
+            "journal_exists": true,
+            "main_bytes": 15290368
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "f8395258fb20ad541643fa51c89f02adc414d3f63dd76be0954ff316146764f9",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "blocks",
+          "gate": {
+            "phase": "blocks",
+            "journal_exists": true,
+            "main_bytes": 15310848
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "f8395258fb20ad541643fa51c89f02adc414d3f63dd76be0954ff316146764f9",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "nodes",
+          "gate": {
+            "phase": "nodes",
+            "journal_exists": true,
+            "main_bytes": 15331328
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "f8395258fb20ad541643fa51c89f02adc414d3f63dd76be0954ff316146764f9",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "tags",
+          "gate": {
+            "phase": "tags",
+            "journal_exists": true,
+            "main_bytes": 15339520
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "f8395258fb20ad541643fa51c89f02adc414d3f63dd76be0954ff316146764f9",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "before_commit",
+          "gate": {
+            "phase": "before_commit",
+            "journal_exists": true,
+            "main_bytes": 15355904
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "f8395258fb20ad541643fa51c89f02adc414d3f63dd76be0954ff316146764f9",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "after_commit",
+          "gate": {
+            "phase": "after_commit",
+            "journal_exists": false,
+            "main_bytes": 17080320
+          },
+          "recovered_nodes": 2,
+          "generation": 2,
+          "root_record_sha256": "f8395258fb20ad541643fa51c89f02adc414d3f63dd76be0954ff316146764f9",
+          "journal_after_recovery": false
+        }
+      ],
+      "controlled_process_kill": true,
+      "kill_inside_commit_syscall": false,
+      "power_loss": false
+    }
+  },
+  "preservation": {
+    "baseline_file_count": 688,
+    "changed_existing_paths": [
+      ".gitattributes",
+      "README.md",
+      "docs/ARCHITECTURE.md",
+      "docs/AUTOSAVE_POLICY.md",
+      "docs/DATA_COMPATIBILITY.md",
+      "docs/HISTORY_ADDRESSING.md",
+      "docs/INDEX.md",
+      "docs/P2_STAGE_GATE.md",
+      "docs/ROADMAP.md",
+      "docs/TECH_STACK.md",
+      "docs/review/DECISIONS.md",
+      "docs/review/DOCUMENT_AUDIT.md",
+      "docs/review/README.md"
+    ],
+    "unchanged_existing_count": 675,
+    "head": "18f74f306a537894b91bad50eef7710ff9223a53",
+    "index": "empty",
+    "product_source_manifests_locks_unchanged": true,
+    "old_json_and_archive_unchanged": true,
+    "agents_unchanged": true,
+    "frozen_p2_binary_sha256": "07852b969bdd88153a79e2e185a29548dc9844038fb7f9639ec71860a15fada8"
+  },
+  "limitations": [
+    "fixture.project is not a full SkinProject codec",
+    "No formal persistence API, UI, autosave scheduler, export, backup, initial candidate publication or migration",
+    "No new Rust SQLite binding or product dependency",
+    "Windows local file tests only; two engine versions do not prove Linux/macOS or arbitrary filesystem durability",
+    "Controlled killed-process gates, not mid-COMMIT syscall or power-loss/VFS fault testing",
+    "GetProcessTimes diagnostic CPU and own-process I/O include engine/interpreter/tool costs; not independent P2 CPU acceptance",
+    "No same-build GUI/audio/GPU storage load; existing zero-underrun/20ms/memory/recovery gates unchanged",
+    "Earlier R1/R2 evidence and Python3.12 fixture-cleanup failure retained; source-r1 and source-r3 snapshots distinguish revisions"
+  ]
+}

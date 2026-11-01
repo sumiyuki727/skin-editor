@@ -27,3 +27,17 @@ jobs:
         run: python tools/check_repository.py
       - name: Check headless core
         run: python tools/check_core.py
+
+  desktop-windows:
+    runs-on: windows-2025
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          persist-credentials: false
+      - name: Install pinned Rust components
+        run: rustup toolchain install 1.95.0 --profile minimal --component rustfmt --component clippy
+      - name: Fetch locked desktop dependencies
+        run: cargo fetch --manifest-path desktop/Cargo.toml --locked --target x86_64-pc-windows-msvc
+      - name: Check desktop without GPU or windows
+        run: python tools/check_desktop.py

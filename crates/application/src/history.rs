@@ -1,8 +1,8 @@
 use std::collections::BTreeMap;
 
 use skin_editor_domain::{
-    Asset, AssetId, ComponentTree, DocumentId, ElementDocument, ModelError, ObjectId,
-    OutputMapping, ProjectDefinition, SkinConfiguration, SkinProject,
+    Asset, AssetId, AudioComponent, AudioComponentId, ComponentTree, DocumentId, ElementDocument,
+    ModelError, ObjectId, OutputMapping, ProjectDefinition, SkinConfiguration, SkinProject,
 };
 
 use crate::{
@@ -16,6 +16,7 @@ pub(crate) fn definition(project: &SkinProject) -> ProjectDefinition {
         id: project.id(),
         assets: project.assets().iter().cloned().collect(),
         documents: project.documents().cloned().collect(),
+        audio_components: project.audio_components().cloned().collect(),
         components: project.components().clone(),
         configuration: project.configuration().clone(),
         outputs: project.outputs().to_vec(),
@@ -55,6 +56,7 @@ fn changes<I: Copy + Ord, V: Clone + PartialEq>(
 pub(crate) struct Patch {
     assets: Vec<Change<AssetId, Asset>>,
     documents: Vec<Change<DocumentId, ElementDocument>>,
+    audio_components: Vec<Change<AudioComponentId, AudioComponent>>,
     components: Option<(ComponentTree, ComponentTree)>,
     configuration: Option<(SkinConfiguration, SkinConfiguration)>,
     outputs: Option<(Vec<OutputMapping>, Vec<OutputMapping>)>,
@@ -73,6 +75,14 @@ impl Patch {
         );
         let components = (old.components() != new.components())
             .then(|| (old.components().clone(), new.components().clone()));
+        let audio_components = changes(
+            old.audio_components()
+                .map(|c| (c.id(), c.clone()))
+                .collect(),
+            new.audio_components()
+                .map(|c| (c.id(), c.clone()))
+                .collect(),
+        );
         let configuration = (old.configuration() != new.configuration())
             .then(|| (old.configuration().clone(), new.configuration().clone()));
         let outputs = (old.outputs() != new.outputs())
@@ -81,6 +91,11 @@ impl Patch {
             .iter()
             .map(|c| ObjectId::Asset(c.id))
             .chain(documents.iter().map(|c| ObjectId::Document(c.id)))
+            .chain(
+                audio_components
+                    .iter()
+                    .map(|c| ObjectId::AudioComponent(c.id)),
+            )
             .collect();
         for change in &documents {
             for doc in change.before.iter().chain(change.after.iter()) {
@@ -101,7 +116,7 @@ impl Patch {
             changed.extend(
                 a.iter()
                     .chain(b.iter())
-                    .map(|mapping| ObjectId::Document(mapping.document())),
+                    .map(|mapping| mapping.source().object_id()),
             );
         }
         changed.sort();
@@ -109,6 +124,7 @@ impl Patch {
         Self {
             assets,
             documents,
+            audio_components,
             components,
             configuration,
             outputs,
@@ -143,6 +159,18 @@ impl Patch {
         for change in &self.documents {
             input.documents.retain(|d| d.id() != change.id);
             input.documents.extend(
+                if forward {
+                    &change.after
+                } else {
+                    &change.before
+                }
+                .iter()
+                .cloned(),
+            );
+        }
+        for change in &self.audio_components {
+            input.audio_components.retain(|c| c.id() != change.id);
+            input.audio_components.extend(
                 if forward {
                     &change.after
                 } else {

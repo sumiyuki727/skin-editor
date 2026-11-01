@@ -2,6 +2,8 @@
 #![forbid(unsafe_code)]
 
 mod address;
+mod audio_editor;
+mod audio_port;
 mod contract;
 mod draft;
 mod draft_contract;
@@ -9,7 +11,11 @@ mod execute;
 mod history;
 mod history_control;
 mod history_queries;
+mod preview_port;
 mod resources;
+pub use audio_editor::*;
+pub use audio_port::*;
+pub use preview_port::*;
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::Arc;
@@ -35,15 +41,16 @@ pub use resources::{BlobLease, ResourceError, ResourceStore};
 /// No active-state setter, storage implementation or project-replacement API.
 pub mod values {
     pub use skin_editor_domain::{
-        Affine2, Asset, AssetId, AssetKind, BlobRef, ComponentId, ComponentKind, ComponentNode,
-        ConfigInterpretation, ConfigRecord, DocumentId, ElementDocument, LayerId, LayerKind,
-        LayerNode, LayerTree, ModelError, ObjectId, Opacity, OutputId, OutputMapping, OutputPath,
-        PixelSize,
+        Affine2, Asset, AssetId, AssetKind, AudioComponent, AudioComponentId, AudioMetadata,
+        BlobRef, Bounds, ComponentId, ComponentKind, ComponentNode, ConfigInterpretation,
+        ConfigRecord, DocumentId, ElementDocument, Gain, LayerId, LayerKind, LayerNode, LayerTree,
+        ModelError, ObjectId, Opacity, OutputId, OutputMapping, OutputPath, OutputSource,
+        PixelSize, SkinProject, SoundSlotKey,
     };
 }
 
 /// Current version of the owned application query values.
-pub const API_VERSION: u16 = 4;
+pub const API_VERSION: u16 = 6;
 
 /// A structured lifecycle validation error, usable without UI types.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -131,7 +138,12 @@ pub struct ProjectSession {
     project: SkinProject,
     session_id: HistorySessionId,
     state: ExpectedState,
+    /// Last effective history navigation, independent of content-node identity.
+    navigation_revision: u64,
     history: history::History,
+    /// Only forks need a remembered direct child. Navigation metadata, never
+    /// node content or a copy of its ancestor path. Explicit checkout resets it.
+    redo_preferences: BTreeMap<NodeId, NodeId>,
     used_ids: BTreeSet<ObjectId>,
     receipts: BTreeMap<RequestId, Receipt>,
     pins: BTreeMap<BlobRef, Arc<dyn BlobLease>>,
@@ -139,6 +151,8 @@ pub struct ProjectSession {
     limits: SessionLimits,
     draft: Option<draft::Draft>,
     next_draft_id: u64,
+    /// Cancellation tombstones are bounded by the admitted Begin requests.
+    cancelled_drafts: BTreeSet<DraftId>,
 }
 
 impl ProjectSession {
@@ -182,12 +196,15 @@ impl ProjectSession {
                 revision: 0,
             },
             used_ids: BTreeSet::new(),
+            navigation_revision: 0,
+            redo_preferences: BTreeMap::new(),
             receipts: BTreeMap::new(),
             resources,
             pins: BTreeMap::new(),
             limits,
             draft: None,
             next_draft_id: 1,
+            cancelled_drafts: BTreeSet::new(),
         })
     }
 
@@ -395,6 +412,17 @@ impl ProjectSession {
         let mut pins = BTreeMap::new();
         for asset in candidate.assets().iter() {
             let blob = asset.blob();
+            // Existing identical typed references were checked on admission.
+            // New aliases must still be verified even if the bytes are pinned.
+            if let skin_editor_domain::AssetKind::Audio(metadata) = asset.kind()
+                && self.project.assets().get(asset.id()).map(|old| old.kind()) != Some(asset.kind())
+                && self.resources.audio_metadata(blob) != Some(*metadata)
+            {
+                return Err(CommandError::Resource {
+                    blob,
+                    error: ResourceError::MetadataMismatch,
+                });
+            }
             if !self.pins.contains_key(&blob) && !pins.contains_key(&blob) {
                 let pin = match temporary.get(&blob) {
                     Some(pin) => pin.clone(),

@@ -1,12 +1,13 @@
 use std::sync::Arc;
 
-use skin_editor_domain::BlobRef;
+use skin_editor_domain::{AudioMetadata, BlobRef};
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum ResourceError {
     Missing,
     Unavailable,
     ReferenceMismatch,
+    MetadataMismatch,
 }
 
 /// An immutable-byte lifetime pin, not necessarily resident image/file bytes.
@@ -17,6 +18,11 @@ pub trait BlobLease: Send + Sync {
 }
 
 pub trait ResourceStore {
+    /// Verified staging metadata index only; never decode or perform byte I/O.
+    fn audio_metadata(&self, _: BlobRef) -> Option<AudioMetadata> {
+        None
+    }
+
     /// Pin an already staged, verified blob using the store's lifetime index.
     /// No file decoding, hash computation, network or blocking byte I/O here;
     /// staging those resources is a separate import use case before submission.

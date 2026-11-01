@@ -1,0 +1,23 @@
+[package]
+name = "skin-editor-desktop"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+[features]
+framework-trace = ["dep:profiling", "dep:tracing", "dep:winit"]
+[dependencies]
+skin-editor-application.workspace = true
+skin-editor-audio = { path = "../audio" }
+skin-editor-rendering = { path = "../rendering" }
+skin-editor-preview = { path = "../preview" }
+skin-editor-infrastructure = { path = "../infrastructure" }
+skin-editor-ui = { path = "../ui" }
+eframe = { version = "=0.37.0", default-features = false, features = ["default_fonts", "wgpu", "x11", "wayland", "system_fonts", "clipboard"] }
+pollster = "=1.0.1"
+getrandom = "=0.4.3"
+profiling = { version = "=1.0.18", default-features = false, features = ["profile-with-tracing"], optional = true }
+tracing = { version = "=0.1.44", default-features = false, features = ["std"], optional = true }
+winit = { version = "=0.30.13", default-features = false, optional = true }
+[lints]
+workspace = true

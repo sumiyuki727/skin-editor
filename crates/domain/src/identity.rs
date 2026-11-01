@@ -25,3 +25,4 @@ identity!(DocumentId);
 identity!(LayerId);
 identity!(ComponentId);
 identity!(OutputId);
+identity!(AudioComponentId);

@@ -1,6 +1,7 @@
 /experiments/**/target/
 /target/
 /tools/core-cost/target/
+/desktop/target/
 /artifacts/
 /.p0-tools/
 __pycache__/

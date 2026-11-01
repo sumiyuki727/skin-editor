@@ -1,0 +1,3868 @@
+{
+  "schema": 1,
+  "date": "2026-10-28",
+  "scope": "full-editor-eframe-owned-device-destroy-during-real-presentation",
+  "source": {
+    "AGENTS.md": "5ccd396856c306b52b2e78e46ce7283f1ff611cf96c8467e9a37c351f875dfbf",
+    "Cargo.lock": "fdea10e6bcd7d2a31574a89f0044a762efe0388e74901f354c115dd4f87106da",
+    "Cargo.toml": "f2145d08a75e10b117cbb8154f6911d2664caa708fb24790d950e2e174cd8401",
+    "crates/application/Cargo.toml": "7613f8f871bb60d0bdfec79d18ac6c2b64bebff403ee3fb3533d2f1a4a35061a",
+    "crates/application/src/address.rs": "d6d1ba60051876c653bbb829caa243b1e166514f3256de37e9b227ccfcf07c0b",
+    "crates/application/src/audio_editor.rs": "87247d6c14bfa4972c64ecdc87e1a2ec483bec65bda94cc0adc0ee4871524d03",
+    "crates/application/src/audio_port.rs": "4ce375c8689d82f51a715ca8d0d403e134521aefddc796f0c469e57e5d18d6bc",
+    "crates/application/src/contract.rs": "6c2ba57f8b6f4406f9366c6561e7ca0560d84fd74797bcce08ea713cdc86df31",
+    "crates/application/src/draft.rs": "06a2c4c2cad35c54201ae681aba9559d41c2d8e8482581d0442f3062c59e8b7b",
+    "crates/application/src/draft_contract.rs": "9ca0e3fba10f8b8545511ed45fa649523e5fc07d6f538ce9ccc85f5175538bd7",
+    "crates/application/src/execute.rs": "735cbc5a56ac1256123ad9e69d74fae321b79a398fa43b6730de63b4a4f029dc",
+    "crates/application/src/history.rs": "44c9c53b29e6e63b30ddf6ba6dcde360f3d2885d21b40178c0a89de81e3a49cf",
+    "crates/application/src/history_control.rs": "c63f63027d347bd747730eacc2c02c7037df1105cf4dfb7deabf49ce1e3b8d44",
+    "crates/application/src/history_queries.rs": "461058962269de64d73f4002065f75b6dbdfdc970abc4ad9d529078445ba0741",
+    "crates/application/src/lib.rs": "9ee6850d37829100ec5d9fd304939f5db5f7d918eddee7b94290fdcd08082a03",
+    "crates/application/src/preview_port.rs": "55b255080df829375854fbcdb965195ff66e760a3f3a7492b1431f9f7c9776c0",
+    "crates/application/src/resources.rs": "b21d2808b96457ea6fd35cdfdc3e45c89c61e4d69fe92f64477105e33c117770",
+    "crates/domain/Cargo.toml": "ebfc5fb45af16bc7219eeef7a79f00d4a9780e9bee2a79fefd91dd7035328052",
+    "crates/domain/src/assets.rs": "6daa3625dab9205497dd9230a460fa55441da022d83a237e644ce07c35e850a5",
+    "crates/domain/src/audio.rs": "807d2cbd247406d0e7a9a6305884e6c6122518f9eab919a3d43beb44db5efb7d",
+    "crates/domain/src/components.rs": "93276309ce2ccdcc165843633d26b2f90176d67fc02a6068fd0cfbfc8529d3c6",
+    "crates/domain/src/configuration.rs": "2472c94b2fac0fcb69ed967d361bd6a1feecc3137af31bf54138dbf6030418fa",
+    "crates/domain/src/forest.rs": "07731db4e0302b768fd995f297dc332aeda2f821f1b29055b1355a1df3ac7827",
+    "crates/domain/src/geometry.rs": "21ce8edbfb4ad963525dfe5ecfb79c7cef3cb8a53c8fc930939bff887335f4c9",
+    "crates/domain/src/identity.rs": "410d53bc95072343060772cac51c19c694cbb691f1cf3587aa3eaeec84e74b56",
+    "crates/domain/src/layers.rs": "ebefe1ea28a4e079c434469a7f4ed5e112acc9b60ca34f7675c4a2592f8e87df",
+    "crates/domain/src/lib.rs": "886b26f31d907a7aab8156624acb9a592a7b596ff9d08bc8b6fa5ac81c2f472d",
+    "crates/domain/src/output.rs": "238e5deb808cf3b5fd4064a5684e869406075cc45409bb8173a4f341d024f95a",
+    "crates/domain/src/project.rs": "2be6417cb42a3c8c3cf9db2b60e81c5ae044eeb815b9b51a85738cbb94760dbe",
+    "desktop/audio/Cargo.toml": "43d8f8e2ffb20dad93347f9afd05eaa2b3c71ca7a8c518344fdeb5ddd705e0ee",
+    "desktop/audio/src/background.rs": "248ce86de90fa360a9ae192a82ef8329928020c5f0f7ed633b806f86f6882939",
+    "desktop/audio/src/lib.rs": "7b33755598b139f0abf2446c72ca0b0ae5bac8bdbf0e09a0b0126fc3300c66e5",
+    "desktop/audio/src/pcm.rs": "82506312e2dbe9b99af37cf2e0577cbd4e2dc79ab9930af3f70d762a964ef2b2",
+    "desktop/audio/src/runtime.rs": "d9d6f02fa1c0338b5fabf4d125c48f0295966d18effafce7bf785111f9bba549",
+    "desktop/audio/src/separated_model.rs": "be42cddee960a8ecc71863ee78dcbbbff7b2c79701c1b83f10cc73269665ecc6",
+    "desktop/audio/src/voice/tests.rs": "cc6eac010777b6f586cdc101ab7197ed8a9f136f03b4138cca31588c7806841c",
+    "desktop/audio/src/voice.rs": "ee77f17309e0bf8b86ce29ddd386eca15bec107e3d6f419e866b35ef5a009c79",
+    "desktop/Cargo.lock": "857556f141ea845cdaaec3f41313bce00e54e5556c3c37239d291d22dca46460",
+    "desktop/Cargo.toml": "a7623cdabef5e9010922340a7c92e134ebd9b0dda437e452f4551a0c6e2e8266",
+    "desktop/host/Cargo.toml": "0a7c99ab8c0bca529a51c980f8fb096a3e1f2d4d90e83b7aee0e6ae912676f73",
+    "desktop/host/src/audio_verification.rs": "a5a8875300972ed936e2c11f2dddd9dba930a939e30592dd217424771d1b43aa",
+    "desktop/host/src/combined_verification/cadence.rs": "075198b815ada0a2d60624fb2519a8ede00563563a58db41adc2c9dfa8666abc",
+    "desktop/host/src/combined_verification/phase.rs": "bf4bb995fd29529c9e2783e152a1cd6de0926b0bdbb5e6b5aa1ca68a06ff8417",
+    "desktop/host/src/combined_verification/recovery.rs": "0e72b10ee5560b2c11154af705af42637841ed1d128f718ba1c853cd474161a9",
+    "desktop/host/src/combined_verification.rs": "650ca19d22cf58087610b535071a74af67b137a2c64371d73c6ba8e52ad3a35e",
+    "desktop/host/src/edit_verification.rs": "56f235f658eba65e001d34ec64910fda5a7291f12ba68c7a2146b39994988535",
+    "desktop/host/src/editor_audio/combined/plan.rs": "4d0a042c05d091400a23aef673d8d7464cce60eab5eb211a6579cc6e07ba7a33",
+    "desktop/host/src/editor_audio/combined/probes.rs": "3b3b1d23aeac551c67ce4ff7b4cf227b342e7083a3da030e2184cb9bda01a089",
+    "desktop/host/src/editor_audio/combined/report.rs": "ba3f43e8db3ffa29512c957a903f509a2ce4b09a89c5730810f2349cf5c5e1d0",
+    "desktop/host/src/editor_audio/combined.rs": "b9175ea4500fb6cad3de2b66ff0e5ae419bc30fa4544fc4ea1b8426973f12bd4",
+    "desktop/host/src/editor_audio/cycles/plan.rs": "b62bad83b6acf59ab69dfacca4bcba931fc26c4ef90fc20fa7cd83e1352fb0eb",
+    "desktop/host/src/editor_audio/cycles/report.rs": "d730f829547f369de80455a0bfd49f51a37a47e5fcd4bc566b2bdc5f81a1b119",
+    "desktop/host/src/editor_audio/cycles.rs": "01ae9b4d90eb643515823aa0ae54a6412f45538e3fcb335892cb08e1de4401e3",
+    "desktop/host/src/editor_audio/faults.rs": "e96049d64d823c4436ffa468c19ad4ed5391e22bf09dad9b2ee3b0cf46dee063",
+    "desktop/host/src/editor_audio/gui_verification.rs": "785aa27b4269c4b1038bb6e1f832256f65b0033290da6d3f393acbbb71f29fd4",
+    "desktop/host/src/editor_audio/stability.rs": "35aa2aefad079edf6887a97f1554080dc479640814c1352a330172cac4b97466",
+    "desktop/host/src/editor_audio/window_recovery/backend.rs": "e1cc23b0f6a65dce13e2037d7b44ff3f4fd42bad65c198f79746c1c50bd14c81",
+    "desktop/host/src/editor_audio/window_recovery/fault.rs": "1cccca2d7423108e27fc7a666bc9a5f79e0fc235d0d1293ee6ddbdc0c0441627",
+    "desktop/host/src/editor_audio/window_recovery/report.rs": "510fb909df1b710823eca245f29e37e31e4574aaaf7c4652dc40dc12a20a6325",
+    "desktop/host/src/editor_audio/window_recovery/sound.rs": "ce6bf063c9e1cecc8210fb10149703cc6546f87b4f4bbb4e589fadb208d89dc2",
+    "desktop/host/src/editor_audio/window_recovery.rs": "b8bc92762918da2674b62a9dd8f4d413cd79560f8425ae36aaa9737cfc22606a",
+    "desktop/host/src/editor_audio.rs": "a8e9321ad2c888668abcf9d0ed19398923385d23eb3f440f6545dffd62e9b44d",
+    "desktop/host/src/frame_worker.rs": "25411743de0aece4862bf82323a595db7b6ec7c6d06a7cec227d1654211ee640",
+    "desktop/host/src/framework_trace/event_loop.rs": "968b3037000249bf2b567d9fc5118a7b32c7849e6f425cb51df5211897cf0fea",
+    "desktop/host/src/framework_trace.rs": "eeb315f916ad2f49e0a07e30eae8cdfc75911b9445119737c8786d91cd251d5f",
+    "desktop/host/src/gpu_observation.rs": "6b999f868e4d991a4e667fd076dba120382d3f83f6584d841fd59f123b15c821",
+    "desktop/host/src/gpu_path.rs": "e98e617aa59cd215a09c35820ff37a814a37d7985cd9b4e172ac528c8b4ffcf7",
+    "desktop/host/src/graphics_faults.rs": "fa802f4d7d69d013dfd587be9871288d04235c861e69b921726d2c5f82db1755",
+    "desktop/host/src/gui_baseline.rs": "53f25c94cdf1b50f6b8f1d922866dcfcf00e86df1f3684e2170290a279bb11f1",
+    "desktop/host/src/import_worker.rs": "3de9d526bb6054b7f5509fe19acb7fc3ea480a2dc2f389450414ab3d86f2e657",
+    "desktop/host/src/load_verification.rs": "027cd28ab97469a397d00e1303edb3645866122afa34e4191b136fd6fba4eac4",
+    "desktop/host/src/main.rs": "4cbc6daa2bca5bbb63a00b6f8240eb42eca60c845ae163ff49d73d44bbc15919",
+    "desktop/host/src/main_work.rs": "6804c2244f7c05523a8568c42dc1b9f571dffcb109f93a41ae4e853833609021",
+    "desktop/host/src/mesh_replay.rs": "a9da791430adac35d129b9b13b69e1eca2c6cb0d086bcd1624bebb00625919c0",
+    "desktop/host/src/presentation.rs": "097eddf6beb0c8ea57ce054529b9c186288b7ded0ebeab9dd7fe5ce9c253e0d4",
+    "desktop/host/src/rebuild_stages.rs": "c268dd0e22e2865cc484f0e67ecc6f237e2536aeac1c9894aa64554356463f6d",
+    "desktop/host/src/repaint_deadline.rs": "30d414e7b1f123fd722025d5328ea554aad8253a8d5768d440b46b7fdf147a2f",
+    "desktop/host/src/repaint_observation.rs": "2e76ba14c4d259371fb1d1484a50de952ec3c643fb833642920fee7b264ed62e",
+    "desktop/host/src/separated_verification.rs": "f74a963795c653dab876560a3c2fd271b012a2295f1de7dac1dd8e63ae26f2dc",
+    "desktop/host/src/stable_window.rs": "9b86a0b221a7c2b168e14e4124e03540247a465916932a3933be532df648c1b6",
+    "desktop/host/src/stream_fixture.rs": "3e98cdf75fbabd09bb75690363c8180c6ba703c9a18f33a446ffa6d9ee77839a",
+    "desktop/host/src/supply_verification.rs": "50794c81837f82c9a80094975488948e1fb9e30b8eb99e7361168e357ddd5e15",
+    "desktop/host/src/text_work.rs": "9ed16d38ed2e3b19ce19b6d1316fd997c605d7239cbb221c458c56b2e6074c71",
+    "desktop/host/src/verification.rs": "47ba70ac9356841daf55ad3e87508098e8b3e1ffd7eb63cb7486dcece637b9e6",
+    "desktop/host/src/worker_verification.rs": "5114480b6dddfa58d244fa61c426e50503ef46c280cedbadc884b5f6f501976a",
+    "desktop/infrastructure/Cargo.toml": "5fae623c62758569c235b1ba0ce7461221f4e4faaae6d9e0f0c3e86bf89a7e87",
+    "desktop/infrastructure/src/audio_playback.rs": "9850c36db4f8ac81e2235312623cd007e5825f27bcaee0ad8889b6e4bfa69b62",
+    "desktop/infrastructure/src/audio_preparation.rs": "2ab4390e787c6eb1a0e5986b75908e52aac83ba77d762e7cea6bb2bb64c745b6",
+    "desktop/infrastructure/src/audio_supply/tests/separated/streaming.rs": "8aaf9e92433394bd19ed9937e17c36770f4703a874894cfb4df88320d0f1bcdb",
+    "desktop/infrastructure/src/audio_supply/tests/separated.rs": "4bf0663ed1aed07e754e7f8a147d62a518f9dcff25e9a5dfb734ebfdcbfe87d4",
+    "desktop/infrastructure/src/audio_supply.rs": "55d737f08f14d056aa177ec9d56005122dcc7984a8666fce1896478365aa95b0",
+    "desktop/infrastructure/src/audio_worker.rs": "f4fa422ccf7a0239d0ef634f0e1d1d75e51ebd8b6154ff04af750d8ba5aac461",
+    "desktop/infrastructure/src/background_input.rs": "cbdf7b3a5c7a89b4fb8364a2257ece2c9e87557d515d9ea6b01d567946da77dd",
+    "desktop/infrastructure/src/background_stream/tests.rs": "3f0964fdb64d5d6e840aa082b30ca218657633f279f5b8067d55e9da50013498",
+    "desktop/infrastructure/src/background_stream.rs": "c6f2a9c40dd736b99d05bc7c5d34acebc953b87346b252b9816552717d5aeec3",
+    "desktop/infrastructure/src/blobs.rs": "e1cf32b28f77dbcc3f80a3d2ac6a8653b41d4e54b9837de3814f0a16e74c87f8",
+    "desktop/infrastructure/src/byte_budget.rs": "db073b247cf1a004b57c3d1878b4357aa854dcba64cdb8786b7a95a5e711ebcd",
+    "desktop/infrastructure/src/callback_audit.rs": "5679aaa4ef92ac999436a64e7f6184c2b51f560ec126bd320696afe15cfca3aa",
+    "desktop/infrastructure/src/lib.rs": "06ab467fe7d3af17660cc4bdd376c6a1aa6cfa0fb42fb223e7819b28ac819f2e",
+    "desktop/infrastructure/src/native_audio.rs": "6af374ab3a0f84307b5a551ed6da3a41d19ecec86b0217864af12a2f68deb0f4",
+    "desktop/infrastructure/src/output_fence.rs": "ee205d7078d8b35955fa5dc3c673f60f98c415dc1e6cb18a1bffc8e01578315b",
+    "desktop/infrastructure/src/separated_native/tests.rs": "7250d6814a77ee1f6b41e44359b66de58f52a56dd5bf6013148b031797c194db",
+    "desktop/infrastructure/src/separated_native.rs": "cbe1bd4d4f3c74d3884f489445f290e121718ba1d61b797416d053ed0113a2fa",
+    "desktop/infrastructure/src/separated_output/control.rs": "273b5c16cbfa91333e6e90407633891ae1d47d985df8638d5128d5c4b986fd39",
+    "desktop/infrastructure/src/separated_output/tests/resume_race.rs": "907415fbc38d2b5cdb419cc4780c0c6782551699a194adf6e091a0357e7b3588",
+    "desktop/infrastructure/src/separated_output/tests/worker_fence.rs": "5dd944287e743b6929bc5a0d6151ca49b29482e2b46c30c71a271c17d1a24f5c",
+    "desktop/infrastructure/src/separated_output/tests.rs": "fa6bda82c6de023f508cd473a2c8a810e40cc2e7f82da484accfe4114bff846b",
+    "desktop/infrastructure/src/separated_output.rs": "ec96a2edd20e44cadb114ffc5c805967bccdebfdc54fb2f2bf060858e660e214",
+    "desktop/infrastructure/src/skin_audio.rs": "78505d256f616354f0c4914904a1260c82c85c03bcd9afe13de7614a8d1f2ab5",
+    "desktop/infrastructure/src/submission_trace.rs": "d6e6eac1212b1a379257e7bd705c697e847beac9fc7f61b136f70708780a2f96",
+    "desktop/infrastructure/src/supply_output.rs": "e18b4cb53aec6292b185a37df4b6a0f824ee7efe2bbe1089e1105b5f215e2f0f",
+    "desktop/infrastructure/src/voice_handoff/tests/runtime_bridge.rs": "72953ce16539722005b1c90540608f6925a09d8d11bb7767c010b76b20a9afbc",
+    "desktop/infrastructure/src/voice_handoff/tests.rs": "c6e7ee2bfb9f09acdf83cdad44cadbd7b3f5c7a5313b21a9167ca7c3d1ccfed2",
+    "desktop/infrastructure/src/voice_handoff.rs": "0eb4942ec2f55a3fc249d48569aca18963b6a9a5d13f4ab29dc54ed160f55cb2",
+    "desktop/infrastructure/src/wav.rs": "756bc6a2d7c02f3667d8595d7a29b31801d6544d8e80a2385cd1026c498f223b",
+    "desktop/preview/Cargo.toml": "6331b4af9692c3f4d16220de8810e992990b6032a2184fac0198e72efedd31fc",
+    "desktop/preview/src/lib.rs": "c519ed1f4e1afa8d570ad14b66ddb1b8291d0de98dca38e599ba1cc8d6e204b6",
+    "desktop/rendering/Cargo.toml": "e5b4c833b136d8bb07790c7a307f91b3fb74da7d55ce48df315f65248f02a636",
+    "desktop/rendering/src/gpu.rs": "faf66adcf12bd092ec6152c204077a68f80f99ed2dd1eeb4c544410d37076510",
+    "desktop/rendering/src/lib.rs": "8078dea78c8ef910446daada6043db6224447f30a271e158cc309b791ffaeb91",
+    "desktop/rendering/src/pixels.rs": "aef38cb0f676ff263eb7a40b3570264398215baba60c9668a2b0f0bcc4420b45",
+    "desktop/rendering/src/upload.rs": "e6797b54b1268cf7a45874b405a65488bc1c59b8b4196e30910edea5b55dac45",
+    "desktop/ui/Cargo.toml": "94e5a78db5fad807428f965606128c3d49705a3e8d045f2841775befcac54a33",
+    "desktop/ui/src/audio.rs": "36836d2eb11d2c22cda933081ea1b98f8d45030022c6552f52d426ce6a0b0b6d",
+    "desktop/ui/src/lib.rs": "b2cf54a7568775dac33895f3c8a5985775195a41b55d3982255d0ef9d47b560f",
+    "desktop/ui/src/observation.rs": "7c3648912494b52a589d3bf95011005441785f11bc3afd894094db078b94151f",
+    "desktop/ui/src/tests.rs": "f132c2c3facff3ed6480e5628e6467051114308e8f36dda733d20aa933ba6698",
+    "rust-toolchain.toml": "7d21c66a15f41bad66b82ed06a289f5dc8a6e3751951d2696bbf20ce296f2b0f",
+    "tools/check_core.py": "c7cd91465685a852498d7753db9a90fd7322799d167eb0d6ffb816ac6619e9cb",
+    "tools/check_core_architecture.py": "6e4fa6ee969655f97a230f148396685a0a3905e8ca567cc4a79f03d2233a221f",
+    "tools/check_core_cost.py": "32c83b988fefbde7cf2c3384252a9d5e52cc51a458d2e8341cf7b12780075cf0",
+    "tools/check_desktop.py": "f767655c446d875252ee5ad96e86ff94ceaf3b2b0022906d735304613f3b55aa",
+    "tools/check_desktop_architecture.py": "c84ac8a30b32c5fd445345bdbe064423abc8e46cce6e4bedd4a19da1df22e0e4",
+    "tools/check_p0.py": "371d68565eeaf7959c2062aae48b39565678dcd4c4efc7fff43d719f449216cc",
+    "tools/check_p0_audio_adaptation.py": "39b26ef5964c436f9b9aef4c18ba475efaf4fa982da1d78b882d0f1da22aa1b0",
+    "tools/check_p0_combined_soak.py": "aab795ccfde5837ed87725d9d3d114a9a201ec5b73999026552923cb08de157a",
+    "tools/check_p0_composition.py": "277358084e319fb70afe1f406ba3365c500275dcfe6e18e6ea038badbe5a15af",
+    "tools/check_p0_compressed.py": "874a7710c6c6149ae7d4ab4854abe2fd180e7be3ff3352a2eb0e98b9d6218472",
+    "tools/check_p0_compressed_soak.py": "20155196ec6f20d579e412f701ebdbbaa11311b256ca045cb307beca1a3f125b",
+    "tools/check_p0_desktop.py": "de2093b6d5f0882b338d3ec41e7c0dad2023018647bef84947fc7907249318b2",
+    "tools/check_p0_edit_composition.py": "0bdb32f65e6828a0da95572c5cf639e8517c5030e070a189e826c5fc6bbf5936",
+    "tools/check_p0_gpu_memory.py": "c15fe78c3412b20dc6e02bc2c4523aa8448a8d48c4fd9759607f19b8428bd1af",
+    "tools/check_p0_gui.py": "030fac0ecdc08237297e151f8229302b94ea868701d95fdf8133ca9aa1ad1764",
+    "tools/check_p0_interaction.py": "927504336ebc4b2187d9adc8ccf6320127ab68af9446cb4f7606cde9bb64a02b",
+    "tools/check_p0_lifetime.py": "5d6d08b91ceffcf10cd973df2380fd50f39968e944087ec325c20872d951fa2f",
+    "tools/check_p0_media.py": "de300b5143a5406c4755efbd6f3358169a7252085514dd2f7248358342410c34",
+    "tools/check_p0_pcm.py": "c9bfbca3c53fab2c0000ace59bfca47af676836db203d917eccdf8921b632e01",
+    "tools/check_p0_recovery.py": "28306d06d06b4f7600bb6ef1ecfff118d60edcb136eb107688837e199301d211",
+    "tools/check_p0_resource_cycles.py": "49cb900d16f2486ab826ae4d05e1b6e607ee7beaa342b873455830877bf576c1",
+    "tools/check_p0_stream_output.py": "0e9eb58b66898d2422a2243deb1afb214565c063d2ca260d4f9b6a65d274d7c9",
+    "tools/check_p0_streaming.py": "6e031e3a2e1de901ca5e7d2a9bddb7e41a659e47fb901755c0f58bcde8320912",
+    "tools/check_p0_switch.py": "c7ea7be526ada9ab8f3ce342e5cf420ad133f01d36d7b2574c5d312ac8138ed1",
+    "tools/check_p0_switch_audio.py": "4c5dca5d6fd0a7ccbd6040857515b0a0298558ce4f9b0abf652d10ed8de54d89",
+    "tools/check_p0_transport.py": "2ef7ffba6e87dafac947a38f11f53ece2c93e811814859e133ef551385045fc8",
+    "tools/check_repository.py": "d939f80eb8b55bc69a3de2521d0492ae7aac17635e9158922eac7f5cf304e62c",
+    "tools/measure_audio_edit.py": "3a8853fdfec9ebe16757cd23d9524b15d067a88ac0ae187843555c0325b296cd",
+    "tools/measure_audio_load.py": "10e59df96fdc055f2747828e645d11d1728cdf9eb3d6b7d286ee10a0adbef0b1",
+    "tools/measure_audio_startup.py": "a116b8131c9b2b4d7479624e26879d311ed2ac027c4968a5c9a7d530f4e8d41e",
+    "tools/measure_background_stream.py": "4a6fa5407111bf6265e6e9f56a3497d93d5433ca9aaf7d0a90ca06d78cc775b5",
+    "tools/measure_budget_review.py": "e33f44be4e444fa19793db83e9ce8bafcc29f525d6ed29734a25dab8da612f20",
+    "tools/measure_combined.py": "63f92e8d9971467da98049c8d3b65cceb68ae0b7f885e66290644e53aaf61bb4",
+    "tools/measure_controlled_recovery.py": "ea0cc721a6b20c76c754a4750a58f51360c0d0cb07d5ff961a8bb95a2b7935ca",
+    "tools/measure_cpu_accounting.py": "4c9ceb02a4307d60d8d6a465ba923068fd5b9faa4586be2c86be5cb9e7adf47f",
+    "tools/measure_cpu_threads.py": "b3d2933de64599d6e88925df69b7f5ad9c84f163b0efc8bce80954779a021870",
+    "tools/measure_current_combined.py": "09db0edf96afa5814e210b3331703e7d52758fbdadd1704dac163d7330d1f8d7",
+    "tools/measure_event_loop_ui.py": "f5e651348d6329c1d5d0eee5bff1f899e6de98cc5a0232257b49607df6018555",
+    "tools/measure_fault_rebuild.py": "5a64b5f8827ba7fc9ebf2228e85ce83f7eea8235ad07b21368453989873f6433",
+    "tools/measure_frame_dispatch.py": "a431502401e4095952752dab0f620928f62bcbdf6e08f6c99e2df8fc99b10656",
+    "tools/measure_framework_baseline.py": "5a7113c08d08a46604db13ae944f111a5ff291a654c5ce7d128941235657f2de",
+    "tools/measure_gpu_path.py": "d689efc91d146c91f450d1ba679a096c5d7292576d005c8d5354631ab4b125bf",
+    "tools/measure_gui_base.py": "f591b5a79d53eb2fc08cadfec6fd4e30a01a5179da74b39f2a207f018954cc9d",
+    "tools/measure_gui_candidate.py": "995f3f66a523c3e44cf74c0798bf148b168d23cbadb678c1ae829ad4e44a5899",
+    "tools/measure_gui_cpu.py": "24c24d74f18b888d5d02248ad1b0d6df524fbd28475bd558a13ad4cbe41fc682",
+    "tools/measure_independent_cpu.py": "3e8da64bda3c9cdd2a2d78674b227f186430b4e97318ca34348c98db85dfec42",
+    "tools/measure_main_work.py": "19c6810fb73811d78aa18910bcea54e65f2742891821a349eb9c02b10e9cc194",
+    "tools/measure_mesh_replay.py": "ea5efa814e2841b7fb4bc27b7e91a315140133cd2600f4cf31f3382600f7068d",
+    "tools/measure_painter_cpu.py": "acebe7480df8d3b2454d98f2ce9808378d6c10c1d8d1def41b8fe9df08f5b62f",
+    "tools/measure_present_fault.py": "7d85efc9371f50c235fce7de2cf3c1b763a42b6ce8d69916217527d5f342ffd6",
+    "tools/measure_rebuild_attribution.py": "11e7481b5680e0cb2505cf8f06ed407594ff858341b9ac3d6f0fc79dda1cf5db",
+    "tools/measure_rebuild_policy.py": "3d40a5b6ecf61763d5718c34626f16f11a002784385ff606c9e7fc1794701e3c",
+    "tools/measure_repaint.py": "19b4cc56192f706893a7ab6b5283a9ed3344b9e6623cbf9f7846e6f15022144b",
+    "tools/measure_resource_cycles.py": "d40d933f84aa064b2d568798a6dbe8afa72f5140d02eac94c0e9bb64adc40808",
+    "tools/measure_scheduling.py": "e864943979989328d7e673ad82e18963238198bad44203a18463b7ca28c8996b",
+    "tools/measure_separated_native.py": "11fbe962e8ec747f66d300ce86279dd019e6269005c4d8a39abbece10dcc611c",
+    "tools/measure_stable_window.py": "3353e0fd63a935622b04dad0dabe1ee6044bf4bf3dab65339d319904740569d2",
+    "tools/measure_staging_recovery.py": "9b22cf72dacf4e59542c51e6ceeb2c1b943ef8ea07e6e7579d85b71b6a248155",
+    "tools/measure_supply_recovery.py": "afebd6c334a562991c101db6dc62bd837342efd0a83f356161e5bde985b7b0c0",
+    "tools/measure_text_work.py": "aeee1730317f5311c4328e7f99294fe1aa8c824a0281198e0b11bbf86eb132f5",
+    "tools/measure_thread_sampling.py": "47fe7460838e72c92330f6be767152590f8588a46f259de2a95acd1f8175a701",
+    "tools/measure_ui_wall.py": "fbde4286b833dc4991a150b6556d8a12629639622cccd5545a5a7ca33efeacf0",
+    "tools/measure_voice_cpu.py": "6c9b974cac8009d6f3e205f186ef5feecafc0e6febca616d7201e1273475c632",
+    "tools/measure_voice_phase.py": "4ad378ef4eb8263f5a2bf1befe89fd5cf10e13845e659da2f15518982c1e07d7",
+    "tools/measure_window_recovery.py": "613f5eebe854eb47925fed1d499681b63652d3dde9043fc1a7107ec4b437ac42",
+    "tools/measure_worker_native.py": "5b6120cfb1d2f843265c5fcc848b8ce51db7cd466c69bfc0729e4916ecd167b6",
+    "tools/test_check_audio_edit.py": "b6baa91860f1bdf18314493da960d4c399199205104eb34bedef098f4e4303cd",
+    "tools/test_check_audio_load.py": "db23c219092ae1bdfd78d2c6efb5e2002b7e0eb9c3aa44dcfb5bcc6cc8da05df",
+    "tools/test_check_audio_startup.py": "5f2cbdd09841597faf574c240b33131f9d4c1bae9c079847fddc9fd05f8d4a28",
+    "tools/test_check_background_stream.py": "6b1b0cf0b181ee306ea0c721c0761a91d9d43c9ec83eadf18fa06b5a2c485e2e",
+    "tools/test_check_budget_review.py": "a878cdc44af5c5a2244d383b79f3f0bf1d4467f35b30e526dbdd0a04ef20b584",
+    "tools/test_check_combined.py": "34c0173a098916f3fd52998b76c2cd471a2bddcc86e4e97fac9c61f741ec7672",
+    "tools/test_check_controlled_recovery.py": "cc16833fdfec0a0d9a443da5b01b31fdf765feb17a051269df2978c42b2b360c",
+    "tools/test_check_core_architecture.py": "fb8226852e9fbaaf925a7e9fd17b8ec8fecc46f64b98e219b42031851eab7a32",
+    "tools/test_check_core_cost.py": "dbe75725a39a53476f81936f7f4b12d5032d672f2e329befcfc823f3b681aa57",
+    "tools/test_check_core_environment.py": "df4d661b681b27d21a1a02071c01e25c4d7f3577d830b48d269fa34a77499d61",
+    "tools/test_check_cpu_accounting.py": "79aa2e5bd416f90419518abd19947a1ae2c89f2975f90fe4865d38cb74f6ae84",
+    "tools/test_check_cpu_threads.py": "87d77c04adb8a2186ab9418863fe9d74459f75e3b6a6a1b3c13204acf5f53444",
+    "tools/test_check_current_combined.py": "c93c76cf15b50abe8cc27288ebd03205e3d88fc63f08911cc7b54fc0dc5fbd77",
+    "tools/test_check_desktop_architecture.py": "82c9423c1774c412647d20228161f5151c493c1ec3c755c688d1d36b0d10e53f",
+    "tools/test_check_event_loop.py": "4cb2d44974263d73479f29357da97f4a4a812a178cfc82315624c5febfa2baf3",
+    "tools/test_check_fault_rebuild.py": "538c7e60405e0863573e453f5517187833fa7591b654186e606b63145055b155",
+    "tools/test_check_frame_dispatch.py": "68d1f504010004c644bde95a1687fd6f67181d01dd0c2879f671d75a25d2b157",
+    "tools/test_check_framework_baseline.py": "dec05e52ed95121c17039d65985cf913041c32f3d69807e834b337276e72c0c2",
+    "tools/test_check_gpu_path.py": "5917eec5307d4a3d00ae86cc958c2a63337e6f55230e1d277d9eb4a764e3918e",
+    "tools/test_check_gui_base.py": "f09aab3f605bdf1acb10ff7b5fcea03fb9063ba666f19acfa7bea3a839ea8eb2",
+    "tools/test_check_gui_candidate.py": "acd1e66821308799d31f41dd01c6dee4bd8dfb341e08187db61e8f72b4f1060e",
+    "tools/test_check_gui_cpu.py": "1448cff978416498ba9114aa7eb446063e5ab5a95c2ff11d74f02c475039336f",
+    "tools/test_check_independent_cpu.py": "fc3da03c5a70262e1b729dfe2c65fcfdb2809af12a54576ed0defc2ec13c8769",
+    "tools/test_check_main_work.py": "0fc9374246dd38ae5791b33254bd6abad72157c17e1ee805c3881ebaaa1ca9a3",
+    "tools/test_check_mesh_replay.py": "c2eaaab1afb3fea7098ee9182ca25d6061b2779b458bbea23b5b82c910237040",
+    "tools/test_check_painter_cpu.py": "206e66d3cb1bd37be96850e298d8cc34828dec14fa8e3db89b0101fce21975f8",
+    "tools/test_check_rebuild_attribution.py": "17bc35c61bf8fe339a27a09a324263bbe9811e695652cc576f06066351643eb3",
+    "tools/test_check_rebuild_policy.py": "0598fa88861ce49659af49867c09589ab6b43b697d8262fe849a44c28ae8de12",
+    "tools/test_check_repaint.py": "a268a9204592961450c83fcfb419ed61e0d7a8c9879b1c04560e92b5cdc6ef0d",
+    "tools/test_check_repository.py": "6918c19beecc9bce89fbf0fe989d8ebc1869d29db6b35cebaff0a8be47947e88",
+    "tools/test_check_resource_cycles.py": "76a5f1e5bc396b6317d1a999b4a4bd72592a6ee1ee8236f0f9b05158e8ac0022",
+    "tools/test_check_scheduling.py": "30fe35ec1bb8ee045d109c15fa015652ca5799acdd2c3803c20414668df2a2ad",
+    "tools/test_check_separated_native.py": "12c35a4dafb9d61d6c9582b00809f03843328c3d35ab3e53b0d517a272ee2b24",
+    "tools/test_check_stable_window.py": "34f72c635faa60313dff091f4b8748d30d18a32cb6e2b005bb97836e40114450",
+    "tools/test_check_staging_recovery.py": "bed24773a8bb4f88607f474fefd811c295698635bff3a7bf872a528f42f6f24d",
+    "tools/test_check_supply_recovery.py": "6bb7baccbf52113dc914ec8f1c4c81e2392bb6f4967f579ad8d513c1802820be",
+    "tools/test_check_text_work.py": "98265bd26303b45a15bfa01998f414e01e642f3daedbf095ca6c060a94568cc1",
+    "tools/test_check_thread_sampling.py": "2fc6c89afef67a0d7b9d85250c00d7d8367c31f4b02ab50d24461d3a8ce1be91",
+    "tools/test_check_ui_wall.py": "ec12cce81c16e11dfd66bdb52d171ccbf7725191a96c913b024a7602dcb3a159",
+    "tools/test_check_voice_cpu.py": "92ea736245c8c189c540ce71e02c5dbd4caafd433b67c1757de0903513906be5",
+    "tools/test_check_voice_phase.py": "b0e93006b4461b0687f2993262618df32fd7c57002fffb221ea045fd5f054044",
+    "tools/test_check_window_recovery.py": "d5b7dbd20a26603a19a1e8639c281230ef693773b9a8d828ff6467e588a0a2b0",
+    "tools/test_check_worker_native.py": "bf02e577797f2db7826843d3057f216e3f649d8b6e099a5cae894e6396da3ebb"
+  },
+  "profile": "release",
+  "requested_features": [],
+  "repeat_sha256": [
+    "ee31b7e68af5c05f450c36aa417e2d67e1248e46b18c2041a8283109f174206c",
+    "ee31b7e68af5c05f450c36aa417e2d67e1248e46b18c2041a8283109f174206c"
+  ],
+  "binary_sha256": "ee31b7e68af5c05f450c36aa417e2d67e1248e46b18c2041a8283109f174206c",
+  "context": {
+    "platform": "Windows-10-10.0.19045-SP0",
+    "adapter": "NVIDIA GeForce RTX 2060",
+    "graphics_api": "Vulkan",
+    "audio_rate": 48000,
+    "audio_channels": 2,
+    "ordinary_owned_child": true,
+    "uac": false,
+    "os_window_capture": false,
+    "user_media": false
+  },
+  "plan": [
+    "prepare",
+    "paint",
+    "rebuild-failure"
+  ],
+  "runs": [
+    {
+      "plan": "prepare",
+      "analysis": {
+        "checks": {
+          "process_budget": true,
+          "pixels_and_project": true,
+          "final_leases": true,
+          "window_0": true,
+          "retirement_0": true,
+          "live_0_dedicated": true,
+          "live_0_shared": true,
+          "window_1": true,
+          "retirement_1": true,
+          "live_1_dedicated": true,
+          "live_1_shared": true,
+          "background_anchor": true,
+          "native_window_actions": true,
+          "dpi_binding": true,
+          "all_known_gpu_dedicated": true,
+          "all_known_gpu_shared": true,
+          "present_boundary": true,
+          "fault_errors_classified": true,
+          "old_draw_rejected": true,
+          "new_window_healthy": true,
+          "failed_creation_scope": true
+        },
+        "component_passed": true,
+        "latency_ms": [
+          [
+            {
+              "count": 32,
+              "p50": 7.509799999999999,
+              "p95": 11.1854,
+              "p99": 11.732,
+              "max": 11.732
+            },
+            {
+              "count": 32,
+              "p50": 7.437799999999999,
+              "p95": 12.0159,
+              "p99": 12.311300000000001,
+              "max": 12.311300000000001
+            }
+          ],
+          [
+            {
+              "count": 32,
+              "p50": 6.8995999999999995,
+              "p95": 11.9432,
+              "p99": 13.485999999999999,
+              "max": 13.485999999999999
+            },
+            {
+              "count": 32,
+              "p50": 5.7811,
+              "p95": 12.209299999999999,
+              "p99": 14.4581,
+              "max": 14.4581
+            }
+          ]
+        ],
+        "gpu": {
+          "dedicated": {
+            "max_bytes": 111738880,
+            "unknown": 1
+          },
+          "shared": {
+            "max_bytes": 49790976,
+            "unknown": 1
+          }
+        },
+        "memory": {
+          "private_bytes": 259522560,
+          "working_set_bytes": 186912768,
+          "lifetime_peak_working_set_bytes": 214708224,
+          "lifetime_peak_pagefile_bytes": 290029568
+        },
+        "physical_dpi_exercised": true,
+        "c4_accepted": false,
+        "p2_accepted": false,
+        "cpu_goal_met": null
+      },
+      "windows": [
+        {
+          "index": 0,
+          "phase": 14,
+          "full_ui_passes": 361,
+          "issued": 64,
+          "screens": [
+            [
+              1180,
+              800,
+              944000,
+              64
+            ],
+            [
+              980,
+              700,
+              686000,
+              64
+            ],
+            [
+              980,
+              700,
+              686000,
+              64
+            ],
+            [
+              1841,
+              1240,
+              2282840,
+              64
+            ]
+          ],
+          "expected_screens": [
+            [
+              1180,
+              800
+            ],
+            [
+              980,
+              700
+            ],
+            [
+              980,
+              700
+            ],
+            [
+              1841,
+              1240
+            ]
+          ],
+          "software_scale": true,
+          "native_before": 1,
+          "native_after": 1.25,
+          "physical_dpi": true,
+          "pause_anchor": 243360,
+          "restore_anchor": null,
+          "old_voices": 1,
+          "pending_prepare": true,
+          "pixel_error": 1,
+          "notice": 1,
+          "pcm_after_fault": 0,
+          "callbacks": 613,
+          "missing_frames": 0,
+          "render_errors": 0,
+          "observation_overflows": 0,
+          "endpoint_returns": 1,
+          "callback_resource_releases": 0,
+          "endpoint_returns_in_render": 0,
+          "endpoint_returns_outside_render": 1,
+          "fault_plan": 1,
+          "fault": {
+            "fired": 1,
+            "prepares": 1,
+            "paints": 0,
+            "errors": 0,
+            "premature_errors": 0,
+            "surface_status": 16,
+            "noticed": 4,
+            "logic_observed": 1,
+            "audio_closed_before_logic": 1,
+            "validation_errors": 0,
+            "internal_errors": 0,
+            "out_of_memory": 0,
+            "surface_faults": 3,
+            "device_notices": 1
+          },
+          "late_frame_rejected": true,
+          "previous_frame_rejected": false
+        },
+        {
+          "index": 1,
+          "phase": 14,
+          "full_ui_passes": 360,
+          "issued": 64,
+          "screens": [
+            [
+              1180,
+              800,
+              944000,
+              64
+            ],
+            [
+              980,
+              700,
+              686000,
+              64
+            ],
+            [
+              980,
+              700,
+              686000,
+              64
+            ],
+            [
+              1841,
+              1240,
+              2282840,
+              64
+            ]
+          ],
+          "expected_screens": [
+            [
+              1180,
+              800
+            ],
+            [
+              980,
+              700
+            ],
+            [
+              980,
+              700
+            ],
+            [
+              1841,
+              1240
+            ]
+          ],
+          "software_scale": true,
+          "native_before": 1,
+          "native_after": 1.25,
+          "physical_dpi": true,
+          "pause_anchor": 486720,
+          "restore_anchor": 243360,
+          "old_voices": 1,
+          "pending_prepare": true,
+          "pixel_error": 1,
+          "notice": 1,
+          "pcm_after_fault": 0,
+          "callbacks": 606,
+          "missing_frames": 0,
+          "render_errors": 0,
+          "observation_overflows": 0,
+          "endpoint_returns": 1,
+          "callback_resource_releases": 0,
+          "endpoint_returns_in_render": 0,
+          "endpoint_returns_outside_render": 1,
+          "fault_plan": 0,
+          "fault": null,
+          "late_frame_rejected": true,
+          "previous_frame_rejected": true
+        }
+      ],
+      "retirements": [
+        {
+          "renderer_released": true,
+          "surfaces_empty": true,
+          "device_resources_empty": false,
+          "targets": 0,
+          "worker_closed": true,
+          "importer_closed": true,
+          "held_draw_blocked": true,
+          "texture_ids": 3,
+          "texture_kept": 0,
+          "surface_failures": 3,
+          "other_registries_empty": true,
+          "instance_retired": true
+        },
+        {
+          "renderer_released": true,
+          "surfaces_empty": true,
+          "device_resources_empty": true,
+          "targets": 0,
+          "worker_closed": true,
+          "importer_closed": true,
+          "held_draw_blocked": true,
+          "texture_ids": 0,
+          "texture_kept": 0,
+          "surface_failures": 0,
+          "other_registries_empty": true,
+          "instance_retired": true
+        }
+      ],
+      "failed_creation_retired": false,
+      "sample_count": 121,
+      "strict_registry_predicate_passed": false,
+      "resource_bytes": {
+        "raw_peak": 132796,
+        "rgba_peak": 32768,
+        "pcm_peak": 323072,
+        "raw_final": 0,
+        "rgba_final": 0,
+        "pcm_final": 0
+      },
+      "canonical_sha256": [
+        "20f5265399fe9f7e4ef0ab8c1bd9ca777dc5c4b90de92277988e1403d05c71b7",
+        "20f5265399fe9f7e4ef0ab8c1bd9ca777dc5c4b90de92277988e1403d05c71b7"
+      ]
+    },
+    {
+      "plan": "paint",
+      "analysis": {
+        "checks": {
+          "process_budget": true,
+          "pixels_and_project": true,
+          "final_leases": true,
+          "window_0": true,
+          "retirement_0": true,
+          "live_0_dedicated": true,
+          "live_0_shared": true,
+          "window_1": true,
+          "retirement_1": true,
+          "live_1_dedicated": true,
+          "live_1_shared": true,
+          "background_anchor": true,
+          "native_window_actions": true,
+          "dpi_binding": true,
+          "all_known_gpu_dedicated": true,
+          "all_known_gpu_shared": true,
+          "present_boundary": true,
+          "fault_errors_classified": true,
+          "old_draw_rejected": true,
+          "new_window_healthy": true,
+          "failed_creation_scope": true
+        },
+        "component_passed": true,
+        "latency_ms": [
+          [
+            {
+              "count": 32,
+              "p50": 6.4242,
+              "p95": 11.5018,
+              "p99": 12.0812,
+              "max": 12.0812
+            },
+            {
+              "count": 32,
+              "p50": 7.9889,
+              "p95": 12.9145,
+              "p99": 13.0108,
+              "max": 13.0108
+            }
+          ],
+          [
+            {
+              "count": 32,
+              "p50": 5.6746,
+              "p95": 12.571499999999999,
+              "p99": 12.779300000000001,
+              "max": 12.779300000000001
+            },
+            {
+              "count": 32,
+              "p50": 6.5132,
+              "p95": 12.0967,
+              "p99": 12.1047,
+              "max": 12.1047
+            }
+          ]
+        ],
+        "gpu": {
+          "dedicated": {
+            "max_bytes": 108658688,
+            "unknown": 1
+          },
+          "shared": {
+            "max_bytes": 49790976,
+            "unknown": 1
+          }
+        },
+        "memory": {
+          "private_bytes": 260763648,
+          "working_set_bytes": 184836096,
+          "lifetime_peak_working_set_bytes": 212807680,
+          "lifetime_peak_pagefile_bytes": 290938880
+        },
+        "physical_dpi_exercised": true,
+        "c4_accepted": false,
+        "p2_accepted": false,
+        "cpu_goal_met": null
+      },
+      "windows": [
+        {
+          "index": 0,
+          "phase": 14,
+          "full_ui_passes": 362,
+          "issued": 64,
+          "screens": [
+            [
+              1180,
+              800,
+              944000,
+              64
+            ],
+            [
+              980,
+              700,
+              686000,
+              64
+            ],
+            [
+              980,
+              700,
+              686000,
+              64
+            ],
+            [
+              1841,
+              1240,
+              2282840,
+              64
+            ]
+          ],
+          "expected_screens": [
+            [
+              1180,
+              800
+            ],
+            [
+              980,
+              700
+            ],
+            [
+              980,
+              700
+            ],
+            [
+              1841,
+              1240
+            ]
+          ],
+          "software_scale": true,
+          "native_before": 1,
+          "native_after": 1.25,
+          "physical_dpi": true,
+          "pause_anchor": 243840,
+          "restore_anchor": null,
+          "old_voices": 1,
+          "pending_prepare": true,
+          "pixel_error": 1,
+          "notice": 1,
+          "pcm_after_fault": 0,
+          "callbacks": 622,
+          "missing_frames": 0,
+          "render_errors": 0,
+          "observation_overflows": 0,
+          "endpoint_returns": 1,
+          "callback_resource_releases": 0,
+          "endpoint_returns_in_render": 0,
+          "endpoint_returns_outside_render": 1,
+          "fault_plan": 2,
+          "fault": {
+            "fired": 1,
+            "prepares": 1,
+            "paints": 1,
+            "errors": 0,
+            "premature_errors": 0,
+            "surface_status": 16,
+            "noticed": 4,
+            "logic_observed": 1,
+            "audio_closed_before_logic": 1,
+            "validation_errors": 0,
+            "internal_errors": 0,
+            "out_of_memory": 0,
+            "surface_faults": 3,
+            "device_notices": 1
+          },
+          "late_frame_rejected": true,
+          "previous_frame_rejected": false
+        },
+        {
+          "index": 1,
+          "phase": 14,
+          "full_ui_passes": 360,
+          "issued": 64,
+          "screens": [
+            [
+              1180,
+              800,
+              944000,
+              64
+            ],
+            [
+              980,
+              700,
+              686000,
+              64
+            ],
+            [
+              980,
+              700,
+              686000,
+              64
+            ],
+            [
+              1841,
+              1240,
+              2282840,
+              64
+            ]
+          ],
+          "expected_screens": [
+            [
+              1180,
+              800
+            ],
+            [
+              980,
+              700
+            ],
+            [
+              980,
+              700
+            ],
+            [
+              1841,
+              1240
+            ]
+          ],
+          "software_scale": true,
+          "native_before": 1,
+          "native_after": 1.25,
+          "physical_dpi": true,
+          "pause_anchor": 486720,
+          "restore_anchor": 243840,
+          "old_voices": 1,
+          "pending_prepare": true,
+          "pixel_error": 1,
+          "notice": 1,
+          "pcm_after_fault": 0,
+          "callbacks": 601,
+          "missing_frames": 0,
+          "render_errors": 0,
+          "observation_overflows": 0,
+          "endpoint_returns": 1,
+          "callback_resource_releases": 0,
+          "endpoint_returns_in_render": 0,
+          "endpoint_returns_outside_render": 1,
+          "fault_plan": 0,
+          "fault": null,
+          "late_frame_rejected": true,
+          "previous_frame_rejected": true
+        }
+      ],
+      "retirements": [
+        {
+          "renderer_released": true,
+          "surfaces_empty": true,
+          "device_resources_empty": false,
+          "targets": 0,
+          "worker_closed": true,
+          "importer_closed": true,
+          "held_draw_blocked": true,
+          "texture_ids": 3,
+          "texture_kept": 0,
+          "surface_failures": 3,
+          "other_registries_empty": true,
+          "instance_retired": true
+        },
+        {
+          "renderer_released": true,
+          "surfaces_empty": true,
+          "device_resources_empty": true,
+          "targets": 0,
+          "worker_closed": true,
+          "importer_closed": true,
+          "held_draw_blocked": true,
+          "texture_ids": 0,
+          "texture_kept": 0,
+          "surface_failures": 0,
+          "other_registries_empty": true,
+          "instance_retired": true
+        }
+      ],
+      "failed_creation_retired": false,
+      "sample_count": 121,
+      "strict_registry_predicate_passed": false,
+      "resource_bytes": {
+        "raw_peak": 132796,
+        "rgba_peak": 32768,
+        "pcm_peak": 323072,
+        "raw_final": 0,
+        "rgba_final": 0,
+        "pcm_final": 0
+      },
+      "canonical_sha256": [
+        "20f5265399fe9f7e4ef0ab8c1bd9ca777dc5c4b90de92277988e1403d05c71b7",
+        "20f5265399fe9f7e4ef0ab8c1bd9ca777dc5c4b90de92277988e1403d05c71b7"
+      ]
+    },
+    {
+      "plan": "rebuild-failure",
+      "analysis": {
+        "checks": {
+          "process_budget": true,
+          "pixels_and_project": true,
+          "final_leases": true,
+          "window_0": true,
+          "retirement_0": true,
+          "live_0_dedicated": true,
+          "live_0_shared": true,
+          "window_1": true,
+          "retirement_1": true,
+          "live_1_dedicated": true,
+          "live_1_shared": true,
+          "background_anchor": true,
+          "native_window_actions": true,
+          "dpi_binding": true,
+          "all_known_gpu_dedicated": true,
+          "all_known_gpu_shared": true,
+          "present_boundary": true,
+          "fault_errors_classified": true,
+          "old_draw_rejected": true,
+          "new_window_healthy": true,
+          "failed_creation_scope": true
+        },
+        "component_passed": true,
+        "latency_ms": [
+          [
+            {
+              "count": 32,
+              "p50": 8.016499999999999,
+              "p95": 12.762,
+              "p99": 12.987200000000001,
+              "max": 12.987200000000001
+            },
+            {
+              "count": 32,
+              "p50": 7.050800000000001,
+              "p95": 12.5382,
+              "p99": 12.902099999999999,
+              "max": 12.902099999999999
+            }
+          ],
+          [
+            {
+              "count": 32,
+              "p50": 6.3942,
+              "p95": 12.5574,
+              "p99": 13.3556,
+              "max": 13.3556
+            },
+            {
+              "count": 32,
+              "p50": 6.6346,
+              "p95": 12.9681,
+              "p99": 12.9847,
+              "max": 12.9847
+            }
+          ]
+        ],
+        "gpu": {
+          "dedicated": {
+            "max_bytes": 108666880,
+            "unknown": 1
+          },
+          "shared": {
+            "max_bytes": 49790976,
+            "unknown": 1
+          }
+        },
+        "memory": {
+          "private_bytes": 258121728,
+          "working_set_bytes": 189390848,
+          "lifetime_peak_working_set_bytes": 210542592,
+          "lifetime_peak_pagefile_bytes": 285806592
+        },
+        "physical_dpi_exercised": true,
+        "c4_accepted": false,
+        "p2_accepted": false,
+        "cpu_goal_met": null
+      },
+      "windows": [
+        {
+          "index": 0,
+          "phase": 14,
+          "full_ui_passes": 362,
+          "issued": 64,
+          "screens": [
+            [
+              1180,
+              800,
+              944000,
+              64
+            ],
+            [
+              980,
+              700,
+              686000,
+              64
+            ],
+            [
+              980,
+              700,
+              686000,
+              64
+            ],
+            [
+              1841,
+              1240,
+              2282840,
+              64
+            ]
+          ],
+          "expected_screens": [
+            [
+              1180,
+              800
+            ],
+            [
+              980,
+              700
+            ],
+            [
+              980,
+              700
+            ],
+            [
+              1841,
+              1240
+            ]
+          ],
+          "software_scale": true,
+          "native_before": 1,
+          "native_after": 1.25,
+          "physical_dpi": true,
+          "pause_anchor": 243840,
+          "restore_anchor": null,
+          "old_voices": 1,
+          "pending_prepare": true,
+          "pixel_error": 1,
+          "notice": 1,
+          "pcm_after_fault": 0,
+          "callbacks": 611,
+          "missing_frames": 0,
+          "render_errors": 0,
+          "observation_overflows": 0,
+          "endpoint_returns": 1,
+          "callback_resource_releases": 0,
+          "endpoint_returns_in_render": 0,
+          "endpoint_returns_outside_render": 1,
+          "fault_plan": 3,
+          "fault": {
+            "fired": 1,
+            "prepares": 1,
+            "paints": 0,
+            "errors": 0,
+            "premature_errors": 0,
+            "surface_status": 16,
+            "noticed": 4,
+            "logic_observed": 1,
+            "audio_closed_before_logic": 1,
+            "validation_errors": 0,
+            "internal_errors": 0,
+            "out_of_memory": 0,
+            "surface_faults": 3,
+            "device_notices": 1
+          },
+          "late_frame_rejected": true,
+          "previous_frame_rejected": false
+        },
+        {
+          "index": 1,
+          "phase": 14,
+          "full_ui_passes": 360,
+          "issued": 64,
+          "screens": [
+            [
+              1180,
+              800,
+              944000,
+              64
+            ],
+            [
+              980,
+              700,
+              686000,
+              64
+            ],
+            [
+              980,
+              700,
+              686000,
+              64
+            ],
+            [
+              1841,
+              1240,
+              2282840,
+              64
+            ]
+          ],
+          "expected_screens": [
+            [
+              1180,
+              800
+            ],
+            [
+              980,
+              700
+            ],
+            [
+              980,
+              700
+            ],
+            [
+              1841,
+              1240
+            ]
+          ],
+          "software_scale": true,
+          "native_before": 1,
+          "native_after": 1.25,
+          "physical_dpi": true,
+          "pause_anchor": 487200,
+          "restore_anchor": 243840,
+          "old_voices": 1,
+          "pending_prepare": true,
+          "pixel_error": 1,
+          "notice": 1,
+          "pcm_after_fault": 0,
+          "callbacks": 602,
+          "missing_frames": 0,
+          "render_errors": 0,
+          "observation_overflows": 0,
+          "endpoint_returns": 1,
+          "callback_resource_releases": 0,
+          "endpoint_returns_in_render": 0,
+          "endpoint_returns_outside_render": 1,
+          "fault_plan": 0,
+          "fault": null,
+          "late_frame_rejected": true,
+          "previous_frame_rejected": true
+        }
+      ],
+      "retirements": [
+        {
+          "renderer_released": true,
+          "surfaces_empty": true,
+          "device_resources_empty": false,
+          "targets": 0,
+          "worker_closed": true,
+          "importer_closed": true,
+          "held_draw_blocked": true,
+          "texture_ids": 3,
+          "texture_kept": 0,
+          "surface_failures": 3,
+          "other_registries_empty": true,
+          "instance_retired": true
+        },
+        {
+          "renderer_released": true,
+          "surfaces_empty": true,
+          "device_resources_empty": true,
+          "targets": 0,
+          "worker_closed": true,
+          "importer_closed": true,
+          "held_draw_blocked": true,
+          "texture_ids": 0,
+          "texture_kept": 0,
+          "surface_failures": 0,
+          "other_registries_empty": true,
+          "instance_retired": true
+        }
+      ],
+      "failed_creation_retired": true,
+      "sample_count": 124,
+      "strict_registry_predicate_passed": false,
+      "resource_bytes": {
+        "raw_peak": 132796,
+        "rgba_peak": 32768,
+        "pcm_peak": 323072,
+        "raw_final": 0,
+        "rgba_final": 0,
+        "pcm_final": 0
+      },
+      "canonical_sha256": [
+        "20f5265399fe9f7e4ef0ab8c1bd9ca777dc5c4b90de92277988e1403d05c71b7",
+        "20f5265399fe9f7e4ef0ab8c1bd9ca777dc5c4b90de92277988e1403d05c71b7"
+      ]
+    }
+  ],
+  "component_passed": true,
+  "c4_accepted": false,
+  "p2_accepted": false,
+  "cpu_goal_met": null,
+  "cpu_meter_independently_validated": false,
+  "default_policy_changed": false,
+  "audio_supply_changed": false,
+  "p3_started": false,
+  "in_place_recovery": false,
+  "real_driver_reset": false,
+  "real_oom": false,
+  "post_handoff_initialization_failure": false,
+  "cleanup_interpretation": {
+    "raw_registry_empty": false,
+    "unassigned_surface_texture_ids": 3,
+    "surface_failures_each": 3,
+    "texture_user_objects": 0,
+    "other_registries_empty": true,
+    "whole_instance_retired_before_reopen": true,
+    "unknown_or_mismatched_ids_rejected": true,
+    "physical_budgets_unchanged": true,
+    "locked_framework_hashes": {
+      "eframe-0.37.0/src/native/wgpu_integration.rs": "658a1283f49ecabc308a8dd69fbe7baa694fd745723c623ecb77836e8e1a39a7",
+      "egui-wgpu-0.37.0/src/winit.rs": "3f9f39150119a4ef071ab9e0ed9384edbebad36cc72bc35a90ac1639d165be51",
+      "wgpu-core-30.0.1/src/present.rs": "cb53160d93ee210025cf4a483ce700b713d56c16daba87cad6b9934cc803f47b",
+      "wgpu-core-30.0.1/src/registry.rs": "02980feeb366f26e627ec8a04aaea49363fd10dea18a74b18a7952b548a98a1f",
+      "wgpu-core-30.0.1/src/device/resource.rs": "3f80d00614d00e89ef57b5a6491eb3901383d576c4d8ad75b4a29d549b3752fc"
+    }
+  },
+  "checks": {
+    "core_python": 329,
+    "core_rust": 134,
+    "core_total": 463,
+    "desktop_default_rust": 407,
+    "desktop_all_features_rust": 415,
+    "format": true,
+    "clippy": true,
+    "headless": true,
+    "module_source_boundaries": true,
+    "added_python_tests": 3,
+    "added_rust_tests": 3
+  },
+  "regressions": {
+    "pixel_controls": {
+      "pixels-default": {
+        "report": {
+          "schema": 1,
+          "gpu_memory_usage_hint": false,
+          "reusable_staging": false,
+          "pixel_trace_sizes": [
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              257,
+              193
+            ]
+          ],
+          "adapter": "NVIDIA GeForce RTX 2060",
+          "max_channel_error": 1,
+          "paused_draft_refresh": true,
+          "cancel_exact_restore": true,
+          "branch_restore": true,
+          "stale_viewport_rejected": true,
+          "unchanged_uploads": 0,
+          "audio_ui_native_audition": false,
+          "audio_ui_submitted_nonzero_samples": 0,
+          "audio_ui_library_nonzero_samples": 0,
+          "audio_ui_library_readonly": false,
+          "monitor_volume_permille": null,
+          "source_uploads": 1,
+          "shutdown_held_frame_tracked": true,
+          "source_buffer_queue_order_verified": true,
+          "allocations": 8,
+          "publications": 8
+        },
+        "trace_sha256": "bee8433fe9c6c6530704fbd6f5ca794e4b900ca16ea5371a14c3f922bceb2270"
+      },
+      "pixels-memory": {
+        "report": {
+          "schema": 1,
+          "gpu_memory_usage_hint": true,
+          "reusable_staging": false,
+          "pixel_trace_sizes": [
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              256,
+              256
+            ],
+            [
+              257,
+              193
+            ]
+          ],
+          "adapter": "NVIDIA GeForce RTX 2060",
+          "max_channel_error": 1,
+          "paused_draft_refresh": true,
+          "cancel_exact_restore": true,
+          "branch_restore": true,
+          "stale_viewport_rejected": true,
+          "unchanged_uploads": 0,
+          "audio_ui_native_audition": false,
+          "audio_ui_submitted_nonzero_samples": 0,
+          "audio_ui_library_nonzero_samples": 0,
+          "audio_ui_library_readonly": false,
+          "monitor_volume_permille": null,
+          "source_uploads": 1,
+          "shutdown_held_frame_tracked": true,
+          "source_buffer_queue_order_verified": true,
+          "allocations": 8,
+          "publications": 8
+        },
+        "trace_sha256": "bee8433fe9c6c6530704fbd6f5ca794e4b900ca16ea5371a14c3f922bceb2270"
+      }
+    },
+    "offscreen": {
+      "report": {
+        "schema": 5,
+        "gpu_memory_usage_hint": true,
+        "device_memory_usage_hints": [
+          true,
+          true
+        ],
+        "adapter_utf8": [
+          78,
+          86,
+          73,
+          68,
+          73,
+          65,
+          32,
+          71,
+          101,
+          70,
+          111,
+          114,
+          99,
+          101,
+          32,
+          82,
+          84,
+          88,
+          32,
+          50,
+          48,
+          54,
+          48
+        ],
+        "scope": "offscreen-own-device-destroy-rebuild",
+        "full_editor": false,
+        "physical_dpi_minimize": false,
+        "device_lost_reason": "Destroyed",
+        "inflight_prepare": true,
+        "held_targets_after_loss": 1,
+        "old_cpu_output_discarded": true,
+        "device_owner_released_before_open": true,
+        "parent_context_released_before_open": true,
+        "late_draw_request_rejected": true,
+        "old_signal_rejected": true,
+        "frame_keys": [
+          1,
+          3
+        ],
+        "pixels_exact": true,
+        "viewport_requests": 32,
+        "final_targets": 0,
+        "worker_closed": true,
+        "shutdown_ok": true,
+        "raw_final": 0,
+        "rgba_final": 0,
+        "raw_peak": 1724,
+        "rgba_peak": 32768
+      },
+      "analysis": {
+        "checks": {
+          "process_budget": true,
+          "confirmed_destroy": true,
+          "late_result_and_draw_fenced": true,
+          "held_owner_and_key_identity": true,
+          "pixels_and_latest_viewport": true,
+          "actual_release": true,
+          "graphics_active_dedicated_budget": true,
+          "graphics_active_shared_budget": true,
+          "graphics_rebuilt_dedicated_budget": true,
+          "graphics_rebuilt_shared_budget": true,
+          "all_known_dedicated_budget": true,
+          "all_known_shared_budget": true
+        },
+        "component_passed": true,
+        "c4_accepted": false,
+        "p2_accepted": false,
+        "cpu_goal_met": null,
+        "cpu_meter_independently_validated": false,
+        "memory": {
+          "working_set_bytes": 89276416,
+          "private_bytes": 147656704,
+          "lifetime_peak_working_set_bytes": 92708864,
+          "lifetime_peak_pagefile_bytes": 148754432
+        },
+        "adapter": "NVIDIA GeForce RTX 2060",
+        "gpu": {
+          "dedicated": {
+            "max_bytes": 37810176,
+            "missing_samples": 1
+          },
+          "shared": {
+            "max_bytes": 18411520,
+            "missing_samples": 1
+          }
+        }
+      },
+      "pixel_sha256": "5e3e9c9d54f95f8f5d6192fb725b3307a75f5ad3412b2009834939d6324d7f9d"
+    },
+    "planned_window": {
+      "analysis": {
+        "checks": {
+          "process_budget": true,
+          "pixels_and_project": true,
+          "final_leases": true,
+          "window_0": true,
+          "retirement_0": true,
+          "live_0_dedicated": true,
+          "live_0_shared": true,
+          "window_1": true,
+          "retirement_1": true,
+          "live_1_dedicated": true,
+          "live_1_shared": true,
+          "background_anchor": true,
+          "native_window_actions": true,
+          "dpi_binding": true,
+          "all_known_gpu_dedicated": true,
+          "all_known_gpu_shared": true
+        },
+        "component_passed": true,
+        "latency_ms": [
+          [
+            {
+              "count": 32,
+              "p50": 6.8916,
+              "p95": 12.0991,
+              "p99": 12.8142,
+              "max": 12.8142
+            },
+            {
+              "count": 32,
+              "p50": 6.8644,
+              "p95": 12.4274,
+              "p99": 12.824800000000002,
+              "max": 12.824800000000002
+            }
+          ],
+          [
+            {
+              "count": 32,
+              "p50": 7.4865,
+              "p95": 12.6134,
+              "p99": 12.8453,
+              "max": 12.8453
+            },
+            {
+              "count": 32,
+              "p50": 8.5147,
+              "p95": 12.8691,
+              "p99": 13.5213,
+              "max": 13.5213
+            }
+          ]
+        ],
+        "gpu": {
+          "dedicated": {
+            "max_bytes": 108658688,
+            "unknown": 1
+          },
+          "shared": {
+            "max_bytes": 49790976,
+            "unknown": 1
+          }
+        },
+        "memory": {
+          "private_bytes": 260800512,
+          "working_set_bytes": 185163776,
+          "lifetime_peak_working_set_bytes": 213368832,
+          "lifetime_peak_pagefile_bytes": 288366592
+        },
+        "physical_dpi_exercised": true,
+        "c4_accepted": false,
+        "p2_accepted": false,
+        "cpu_goal_met": null
+      },
+      "report": {
+        "schema": 1,
+        "scope": "same-process-eframe-window-replacement",
+        "full_editor": true,
+        "memory_usage": true,
+        "adapters_utf8": [
+          [
+            78,
+            86,
+            73,
+            68,
+            73,
+            65,
+            32,
+            71,
+            101,
+            70,
+            111,
+            114,
+            99,
+            101,
+            32,
+            82,
+            84,
+            88,
+            32,
+            50,
+            48,
+            54,
+            48
+          ],
+          [
+            78,
+            86,
+            73,
+            68,
+            73,
+            65,
+            32,
+            71,
+            101,
+            70,
+            111,
+            114,
+            99,
+            101,
+            32,
+            82,
+            84,
+            88,
+            32,
+            50,
+            48,
+            54,
+            48
+          ]
+        ],
+        "in_place_device_reset": false,
+        "fault_plan": 0,
+        "failed_creation_retired": false,
+        "windows": [
+          {
+            "index": 0,
+            "phase": 14,
+            "full_ui_passes": 360,
+            "issued": 64,
+            "rows": [
+              [
+                4,
+                0,
+                1,
+                9.084800000000001,
+                21.1747,
+                45583117879700,
+                30,
+                0,
+                480
+              ],
+              [
+                5,
+                1,
+                2,
+                3.0206999999999997,
+                16.428,
+                45583197714000,
+                38,
+                0,
+                480
+              ],
+              [
+                6,
+                0,
+                3,
+                11.0928,
+                16.718799999999998,
+                45583287763000,
+                47,
+                0,
+                480
+              ],
+              [
+                7,
+                1,
+                4,
+                6.6467,
+                16.0626,
+                45583367618300,
+                55,
+                0,
+                480
+              ],
+              [
+                8,
+                0,
+                5,
+                4.2814000000000005,
+                16.5147,
+                45583447567900,
+                63,
+                0,
+                480
+              ],
+              [
+                9,
+                1,
+                6,
+                7.6593,
+                16.258399999999998,
+                45583517876800,
+                70,
+                0,
+                480
+              ],
+              [
+                10,
+                0,
+                7,
+                4.8327,
+                16.1556,
+                45583597659800,
+                78,
+                0,
+                480
+              ],
+              [
+                11,
+                1,
+                8,
+                12.4274,
+                16.7602,
+                45583687707400,
+                87,
+                0,
+                480
+              ],
+              [
+                12,
+                0,
+                9,
+                10.370199999999999,
+                16.2443,
+                45583767530700,
+                95,
+                0,
+                480
+              ],
+              [
+                13,
+                1,
+                10,
+                6.341600000000001,
+                16.5264,
+                45583847562300,
+                103,
+                0,
+                480
+              ],
+              [
+                14,
+                0,
+                11,
+                4.8872,
+                16.0977,
+                45583927491700,
+                111,
+                0,
+                480
+              ],
+              [
+                15,
+                1,
+                12,
+                10.7088,
+                16.3621,
+                45583997774100,
+                118,
+                0,
+                480
+              ],
+              [
+                16,
+                0,
+                13,
+                7.1361,
+                16.177799999999998,
+                45584077719600,
+                126,
+                0,
+                480
+              ],
+              [
+                17,
+                1,
+                14,
+                4.849,
+                16.3337,
+                45584157760600,
+                134,
+                0,
+                480
+              ],
+              [
+                18,
+                0,
+                15,
+                11.8926,
+                16.582800000000002,
+                45584247537100,
+                143,
+                0,
+                480
+              ],
+              [
+                19,
+                1,
+                16,
+                7.9641,
+                16.392899999999997,
+                45584327700100,
+                151,
+                0,
+                480
+              ],
+              [
+                20,
+                0,
+                17,
+                6.5077,
+                16.1753,
+                45584407494700,
+                159,
+                0,
+                480
+              ],
+              [
+                21,
+                1,
+                18,
+                3.4646,
+                16.997000000000003,
+                45584487665800,
+                167,
+                0,
+                480
+              ],
+              [
+                22,
+                0,
+                19,
+                7.1356,
+                16.758599999999998,
+                45584557628500,
+                174,
+                0,
+                480
+              ],
+              [
+                23,
+                1,
+                20,
+                4.8534,
+                16.0694,
+                45584637682600,
+                182,
+                0,
+                480
+              ],
+              [
+                24,
+                0,
+                21,
+                11.6132,
+                16.3013,
+                45584727530600,
+                191,
+                0,
+                480
+              ],
+              [
+                25,
+                1,
+                22,
+                8.8564,
+                16.2266,
+                45584807557100,
+                199,
+                0,
+                480
+              ],
+              [
+                26,
+                0,
+                23,
+                8.7835,
+                16.104400000000002,
+                45584887571800,
+                207,
+                0,
+                480
+              ],
+              [
+                27,
+                1,
+                24,
+                6.0920000000000005,
+                16.5122,
+                45584967584600,
+                215,
+                0,
+                480
+              ],
+              [
+                28,
+                0,
+                25,
+                3.3559,
+                16.282899999999998,
+                45585047702100,
+                223,
+                0,
+                480
+              ],
+              [
+                29,
+                1,
+                26,
+                8.2433,
+                16.0683,
+                45585117747600,
+                230,
+                0,
+                480
+              ],
+              [
+                30,
+                0,
+                27,
+                5.3806,
+                16.188299999999998,
+                45585197647700,
+                238,
+                0,
+                480
+              ],
+              [
+                31,
+                1,
+                28,
+                3.3960000000000004,
+                16.6693,
+                45585277840500,
+                246,
+                0,
+                480
+              ],
+              [
+                32,
+                0,
+                29,
+                10.0375,
+                16.8981,
+                45585367636200,
+                255,
+                0,
+                480
+              ],
+              [
+                33,
+                1,
+                30,
+                6.8644,
+                16.521500000000003,
+                45585447552800,
+                263,
+                0,
+                480
+              ],
+              [
+                34,
+                0,
+                31,
+                4.7803,
+                16.202399999999997,
+                45585527524600,
+                271,
+                0,
+                480
+              ],
+              [
+                35,
+                1,
+                32,
+                9.4515,
+                16.4565,
+                45585597638700,
+                278,
+                0,
+                480
+              ],
+              [
+                36,
+                0,
+                33,
+                5.5285,
+                16.710800000000003,
+                45585677546600,
+                286,
+                0,
+                480
+              ],
+              [
+                37,
+                1,
+                34,
+                3.529,
+                16.5362,
+                45585757673900,
+                294,
+                0,
+                480
+              ],
+              [
+                38,
+                0,
+                35,
+                10.4683,
+                16.3393,
+                45585847557300,
+                303,
+                0,
+                480
+              ],
+              [
+                39,
+                1,
+                36,
+                8.0209,
+                16.6167,
+                45585927762400,
+                311,
+                0,
+                480
+              ],
+              [
+                40,
+                0,
+                37,
+                4.5821000000000005,
+                16.399,
+                45586007689500,
+                319,
+                0,
+                480
+              ],
+              [
+                41,
+                1,
+                38,
+                8.236500000000001,
+                17.0582,
+                45586077814000,
+                326,
+                0,
+                480
+              ],
+              [
+                42,
+                0,
+                39,
+                6.0733999999999995,
+                16.279600000000002,
+                45586157597500,
+                334,
+                0,
+                480
+              ],
+              [
+                43,
+                1,
+                40,
+                4.385400000000001,
+                16.4769,
+                45586237648000,
+                342,
+                0,
+                480
+              ],
+              [
+                44,
+                0,
+                41,
+                12.0991,
+                16.2926,
+                45586327571400,
+                351,
+                0,
+                480
+              ],
+              [
+                45,
+                1,
+                42,
+                8.8152,
+                16.5747,
+                45586407523500,
+                359,
+                0,
+                480
+              ],
+              [
+                46,
+                0,
+                43,
+                5.0464,
+                16.4254,
+                45586487541000,
+                367,
+                0,
+                480
+              ],
+              [
+                47,
+                1,
+                44,
+                9.663,
+                16.6933,
+                45586557648000,
+                374,
+                0,
+                480
+              ],
+              [
+                48,
+                0,
+                45,
+                6.8916,
+                16.693099999999998,
+                45586637591700,
+                382,
+                0,
+                480
+              ],
+              [
+                49,
+                1,
+                46,
+                5.4875,
+                16.375799999999998,
+                45586717720900,
+                390,
+                0,
+                480
+              ],
+              [
+                50,
+                0,
+                47,
+                11.388300000000001,
+                17.2445,
+                45586807529300,
+                399,
+                0,
+                480
+              ],
+              [
+                51,
+                1,
+                48,
+                9.722700000000001,
+                16.2406,
+                45586888156700,
+                407,
+                0,
+                480
+              ],
+              [
+                52,
+                0,
+                49,
+                6.8174,
+                16.5698,
+                45586967534700,
+                415,
+                0,
+                480
+              ],
+              [
+                53,
+                1,
+                50,
+                4.8367,
+                16.1858,
+                45587047654700,
+                423,
+                0,
+                480
+              ],
+              [
+                54,
+                0,
+                51,
+                8.7447,
+                16.593799999999998,
+                45587117677900,
+                430,
+                0,
+                480
+              ],
+              [
+                55,
+                1,
+                52,
+                5.1738,
+                16.337799999999998,
+                45587197646400,
+                438,
+                0,
+                480
+              ],
+              [
+                56,
+                0,
+                53,
+                12.8142,
+                16.4178,
+                45587288047700,
+                447,
+                0,
+                480
+              ],
+              [
+                57,
+                1,
+                54,
+                10.3728,
+                16.507399999999997,
+                45587367564900,
+                455,
+                0,
+                480
+              ],
+              [
+                58,
+                0,
+                55,
+                7.7904,
+                16.4378,
+                45587447525400,
+                463,
+                0,
+                480
+              ],
+              [
+                59,
+                1,
+                56,
+                5.5724,
+                16.7418,
+                45587527575400,
+                471,
+                0,
+                480
+              ],
+              [
+                60,
+                0,
+                57,
+                3.7882,
+                16.3245,
+                45587607606200,
+                479,
+                0,
+                480
+              ],
+              [
+                61,
+                1,
+                58,
+                7.3892999999999995,
+                16.1744,
+                45587677722900,
+                486,
+                0,
+                480
+              ],
+              [
+                62,
+                0,
+                59,
+                4.5361,
+                16.3048,
+                45587757659500,
+                494,
+                0,
+                480
+              ],
+              [
+                63,
+                1,
+                60,
+                12.824800000000002,
+                16.4236,
+                45587847674900,
+                503,
+                0,
+                480
+              ],
+              [
+                64,
+                0,
+                61,
+                9.5593,
+                16.1861,
+                45587927557100,
+                511,
+                0,
+                480
+              ],
+              [
+                65,
+                1,
+                62,
+                7.7094,
+                16.7465,
+                45588007582900,
+                519,
+                0,
+                480
+              ],
+              [
+                66,
+                0,
+                63,
+                6.4403999999999995,
+                16.3839,
+                45588087556800,
+                527,
+                0,
+                480
+              ],
+              [
+                67,
+                1,
+                64,
+                3.2895,
+                16.1432,
+                45588167596500,
+                535,
+                0,
+                480
+              ]
+            ],
+            "screens": [
+              [
+                1180,
+                800,
+                944000,
+                64
+              ],
+              [
+                980,
+                700,
+                686000,
+                64
+              ],
+              [
+                980,
+                700,
+                686000,
+                64
+              ],
+              [
+                1841,
+                1240,
+                2282840,
+                64
+              ]
+            ],
+            "expected_screens": [
+              [
+                1180,
+                800
+              ],
+              [
+                980,
+                700
+              ],
+              [
+                980,
+                700
+              ],
+              [
+                1841,
+                1240
+              ]
+            ],
+            "software_scale": true,
+            "native_before": 1,
+            "native_after": 1.25,
+            "physical_dpi": true,
+            "pause_anchor": 243840,
+            "restore_anchor": null,
+            "old_voices": 1,
+            "pending_prepare": true,
+            "pixel_error": 1,
+            "notice": 1,
+            "pcm_after_fault": 0,
+            "callbacks": 626,
+            "missing_frames": 0,
+            "render_errors": 0,
+            "observation_overflows": 0,
+            "endpoint_returns": 1,
+            "callback_resource_releases": 0,
+            "endpoint_returns_in_render": 0,
+            "endpoint_returns_outside_render": 1,
+            "fault_plan": 0,
+            "fault": null,
+            "late_frame_rejected": true,
+            "previous_frame_rejected": false
+          },
+          {
+            "index": 1,
+            "phase": 14,
+            "full_ui_passes": 360,
+            "issued": 64,
+            "rows": [
+              [
+                4,
+                0,
+                1,
+                3.952,
+                5.495299999999999,
+                45589707993500,
+                10,
+                0,
+                480
+              ],
+              [
+                5,
+                1,
+                2,
+                5.6245,
+                16.682,
+                45589797683700,
+                19,
+                0,
+                480
+              ],
+              [
+                6,
+                0,
+                3,
+                3.1602,
+                16.1248,
+                45589877702300,
+                27,
+                0,
+                480
+              ],
+              [
+                7,
+                1,
+                4,
+                9.5096,
+                16.4046,
+                45589967567200,
+                36,
+                0,
+                480
+              ],
+              [
+                8,
+                0,
+                5,
+                7.3314,
+                16.9254,
+                45590047616900,
+                44,
+                0,
+                480
+              ],
+              [
+                9,
+                1,
+                6,
+                11.4353,
+                17.038600000000002,
+                45590118202500,
+                51,
+                0,
+                480
+              ],
+              [
+                10,
+                0,
+                7,
+                7.3218,
+                16.0366,
+                45590197763500,
+                59,
+                0,
+                480
+              ],
+              [
+                11,
+                1,
+                8,
+                6.5997,
+                16.5133,
+                45590277709200,
+                67,
+                0,
+                480
+              ],
+              [
+                12,
+                0,
+                9,
+                3.1008,
+                16.1169,
+                45590357813500,
+                75,
+                0,
+                480
+              ],
+              [
+                13,
+                1,
+                10,
+                11.953999999999999,
+                16.3146,
+                45590447663800,
+                84,
+                0,
+                480
+              ],
+              [
+                14,
+                0,
+                11,
+                8.8667,
+                16.6633,
+                45590527598800,
+                92,
+                0,
+                480
+              ],
+              [
+                15,
+                1,
+                12,
+                3.8886,
+                16.383499999999998,
+                45590587555900,
+                98,
+                0,
+                480
+              ],
+              [
+                16,
+                0,
+                13,
+                12.2682,
+                16.2075,
+                45590677660700,
+                107,
+                0,
+                480
+              ],
+              [
+                17,
+                1,
+                14,
+                8.825299999999999,
+                16.3518,
+                45590757808100,
+                115,
+                0,
+                480
+              ],
+              [
+                18,
+                0,
+                15,
+                7.0271,
+                16.2639,
+                45590837566600,
+                123,
+                0,
+                480
+              ],
+              [
+                19,
+                1,
+                16,
+                12.2963,
+                16.4265,
+                45590927514600,
+                132,
+                0,
+                480
+              ],
+              [
+                20,
+                0,
+                17,
+                10.954,
+                16.255300000000002,
+                45591007537200,
+                140,
+                0,
+                480
+              ],
+              [
+                21,
+                1,
+                18,
+                7.3699,
+                16.250500000000002,
+                45591087782200,
+                148,
+                0,
+                480
+              ],
+              [
+                22,
+                0,
+                19,
+                11.7255,
+                16.180300000000003,
+                45591157636300,
+                155,
+                0,
+                480
+              ],
+              [
+                23,
+                1,
+                20,
+                9.1295,
+                16.4663,
+                45591237664500,
+                163,
+                0,
+                480
+              ],
+              [
+                24,
+                0,
+                21,
+                7.779999999999999,
+                16.9517,
+                45591317599500,
+                171,
+                0,
+                480
+              ],
+              [
+                25,
+                1,
+                22,
+                3.3449999999999998,
+                16.3583,
+                45591397609400,
+                179,
+                0,
+                480
+              ],
+              [
+                26,
+                0,
+                23,
+                1.8345,
+                16.2834,
+                45591477739700,
+                187,
+                0,
+                480
+              ],
+              [
+                27,
+                1,
+                24,
+                10.2249,
+                16.4253,
+                45591567568500,
+                196,
+                0,
+                480
+              ],
+              [
+                28,
+                0,
+                25,
+                3.8251,
+                16.312900000000003,
+                45591627698400,
+                202,
+                0,
+                480
+              ],
+              [
+                29,
+                1,
+                26,
+                11.488,
+                16.3617,
+                45591717743300,
+                211,
+                0,
+                480
+              ],
+              [
+                30,
+                0,
+                27,
+                8.905800000000001,
+                16.4611,
+                45591797589700,
+                219,
+                0,
+                480
+              ],
+              [
+                31,
+                1,
+                28,
+                4.902100000000001,
+                16.503400000000003,
+                45591877649400,
+                227,
+                0,
+                480
+              ],
+              [
+                32,
+                0,
+                29,
+                11.1852,
+                16.0258,
+                45591967518400,
+                236,
+                0,
+                480
+              ],
+              [
+                33,
+                1,
+                30,
+                8.974599999999999,
+                16.2595,
+                45592047608800,
+                244,
+                0,
+                480
+              ],
+              [
+                34,
+                0,
+                31,
+                3.3635,
+                16.1281,
+                45592107651900,
+                250,
+                0,
+                480
+              ],
+              [
+                35,
+                1,
+                32,
+                1.9581999999999997,
+                16.9451,
+                45592188131600,
+                258,
+                0,
+                480
+              ],
+              [
+                36,
+                0,
+                33,
+                9.7313,
+                16.294800000000002,
+                45592277751800,
+                267,
+                0,
+                480
+              ],
+              [
+                37,
+                1,
+                34,
+                7.7035,
+                16.497899999999998,
+                45592357697800,
+                275,
+                0,
+                480
+              ],
+              [
+                38,
+                0,
+                35,
+                6.1636,
+                16.1704,
+                45592437706200,
+                283,
+                0,
+                480
+              ],
+              [
+                39,
+                1,
+                36,
+                3.8859,
+                16.192800000000002,
+                45592517623200,
+                291,
+                0,
+                480
+              ],
+              [
+                40,
+                0,
+                37,
+                10.4421,
+                16.4937,
+                45592607647900,
+                300,
+                0,
+                480
+              ],
+              [
+                41,
+                1,
+                38,
+                8.5147,
+                16.6273,
+                45592687942000,
+                308,
+                0,
+                480
+              ],
+              [
+                42,
+                0,
+                39,
+                12.6134,
+                16.3563,
+                45592757708900,
+                315,
+                0,
+                480
+              ],
+              [
+                43,
+                1,
+                40,
+                11.307400000000001,
+                16.6877,
+                45592837601500,
+                323,
+                0,
+                480
+              ],
+              [
+                44,
+                0,
+                41,
+                10.01,
+                16.493000000000002,
+                45592917804900,
+                331,
+                0,
+                480
+              ],
+              [
+                45,
+                1,
+                42,
+                7.3278,
+                16.6742,
+                45592997621100,
+                339,
+                0,
+                480
+              ],
+              [
+                46,
+                0,
+                43,
+                3.7013,
+                16.468,
+                45593077624500,
+                347,
+                0,
+                480
+              ],
+              [
+                47,
+                1,
+                44,
+                4.8648,
+                16.5135,
+                45593157625000,
+                355,
+                0,
+                480
+              ],
+              [
+                48,
+                0,
+                45,
+                8.7539,
+                16.7986,
+                45593247700000,
+                364,
+                0,
+                480
+              ],
+              [
+                49,
+                1,
+                46,
+                13.5213,
+                16.6195,
+                45593317649000,
+                371,
+                0,
+                480
+              ],
+              [
+                50,
+                0,
+                47,
+                10.5234,
+                16.1532,
+                45593397607300,
+                379,
+                0,
+                480
+              ],
+              [
+                51,
+                1,
+                48,
+                8.8378,
+                16.5912,
+                45593477580900,
+                387,
+                0,
+                480
+              ],
+              [
+                52,
+                0,
+                49,
+                7.0242,
+                16.5895,
+                45593557705300,
+                395,
+                0,
+                480
+              ],
+              [
+                53,
+                1,
+                50,
+                5.2569,
+                16.157,
+                45593637749000,
+                403,
+                0,
+                480
+              ],
+              [
+                54,
+                0,
+                51,
+                12.8453,
+                16.1083,
+                45593727648100,
+                412,
+                0,
+                480
+              ],
+              [
+                55,
+                1,
+                52,
+                9.3992,
+                16.1285,
+                45593807828400,
+                420,
+                0,
+                480
+              ],
+              [
+                56,
+                0,
+                53,
+                3.8305000000000002,
+                16.4697,
+                45593867690500,
+                426,
+                0,
+                480
+              ],
+              [
+                57,
+                1,
+                54,
+                10.477500000000001,
+                16.2911,
+                45593957644100,
+                435,
+                0,
+                480
+              ],
+              [
+                58,
+                0,
+                55,
+                7.4865,
+                16.5534,
+                45594037579700,
+                443,
+                0,
+                480
+              ],
+              [
+                59,
+                1,
+                56,
+                5.7984,
+                16.1591,
+                45594117695700,
+                451,
+                0,
+                480
+              ],
+              [
+                60,
+                0,
+                57,
+                11.9996,
+                16.6481,
+                45594207512900,
+                460,
+                0,
+                480
+              ],
+              [
+                61,
+                1,
+                58,
+                10.2258,
+                16.565900000000003,
+                45594288370000,
+                468,
+                0,
+                480
+              ],
+              [
+                62,
+                0,
+                59,
+                4.2544,
+                16.2899,
+                45594347712600,
+                474,
+                0,
+                480
+              ],
+              [
+                63,
+                1,
+                60,
+                12.8691,
+                16.4693,
+                45594438307800,
+                483,
+                0,
+                480
+              ],
+              [
+                64,
+                0,
+                61,
+                9.4018,
+                16.6649,
+                45594517579300,
+                491,
+                0,
+                480
+              ],
+              [
+                65,
+                1,
+                62,
+                6.0934,
+                16.5625,
+                45594597676700,
+                499,
+                0,
+                480
+              ],
+              [
+                66,
+                0,
+                63,
+                4.3827,
+                16.4888,
+                45594677989000,
+                507,
+                0,
+                480
+              ],
+              [
+                67,
+                1,
+                64,
+                2.3649,
+                16.0411,
+                45594757626700,
+                515,
+                0,
+                480
+              ]
+            ],
+            "screens": [
+              [
+                1180,
+                800,
+                944000,
+                64
+              ],
+              [
+                980,
+                700,
+                686000,
+                64
+              ],
+              [
+                980,
+                700,
+                686000,
+                64
+              ],
+              [
+                1841,
+                1240,
+                2282840,
+                64
+              ]
+            ],
+            "expected_screens": [
+              [
+                1180,
+                800
+              ],
+              [
+                980,
+                700
+              ],
+              [
+                980,
+                700
+              ],
+              [
+                1841,
+                1240
+              ]
+            ],
+            "software_scale": true,
+            "native_before": 1,
+            "native_after": 1.25,
+            "physical_dpi": true,
+            "pause_anchor": 487200,
+            "restore_anchor": 243840,
+            "old_voices": 1,
+            "pending_prepare": true,
+            "pixel_error": 1,
+            "notice": 1,
+            "pcm_after_fault": 0,
+            "callbacks": 603,
+            "missing_frames": 0,
+            "render_errors": 0,
+            "observation_overflows": 0,
+            "endpoint_returns": 1,
+            "callback_resource_releases": 0,
+            "endpoint_returns_in_render": 0,
+            "endpoint_returns_outside_render": 1,
+            "fault_plan": 0,
+            "fault": null,
+            "late_frame_rejected": true,
+            "previous_frame_rejected": true
+          }
+        ],
+        "retirements": [
+          {
+            "renderer_released": true,
+            "surfaces_empty": true,
+            "device_resources_empty": true,
+            "targets": 0,
+            "worker_closed": true,
+            "importer_closed": true,
+            "held_draw_blocked": true,
+            "texture_ids": 0,
+            "texture_kept": 0,
+            "surface_failures": 0,
+            "other_registries_empty": true,
+            "instance_retired": true
+          },
+          {
+            "renderer_released": true,
+            "surfaces_empty": true,
+            "device_resources_empty": true,
+            "targets": 0,
+            "worker_closed": true,
+            "importer_closed": true,
+            "held_draw_blocked": true,
+            "texture_ids": 0,
+            "texture_kept": 0,
+            "surface_failures": 0,
+            "other_registries_empty": true,
+            "instance_retired": true
+          }
+        ],
+        "pixels_exact": true,
+        "project_unchanged": true,
+        "raw_final": 0,
+        "rgba_final": 0,
+        "pcm_final": 0,
+        "raw_peak": 132796,
+        "rgba_peak": 32768,
+        "pcm_peak": 323072
+      }
+    }
+  },
+  "prior_failed_plans": [
+    {
+      "path": "artifacts/p2/present-fault/native-1",
+      "reason": "fatal surface status precedes DeviceLost dispatch; audio gate not closed before exit controller"
+    },
+    {
+      "path": "artifacts/p2/present-fault/native-2",
+      "reason": "strict texture-registry emptiness rejected unassigned surface IDs despite no user-held objects"
+    }
+  ],
+  "visual_qa": {
+    "image": "artifacts/p2/present-fault/native-3/rebuild-failure/process/ui-1-3.png",
+    "method": "own renderer readback",
+    "result": "Chinese text/panels legible after failed creation and replacement; no visible atlas corruption"
+  },
+  "preexisting_json_unchanged": {
+    "count": 100,
+    "all_match": true
+  },
+  "changed_code_since_start": [
+    "desktop/host/src/editor_audio/window_recovery/backend.rs",
+    "desktop/host/src/editor_audio/window_recovery/fault.rs",
+    "desktop/host/src/editor_audio/window_recovery/report.rs",
+    "desktop/host/src/editor_audio/window_recovery.rs",
+    "desktop/host/src/main.rs",
+    "desktop/host/src/presentation.rs",
+    "tools/measure_present_fault.py",
+    "tools/measure_window_recovery.py",
+    "tools/test_check_window_recovery.py"
+  ],
+  "limitations": [
+    "explicit candidate only; ordinary startup has no automatic recovery",
+    "owned Device.destroy is not a real driver Unknown loss/TDR or OOM",
+    "creation rejection occurs before consuming project handoff; later initialization failure remains open",
+    "active draft/gesture versus failure and physical audio/default-endpoint changes unverified",
+    "single-image fixture; no current standard/cold-preparation promotion or C5 manual input",
+    "Windows RTX 2060 only; no Linux/macOS or acoustic residual-buffer proof"
+  ],
+  "artifacts": {
+    "artifacts/p2/present-fault/native-1/paint.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "artifacts/p2/present-fault/native-1/prepare.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "artifacts/p2/present-fault/native-1/proof.json": {
+      "sha256": "10f84870b79d9a5d1f9ac8928ac4662a27a34b50dc8f49f9d0188372618c4074",
+      "bytes": 26974
+    },
+    "artifacts/p2/present-fault/native-1/rebuild-failure.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "artifacts/p2/present-fault/native-1/paint/proof.json": {
+      "sha256": "1a8f103efe319db3b4c18f6d9d462004b0ef0c0769cf013f9af757f9d5079991",
+      "bytes": 71654
+    },
+    "artifacts/p2/present-fault/native-1/paint/stderr.log": {
+      "sha256": "675d32dc9962c259bf9b9a23d5bc3ac24c092b883d43d0f47ef93724fcae1cf0",
+      "bytes": 57
+    },
+    "artifacts/p2/present-fault/native-1/paint/process/dpi-0.ok": {
+      "sha256": "5edd1832df25e2f1a72585c0ee55c1e585e7f4902eb1d15f7abf1c71c1b296ae",
+      "bytes": 5
+    },
+    "artifacts/p2/present-fault/native-1/paint/process/failure.txt": {
+      "sha256": "fdc65c4c645a5d352d6107d6a753fb8c1c82e0fed999b9ca75c9512e12eadee3",
+      "bytes": 47
+    },
+    "artifacts/p2/present-fault/native-1/paint/process/partial-window.json": {
+      "sha256": "9facdb8076ff2f4586a0e9ca8e2d1e30a7cdecc59d53c766b9f1aa95013b0ae8",
+      "bytes": 4541
+    },
+    "artifacts/p2/present-fault/native-1/paint/process/restore-0.ok": {
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "bytes": 1
+    },
+    "artifacts/p2/present-fault/native-1/paint/process/ui-0-0.png": {
+      "sha256": "3aef6866ab302259724023e442f85ea80c8d138767d7d407995369052f7337c3",
+      "bytes": 206154
+    },
+    "artifacts/p2/present-fault/native-1/paint/process/ui-0-1.png": {
+      "sha256": "1ad2255da350980041abf673d93fa18a93478185a978525d3494afad969c57f7",
+      "bytes": 186334
+    },
+    "artifacts/p2/present-fault/native-1/paint/process/ui-0-2.png": {
+      "sha256": "f6953d99740348a82faf8c4f8f0a4f30f1deb20965207b654a328a64a085078e",
+      "bytes": 215863
+    },
+    "artifacts/p2/present-fault/native-1/paint/process/ui-0-3.png": {
+      "sha256": "9a0130af34d8f5e1d922a21be724ef574db4613293f967385f66524efd2300cc",
+      "bytes": 326210
+    },
+    "artifacts/p2/present-fault/native-1/prepare/proof.json": {
+      "sha256": "f9c32403c657238058bb2e1461696da0d3f504ecbaad7680030b09befdd1e53b",
+      "bytes": 74713
+    },
+    "artifacts/p2/present-fault/native-1/prepare/stderr.log": {
+      "sha256": "675d32dc9962c259bf9b9a23d5bc3ac24c092b883d43d0f47ef93724fcae1cf0",
+      "bytes": 57
+    },
+    "artifacts/p2/present-fault/native-1/prepare/process/dpi-0.ok": {
+      "sha256": "5edd1832df25e2f1a72585c0ee55c1e585e7f4902eb1d15f7abf1c71c1b296ae",
+      "bytes": 5
+    },
+    "artifacts/p2/present-fault/native-1/prepare/process/failure.txt": {
+      "sha256": "fdc65c4c645a5d352d6107d6a753fb8c1c82e0fed999b9ca75c9512e12eadee3",
+      "bytes": 47
+    },
+    "artifacts/p2/present-fault/native-1/prepare/process/partial-window.json": {
+      "sha256": "cbf5fe035b16a9fa350a11770d399baf7ba553f1c13f59b6ce5f320e70ac4374",
+      "bytes": 4473
+    },
+    "artifacts/p2/present-fault/native-1/prepare/process/restore-0.ok": {
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "bytes": 1
+    },
+    "artifacts/p2/present-fault/native-1/prepare/process/ui-0-0.png": {
+      "sha256": "85bb0bcbdd110ed649fc9e5328512c58545fb271326ef1c0a1d579607dca6ddb",
+      "bytes": 206406
+    },
+    "artifacts/p2/present-fault/native-1/prepare/process/ui-0-1.png": {
+      "sha256": "02e7c1c1db5ba3c430ace101ed0a7442f78143346e2d1c37e56a245359fc4a59",
+      "bytes": 186483
+    },
+    "artifacts/p2/present-fault/native-1/prepare/process/ui-0-2.png": {
+      "sha256": "1cd61ba1b485985d98cad17b14c2b0364e9fb897a44332f5cc94e5e4ff3597ee",
+      "bytes": 216069
+    },
+    "artifacts/p2/present-fault/native-1/prepare/process/ui-0-3.png": {
+      "sha256": "cc41f39827f2c9b4f7e4b7f8c105df869ecce64e71d71393615d4bebea226652",
+      "bytes": 326244
+    },
+    "artifacts/p2/present-fault/native-1/rebuild-failure/proof.json": {
+      "sha256": "39cadbff6ec911d745376b65d01f25958cac7f01fe67d5d038d840118c71d5a2",
+      "bytes": 70884
+    },
+    "artifacts/p2/present-fault/native-1/rebuild-failure/stderr.log": {
+      "sha256": "675d32dc9962c259bf9b9a23d5bc3ac24c092b883d43d0f47ef93724fcae1cf0",
+      "bytes": 57
+    },
+    "artifacts/p2/present-fault/native-1/rebuild-failure/process/dpi-0.ok": {
+      "sha256": "5edd1832df25e2f1a72585c0ee55c1e585e7f4902eb1d15f7abf1c71c1b296ae",
+      "bytes": 5
+    },
+    "artifacts/p2/present-fault/native-1/rebuild-failure/process/failure.txt": {
+      "sha256": "fdc65c4c645a5d352d6107d6a753fb8c1c82e0fed999b9ca75c9512e12eadee3",
+      "bytes": 47
+    },
+    "artifacts/p2/present-fault/native-1/rebuild-failure/process/partial-window.json": {
+      "sha256": "8b7dc21bffccc58ba5a0ba2446e86f7cef61262db8d2e4de105a4e354e49e8f6",
+      "bytes": 4505
+    },
+    "artifacts/p2/present-fault/native-1/rebuild-failure/process/restore-0.ok": {
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "bytes": 1
+    },
+    "artifacts/p2/present-fault/native-1/rebuild-failure/process/ui-0-0.png": {
+      "sha256": "32b9ee0ce8d16b82551f9c26d62efb5cafc05c123f5a8dd42d3f617ebce3946e",
+      "bytes": 206251
+    },
+    "artifacts/p2/present-fault/native-1/rebuild-failure/process/ui-0-1.png": {
+      "sha256": "23f7e988dadd974ea1d868378048a8d4c23a1a1f85ca7749160afa46a428dae6",
+      "bytes": 186372
+    },
+    "artifacts/p2/present-fault/native-1/rebuild-failure/process/ui-0-2.png": {
+      "sha256": "82332ec2c72d9ce491d962b4511ce36f1b2530eb5dd96d8db4307b441515acfa",
+      "bytes": 215947
+    },
+    "artifacts/p2/present-fault/native-1/rebuild-failure/process/ui-0-3.png": {
+      "sha256": "445a2bb5af291b22dd30776fcde9655c1d649c6a25e046fcaa8fda8599466877",
+      "bytes": 326123
+    },
+    "artifacts/p2/present-fault/native-2/paint.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "artifacts/p2/present-fault/native-2/prepare.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "artifacts/p2/present-fault/native-2/proof.json": {
+      "sha256": "a258ceef4a83effb511963947d0ea4df27b9513ce793709117708ceb141ccdf8",
+      "bytes": 26974
+    },
+    "artifacts/p2/present-fault/native-2/rebuild-failure.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "artifacts/p2/present-fault/native-2/paint/proof.json": {
+      "sha256": "43bebaa84b7dd3f4d58c305f6641f870373f45cc6718305d2be5170ae9e1427d",
+      "bytes": 70898
+    },
+    "artifacts/p2/present-fault/native-2/paint/stderr.log": {
+      "sha256": "2b2976bc49f29b9568b528c008b5595f6634e41aced3764906721a1654a32b1a",
+      "bytes": 2890
+    },
+    "artifacts/p2/present-fault/native-2/paint/process/dpi-0.ok": {
+      "sha256": "5edd1832df25e2f1a72585c0ee55c1e585e7f4902eb1d15f7abf1c71c1b296ae",
+      "bytes": 5
+    },
+    "artifacts/p2/present-fault/native-2/paint/process/preview-0.rgba": {
+      "sha256": "20f5265399fe9f7e4ef0ab8c1bd9ca777dc5c4b90de92277988e1403d05c71b7",
+      "bytes": 65536
+    },
+    "artifacts/p2/present-fault/native-2/paint/process/restore-0.ok": {
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "bytes": 1
+    },
+    "artifacts/p2/present-fault/native-2/paint/process/ui-0-0.png": {
+      "sha256": "6e4ea9b06cbb8abebead05030c1abc05493b7ee1d4caa050fd938fe3f12c8868",
+      "bytes": 206289
+    },
+    "artifacts/p2/present-fault/native-2/paint/process/ui-0-1.png": {
+      "sha256": "026ea39a83fda2b77996857790a9d6542ff732462551561a4691c1bd6e682349",
+      "bytes": 186603
+    },
+    "artifacts/p2/present-fault/native-2/paint/process/ui-0-2.png": {
+      "sha256": "a976d215f9d3080bb73f5b194034be24160969b128ca28c739fee53320805d3f",
+      "bytes": 216285
+    },
+    "artifacts/p2/present-fault/native-2/paint/process/ui-0-3.png": {
+      "sha256": "b4bfb561b7741f0d53021215054ee31bee147f665fc58a0edd0ee6c0eb63ea55",
+      "bytes": 326461
+    },
+    "artifacts/p2/present-fault/native-2/prepare/proof.json": {
+      "sha256": "da4ae33495bea042c2a036237debf00038f24e880e9e12bbbae931a86744e976",
+      "bytes": 70903
+    },
+    "artifacts/p2/present-fault/native-2/prepare/stderr.log": {
+      "sha256": "2b2976bc49f29b9568b528c008b5595f6634e41aced3764906721a1654a32b1a",
+      "bytes": 2890
+    },
+    "artifacts/p2/present-fault/native-2/prepare/process/dpi-0.ok": {
+      "sha256": "5edd1832df25e2f1a72585c0ee55c1e585e7f4902eb1d15f7abf1c71c1b296ae",
+      "bytes": 5
+    },
+    "artifacts/p2/present-fault/native-2/prepare/process/preview-0.rgba": {
+      "sha256": "20f5265399fe9f7e4ef0ab8c1bd9ca777dc5c4b90de92277988e1403d05c71b7",
+      "bytes": 65536
+    },
+    "artifacts/p2/present-fault/native-2/prepare/process/restore-0.ok": {
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "bytes": 1
+    },
+    "artifacts/p2/present-fault/native-2/prepare/process/ui-0-0.png": {
+      "sha256": "32b9ee0ce8d16b82551f9c26d62efb5cafc05c123f5a8dd42d3f617ebce3946e",
+      "bytes": 206251
+    },
+    "artifacts/p2/present-fault/native-2/prepare/process/ui-0-1.png": {
+      "sha256": "9dd3391c4344a2a3fb2c92b15b09f172a485ac3c8941c66423bb08afcd4c8448",
+      "bytes": 186490
+    },
+    "artifacts/p2/present-fault/native-2/prepare/process/ui-0-2.png": {
+      "sha256": "c743faf275fb2db268dd9f15dd948f9421e151121bb29cfd5579974d45390e3e",
+      "bytes": 216115
+    },
+    "artifacts/p2/present-fault/native-2/prepare/process/ui-0-3.png": {
+      "sha256": "eb760d1e1396e70c9a09739b403af014573064c0c31fc1d7db2ba6c0e05aa064",
+      "bytes": 326461
+    },
+    "artifacts/p2/present-fault/native-2/rebuild-failure/proof.json": {
+      "sha256": "3b05bac5e460d85ed236a6438794b126976a4c9e79fd72dc6746aa4bbfa15079",
+      "bytes": 71676
+    },
+    "artifacts/p2/present-fault/native-2/rebuild-failure/stderr.log": {
+      "sha256": "2b2976bc49f29b9568b528c008b5595f6634e41aced3764906721a1654a32b1a",
+      "bytes": 2890
+    },
+    "artifacts/p2/present-fault/native-2/rebuild-failure/process/dpi-0.ok": {
+      "sha256": "5edd1832df25e2f1a72585c0ee55c1e585e7f4902eb1d15f7abf1c71c1b296ae",
+      "bytes": 5
+    },
+    "artifacts/p2/present-fault/native-2/rebuild-failure/process/preview-0.rgba": {
+      "sha256": "20f5265399fe9f7e4ef0ab8c1bd9ca777dc5c4b90de92277988e1403d05c71b7",
+      "bytes": 65536
+    },
+    "artifacts/p2/present-fault/native-2/rebuild-failure/process/restore-0.ok": {
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "bytes": 1
+    },
+    "artifacts/p2/present-fault/native-2/rebuild-failure/process/ui-0-0.png": {
+      "sha256": "6e4ea9b06cbb8abebead05030c1abc05493b7ee1d4caa050fd938fe3f12c8868",
+      "bytes": 206289
+    },
+    "artifacts/p2/present-fault/native-2/rebuild-failure/process/ui-0-1.png": {
+      "sha256": "28c4a0e9caa0fdbd0da276fce8f26f69ad8a35983a618fc833b27def54344165",
+      "bytes": 186232
+    },
+    "artifacts/p2/present-fault/native-2/rebuild-failure/process/ui-0-2.png": {
+      "sha256": "d1b16e89391709a0917df3f8df4a1865c6220aba960998bd31648614dace5046",
+      "bytes": 215761
+    },
+    "artifacts/p2/present-fault/native-2/rebuild-failure/process/ui-0-3.png": {
+      "sha256": "046e04d9712d2d0db6db2ebdb0685030069b1a0c82144e3811af69c10f7cdd4e",
+      "bytes": 326021
+    },
+    "artifacts/p2/present-fault/native-3/paint.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "artifacts/p2/present-fault/native-3/prepare.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "artifacts/p2/present-fault/native-3/proof.json": {
+      "sha256": "83816380c95c7ce07e21290e0d95161c3b8cfb8adbceace725e461d56975d252",
+      "bytes": 26973
+    },
+    "artifacts/p2/present-fault/native-3/rebuild-failure.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "artifacts/p2/present-fault/native-3/paint/proof.json": {
+      "sha256": "b59ec380262306416e67015d4d9601606f4881a981da5942354d642fac252534",
+      "bytes": 153349
+    },
+    "artifacts/p2/present-fault/native-3/paint/stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "artifacts/p2/present-fault/native-3/paint/process/dpi-0.ok": {
+      "sha256": "5edd1832df25e2f1a72585c0ee55c1e585e7f4902eb1d15f7abf1c71c1b296ae",
+      "bytes": 5
+    },
+    "artifacts/p2/present-fault/native-3/paint/process/dpi-1.ok": {
+      "sha256": "5edd1832df25e2f1a72585c0ee55c1e585e7f4902eb1d15f7abf1c71c1b296ae",
+      "bytes": 5
+    },
+    "artifacts/p2/present-fault/native-3/paint/process/preview-0.rgba": {
+      "sha256": "20f5265399fe9f7e4ef0ab8c1bd9ca777dc5c4b90de92277988e1403d05c71b7",
+      "bytes": 65536
+    },
+    "artifacts/p2/present-fault/native-3/paint/process/preview-1.rgba": {
+      "sha256": "20f5265399fe9f7e4ef0ab8c1bd9ca777dc5c4b90de92277988e1403d05c71b7",
+      "bytes": 65536
+    },
+    "artifacts/p2/present-fault/native-3/paint/process/report.json": {
+      "sha256": "4544159b14baf41a836d25bb9aadfb34087b728c866435c9ce317c455113494b",
+      "bytes": 9950
+    },
+    "artifacts/p2/present-fault/native-3/paint/process/restore-0.ok": {
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "bytes": 1
+    },
+    "artifacts/p2/present-fault/native-3/paint/process/restore-1.ok": {
+      "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+      "bytes": 1
+    },
+    "artifacts/p2/present-fault/native-3/paint/process/ui-0-0.png": {
+      "sha256": "777d5ed42e1f2f8f5deff2fbbbe628d707dc817e1dfb7068923500b98b1a2aed",
+      "bytes": 206259
+    },
+    "artifacts/p2/present-fault/native-3/paint/process/ui-0-1.png": {
+      "sha256": "c8dbb63431a1146fee59264ff2c432085f0aa0609bed40044e2426d85b10b621",
+      "bytes": 186374
+    },
+    "artifacts/p2/present-fault/native-3/paint/process/ui-0-2.png": {
+      "sha256": "4a03bf7bff478a5e0d718880946923dfa915e28ffbc98a2a2bef532bc246fdcf",
+      "bytes": 215887
+    },
+    "artifacts/p2/present-fault/native-3/paint/process/ui-0-3.png": {
+      "sha256": "4a65b242bd488af66a99d5de9b458de3bb50385f5918179357b0118c18912994",
+      "bytes": 325956
+    },
+    "artifacts/p2/present-fault/native-3/paint/process/ui-1-0.png": {
+      "sha256": "367fdadbd006a18fd793b2b46154f9cfd0317a5936c0202637530cc8ae3b33bd",
+      "bytes": 207352
+    },
+    "artifacts/p2/present-fault/native-3/paint/process/ui-1-1.png": {
+      "sha256": "e6a540b764a13e1b4dda715c40bcac0ba2638a1aaa0cec426ddb1ab4c3bb3947",
+      "bytes": 186591
+    },
+    "artifacts/p2/present-fault/native-3/paint/process/ui-1-2.png": {
+      "sha256": "6db0f29fe872831510607723018179f27b2b625eec208cb6efe5155a1fbeff6a",
+      "bytes": 216208
+    },
+    "artifacts/p2/present-fault/native-3/paint/process/ui-1-3.png": {
+      "sha256": "453451ddc48378733161e13bcfa75cf0da6ab68454dc9f9d3c85b6b02099624f",
+      "bytes": 326485
+    },
+    "artifacts/p2/present-fault/native-3/paint/process/window-0.json": {
+      "sha256": "6969e715b1b9164527347a2983518e10ba92949f8a25453b81da6a463263d724",
+      "bytes": 4517
+    },
+    "artifacts/p2/present-fault/native-3/paint/process/window-1.json": {
+      "sha256": "e47664fb3d614802b807908a7051f6a59cdf6ea498ed8f94308b64f0d9c97a1d",
+      "bytes": 4334
+    },
+    "artifacts/p2/present-fault/native-3/prepare/proof.json": {
+      "sha256": "15366e7b9bb0d579d5bfc2922311cbe83c648405c0998190e75f4233a6679503",
+      "bytes": 153512
+    },
+    "artifacts/p2/present-fault/native-3/prepare/stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "artifacts/p2/present-fault/native-3/prepare/process/dpi-0.ok": {
+      "sha256": "5edd1832df25e2f1a72585c0ee55c1e585e7f4902eb1d15f7abf1c71c1b296ae",
+      "bytes": 5
+    },
+    "artifacts/p2/present-fault/native-3/prepare/process/dpi-1.ok": {
+      "sha256": "5edd1832df25e2f1a72585c0ee55c1e585e7f4902eb1d15f7abf1c71c1b296ae",
+      "bytes": 5
+    },
+    "artifacts/p2/present-fault/native-3/prepare/process/preview-0.rgba": {
+      "sha256": "20f5265399fe9f7e4ef0ab8c1bd9ca777dc5c4b90de92277988e1403d05c71b7",
+      "bytes": 65536
+    },
+    "artifacts/p2/present-fault/native-3/prepare/process/preview-1.rgba": {
+      "sha256": "20f5265399fe9f7e4ef0ab8c1bd9ca777dc5c4b90de92277988e1403d05c71b7",
+      "bytes": 65536
+    },
+    "artifacts/p2/present-fault/native-3/prepare/process/report.json": {
+      "sha256": "23050ef3408ccfd5b271bd579d30f60b2090ce65e0b813811dedc5c2ef6984c2",
+      "bytes": 10047
+    },
+    "artifacts/p2/present-fault/native-3/prepare/process/restore-0.ok": {
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "bytes": 1
+    },
+    "artifacts/p2/present-fault/native-3/prepare/process/restore-1.ok": {
+      "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+      "bytes": 1
+    },
+    "artifacts/p2/present-fault/native-3/prepare/process/ui-0-0.png": {
+      "sha256": "3aef6866ab302259724023e442f85ea80c8d138767d7d407995369052f7337c3",
+      "bytes": 206154
+    },
+    "artifacts/p2/present-fault/native-3/prepare/process/ui-0-1.png": {
+      "sha256": "1e8bd9fd0175e1799cfde948ca113e2a0a794847e7cf28bff212a5758a8f3bc5",
+      "bytes": 186444
+    },
+    "artifacts/p2/present-fault/native-3/prepare/process/ui-0-2.png": {
+      "sha256": "b49a4e759c15848fe2694e54c7e00e7cf23afa9c0fa479804f851a31112eb1d1",
+      "bytes": 216006
+    },
+    "artifacts/p2/present-fault/native-3/prepare/process/ui-0-3.png": {
+      "sha256": "3b93c32e29ad6c83d1e6178599ff262dbe0a18798cb54d3b572469206d4327e4",
+      "bytes": 326308
+    },
+    "artifacts/p2/present-fault/native-3/prepare/process/ui-1-0.png": {
+      "sha256": "22e5c6b25f84769cedbe776f2fd520aaad30821a041517f8205b37e02c2d988f",
+      "bytes": 207350
+    },
+    "artifacts/p2/present-fault/native-3/prepare/process/ui-1-1.png": {
+      "sha256": "bea7d541836f1c069260264da8d433e2665db9c95009760a27f4b387f095ed30",
+      "bytes": 186416
+    },
+    "artifacts/p2/present-fault/native-3/prepare/process/ui-1-2.png": {
+      "sha256": "d27e01a0b3ea13856049435e6a4d0b437b856c22298d61e52e683a11739883a7",
+      "bytes": 216025
+    },
+    "artifacts/p2/present-fault/native-3/prepare/process/ui-1-3.png": {
+      "sha256": "48bbfa781fc98861f2f56863c9da082f88a62126f8aea9ab9d1dcc09fcc2425d",
+      "bytes": 326522
+    },
+    "artifacts/p2/present-fault/native-3/prepare/process/window-0.json": {
+      "sha256": "5ab9ae152e7a8f9580a069683772677245cbea12c95339b5ae57391778b1dba4",
+      "bytes": 4619
+    },
+    "artifacts/p2/present-fault/native-3/prepare/process/window-1.json": {
+      "sha256": "3a82b583ec1f1f3428d22223d54e80dfb191b2605e5da58cefa70e98aef9eda3",
+      "bytes": 4329
+    },
+    "artifacts/p2/present-fault/native-3/rebuild-failure/proof.json": {
+      "sha256": "c0be8b0899f684e75be38b1ec949769c2ec627da89cec289cc20c4f38ef082e6",
+      "bytes": 155561
+    },
+    "artifacts/p2/present-fault/native-3/rebuild-failure/stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "artifacts/p2/present-fault/native-3/rebuild-failure/process/dpi-0.ok": {
+      "sha256": "5edd1832df25e2f1a72585c0ee55c1e585e7f4902eb1d15f7abf1c71c1b296ae",
+      "bytes": 5
+    },
+    "artifacts/p2/present-fault/native-3/rebuild-failure/process/dpi-1.ok": {
+      "sha256": "5edd1832df25e2f1a72585c0ee55c1e585e7f4902eb1d15f7abf1c71c1b296ae",
+      "bytes": 5
+    },
+    "artifacts/p2/present-fault/native-3/rebuild-failure/process/preview-0.rgba": {
+      "sha256": "20f5265399fe9f7e4ef0ab8c1bd9ca777dc5c4b90de92277988e1403d05c71b7",
+      "bytes": 65536
+    },
+    "artifacts/p2/present-fault/native-3/rebuild-failure/process/preview-1.rgba": {
+      "sha256": "20f5265399fe9f7e4ef0ab8c1bd9ca777dc5c4b90de92277988e1403d05c71b7",
+      "bytes": 65536
+    },
+    "artifacts/p2/present-fault/native-3/rebuild-failure/process/report.json": {
+      "sha256": "bbe13dd539bf1d949cfe10afbd7e41cb534d233de558d12da5445ff07635409d",
+      "bytes": 9826
+    },
+    "artifacts/p2/present-fault/native-3/rebuild-failure/process/restore-0.ok": {
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "bytes": 1
+    },
+    "artifacts/p2/present-fault/native-3/rebuild-failure/process/restore-1.ok": {
+      "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+      "bytes": 1
+    },
+    "artifacts/p2/present-fault/native-3/rebuild-failure/process/ui-0-0.png": {
+      "sha256": "6e4ea9b06cbb8abebead05030c1abc05493b7ee1d4caa050fd938fe3f12c8868",
+      "bytes": 206289
+    },
+    "artifacts/p2/present-fault/native-3/rebuild-failure/process/ui-0-1.png": {
+      "sha256": "9f9f9a2e8193714285d75609a76b6893123b18705b737f33f26b4b99f4527035",
+      "bytes": 186515
+    },
+    "artifacts/p2/present-fault/native-3/rebuild-failure/process/ui-0-2.png": {
+      "sha256": "3897a077cb6090571e870f92ac18d5a63b62e09f0e84833cf518e2618d287a32",
+      "bytes": 216158
+    },
+    "artifacts/p2/present-fault/native-3/rebuild-failure/process/ui-0-3.png": {
+      "sha256": "5fc3a467f1302b860190dad00c06511cb392798a525642e67aecea253c8c0e72",
+      "bytes": 326514
+    },
+    "artifacts/p2/present-fault/native-3/rebuild-failure/process/ui-1-0.png": {
+      "sha256": "8d09b7cb0b9d5f55aad83c75b18fcc12324e67d610772b64e510c21cfc7e3722",
+      "bytes": 207591
+    },
+    "artifacts/p2/present-fault/native-3/rebuild-failure/process/ui-1-1.png": {
+      "sha256": "bbd10c4752ee9ab22fa828bad33b244117adb1b46bb4a3ff3a29e20a7a400e5e",
+      "bytes": 186348
+    },
+    "artifacts/p2/present-fault/native-3/rebuild-failure/process/ui-1-2.png": {
+      "sha256": "75e68698a0dbf36c465181de523303160a26488ad57260f7bb06de4be3760702",
+      "bytes": 215937
+    },
+    "artifacts/p2/present-fault/native-3/rebuild-failure/process/ui-1-3.png": {
+      "sha256": "07af6ea176e583099724d379b735f7210984e7814039e54a4af1e2b5f8fb7dab",
+      "bytes": 326352
+    },
+    "artifacts/p2/present-fault/native-3/rebuild-failure/process/window-0.json": {
+      "sha256": "c8136c60194f20084e4f5715c44111da43eb1a81e452f41fda44b2c26db53d2f",
+      "bytes": 4585
+    },
+    "artifacts/p2/present-fault/native-3/rebuild-failure/process/window-1.json": {
+      "sha256": "abd2682ba6f1f0adfe91651e5f7b543a5dda0de5c5d22ca28d97938b76deb7a1",
+      "bytes": 4143
+    },
+    "artifacts/p2/present-fault/planned-window/proof.json": {
+      "sha256": "d611695b5da6d27480110b17aa0da873bfe42bf3a4754e8a8e85782227a036c6",
+      "bytes": 153370
+    },
+    "artifacts/p2/present-fault/planned-window/stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "artifacts/p2/present-fault/planned-window/process/dpi-0.ok": {
+      "sha256": "5edd1832df25e2f1a72585c0ee55c1e585e7f4902eb1d15f7abf1c71c1b296ae",
+      "bytes": 5
+    },
+    "artifacts/p2/present-fault/planned-window/process/dpi-1.ok": {
+      "sha256": "5edd1832df25e2f1a72585c0ee55c1e585e7f4902eb1d15f7abf1c71c1b296ae",
+      "bytes": 5
+    },
+    "artifacts/p2/present-fault/planned-window/process/preview-0.rgba": {
+      "sha256": "20f5265399fe9f7e4ef0ab8c1bd9ca777dc5c4b90de92277988e1403d05c71b7",
+      "bytes": 65536
+    },
+    "artifacts/p2/present-fault/planned-window/process/preview-1.rgba": {
+      "sha256": "20f5265399fe9f7e4ef0ab8c1bd9ca777dc5c4b90de92277988e1403d05c71b7",
+      "bytes": 65536
+    },
+    "artifacts/p2/present-fault/planned-window/process/report.json": {
+      "sha256": "28356ebe4e99393e9fd54a09bb912d4cca8d69dead7216cd9d19ceb8893dc4da",
+      "bytes": 9607
+    },
+    "artifacts/p2/present-fault/planned-window/process/restore-0.ok": {
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+      "bytes": 1
+    },
+    "artifacts/p2/present-fault/planned-window/process/restore-1.ok": {
+      "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+      "bytes": 1
+    },
+    "artifacts/p2/present-fault/planned-window/process/ui-0-0.png": {
+      "sha256": "485b75a4f72dc324e51d0e82ad28b4cb15f3055215f30c710bfb13de865d175e",
+      "bytes": 206392
+    },
+    "artifacts/p2/present-fault/planned-window/process/ui-0-1.png": {
+      "sha256": "eb0c827d58c23153cd0fbd674d5430e1fabf6744c186885eb3d6976c7c2b7f43",
+      "bytes": 186661
+    },
+    "artifacts/p2/present-fault/planned-window/process/ui-0-2.png": {
+      "sha256": "ec4f3016a4677d64d668477f979e41da4e302847c413d08f53d103a71eb4d0d9",
+      "bytes": 216321
+    },
+    "artifacts/p2/present-fault/planned-window/process/ui-0-3.png": {
+      "sha256": "54a5f99d003a874d44187ae7939e704a7b3628e8b6edaae59fdda40b2e0e0b6b",
+      "bytes": 326483
+    },
+    "artifacts/p2/present-fault/planned-window/process/ui-1-0.png": {
+      "sha256": "b5b3e3c0f9c9787d76132d1b45b13a12f507d4050335428971e25b86d719c58e",
+      "bytes": 207462
+    },
+    "artifacts/p2/present-fault/planned-window/process/ui-1-1.png": {
+      "sha256": "754029490b099419080ee5b6438df08f100dfdbc5368b25e409552f20e760f6b",
+      "bytes": 186341
+    },
+    "artifacts/p2/present-fault/planned-window/process/ui-1-2.png": {
+      "sha256": "8da4901ac8ac2f65d56cb87fb41f0dc95b7bf8e170e1b7ef6a165da3fdee7b5e",
+      "bytes": 212937
+    },
+    "artifacts/p2/present-fault/planned-window/process/ui-1-3.png": {
+      "sha256": "149f6a6ee2b7a86c7e9441f98506e64fcab88c3c1bd3ea63b2a212d564f31f95",
+      "bytes": 326095
+    },
+    "artifacts/p2/present-fault/planned-window/process/window-0.json": {
+      "sha256": "7a7af9accc6942a1f163c636e2a6b3a49cc85da382e17ce574bc214145d28975",
+      "bytes": 4317
+    },
+    "artifacts/p2/present-fault/planned-window/process/window-1.json": {
+      "sha256": "74c81c6ca1be9989864846e5494aa3ae1620945771da5f87a6cd79819bce83e8",
+      "bytes": 4192
+    },
+    "artifacts/p2/present-fault/offscreen/first.rgba": {
+      "sha256": "5e3e9c9d54f95f8f5d6192fb725b3307a75f5ad3412b2009834939d6324d7f9d",
+      "bytes": 16384
+    },
+    "artifacts/p2/present-fault/offscreen/rebuilt.rgba": {
+      "sha256": "5e3e9c9d54f95f8f5d6192fb725b3307a75f5ad3412b2009834939d6324d7f9d",
+      "bytes": 16384
+    },
+    "artifacts/p2/present-fault/offscreen/report.json": {
+      "sha256": "41acd3eaa63479fdbd1ced64d0c1bf02f41c7e010d115ad4a5e5c802d0204476",
+      "bytes": 735
+    },
+    "artifacts/p2/present-fault/pixels-default/editor.png": {
+      "sha256": "d96c84434c26d7083c799cabc0e4770196f63ad6bd491c2eff0d97291e6db04e",
+      "bytes": 106555
+    },
+    "artifacts/p2/present-fault/pixels-default/pixel_trace.rgba": {
+      "sha256": "bee8433fe9c6c6530704fbd6f5ca794e4b900ca16ea5371a14c3f922bceb2270",
+      "bytes": 1771268
+    },
+    "artifacts/p2/present-fault/pixels-default/presentation_checks.json": {
+      "sha256": "0b49359a1e8fdf27521bbabf01f7f084eb960f9c93ffa55515a2e196e671acea",
+      "bytes": 108
+    },
+    "artifacts/p2/present-fault/pixels-default/preview.png": {
+      "sha256": "db6ed930023a8e5d67b450cf801eae4b8a59ff509da595fca814afd9f1b2a4f1",
+      "bytes": 2976
+    },
+    "artifacts/p2/present-fault/pixels-default/report.json": {
+      "sha256": "3011551fbb9dfeb48349acf92cde878e7d74f309cbeb0563d6bdbbb46d7b469b",
+      "bytes": 737
+    },
+    "artifacts/p2/present-fault/pixels-memory/editor.png": {
+      "sha256": "d96c84434c26d7083c799cabc0e4770196f63ad6bd491c2eff0d97291e6db04e",
+      "bytes": 106555
+    },
+    "artifacts/p2/present-fault/pixels-memory/pixel_trace.rgba": {
+      "sha256": "bee8433fe9c6c6530704fbd6f5ca794e4b900ca16ea5371a14c3f922bceb2270",
+      "bytes": 1771268
+    },
+    "artifacts/p2/present-fault/pixels-memory/presentation_checks.json": {
+      "sha256": "0b49359a1e8fdf27521bbabf01f7f084eb960f9c93ffa55515a2e196e671acea",
+      "bytes": 108
+    },
+    "artifacts/p2/present-fault/pixels-memory/preview.png": {
+      "sha256": "db6ed930023a8e5d67b450cf801eae4b8a59ff509da595fca814afd9f1b2a4f1",
+      "bytes": 2976
+    },
+    "artifacts/p2/present-fault/pixels-memory/report.json": {
+      "sha256": "fe78cfeed3aac5223570ea2544adc464e59e0574abce203a314ae9e40004a0a0",
+      "bytes": 736
+    },
+    "artifacts/p2/present-fault/before.json": {
+      "sha256": "5cb2b6db4fa3cdedf9daf37cc674d1c8707343a34aac68ddb5c319756d5c41c6",
+      "bytes": 45719
+    },
+    "artifacts/p2/present-fault/build-frozen.json": {
+      "sha256": "c8a98021710333f95c6facdb4cfcb7540812865f38c298881ccf57e8a8d64411",
+      "bytes": 26464
+    },
+    "artifacts/p2/present-fault/build-fixed.json": {
+      "sha256": "02dbef3ed1ccae7c4ff86f9d54f290c9459a01ed01ccd7e9382ba7672c6712da",
+      "bytes": 26464
+    },
+    "artifacts/p2/present-fault/build-registry.json": {
+      "sha256": "b6f1772d3f845329ce90067a1bc7611fe2a24f2dd2fe42c287e02c792671e47a",
+      "bytes": 26464
+    },
+    "artifacts/p2/present-fault/compile-initial.log": {
+      "sha256": "373724d61781382ddad7a218b9f914cdca311788218e542bb68f6f6a90bfb120",
+      "bytes": 1881
+    },
+    "artifacts/p2/present-fault/regressions-preflight.txt": {
+      "sha256": "16d3dcfa506f15a7189a56122c2f4d93eb4316f7c62116384aa7da05f9a72a46",
+      "bytes": 181
+    },
+    "artifacts/p2/present-fault/host-registry-check.log": {
+      "sha256": "34c4ace11ae6742d1ec72b168be717311ed18c30f86de4fe7679dad754edfbd0",
+      "bytes": 142
+    },
+    "artifacts/p2/present-fault/core-final.log": {
+      "sha256": "8527db6a0daec01f3eb7a8f90e6cba4b3187817a2f9f3791ea23046fbac03138",
+      "bytes": 50522
+    },
+    "artifacts/p2/present-fault/desktop-final.log": {
+      "sha256": "ed3605663576264fdf6ac2121e4ab501b62764295547b37e6adfb369da26a5b9",
+      "bytes": 100783
+    },
+    "artifacts/p2/present-fault/release-final-1.log": {
+      "sha256": "76a8e41312e7fd6ca145ea9d8c7684aee2f444252a70058c286da63de7f06285",
+      "bytes": 62
+    },
+    "artifacts/p2/present-fault/release-final-2.log": {
+      "sha256": "6995567f892838400c699cad5ce5f7a437e4763d8d030b39d03670d40a865a85",
+      "bytes": 4113
+    },
+    "artifacts/p2/present-fault/final-checks.json": {
+      "sha256": "219c31f4b2beec4e1215ced9079337e6f41e2b8304247b906cd89b8479a00ba7",
+      "bytes": 738
+    },
+    "artifacts/p2/present-fault/regressions.json": {
+      "sha256": "d2994ed2504cbeb8a643649221a3157f2490f4a1f748247988b741ad91c7d474",
+      "bytes": 75027
+    },
+    "artifacts/p2/present-fault/planned-window.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "artifacts/p2/present-fault/offscreen-observation.json": {
+      "sha256": "2f8012d0fe2d7fd1ef69d41cfd90374906597d14e6ce5c6f22de44dfa9fbce90",
+      "bytes": 30926
+    },
+    "artifacts/p2/present-fault/offscreen-stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  }
+}

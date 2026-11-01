@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 
-use crate::{AssetId, ModelError, ObjectId, PixelSize};
+use crate::{AssetId, AudioMetadata, ModelError, ObjectId, PixelSize};
 
 /// Content address asserted by the byte store, not computed or verified here.
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
@@ -26,6 +26,8 @@ impl BlobRef {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum AssetKind {
     RasterImage(PixelSize),
+    /// Verified metadata. Unknown audio can remain Opaque for lossless export.
+    Audio(AudioMetadata),
     /// Uninterpreted resource; cannot be used as an image layer.
     Opaque,
 }
@@ -84,17 +86,27 @@ impl AssetLibrary {
         let mut blobs = BTreeMap::new();
         for asset in assets {
             let id = asset.id;
-            let metadata = blobs
-                .entry(asset.blob.sha256)
-                .or_insert((asset.blob.byte_len, None));
+            let metadata =
+                blobs
+                    .entry(asset.blob.sha256)
+                    .or_insert((asset.blob.byte_len, None, None));
             if metadata.0 != asset.blob.byte_len {
                 return Err(ModelError::InvalidValue("conflicting_blob_length"));
             }
             if let AssetKind::RasterImage(size) = asset.kind {
+                if metadata.2.is_some() {
+                    return Err(ModelError::InvalidValue("conflicting_media_kind"));
+                }
                 if metadata.1.is_some_and(|old| old != size) {
                     return Err(ModelError::InvalidValue("conflicting_image_dimensions"));
                 }
                 metadata.1 = Some(size);
+            }
+            if let AssetKind::Audio(info) = asset.kind {
+                if metadata.1.is_some() || metadata.2.is_some_and(|old| old != info) {
+                    return Err(ModelError::InvalidValue("conflicting_audio_metadata"));
+                }
+                metadata.2 = Some(info);
             }
             if result.insert(id, asset).is_some() {
                 return Err(ModelError::DuplicateId(ObjectId::Asset(id)));

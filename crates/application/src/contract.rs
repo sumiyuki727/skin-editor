@@ -1,8 +1,9 @@
 use core::num::{NonZeroU64, NonZeroU128};
 
 use skin_editor_domain::{
-    Affine2, Asset, AssetId, ComponentId, ComponentNode, ConfigRecord, DocumentId, ElementDocument,
-    LayerId, LayerNode, ModelError, ObjectId, Opacity, OutputId, OutputMapping, PixelSize,
+    Affine2, Asset, AssetId, AudioComponent, AudioComponentId, ComponentId, ComponentNode,
+    ConfigRecord, DocumentId, ElementDocument, Gain, LayerId, LayerNode, ModelError, ObjectId,
+    Opacity, OutputId, OutputMapping, PixelSize,
 };
 
 /// Resolved by the host, separately from the project identity. Never reuse for
@@ -56,7 +57,7 @@ pub struct ExpectedState {
     pub revision: u64,
 }
 
-/// v4 is a closed value protocol. New-object IDs are explicit candidates;
+/// Closed payload introduced in v5, carried by application API v6. New IDs are candidates;
 /// application admits them once per session, and never reuses a committed ID.
 /// Positions are zero-based; moves index the destination AFTER detaching.
 #[derive(Clone, Debug, PartialEq)]
@@ -70,6 +71,25 @@ pub enum Command {
     RenameAsset {
         asset: AssetId,
         name: String,
+    },
+    CreateAudioComponent {
+        component: AudioComponent,
+    },
+    RemoveAudioComponent {
+        component: AudioComponentId,
+    },
+    SetAudioAsset {
+        component: AudioComponentId,
+        asset: AssetId,
+    },
+    SetAudioProperties {
+        component: AudioComponentId,
+        gain: Gain,
+        visible: bool,
+    },
+    SetDocumentVisibility {
+        document: DocumentId,
+        visible: bool,
     },
     CreateDocument {
         document: ElementDocument,
@@ -196,6 +216,11 @@ pub enum CommandFailure {
         layers: Vec<LayerId>,
     },
     DocumentInUse(DocumentId),
+    AudioAssetInUse {
+        asset: AssetId,
+        components: Vec<AudioComponentId>,
+    },
+    AudioComponentInUse(AudioComponentId),
     Model(ModelError),
 }
 
@@ -293,7 +318,8 @@ pub enum AddressError {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum HistoryAction {
     Undo,
-    /// None is allowed only with zero/one child. Multiple children are explicit.
+    /// None follows the child most recently undone from this fork; otherwise
+    /// zero/one child is unambiguous. Explicit checkout resets remembered routes.
     Redo {
         child: Option<NodeId>,
     },
@@ -397,4 +423,6 @@ pub struct HistoryStatistics {
     pub max_depth: u64,
     pub retained_blobs: usize,
     pub retained_requests: usize,
+    /// One fixed-size parent/child pair per remembered fork, not per depth.
+    pub redo_preference_entries: usize,
 }

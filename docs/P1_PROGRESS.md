@@ -75,3 +75,7 @@ before 的高成本没有隐藏：先保留源码／可执行快照及原始报�
 新增的玩家资料、统一设置、自动打图、区域描述、外部默认皮肤、实际 stable／Songs 来源与必要媒体读取及全量可皮肤组件覆盖已写入[需求设计](PREVIEW_SETTINGS.md)，尚无这些设置／读取功能实现。本轮没有读取真实谱面或安装目录。Linux 实测仍延期，macOS 待设备；CI 未远程执行，打包、资源授权清单和低延迟游玩均未验收。
 
 2026-10-20 先以 `f82b19e` 保存 [application 端口与 GPU 呈现交接](PRESENTATION_CONTRACT.md)、[嵌套组件](COMPONENT_MODEL.md)、[历史地址](HISTORY_ADDRESSING.md)和[精细时间轴](PREVIEW_TRANSPORT.md)的文档／只读研究，之后 `45d32b2` 落实 P1-1 模型。P1-2 未引入 GPU／预览依赖；分数／ACC 的跳转后呈现模式仍待讨论。
+
+## 阅读范围
+
+本文是P1固定时点交付记录，旧版本／测试计数与“后续UI未实现”不作为当前状态。当前application API6及P2事实见[架构](ARCHITECTURE.md)，历次原文已[归档](archive/2026-10-30-pre-review/README.md)。

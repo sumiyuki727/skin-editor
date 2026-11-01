@@ -1,6 +1,6 @@
 # 命令、事务与历史控制契约
 
-2026-10-21，P1-2／3／4 Windows 无窗口检查通过，application API v4。当前是结构化 Rust 值接口，不是已发布的 JSON／AI 服务或 GUI。源码入口为 `crates/application/src/lib.rs`，命令／历史值协议为 `contract.rs`，草稿值为 `draft_contract.rs`；候选执行与发布均为私有模块。
+2026-10-30核对：application API v6／领域模型v2；已接P2内存GUI，仍是结构化Rust值接口，未发布JSON／外部AI服务。此前P1版本记录保留其阶段含义。源码入口为 `crates/application/src/lib.rs`，命令／历史值协议为 `contract.rs`，草稿值为 `draft_contract.rs`；候选执行与发布均为私有模块。
 
 ## 唯一内容写入口
 
@@ -8,8 +8,9 @@ application 是唯一活动项目内容写入 owner：普通批次走 `submit(Co
 
 | 命令范围 | 当前能力及约束 |
 | --- | --- |
-| 资源 | RegisterAsset、RemoveAsset、RenameAsset；原始 BlobRef 不就地改写，删除仍被图层引用的资源返回 AssetInUse |
-| 文档 | CreateDocument、RemoveDocument、ResizeDocument；仍有组件成员／输出关联时拒绝删除，调用方显式安排解除引用的顺序 |
+| 资源 | RegisterAsset、RemoveAsset、RenameAsset；原始BlobRef不就地改写，仍被图层或音效组件引用的资源不能直接删除 |
+| 音效 | CreateAudioComponent、RemoveAudioComponent、SetAudioAsset、SetAudioProperties；图像与声音独立，增益／可见性是项目修改 |
+| 文档 | CreateDocument、RemoveDocument、ResizeDocument、SetDocumentVisibility；仍有组件成员／输出关联时拒绝删除，调用方显式安排解除引用的顺序 |
 | 图层／组 | AddLayer、RemoveLayer、MoveLayer、SetLayerTransform、SetLayerProperties、SetLayerAsset；新组先为空，删除组含后代，移动不跨文档 |
 | 组件 | AddComponent、RemoveComponent、MoveComponent、SetComponentTransform、SetComponentMapping；删除组件树只解除组织关系，不删除文档或输出 |
 | 输出 | SetOutputMapping、RemoveOutputMapping；新增输出 ID 只准首次使用，已有映射可修改，路径冲突仍由模型拒绝 |
@@ -58,3 +59,7 @@ P1-2 将 API_VERSION 从 1 升为 2：查询新增历史会话／活动状态，
 P1-3 将 API_VERSION 从 2 升为 3：新增历史控制、分页、地址与错误值，共享命令／导航请求命名空间。源调用方使用当前常量重新构造请求，保留两个创建参数；v1／v2 请求明确拒绝，不隐式升级或执行。现有 Rust 示例与测试已同步。MODEL_VERSION 仍为 1，尚无项目文件或持久化历史，不存在本轮磁盘迁移；未来传输绑定须明确 u128／u64 身份编码，不能经浮点数损失精度。
 
 P1-4 将 API_VERSION 从 3 升为 4：新增 DraftId／DraftState、四类草稿操作、只读候选和 Busy 错误；回执命名空间扩展至草稿。调用方升级常量并处理 Busy／草稿冲突，取消须使用最后接受的草稿修订；v1–v3 请求明确拒绝。创建参数、MODEL_VERSION 1 与 n／b 地址不变；存储共享仅为内部表示优化，没有磁盘格式迁移。
+
+## 当前版本与审查事项
+
+v5引入独立音效／文档可见性和模型2；v6保留该Command载荷，新增普通Redo分叉路线记忆。旧版本请求拒绝。PreviewPort2、AudioEditorPort3等有自己的值契约版本，不等于文件schema。资源登记仍入历史，未因“当前未输出”而自动排除；更改方案见[审阅决定](review/DECISIONS.md)，尚未采纳。

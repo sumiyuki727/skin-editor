@@ -1,4 +1,18 @@
-use crate::{DocumentId, ModelError, OutputId};
+use crate::{AudioComponentId, DocumentId, ModelError, ObjectId, OutputId};
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum OutputSource {
+    Image(DocumentId),
+    Audio(AudioComponentId),
+}
+impl OutputSource {
+    pub const fn object_id(self) -> ObjectId {
+        match self {
+            Self::Image(id) => ObjectId::Document(id),
+            Self::Audio(id) => ObjectId::AudioComponent(id),
+        }
+    }
+}
 
 /// A lexical relative output path. Filesystem and Unicode-normalisation checks
 /// still belong to the eventual export adapter; this is not a stable name rule.
@@ -39,7 +53,7 @@ impl OutputPath {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct OutputMapping {
     id: OutputId,
-    document: DocumentId,
+    source: OutputSource,
     element_key: String,
     path: OutputPath,
 }
@@ -56,7 +70,7 @@ impl OutputMapping {
         }
         Ok(Self {
             id,
-            document,
+            source: OutputSource::Image(document),
             element_key,
             path,
         })
@@ -66,8 +80,30 @@ impl OutputMapping {
         self.id
     }
 
-    pub const fn document(&self) -> DocumentId {
-        self.document
+    pub const fn document(&self) -> Option<DocumentId> {
+        match self.source {
+            OutputSource::Image(id) => Some(id),
+            _ => None,
+        }
+    }
+    pub fn for_audio(
+        id: OutputId,
+        component: AudioComponentId,
+        element_key: String,
+        path: OutputPath,
+    ) -> Result<Self, ModelError> {
+        if element_key.trim().is_empty() {
+            return Err(ModelError::InvalidValue("element_key"));
+        }
+        Ok(Self {
+            id,
+            source: OutputSource::Audio(component),
+            element_key,
+            path,
+        })
+    }
+    pub const fn source(&self) -> OutputSource {
+        self.source
     }
 
     pub fn element_key(&self) -> &str {

@@ -115,11 +115,24 @@ pub struct ElementDocument {
     id: DocumentId,
     canvas: PixelSize,
     layers: LayerTree,
+    visible: bool,
 }
 
 impl ElementDocument {
     pub const fn new(id: DocumentId, canvas: PixelSize, layers: LayerTree) -> Self {
-        Self { id, canvas, layers }
+        Self {
+            id,
+            canvas,
+            layers,
+            visible: true,
+        }
+    }
+    pub fn with_visibility(mut self, visible: bool) -> Self {
+        self.visible = visible;
+        self
+    }
+    pub const fn visible(&self) -> bool {
+        self.visible
     }
 
     pub const fn id(&self) -> DocumentId {

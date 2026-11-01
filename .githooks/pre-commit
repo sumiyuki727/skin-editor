@@ -4,3 +4,6 @@ python tools/check_repository.py --staged
 if [ -f Cargo.toml ]; then
     python tools/check_core.py
 fi
+if [ -f desktop/Cargo.toml ]; then
+    python tools/check_desktop.py
+fi

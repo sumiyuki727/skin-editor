@@ -1,0 +1,1008 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-22",
+  "status": "passed_scoped_A2_startup_underflow_fix_and_ready_audio_latency; full_A2_A3_open",
+  "git_head": "18f74f306a537894b91bad50eef7710ff9223a53",
+  "rust": "1.95.0",
+  "build": "release",
+  "versions": {
+    "model": 2,
+    "application": 5,
+    "skin_audio_port": 1,
+    "sound_plan": 2,
+    "frame_descriptor": 1,
+    "mix_conversion": 1,
+    "audio_editor_port": 2
+  },
+  "platform": {
+    "platform": "Windows",
+    "os_build": "Windows-10-10.0.19045-SP0",
+    "processor_identifier": "AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD",
+    "logical_processors": 16
+  },
+  "source_sha256": {
+    "AGENTS.md": "83ceef572bafbd6b805817e919ed6aace82c4cc47d708410df5199f36026dd3f",
+    "Cargo.lock": "fdea10e6bcd7d2a31574a89f0044a762efe0388e74901f354c115dd4f87106da",
+    "Cargo.toml": "f2145d08a75e10b117cbb8154f6911d2664caa708fb24790d950e2e174cd8401",
+    "README.md": "f3f976f82f099f8b6ef9324d3e6d1dc293ac1e25901cf704f8d4b1ca2735cd72",
+    "crates/application/Cargo.toml": "7613f8f871bb60d0bdfec79d18ac6c2b64bebff403ee3fb3533d2f1a4a35061a",
+    "crates/application/src/address.rs": "d6d1ba60051876c653bbb829caa243b1e166514f3256de37e9b227ccfcf07c0b",
+    "crates/application/src/audio_editor.rs": "81c14eb800e0e84978c63f3d7c6e21cf1b0a691c7e0fef33932bb6f629464e53",
+    "crates/application/src/audio_port.rs": "4ce375c8689d82f51a715ca8d0d403e134521aefddc796f0c469e57e5d18d6bc",
+    "crates/application/src/contract.rs": "38a08d792c075fe388c3051aa4523df69ff4dcb7daa8a4520a617b560cc272d9",
+    "crates/application/src/draft.rs": "06a2c4c2cad35c54201ae681aba9559d41c2d8e8482581d0442f3062c59e8b7b",
+    "crates/application/src/draft_contract.rs": "9ca0e3fba10f8b8545511ed45fa649523e5fc07d6f538ce9ccc85f5175538bd7",
+    "crates/application/src/execute.rs": "735cbc5a56ac1256123ad9e69d74fae321b79a398fa43b6730de63b4a4f029dc",
+    "crates/application/src/history.rs": "44c9c53b29e6e63b30ddf6ba6dcde360f3d2885d21b40178c0a89de81e3a49cf",
+    "crates/application/src/history_control.rs": "a47dfa5a386cbd0aa6d88df679617b7df1d749c7e614886cb349bc547c510220",
+    "crates/application/src/history_queries.rs": "449dcb6feea8223f590d50374f1bdf5434a6eae7957e5d8bdade8eb7b20c919d",
+    "crates/application/src/lib.rs": "04dd883cfd0cb62fd5f63c80af79c9280327bc90be8af8663621ae80ca4f4440",
+    "crates/application/src/preview_port.rs": "55b255080df829375854fbcdb965195ff66e760a3f3a7492b1431f9f7c9776c0",
+    "crates/application/src/resources.rs": "b21d2808b96457ea6fd35cdfdc3e45c89c61e4d69fe92f64477105e33c117770",
+    "crates/application/tests/audio.rs": "7ba8b8d28f96a445b26634323ae4d1345dfe8384b3ceda0e83a583e31bc31143",
+    "crates/application/tests/audio_editor.rs": "d273cf2c870e1db39b04e23e50607bdb1548d3f88a7251f0ea563ed3ffe285d3",
+    "crates/application/tests/audio_port.rs": "2409f7e0191ccf6de1de937c232ddd5eac74962effdac74c8d9c4a5f792b061e",
+    "crates/application/tests/commands.rs": "c2c8b2b1ac4d2773604f4e27bf0b695881863c11e11b3bb89bdf364f3041fe0c",
+    "crates/application/tests/draft.rs": "b1eee3863619ebbbe7ed8530659e33ee5f7773f67b80c4f12e5c1396480716ef",
+    "crates/application/tests/history.rs": "031e746bffca21efe7f4c08989acbe4f0f377ff5f97451c004c626c0d3f9eb33",
+    "crates/domain/Cargo.toml": "ebfc5fb45af16bc7219eeef7a79f00d4a9780e9bee2a79fefd91dd7035328052",
+    "crates/domain/src/assets.rs": "6daa3625dab9205497dd9230a460fa55441da022d83a237e644ce07c35e850a5",
+    "crates/domain/src/audio.rs": "807d2cbd247406d0e7a9a6305884e6c6122518f9eab919a3d43beb44db5efb7d",
+    "crates/domain/src/components.rs": "93276309ce2ccdcc165843633d26b2f90176d67fc02a6068fd0cfbfc8529d3c6",
+    "crates/domain/src/configuration.rs": "2472c94b2fac0fcb69ed967d361bd6a1feecc3137af31bf54138dbf6030418fa",
+    "crates/domain/src/forest.rs": "07731db4e0302b768fd995f297dc332aeda2f821f1b29055b1355a1df3ac7827",
+    "crates/domain/src/geometry.rs": "21ce8edbfb4ad963525dfe5ecfb79c7cef3cb8a53c8fc930939bff887335f4c9",
+    "crates/domain/src/identity.rs": "410d53bc95072343060772cac51c19c694cbb691f1cf3587aa3eaeec84e74b56",
+    "crates/domain/src/layers.rs": "ebefe1ea28a4e079c434469a7f4ed5e112acc9b60ca34f7675c4a2592f8e87df",
+    "crates/domain/src/lib.rs": "886b26f31d907a7aab8156624acb9a592a7b596ff9d08bc8b6fa5ac81c2f472d",
+    "crates/domain/src/output.rs": "238e5deb808cf3b5fd4064a5684e869406075cc45409bb8173a4f341d024f95a",
+    "crates/domain/src/project.rs": "2be6417cb42a3c8c3cf9db2b60e81c5ae044eeb815b9b51a85738cbb94760dbe",
+    "crates/domain/tests/audio.rs": "60bd84c634c2b1f7573e334001f13ac7fc1cdd77c75f4bc7fe8e484707b96d3f",
+    "crates/domain/tests/model.rs": "bf629b358ece1bc56cddb312490964514ebde9dda1e06f3b882e5491a51f99e0",
+    "desktop/Cargo.lock": "379eca6a0762a5439123a13d9aa8c3e96fe88fc4448498fc54495d6e2bd59eb0",
+    "desktop/Cargo.toml": "a7623cdabef5e9010922340a7c92e134ebd9b0dda437e452f4551a0c6e2e8266",
+    "desktop/audio/Cargo.toml": "43d8f8e2ffb20dad93347f9afd05eaa2b3c71ca7a8c518344fdeb5ddd705e0ee",
+    "desktop/audio/src/background.rs": "248ce86de90fa360a9ae192a82ef8329928020c5f0f7ed633b806f86f6882939",
+    "desktop/audio/src/lib.rs": "37fc9869ba2ff5a3eef26644f1658c50df3fd45be02b8f44bf97c1d6e6b6ba9c",
+    "desktop/audio/src/pcm.rs": "82506312e2dbe9b99af37cf2e0577cbd4e2dc79ab9930af3f70d762a964ef2b2",
+    "desktop/audio/src/runtime.rs": "cee7b97276ff4893d7e1b70a9cd6033fd440ed8357d51041697d7e2755c9dbfd",
+    "desktop/audio/tests/pcm.rs": "df51b9106f405bd3ac9bb75f027751a0c8df45f9a151243ef706d64562eef8e4",
+    "desktop/audio/tests/recipe.rs": "4f94d1bbb6d7a2ed3a1e6a852cae47d3243634ad50024bf2a412fa5c7928bc24",
+    "desktop/audio/tests/runtime.rs": "d269195977a1b75c1761de7d28aa8374834a0f529776dd9fbc9ab7b121da6fbb",
+    "desktop/host/Cargo.toml": "486b1a279eefb1bcb966afdacc00cfbc8c6ab1f3e2cf18cb6f79b0926a38673d",
+    "desktop/host/src/audio_verification.rs": "a5a8875300972ed936e2c11f2dddd9dba930a939e30592dd217424771d1b43aa",
+    "desktop/host/src/edit_verification.rs": "2e5c658f373cb38d6fdbe94359f5d45320926c08e55118ffb920796ed9c47f3e",
+    "desktop/host/src/editor_audio.rs": "115af900e00f04ade9b317c07bbc0836754dce73ea598b6055c78e124d37432c",
+    "desktop/host/src/import_worker.rs": "1db4c8b6dec3349eb72b6bc2758ff7899bfeba7fec7bb375498f380248f99e21",
+    "desktop/host/src/load_verification.rs": "b4f892c38d7c3dd52080404cfbf054a7f57f9096f77ae2cc903351db10ef29b5",
+    "desktop/host/src/main.rs": "7b0102a4702c7b568256bab7e064e82b160e6a95eee6e9fe03ac2637f79e70cc",
+    "desktop/host/src/presentation.rs": "a7b8f0d38af0dd09b52ddc2ccfa0624fdb86383ef81d9383d91a3cef08901040",
+    "desktop/host/src/supply_verification.rs": "b46c642bbf4020b742fa9a880ff4430ce2b9b311952990ee1b93b665c76a164a",
+    "desktop/host/src/verification.rs": "f83734f99b453852dd3e1d6af60a00489df34d1e753eb580d4f31f5a12930a79",
+    "desktop/infrastructure/Cargo.toml": "5fae623c62758569c235b1ba0ce7461221f4e4faaae6d9e0f0c3e86bf89a7e87",
+    "desktop/infrastructure/src/audio_playback.rs": "9850c36db4f8ac81e2235312623cd007e5825f27bcaee0ad8889b6e4bfa69b62",
+    "desktop/infrastructure/src/audio_preparation.rs": "2ab4390e787c6eb1a0e5986b75908e52aac83ba77d762e7cea6bb2bb64c745b6",
+    "desktop/infrastructure/src/audio_supply.rs": "7a90b5472377c48a5fe1ae300bf0b84c92a03fcaaa26fdd7f629c843fe2b8ae8",
+    "desktop/infrastructure/src/audio_worker.rs": "a7fbe3890518b85f0264adf37d8cc5e19fe93ce876cefd17aa68bcf6491f763f",
+    "desktop/infrastructure/src/blobs.rs": "5be7127b22e7276a6db2c435c312df29795af00fa3f3904a4d610a7e8639a9d9",
+    "desktop/infrastructure/src/byte_budget.rs": "0fe47fdea27b76520e3dedad38aa2695421b199ec2a5342ba4e9242bb0e45e15",
+    "desktop/infrastructure/src/lib.rs": "22d581cb3065a54bff380e51250972a13dd5256a3b9950b09a0b4edb2d23d805",
+    "desktop/infrastructure/src/native_audio.rs": "0203ceb932b4269371f20369baa56a552321f5404384b43903b5360d9159d30b",
+    "desktop/infrastructure/src/skin_audio.rs": "78505d256f616354f0c4914904a1260c82c85c03bcd9afe13de7614a8d1f2ab5",
+    "desktop/infrastructure/src/wav.rs": "b0cd422952d3e4b7b273d97dc0ebcbd122dab213130e8069c0e57dd0d50e278f",
+    "desktop/infrastructure/tests/audio_a2.rs": "d1fd9281e8af63a1ed8c70f68d9380933cde19e3dab74783bb248753a9cc799f",
+    "desktop/infrastructure/tests/resources.rs": "2be297fa3f7fae2130009680cc0a48ad079ff2ca50186ebe35302fbcdf23834d",
+    "desktop/infrastructure/tests/skin_audio.rs": "4e341c2e48ae324622d610b26cc498c287aea9f8e50a731481513da503d297c1",
+    "desktop/preview/Cargo.toml": "6331b4af9692c3f4d16220de8810e992990b6032a2184fac0198e72efedd31fc",
+    "desktop/preview/src/lib.rs": "c519ed1f4e1afa8d570ad14b66ddb1b8291d0de98dca38e599ba1cc8d6e204b6",
+    "desktop/rendering/Cargo.toml": "e5b4c833b136d8bb07790c7a307f91b3fb74da7d55ce48df315f65248f02a636",
+    "desktop/rendering/src/gpu.rs": "656a60a3d01f310d4d9a134415d50f19f7e81fbb76fb630c5504866b56f4d85c",
+    "desktop/rendering/src/lib.rs": "a93779edef007f306fffbeac5c46fca3e7f5c3dfb4c0a2519f3e56caedb52e7b",
+    "desktop/rendering/tests/composition.rs": "89f17b50ee34f1cd5226888649cd3b45fcf84fff53e6450e2997ddab2e922cc2",
+    "desktop/ui/Cargo.toml": "94e5a78db5fad807428f965606128c3d49705a3e8d045f2841775befcac54a33",
+    "desktop/ui/src/audio.rs": "f7163e5a9302460f3d6ffd7dc2db5c063cfc7301ee0b5bbe4a0183bf53027537",
+    "desktop/ui/src/lib.rs": "bba1da3fa6d3ca289ec9b2f4a46d0ffe63b2b3003b4accb9fcfbc2d3bb5b2138",
+    "desktop/ui/src/tests.rs": "987b1a6f9a437c566ad46f4715f5c14e4fed85ea4e877da19bebe7886c249aed",
+    "docs/ARCHITECTURE.md": "33d3b6eef91ea09dd101b843717261fea6b3e136773464cba5a3e56a22887a11",
+    "docs/AUDIO_EDITING_REVIEW.md": "006628f826ee2d314c2635ff8121aafd39f684ff768b3d6d546e2a51238e748e",
+    "docs/P2_AUDIO_CORE.md": "e9cd3fcfe6e0d657ba70f3ec5550fd4f2028583d65510604b85c40d2d6b4b061",
+    "docs/P2_AUDIO_EDIT.md": "75b3798bcd23260fe180f16178dbee14ff1e661442cac3b9c4709343a7525f77",
+    "docs/P2_AUDIO_LIBRARY.md": "f4c983ef1e7f239e939f46b336ac51fb0f5e6f4550b80589823937b273652a38",
+    "docs/P2_AUDIO_LOAD.md": "ba6ae7b7e75d5e27481bffb998e7dc0a4aa228139ba8a3e61eb4fadfa2f61519",
+    "docs/P2_AUDIO_NATIVE.md": "a824d4e14f1d30f81092a759696c8ff008e4bba7b19813c36568767b6dabc2e0",
+    "docs/P2_AUDIO_RESOURCES.md": "ab7a0676a891b46ac698b7a16b6ddb298addf3b17991b10afe67a60f7f119875",
+    "docs/P2_AUDIO_RUNTIME.md": "47616c957496de1261981c795fe7f96b7a340aabe963aaa891230e540c126791",
+    "docs/P2_AUDIO_STARTUP.md": "1dcb83a8b477833d0362577cfaddbe3368eb6c0c9969cfcdd1af2184400a9d26",
+    "docs/P2_AUDIO_SUPPLY.md": "1e398f6cdf49da9d6bb81f227fe4c2033c9f9b08dd3ba1212a0dddcf91b375f1",
+    "docs/P2_AUDIO_UI.md": "3ce2e1e46b91a49e4359e6acf382e2a73c8b69cb8cd4228c8c792ab50acf2016",
+    "docs/P2_PROGRESS.md": "7d640d853cfb4b7953f63efcf81322c2a45d1e448a19d33f980534452e5dc8ad",
+    "docs/ROADMAP.md": "0bc4daf028a93e4cb60572ff7976caa7ac1fe5ff334a95efc43d0b1ae6ea895a",
+    "docs/TECH_STACK.md": "7b7f24bdd0e13a6e41c1a0f0d2907d501ec3b2b0b7e22b3e92ba1bbb0634b83d",
+    "rust-toolchain.toml": "7d21c66a15f41bad66b82ed06a289f5dc8a6e3751951d2696bbf20ce296f2b0f",
+    "tools/check_core.py": "c7cd91465685a852498d7753db9a90fd7322799d167eb0d6ffb816ac6619e9cb",
+    "tools/check_core_architecture.py": "6e4fa6ee969655f97a230f148396685a0a3905e8ca567cc4a79f03d2233a221f",
+    "tools/check_desktop.py": "27e80ba6477f2eeaa01152f435ea7129df65d5b45b31dfba0a8314ad4b440fd7",
+    "tools/check_desktop_architecture.py": "ed4302a32bffd32617cb560346167c3722b0056633adc075087ba576fbcadf5a",
+    "tools/measure_audio_edit.py": "3a8853fdfec9ebe16757cd23d9524b15d067a88ac0ae187843555c0325b296cd",
+    "tools/measure_audio_load.py": "0bb1bba7aff760c1603c586450efa07662f8d04d5777cd08cf5c6a0ef01dceab",
+    "tools/measure_audio_startup.py": "a116b8131c9b2b4d7479624e26879d311ed2ac027c4968a5c9a7d530f4e8d41e",
+    "tools/test_check_audio_edit.py": "b6baa91860f1bdf18314493da960d4c399199205104eb34bedef098f4e4303cd",
+    "tools/test_check_audio_load.py": "db23c219092ae1bdfd78d2c6efb5e2002b7e0eb9c3aa44dcfb5bcc6cc8da05df",
+    "tools/test_check_audio_startup.py": "5f2cbdd09841597faf574c240b33131f9d4c1bae9c079847fddc9fd05f8d4a28",
+    "tools/test_check_desktop_architecture.py": "0974e31d4ccb95ccadaa6b4d150e892a88115b63ed2fcdb2317eeeaf4f907551"
+  },
+  "binary": {
+    "path": "desktop/target/release/skin-editor-desktop.exe",
+    "sha256": "4dde423b25100cfdd8a8995f06d5555a8fa5f89d4741720e3c89c039630ec799"
+  },
+  "checks": {
+    "core": 174,
+    "desktop": 130,
+    "total": 304,
+    "logs": {
+      "artifacts/p2/audio-burst-core-final.log": "3c935f56473351954ad59029eff41d87d104eacd283c50f0f9d4926dfa90f186",
+      "artifacts/p2/audio-burst-desktop-final.log": "7ff31d1baa7d396845188de1b4f5fc1ba28be6c4aac50fb3636b32f1d4783f42",
+      "artifacts/p2/audio-burst-clippy-final.log": "16e7f8a2ec318e31f918a31b21e90e4c593991993ce90d83bead7c54234c612d",
+      "artifacts/p2/audio-burst-background.log": "e4756196a40a1497c80886cf5dd07151eec00de16169dc1922917157a13ed70d"
+    }
+  },
+  "native_measurements": [
+    {
+      "path": "artifacts/p2/audio-burst-final/metrics.json",
+      "sha256": "f771a102141461cbdba8fb298f440f27333723d783c74aa2a5894fe207ab0624",
+      "passed": true,
+      "runs": [
+        {
+          "phases": {
+            "idle": {
+              "sample_count": 28,
+              "sample_span_seconds": 2.95299999999952,
+              "cpu_seconds": 0.0,
+              "cpu_one_logical_core_percent": 0.0,
+              "working_set_bytes_max": 20381696,
+              "private_bytes_max": 11624448
+            },
+            "latency": {
+              "sample_count": 36,
+              "sample_span_seconds": 3.8439999999991414,
+              "cpu_seconds": 0.0625,
+              "cpu_one_logical_core_percent": 1.625910509885899,
+              "working_set_bytes_max": 20393984,
+              "private_bytes_max": 11624448
+            },
+            "voices_1": {
+              "sample_count": 55,
+              "sample_span_seconds": 5.96900000000096,
+              "cpu_seconds": 0.015625,
+              "cpu_one_logical_core_percent": 0.2617691405595156,
+              "working_set_bytes_max": 20393984,
+              "private_bytes_max": 11624448
+            },
+            "voices_32": {
+              "sample_count": 56,
+              "sample_span_seconds": 6.0460000000002765,
+              "cpu_seconds": 0.046875,
+              "cpu_one_logical_core_percent": 0.7753059874296702,
+              "working_set_bytes_max": 20398080,
+              "private_bytes_max": 11624448
+            },
+            "isolation": {
+              "sample_count": 3,
+              "sample_span_seconds": 0.21899999999914144,
+              "cpu_seconds": 0.0,
+              "cpu_one_logical_core_percent": 0.0,
+              "working_set_bytes_max": 20402176,
+              "private_bytes_max": 11624448
+            },
+            "closed": {
+              "sample_count": 18,
+              "sample_span_seconds": 1.8909999999996217,
+              "cpu_seconds": 0.0,
+              "cpu_one_logical_core_percent": 0.0,
+              "working_set_bytes_max": 14925824,
+              "private_bytes_max": 5890048
+            }
+          },
+          "checks": {
+            "native_submission_observed_upper_bound_p95_le_20_ms": true,
+            "no_startup_underflow": true,
+            "idle_retiming_exercised": true,
+            "no_steady_underflow": true,
+            "thirty_two_voices_and_refuse_33rd": true,
+            "dual_channel_isolation": true,
+            "managed_pcm_released": true,
+            "audio_only_process_memory_le_512_mib": true
+          },
+          "latency_ms": [
+            {
+              "count": 64,
+              "p50": 6.4354,
+              "p95": 11.2758,
+              "p99": 12.1507,
+              "max": 12.1507
+            },
+            {
+              "count": 64,
+              "p50": 6.8615,
+              "p95": 12.1896,
+              "p99": 13.2231,
+              "max": 13.2231
+            }
+          ],
+          "receipt_ms": [
+            {
+              "count": 64,
+              "p50": 1.5391000000000001,
+              "p95": 3.2364,
+              "p99": 3.2969000000000004,
+              "max": 3.2969000000000004
+            },
+            {
+              "count": 64,
+              "p50": 1.2358,
+              "p95": 3.0887000000000002,
+              "p99": 3.1818,
+              "max": 3.1818
+            }
+          ],
+          "report_summary": {
+            "schema": 1,
+            "period_frames": 480,
+            "idle_reserve_frames": 960,
+            "retimed_idle_frames": 100736,
+            "rate": 48000,
+            "channels": 2,
+            "format": "F32",
+            "max_post_receipt_poll_gap_ms": 2.4838999999999998,
+            "peak_voices": 32,
+            "capacity_refusals": 4,
+            "steady_empty_frames": 0,
+            "startup_empty_frames": 0,
+            "callbacks": 1934,
+            "pcm_peak_bytes": 5619200,
+            "pcm_final_bytes": 0,
+            "raw_bytes": 2784704,
+            "dual_channel_isolation": true,
+            "project_history_unchanged": true,
+            "device_consumption_or_acoustic_verified": false
+          },
+          "lifetime_peak_working_set_bytes": 20451328,
+          "lifetime_peak_pagefile_bytes": 11624448
+        },
+        {
+          "phases": {
+            "idle": {
+              "sample_count": 28,
+              "sample_span_seconds": 3.0,
+              "cpu_seconds": 0.03125,
+              "cpu_one_logical_core_percent": 1.0416666666666665,
+              "working_set_bytes_max": 20422656,
+              "private_bytes_max": 11730944
+            },
+            "latency": {
+              "sample_count": 37,
+              "sample_span_seconds": 3.95299999999952,
+              "cpu_seconds": 0.09375,
+              "cpu_one_logical_core_percent": 2.3716164938024633,
+              "working_set_bytes_max": 20434944,
+              "private_bytes_max": 11730944
+            },
+            "voices_1": {
+              "sample_count": 56,
+              "sample_span_seconds": 6.031000000000859,
+              "cpu_seconds": 0.015625,
+              "cpu_one_logical_core_percent": 0.25907809650137253,
+              "working_set_bytes_max": 20434944,
+              "private_bytes_max": 11730944
+            },
+            "voices_32": {
+              "sample_count": 55,
+              "sample_span_seconds": 6.0,
+              "cpu_seconds": 0.03125,
+              "cpu_one_logical_core_percent": 0.5208333333333333,
+              "working_set_bytes_max": 20443136,
+              "private_bytes_max": 11730944
+            },
+            "isolation": {
+              "sample_count": 3,
+              "sample_span_seconds": 0.21899999999914144,
+              "cpu_seconds": 0.0,
+              "cpu_one_logical_core_percent": 0.0,
+              "working_set_bytes_max": 20447232,
+              "private_bytes_max": 11730944
+            },
+            "closed": {
+              "sample_count": 19,
+              "sample_span_seconds": 1.9689999999991414,
+              "cpu_seconds": 0.0,
+              "cpu_one_logical_core_percent": 0.0,
+              "working_set_bytes_max": 14700544,
+              "private_bytes_max": 5779456
+            }
+          },
+          "checks": {
+            "native_submission_observed_upper_bound_p95_le_20_ms": true,
+            "no_startup_underflow": true,
+            "idle_retiming_exercised": true,
+            "no_steady_underflow": true,
+            "thirty_two_voices_and_refuse_33rd": true,
+            "dual_channel_isolation": true,
+            "managed_pcm_released": true,
+            "audio_only_process_memory_le_512_mib": true
+          },
+          "latency_ms": [
+            {
+              "count": 64,
+              "p50": 6.8434,
+              "p95": 11.796,
+              "p99": 12.4963,
+              "max": 12.4963
+            },
+            {
+              "count": 64,
+              "p50": 7.4676,
+              "p95": 12.2822,
+              "p99": 13.3848,
+              "max": 13.3848
+            }
+          ],
+          "receipt_ms": [
+            {
+              "count": 64,
+              "p50": 1.4243999999999999,
+              "p95": 3.1067,
+              "p99": 3.503,
+              "max": 3.503
+            },
+            {
+              "count": 64,
+              "p50": 2.0883999999999996,
+              "p95": 3.1535,
+              "p99": 3.3127999999999997,
+              "max": 3.3127999999999997
+            }
+          ],
+          "report_summary": {
+            "schema": 1,
+            "period_frames": 480,
+            "idle_reserve_frames": 960,
+            "retimed_idle_frames": 101248,
+            "rate": 48000,
+            "channels": 2,
+            "format": "F32",
+            "max_post_receipt_poll_gap_ms": 2.5566999999999998,
+            "peak_voices": 32,
+            "capacity_refusals": 4,
+            "steady_empty_frames": 0,
+            "startup_empty_frames": 0,
+            "callbacks": 1943,
+            "pcm_peak_bytes": 5619200,
+            "pcm_final_bytes": 0,
+            "raw_bytes": 2784704,
+            "dual_channel_isolation": true,
+            "project_history_unchanged": true,
+            "device_consumption_or_acoustic_verified": false
+          },
+          "lifetime_peak_working_set_bytes": 20492288,
+          "lifetime_peak_pagefile_bytes": 11730944
+        }
+      ]
+    },
+    {
+      "path": "artifacts/p2/audio-burst-final/edit/metrics.json",
+      "sha256": "57d6708da4b8ca7e42e05e29958319c3154bfbf552b5cb3f6455c2ce478a27b1",
+      "passed": true,
+      "runs": [
+        {
+          "phases": {
+            "idle": {
+              "sample_count": 28,
+              "sample_span_seconds": 2.95299999999952,
+              "cpu_seconds": 0.03125,
+              "cpu_one_logical_core_percent": 1.0582458516764335,
+              "working_set_bytes_max": 14872576,
+              "private_bytes_max": 6074368
+            },
+            "hot_edits": {
+              "sample_count": 84,
+              "sample_span_seconds": 9.125,
+              "cpu_seconds": 0.09375,
+              "cpu_one_logical_core_percent": 1.0273972602739725,
+              "working_set_bytes_max": 15540224,
+              "private_bytes_max": 6684672
+            },
+            "warm_prepare": {
+              "sample_count": 18,
+              "sample_span_seconds": 1.875,
+              "cpu_seconds": 0.046875,
+              "cpu_one_logical_core_percent": 2.5,
+              "working_set_bytes_max": 16076800,
+              "private_bytes_max": 7471104
+            },
+            "cleanup": {
+              "sample_count": 13,
+              "sample_span_seconds": 1.3130000000001019,
+              "cpu_seconds": 0.0,
+              "cpu_one_logical_core_percent": 0.0,
+              "working_set_bytes_max": 16130048,
+              "private_bytes_max": 7319552
+            },
+            "closed": {
+              "sample_count": 19,
+              "sample_span_seconds": 1.985000000000582,
+              "cpu_seconds": 0.0,
+              "cpu_one_logical_core_percent": 0.0,
+              "working_set_bytes_max": 12169216,
+              "private_bytes_max": 3014656
+            }
+          },
+          "checks": {
+            "hot_300_p95_le_50_ms": true,
+            "warm_file_plus_activation_p95_le_250_ms": true,
+            "all_preparations_real_cache_misses": true,
+            "current_source_triggered": true,
+            "single_draft_commit": true,
+            "cancel_history_cleanup": true,
+            "settled_old_pcm_released": true,
+            "no_startup_underflow": true,
+            "idle_retiming_exercised": true,
+            "no_steady_underflow": true,
+            "managed_resources_released": true,
+            "audio_only_process_memory_le_512_mib": true
+          },
+          "latency": {
+            "hot": {
+              "activation_observed_ms": {
+                "count": 300,
+                "p50": 5.2598,
+                "p95": 7.406000000000001,
+                "p99": 8.482,
+                "max": 10.5625
+              },
+              "selection_receipt_ms": {
+                "count": 300,
+                "p50": 3.0753,
+                "p95": 4.0603,
+                "p99": 5.1804,
+                "max": 5.3261
+              },
+              "queue_wait_ms": {
+                "count": 300,
+                "p50": 0.0262,
+                "p95": 0.0536,
+                "p99": 0.1858,
+                "max": 0.4401
+              },
+              "probe_allocate_decode_ms": {
+                "count": 300,
+                "p50": 0.06849999999999999,
+                "p95": 0.0971,
+                "p99": 0.1066,
+                "max": 0.1472
+              },
+              "gain_process_ms": {
+                "count": 300,
+                "p50": 0.078,
+                "p95": 0.10679999999999999,
+                "p99": 0.1265,
+                "max": 0.1584
+              },
+              "result_handoff_ms": {
+                "count": 300,
+                "p50": 2.3563,
+                "p95": 2.8549,
+                "p99": 2.9649,
+                "max": 3.3108
+              },
+              "edit_to_callback_observed_upper_ms": {
+                "count": 300,
+                "p50": 9.9695,
+                "p95": 17.975499999999997,
+                "p99": 20.293499999999998,
+                "max": 20.7842
+              }
+            },
+            "warm": {
+              "activation_observed_ms": {
+                "count": 64,
+                "p50": 5.3488,
+                "p95": 7.424,
+                "p99": 8.229999999999999,
+                "max": 8.229999999999999
+              },
+              "selection_receipt_ms": {
+                "count": 64,
+                "p50": 2.8944,
+                "p95": 4.5183,
+                "p99": 4.8921,
+                "max": 4.8921
+              },
+              "queue_wait_ms": {
+                "count": 64,
+                "p50": 0.019899999999999998,
+                "p95": 0.041100000000000005,
+                "p99": 0.0817,
+                "max": 0.0817
+              },
+              "probe_allocate_decode_ms": {
+                "count": 64,
+                "p50": 0.1357,
+                "p95": 0.6328,
+                "p99": 0.7345999999999999,
+                "max": 0.7345999999999999
+              },
+              "gain_process_ms": {
+                "count": 64,
+                "p50": 0.0692,
+                "p95": 0.3704,
+                "p99": 0.4372,
+                "max": 0.4372
+              },
+              "result_handoff_ms": {
+                "count": 64,
+                "p50": 2.2542,
+                "p95": 2.9183,
+                "p99": 3.1751,
+                "max": 3.1751
+              },
+              "edit_to_callback_observed_upper_ms": {
+                "count": 64,
+                "p50": 9.440900000000001,
+                "p95": 11.2739,
+                "p99": 20.6561,
+                "max": 20.6561
+              }
+            },
+            "warm_file_stage_ms": {
+              "count": 64,
+              "p50": 0.7258,
+              "p95": 1.0945,
+              "p99": 1.6033,
+              "max": 1.6033
+            },
+            "warm_file_plus_activation_ms": {
+              "count": 64,
+              "p50": 6.271,
+              "p95": 8.0517,
+              "p99": 8.992099999999999,
+              "max": 8.992099999999999
+            }
+          },
+          "report_summary": {
+            "schema": 1,
+            "period_frames": 480,
+            "idle_reserve_frames": 960,
+            "retimed_idle_frames": 307744,
+            "rate": 48000,
+            "channels": 2,
+            "queued_hot": 300,
+            "queued_warm": 64,
+            "new_origin_triggers": 364,
+            "draft_single_commit": true,
+            "cancel_history_cleanup": true,
+            "settled_old_pcm_released": true,
+            "steady_empty_frames": 0,
+            "startup_empty_frames": 0,
+            "empty_callbacks": 0,
+            "max_empty_callback_frames": 0,
+            "pcm_peak_bytes": 1587200,
+            "pcm_final_bytes": 0,
+            "raw_peak_bytes": 2784704,
+            "raw_final_bytes": 0,
+            "callbacks": 1549,
+            "device_consumption_or_acoustic_verified": false
+          },
+          "lifetime_peak_working_set_bytes": 16850944,
+          "lifetime_peak_pagefile_bytes": 8085504
+        },
+        {
+          "phases": {
+            "idle": {
+              "sample_count": 28,
+              "sample_span_seconds": 2.9530000000013388,
+              "cpu_seconds": 0.03125,
+              "cpu_one_logical_core_percent": 1.0582458516757816,
+              "working_set_bytes_max": 14888960,
+              "private_bytes_max": 6094848
+            },
+            "hot_edits": {
+              "sample_count": 83,
+              "sample_span_seconds": 8.985000000000582,
+              "cpu_seconds": 0.046875,
+              "cpu_one_logical_core_percent": 0.5217028380634052,
+              "working_set_bytes_max": 15552512,
+              "private_bytes_max": 6709248
+            },
+            "warm_prepare": {
+              "sample_count": 18,
+              "sample_span_seconds": 1.890000000001237,
+              "cpu_seconds": 0.03125,
+              "cpu_one_logical_core_percent": 1.6534391534380712,
+              "working_set_bytes_max": 16072704,
+              "private_bytes_max": 7229440
+            },
+            "cleanup": {
+              "sample_count": 13,
+              "sample_span_seconds": 1.3130000000001019,
+              "cpu_seconds": 0.0,
+              "cpu_one_logical_core_percent": 0.0,
+              "working_set_bytes_max": 16130048,
+              "private_bytes_max": 7266304
+            },
+            "closed": {
+              "sample_count": 19,
+              "sample_span_seconds": 1.985000000000582,
+              "cpu_seconds": 0.0,
+              "cpu_one_logical_core_percent": 0.0,
+              "working_set_bytes_max": 12185600,
+              "private_bytes_max": 3514368
+            }
+          },
+          "checks": {
+            "hot_300_p95_le_50_ms": true,
+            "warm_file_plus_activation_p95_le_250_ms": true,
+            "all_preparations_real_cache_misses": true,
+            "current_source_triggered": true,
+            "single_draft_commit": true,
+            "cancel_history_cleanup": true,
+            "settled_old_pcm_released": true,
+            "no_startup_underflow": true,
+            "idle_retiming_exercised": true,
+            "no_steady_underflow": true,
+            "managed_resources_released": true,
+            "audio_only_process_memory_le_512_mib": true
+          },
+          "latency": {
+            "hot": {
+              "activation_observed_ms": {
+                "count": 300,
+                "p50": 5.2109,
+                "p95": 7.4176,
+                "p99": 8.285,
+                "max": 8.6439
+              },
+              "selection_receipt_ms": {
+                "count": 300,
+                "p50": 3.081,
+                "p95": 4.0667,
+                "p99": 5.0606,
+                "max": 5.3426
+              },
+              "queue_wait_ms": {
+                "count": 300,
+                "p50": 0.0257,
+                "p95": 0.0455,
+                "p99": 0.152,
+                "max": 0.17579999999999998
+              },
+              "probe_allocate_decode_ms": {
+                "count": 300,
+                "p50": 0.068,
+                "p95": 0.097,
+                "p99": 0.106,
+                "max": 0.14770000000000003
+              },
+              "gain_process_ms": {
+                "count": 300,
+                "p50": 0.078,
+                "p95": 0.10679999999999999,
+                "p99": 0.1095,
+                "max": 0.1254
+              },
+              "result_handoff_ms": {
+                "count": 300,
+                "p50": 2.4225000000000003,
+                "p95": 2.9218,
+                "p99": 3.0403000000000002,
+                "max": 3.2229
+              },
+              "edit_to_callback_observed_upper_ms": {
+                "count": 300,
+                "p50": 9.9535,
+                "p95": 11.4547,
+                "p99": 19.6606,
+                "max": 20.1047
+              }
+            },
+            "warm": {
+              "activation_observed_ms": {
+                "count": 64,
+                "p50": 5.415,
+                "p95": 7.121899999999999,
+                "p99": 7.5373,
+                "max": 7.5373
+              },
+              "selection_receipt_ms": {
+                "count": 64,
+                "p50": 2.6551,
+                "p95": 4.022600000000001,
+                "p99": 4.667,
+                "max": 4.667
+              },
+              "queue_wait_ms": {
+                "count": 64,
+                "p50": 0.0205,
+                "p95": 0.0415,
+                "p99": 0.1157,
+                "max": 0.1157
+              },
+              "probe_allocate_decode_ms": {
+                "count": 64,
+                "p50": 0.1421,
+                "p95": 0.5176999999999999,
+                "p99": 0.6952,
+                "max": 0.6952
+              },
+              "gain_process_ms": {
+                "count": 64,
+                "p50": 0.0694,
+                "p95": 0.3129,
+                "p99": 0.4557,
+                "max": 0.4557
+              },
+              "result_handoff_ms": {
+                "count": 64,
+                "p50": 2.2425,
+                "p95": 2.8267,
+                "p99": 2.9542,
+                "max": 2.9542
+              },
+              "edit_to_callback_observed_upper_ms": {
+                "count": 64,
+                "p50": 9.3078,
+                "p95": 17.8386,
+                "p99": 19.3434,
+                "max": 19.3434
+              }
+            },
+            "warm_file_stage_ms": {
+              "count": 64,
+              "p50": 0.6375000000000001,
+              "p95": 1.1559000000000001,
+              "p99": 1.3908,
+              "max": 1.3908
+            },
+            "warm_file_plus_activation_ms": {
+              "count": 64,
+              "p50": 6.123600000000001,
+              "p95": 8.0419,
+              "p99": 8.2377,
+              "max": 8.2377
+            }
+          },
+          "report_summary": {
+            "schema": 1,
+            "period_frames": 480,
+            "idle_reserve_frames": 960,
+            "retimed_idle_frames": 310720,
+            "rate": 48000,
+            "channels": 2,
+            "queued_hot": 300,
+            "queued_warm": 64,
+            "new_origin_triggers": 364,
+            "draft_single_commit": true,
+            "cancel_history_cleanup": true,
+            "settled_old_pcm_released": true,
+            "steady_empty_frames": 0,
+            "startup_empty_frames": 0,
+            "empty_callbacks": 0,
+            "max_empty_callback_frames": 0,
+            "pcm_peak_bytes": 1587200,
+            "pcm_final_bytes": 0,
+            "raw_peak_bytes": 2784704,
+            "raw_final_bytes": 0,
+            "callbacks": 1542,
+            "device_consumption_or_acoustic_verified": false
+          },
+          "lifetime_peak_working_set_bytes": 16850944,
+          "lifetime_peak_pagefile_bytes": 8265728
+        }
+      ]
+    },
+    {
+      "path": "artifacts/p2/audio-burst-final/startup/metrics.json",
+      "sha256": "23c5d76f5a1a0767f4e10bb334687b8ca2e22c0459672dbfac2f31b4b596f802",
+      "passed": true,
+      "runs": [
+        {
+          "phases": {
+            "idle": {
+              "sample_count": 117,
+              "sample_span_seconds": 12.734000000000378,
+              "cpu_seconds": 0.078125,
+              "cpu_one_logical_core_percent": 0.6135149992146826,
+              "working_set_bytes_max": 11735040,
+              "private_bytes_max": 3387392
+            },
+            "closed": {
+              "sample_count": 19,
+              "sample_span_seconds": 1.9690000000009604,
+              "cpu_seconds": 0.0,
+              "cpu_one_logical_core_percent": 0.0,
+              "working_set_bytes_max": 11407360,
+              "private_bytes_max": 2859008
+            }
+          },
+          "checks": {
+            "twenty_starts": true,
+            "no_startup_underflow": true,
+            "resources_released_every_cycle": true,
+            "idle_reserve_covers_two_reported_periods": true,
+            "audio_only_memory_le_512_mib": true
+          },
+          "report_summary": {
+            "schema": 1,
+            "empty_frames": 0
+          },
+          "lifetime_peak_working_set_bytes": 11886592,
+          "lifetime_peak_pagefile_bytes": 3403776,
+          "startup_cycles": 20,
+          "cycle_pcm_peak_bytes_max": 51200,
+          "every_cycle_pcm_released": true
+        },
+        {
+          "phases": {
+            "idle": {
+              "sample_count": 117,
+              "sample_span_seconds": 12.71900000000096,
+              "cpu_seconds": 0.140625,
+              "cpu_one_logical_core_percent": 1.1056293733783267,
+              "working_set_bytes_max": 11755520,
+              "private_bytes_max": 3317760
+            },
+            "closed": {
+              "sample_count": 19,
+              "sample_span_seconds": 1.9839999999985594,
+              "cpu_seconds": 0.0,
+              "cpu_one_logical_core_percent": 0.0,
+              "working_set_bytes_max": 11452416,
+              "private_bytes_max": 2899968
+            }
+          },
+          "checks": {
+            "twenty_starts": true,
+            "no_startup_underflow": true,
+            "resources_released_every_cycle": true,
+            "idle_reserve_covers_two_reported_periods": true,
+            "audio_only_memory_le_512_mib": true
+          },
+          "report_summary": {
+            "schema": 1,
+            "empty_frames": 0
+          },
+          "lifetime_peak_working_set_bytes": 11935744,
+          "lifetime_peak_pagefile_bytes": 3338240,
+          "startup_cycles": 20,
+          "cycle_pcm_peak_bytes_max": 51200,
+          "every_cycle_pcm_released": true
+        }
+      ]
+    }
+  ],
+  "configuration": {
+    "ring_frames": 2048,
+    "active_ahead_frames": 768,
+    "block_frames": 128,
+    "reported_period_frames": 480,
+    "idle_reserve_frames": 960,
+    "idle_guard_frames": 192,
+    "startup_observation_rows": 32
+  },
+  "baseline_reproduction": {
+    "path": "artifacts/p2/audio-burst-trace-baseline/metrics.json",
+    "sha256": "1af946d195e3183e34e13506d4f401fef3672d7a1f14d40c013f21fe42079ab8",
+    "old_empty_frames": [
+      192,
+      0
+    ],
+    "observed_pair": [
+      [
+        480,
+        768,
+        0,
+        18
+      ],
+      [
+        480,
+        288,
+        192,
+        18
+      ]
+    ]
+  },
+  "rejected_fix": {
+    "path": "artifacts/p2/audio-burst-fixed-load/metrics.json",
+    "sha256": "c1297399a2f67f49db8a6f172b203134578251a77efc898c1c7950c92973b1c3",
+    "reason": "Scene clock alone was incorrectly treated as protected audio; scene ready latency p95 exceeded 20 ms. Evidence retained, not accepted."
+  },
+  "final_observed_same_supply_pass_bursts": [
+    {
+      "run": 1,
+      "callback_pair": [
+        3,
+        4
+      ],
+      "rows": [
+        [
+          480,
+          1024,
+          0,
+          20
+        ],
+        [
+          480,
+          544,
+          0,
+          20
+        ]
+      ]
+    }
+  ],
+  "background_regression": {
+    "path": "artifacts/p2/audio-burst-background/report.json",
+    "sha256": "a8b14297999c0c8f709c7fc96035c1df9832cf99f5cc2ee15b583fe146e98c50",
+    "report": {
+      "schema": 1,
+      "rate": 48000,
+      "channels": 2,
+      "format": "F32",
+      "supply_threads": 1,
+      "decoder_threads": 1,
+      "control_stall_ms": 500,
+      "control_stall_rounds": 3,
+      "before_stall_frame": 0,
+      "after_stall_frame": 23808,
+      "after_hot_replace_frame": 48288,
+      "freeze_anchor_frame": 48288,
+      "after_cancel_frame": 49056,
+      "background_next_frame": 73536,
+      "background_submitted_frames": 73536,
+      "background_position_gaps": 0,
+      "callbacks": 182,
+      "max_callback_frames": 1056,
+      "startup_empty_frames": 0,
+      "steady_empty_frames": 0,
+      "stale_skin_lane_frames": 4384,
+      "nonzero_samples": 158182,
+      "pcm_peak_bytes": 3507200,
+      "pcm_final_bytes": 0,
+      "freeze_audition_isolation": true,
+      "cancel_project_history_unchanged": true,
+      "skin_replace_preserves_background": true,
+      "acoustic_or_device_consumption_verified": false
+    }
+  },
+  "previous_proofs_unchanged": {
+    "docs\\P2_AUDIO_CORE_PROOF.json": "0233a706a68fda7129698f4f935d4e61272296ee8a99dff7d77013802a220495",
+    "docs\\P2_AUDIO_EDIT_PROOF.json": "3489c044f93da364fb95b86f243b874e8b55123e635ee87456edc48cd581d818",
+    "docs\\P2_AUDIO_LIBRARY_PROOF.json": "faae41499f5871630cb59e6ebb11f344a62cf46bbae1542922dc5b56e90ddd25",
+    "docs\\P2_AUDIO_LOAD_PROOF.json": "011db2daf8e5359eb072244ba1c3baf325d6a1ff0a0809a9826d0ee95e0151d0",
+    "docs\\P2_AUDIO_NATIVE_PROOF.json": "062888a55213a52dc5387c8ce28ab471cc675620aeec5e3d13c49730a2aac9e1",
+    "docs\\P2_AUDIO_RESOURCES_PROOF.json": "02a57944693e5d17e89368a95804dcc0b1dee68256bd8668915b3198df123f4f",
+    "docs\\P2_AUDIO_RUNTIME_PROOF.json": "3ead10f09df8f926bf79ca8b487381b834829c6b24cea5b0b82b90500539541c",
+    "docs\\P2_AUDIO_SUPPLY_PROOF.json": "2d81e51003e2070c00db020a9c14ffce489905ce6ef585a2406159bbcd217201",
+    "docs\\P2_AUDIO_UI_PROOF.json": "7c365495eb764f8c375d7080c331e3fb4b7f6e68affede9a17bd2fd8e070c811",
+    "docs\\P2_NATIVE_PROOF.json": "9bad4e2ae408839a7a6bbc39356491edc561283d4da646993095cf337e52bab6"
+  },
+  "p0_frozen_sources_unchanged": {
+    "count": 124,
+    "manifest": "docs/p0/windows-audio-adaptation.json"
+  },
+  "not_validated": [
+    "unbounded callback bursts, arbitrary scheduling stalls, other devices or attribution of OS/backend/driver scheduling",
+    "exact first-sample timestamp, device consumption or acoustic latency",
+    "full GUI/graphics/audio 300-second budgets, complete editor lifecycle cycles, device recovery and manual UI",
+    "actual scene/music/beatmap integration, Linux/macOS hardware or remote CI",
+    "project persistence, original-byte file export, valid silence encoding or stable-specific sound rules"
+  ],
+  "git_staged": false,
+  "git_committed": false,
+  "git_pushed": false,
+  "repository_review": {
+    "command": "python tools/check_repository.py",
+    "path": "artifacts/p2/audio-burst-repository-final.log",
+    "sha256": "d265d4b0de9fac61b72c015dc0efa24d691c52a82f356e169375ed7af20ab5e2",
+    "index_empty": true,
+    "patch_whitespace_check": "git diff --check passed"
+  }
+}

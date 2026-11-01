@@ -9,6 +9,7 @@
 #![forbid(unsafe_code)]
 
 mod assets;
+mod audio;
 mod components;
 mod configuration;
 mod forest;
@@ -19,12 +20,13 @@ mod output;
 mod project;
 
 pub use assets::{Asset, AssetKind, AssetLibrary, BlobRef};
+pub use audio::{AudioComponent, AudioMetadata, Gain, SoundSlotKey};
 pub use components::{ComponentKind, ComponentNode, ComponentTree};
 pub use configuration::{ConfigInterpretation, ConfigRecord, SkinConfiguration};
 pub use geometry::{Affine2, Bounds, Opacity, PixelSize};
-pub use identity::{AssetId, ComponentId, DocumentId, LayerId, OutputId};
+pub use identity::{AssetId, AudioComponentId, ComponentId, DocumentId, LayerId, OutputId};
 pub use layers::{ElementDocument, LayerKind, LayerNode, LayerTree};
-pub use output::{OutputMapping, OutputPath};
+pub use output::{OutputMapping, OutputPath, OutputSource};
 pub use project::{MODEL_VERSION, ProjectDefinition, SkinProject};
 
 use core::num::NonZeroU128;
@@ -36,6 +38,7 @@ pub enum ObjectId {
     Layer(LayerId),
     Component(ComponentId),
     Output(OutputId),
+    AudioComponent(AudioComponentId),
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]

@@ -1,9 +1,9 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use skin_editor_domain::{
-    Affine2, Asset, ComponentId, ComponentKind, ComponentNode, ComponentTree, DocumentId,
-    ElementDocument, LayerId, LayerKind, LayerNode, LayerTree, ObjectId, ProjectDefinition,
-    SkinConfiguration, SkinProject,
+    Affine2, Asset, AudioComponent, ComponentId, ComponentKind, ComponentNode, ComponentTree,
+    DocumentId, ElementDocument, LayerId, LayerKind, LayerNode, LayerTree, ObjectId, OutputSource,
+    ProjectDefinition, SkinConfiguration, SkinProject,
 };
 
 use crate::history::definition;
@@ -63,7 +63,8 @@ fn layers(
     let mut nodes = old.layers().iter().map(|n| (n.id, n.clone())).collect();
     edit(old.layers(), &mut roots, &mut nodes)?;
     let tree = LayerTree::new(roots, nodes.into_values().collect())?;
-    input.documents[index] = ElementDocument::new(document, old.canvas(), tree);
+    input.documents[index] =
+        ElementDocument::new(document, old.canvas(), tree).with_visibility(old.visible());
     Ok(())
 }
 
@@ -141,6 +142,18 @@ pub(crate) fn apply(
                     layers: references,
                 });
             }
+            let references: Vec<_> = input
+                .audio_components
+                .iter()
+                .filter(|c| c.asset() == *asset)
+                .map(|c| c.id())
+                .collect();
+            if !references.is_empty() {
+                return Err(CommandFailure::AudioAssetInUse {
+                    asset: *asset,
+                    components: references,
+                });
+            }
             input.assets.remove(index);
         }
         Command::RenameAsset { asset, name } => {
@@ -158,10 +171,63 @@ pub(crate) fn apply(
             }
             input.documents.push(document.clone());
         }
+        Command::CreateAudioComponent { component } => {
+            reserve(used, ObjectId::AudioComponent(component.id()))?;
+            input.audio_components.push(component.clone());
+        }
+        Command::RemoveAudioComponent { component } => {
+            let index = input
+                .audio_components
+                .iter()
+                .position(|c| c.id() == *component)
+                .ok_or(CommandFailure::Missing(ObjectId::AudioComponent(
+                    *component,
+                )))?;
+            if input
+                .outputs
+                .iter()
+                .any(|m| m.source() == OutputSource::Audio(*component))
+            {
+                return Err(CommandFailure::AudioComponentInUse(*component));
+            }
+            input.audio_components.remove(index);
+        }
+        Command::SetAudioAsset { component, asset } => {
+            let old = input
+                .audio_components
+                .iter_mut()
+                .find(|c| c.id() == *component)
+                .ok_or(CommandFailure::Missing(ObjectId::AudioComponent(
+                    *component,
+                )))?;
+            *old = AudioComponent::new(*component, old.slot().clone(), *asset)
+                .with_properties(old.gain(), old.visible());
+        }
+        Command::SetAudioProperties {
+            component,
+            gain,
+            visible,
+        } => {
+            let old = input
+                .audio_components
+                .iter_mut()
+                .find(|c| c.id() == *component)
+                .ok_or(CommandFailure::Missing(ObjectId::AudioComponent(
+                    *component,
+                )))?;
+            *old = old.clone().with_properties(*gain, *visible);
+        }
+        Command::SetDocumentVisibility { document, visible } => {
+            let index = doc_index(&input, *document)?;
+            input.documents[index] = input.documents[index].clone().with_visibility(*visible);
+        }
         Command::RemoveDocument { document } => {
             let index = doc_index(&input, *document)?;
             if input.components.member(*document).is_some()
-                || input.outputs.iter().any(|m| m.document() == *document)
+                || input
+                    .outputs
+                    .iter()
+                    .any(|m| m.document() == Some(*document))
             {
                 return Err(CommandFailure::DocumentInUse(*document));
             }
@@ -170,7 +236,8 @@ pub(crate) fn apply(
         Command::ResizeDocument { document, canvas } => {
             let index = doc_index(&input, *document)?;
             input.documents[index] =
-                ElementDocument::new(*document, *canvas, input.documents[index].layers().clone());
+                ElementDocument::new(*document, *canvas, input.documents[index].layers().clone())
+                    .with_visibility(input.documents[index].visible());
         }
         Command::AddLayer {
             document,

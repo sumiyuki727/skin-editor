@@ -12,5 +12,7 @@ image = { version = "=0.25.10", default-features = false, features = ["png"] }
 sha2 = "=0.10.9"
 cpal = { version = "=0.18.2", default-features = false }
 rtrb = { version = "=0.4.0", default-features = false }
+serde = { version = "=1.0.229", default-features = false, features = ["std"] }
+serde_json = { version = "=1.0.154", default-features = false, features = ["std", "float_roundtrip"] }
 [lints]
 workspace = true

@@ -6,7 +6,7 @@
 
 ## 已实现的模块
 
-P3-0工具原型审阅修订2见[最新结果](P3_0_LOAD_REVIEW.md)：独立地址表／映射代次、只追加的Schema表示、同一读取事务内的流式完整校验。尚未接入application或infrastructure，以下产品依赖图及唯一写入口保持不变。
+P3-0工具原型审阅修订2见[最新结果](P3_0_LOAD_REVIEW.md)：独立地址表／映射代次、只追加的Schema表示、同一读取事务内的流式完整校验。该存储器尚未接入产品。2026-11-02的[P3-1A](P3_1_STATE_REVIEW.md)已在infrastructure加入真实项目状态codec，以下项目内依赖图及唯一写入口保持不变。
 
 仍采用单一Rust进程的模块化单体。根工作区只有domain／application，桌面工作区六包；不是两套产品或跨语言核心。
 
@@ -17,7 +17,7 @@ P3-0工具原型审阅修订2见[最新结果](P3_0_LOAD_REVIEW.md)：独立地�
 | audio · desktop/audio | SoundPlan、共享PCM配额、有界声音／混音与来源门控 | domain |
 | rendering · desktop/rendering | Plan、CPU/GPU合成、像素／上传所有权 | domain |
 | preview · desktop/preview | 当前仅占位PreviewState、场景与冻结／输入计数 | 无 |
-| infrastructure · desktop/infrastructure | 字节／RGBA缓存、PNG／WAV、准备／供给／设备适配 | application、audio、rendering |
+| infrastructure · desktop/infrastructure | 字节／RGBA缓存、PNG／WAV、准备／供给／设备适配；带版本的脱离会话项目状态codec | application、audio、rendering |
 | ui · desktop/ui | 面板、选择／手势、输入路由；定义窄Presenter | application |
 | desktop · desktop/host | Editor组装、原生呈现／生命周期、线程及诊断入口 | application、audio、rendering、preview、infrastructure、ui |
 
@@ -60,7 +60,13 @@ PreviewState、EditorUi选择／面板、监听音量、设备、Voice、缓存�
 
 History保留父子、补丁和有界坐标；检出旧节点再编辑不删旧分支。NodeId为会话内非零u64，外部引用必须带HistorySessionId；n地址≤14、b坐标≤28字符，不随深度增长。Undo在分叉父节点记住刚离开的直接子分支，普通Redo优先返回该分支；没有有效记忆且多个后继时才报告歧义。显式Checkout重置导航记忆，不创建内容节点。
 
-当前没有历史持久化、同时多个活动分支工作区或完整树UI。六类系统标签是显示／导航契约，保存标签必须等真实保存成功关联捕获节点。首版完整历史持久化已确认；持久身份与短地址等具体方案待审阅，不能直接把API v6会话或私有Patch写成永久格式。回执寿命和素材导入语义仍见[决策清单](review/DECISIONS.md)。
+当前没有历史持久化、同时多个活动分支工作区或完整树UI。六类系统标签是显示／导航契约，保存标签必须等真实保存成功关联捕获节点。首版完整历史持久化已确认；持久身份与短地址约定见[文件格式](PROJECT_FORMAT_V1.md)，不能直接把API v6会话或私有Patch写成永久格式。回执寿命和素材导入语义仍见[决策清单](review/DECISIONS.md)。
+
+## 状态编码与后续文件交接
+
+infrastructure::project_format通过application::values只读查询SkinProject，并用显式schema 1映射生成小块／分页索引。serde与serde_json仅在infrastructure使用，domain不持有序列化derive或文件依赖。解码验证字节摘要、引用闭包、结构限额及领域不变量，返回脱离活动会话的SkinProject；没有替换ProjectSession的入口。详见[状态契约](PROJECT_STATE_SCHEMA.md)。
+
+一个StateBundle只覆盖一个内容状态，媒体为原字节引用；required_originals列全已登记素材但不校验字节存在性或申请租约。完整历史、永久历史身份、对象准入、保存／保护／导航元数据和实际原字节仍需application专用捕获／恢复用例及存储适配器。当前源码没有文件I/O或SQLite接线，不以此codec宣称工程可保存。将来迁移追加表示，既有节点的原始状态摘要不被重新编码替换。
 
 ## 图像与GPU交接
 
@@ -90,9 +96,9 @@ Windows普通Policy使用分离背景储备／Voice与CPAL原生输出，默认�
 
 ## 后续模块与审查门槛
 
-P3实现尚未开始，先冻结[数据契约](DATA_COMPATIBILITY.md)。项目格式、保存／打开／静态导出必须经application专用用例；保存捕获固定头及整棵历史、全部分支资源和保存／导航元数据。持久历史与新打开epoch分离，设置／本机状态／工作区／缓存各自保存；未知必要语义禁止覆写，迁移失败原件可用。外部谱面不成为皮肤Asset；在线准备在事务外，登记／引用原子提交。真实兼容规则集中在有证据的后续compatibility，不散入UI或domain。
+P3已完成独立存储原型和真实内容状态codec，完整历史捕获／正式保存尚待后续增量。项目格式、保存／打开／静态导出必须经application专用用例；保存捕获固定头及整棵历史、全部分支资源和保存／导航元数据。持久历史与新打开epoch分离，设置／本机状态／工作区／缓存各自保存；未知必要语义禁止覆写，迁移失败原件可用。外部谱面不成为皮肤Asset；在线准备在事务外，登记／引用原子提交。真实兼容规则集中在有证据的后续compatibility，不散入UI或domain。
 
-同一工程文件须保存全部已登记内容，未使用库素材也不能省略。手动保存、历史自动与退出保护共用增量事务：适配器复用已有块，写入变化状态／新资源／索引页后原子提交代次；完整捕获不要求每轮重写／重新读取整份文件。手动检查点、最新保护检查点和活动头分开，普通打开选最近手动状态，允许显式恢复最新；不保存退出在application关闭门控下补存完成编辑但不推进手动位置，失败不默默退出。调度周期和具体显示仍待讨论，不能从UI另开只写树结构的旁路；尚未选定容器或实现。
+同一工程文件须保存全部已登记内容，未使用库素材也不能省略。手动保存、历史自动与退出保护共用增量事务：适配器复用已有块，写入变化状态／新资源／索引页后原子提交代次；完整捕获不要求每轮重写／重新读取整份文件。手动检查点、最新保护检查点和活动头分开，普通打开选最近手动状态，允许显式恢复最新；不保存退出在application关闭门控下补存完成编辑但不推进手动位置，失败不默默退出。调度设计见[AUTOSAVE_POLICY](AUTOSAVE_POLICY.md)，参数仍待实施验证；容器路线已选SQLite，产品Rust绑定与保存接线尚未实现，不能从UI另开只写树结构的旁路。
 
 [自动保护调度方案](AUTOSAVE_POLICY.md)由未来application按有效变更／单调时间评估，desktop负责单次唤醒和有界存储任务；计时不依赖GUI帧／音频回调，后台不持有可变会话，不能新增通用事件总线或反向依赖。参数、捕获及暂存目标仍待实现验证，旧P2证据不覆盖保存器。
 

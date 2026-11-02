@@ -1,9 +1,10 @@
 # 文档索引
 
-当前实现以[架构](ARCHITECTURE.md)、[技术栈](TECH_STACK.md)、[README](../README.md)为准；代码基线见[代码与决策包](review/README.md)；本轮已按授权完成[P3-0定约与独立原型](P3_0_REVIEW.md)，交由用户审阅，未接入正式保存。历史测量中的旧待办不覆盖当前[阶段结论](P2_FINAL_ACCEPTANCE.md)。
+当前实现以[架构](ARCHITECTURE.md)、[技术栈](TECH_STACK.md)、[README](../README.md)为准；代码基线见[代码与决策包](review/README.md)，后续新增对象见[P3-1A状态codec审阅](P3_1_STATE_REVIEW.md)。P3-0工具原型和P3-1A不等于已接入正式保存。历史测量中的旧待办不覆盖当前[阶段结论](P2_FINAL_ACCEPTANCE.md)。
 
 ## 当前阅读入口
 
+- [P3-1A实际状态codec](P3_1_STATE_REVIEW.md) · [schema 1契约](PROJECT_STATE_SCHEMA.md) · [检查证据](P3_1_STATE_PROOF.json)
 - [P3-0最新审阅：地址、Schema与加载](P3_0_LOAD_REVIEW.md) · [本轮证明](P3_0_LOAD_PROOF.json)
 - [P3-0审阅包](P3_0_REVIEW.md) · [身份／文件格式v1](PROJECT_FORMAT_V1.md) · [原型证据](P3_0_PROOF.json)
 - [系统对象／方法与引用](review/SYSTEM_MAP.md) · [完整清单](review/README.md#全量代码清单) · [待讨论决定](review/DECISIONS.md)
@@ -32,6 +33,8 @@
 | [HISTORY_ADDRESSING.md](HISTORY_ADDRESSING.md) | 当前契约／入口 |
 | [HISTORY_PRESENTATION.md](HISTORY_PRESENTATION.md) | 现行专题契约 |
 | [ONLINE_ASSETS.md](ONLINE_ASSETS.md) | 未来设计／部分接线 |
+| [PROJECT_STATE_SCHEMA.md](PROJECT_STATE_SCHEMA.md) | P3-1A已实现的内容状态schema；不是完整文件或历史格式 |
+| [P3_1_STATE_REVIEW.md](P3_1_STATE_REVIEW.md) | P3-1A实现、对象／方法与后续范围 |
 | [P1_PLAN.md](P1_PLAN.md) | P1阶段记录 |
 | [P1_PROGRESS.md](P1_PROGRESS.md) | 当前契约／入口 |
 | [P2_ACTIVE_EDIT_FAULTS.md](P2_ACTIVE_EDIT_FAULTS.md) | 历史增量／测量 |

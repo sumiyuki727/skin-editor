@@ -18,6 +18,15 @@ def fixture():
     return dict(packages=packages, workspace_root=str(ROOT / "desktop"), workspace_members=[p["id"] for p in packages if p["name"] not in {"skin-editor-domain", "skin-editor-application"}])
 
 class Boundaries(unittest.TestCase):
+    def test_project_codec_dependencies_are_infrastructure_only_and_pinned(self):
+        for name in ["skin-editor-application", "skin-editor-domain", "skin-editor-ui", "skin-editor-preview", "skin-editor-audio", "skin-editor-rendering"]:
+            for edge in ["serde", "serde_json"]:
+                data=fixture();package=next(p for p in data['packages'] if p['name']==name)
+                package['dependencies'].append(dict(name=edge,req=VERSIONS[edge],features=list(FEATURES[edge]),source='registry+https://github.com/rust-lang/crates.io-index'))
+                self.assertTrue(validate_metadata(data,ROOT))
+        for field,value in [('req','*'),('uses_default_features',True),('features',['std','unbounded_depth'])]:
+            data=fixture();dep=next(d for p in data['packages'] for d in p['dependencies'] if d['name']=='serde_json')
+            dep[field]=value;self.assertTrue(validate_metadata(data,ROOT))
     def test_framework_trace_is_explicit_host_only_and_default_off(self):
         for change in [lambda p:p['features'].update(default=['framework-trace']),lambda p:p['features']['framework-trace'].append('eframe/accesskit'),
             lambda p:next(d for d in p['dependencies'] if d['name']=='tracing').update(optional=False),

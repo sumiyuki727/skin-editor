@@ -42,10 +42,11 @@ pub use resources::{BlobLease, ResourceError, ResourceStore};
 pub mod values {
     pub use skin_editor_domain::{
         Affine2, Asset, AssetId, AssetKind, AudioComponent, AudioComponentId, AudioMetadata,
-        BlobRef, Bounds, ComponentId, ComponentKind, ComponentNode, ConfigInterpretation,
-        ConfigRecord, DocumentId, ElementDocument, Gain, LayerId, LayerKind, LayerNode, LayerTree,
-        ModelError, ObjectId, Opacity, OutputId, OutputMapping, OutputPath, OutputSource,
-        PixelSize, SkinProject, SoundSlotKey,
+        BlobRef, Bounds, ComponentId, ComponentKind, ComponentNode, ComponentTree,
+        ConfigInterpretation, ConfigRecord, DocumentId, ElementDocument, Gain, LayerId, LayerKind,
+        LayerNode, LayerTree, ModelError, ObjectId, Opacity, OutputId, OutputMapping, OutputPath,
+        OutputSource, PixelSize, ProjectDefinition, ProjectId, SkinConfiguration, SkinProject,
+        SoundSlotKey,
     };
 }
 

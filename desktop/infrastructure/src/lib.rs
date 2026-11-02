@@ -8,6 +8,8 @@ mod background_input;
 /// Bounded PCM16 WAV background reader; never used by the device callback.
 pub mod background_stream;
 mod callback_audit;
+/// Versioned detached project-state blocks; no active-session or filesystem writer.
+pub mod project_format;
 pub use audio_supply::{
     AudioSupplyClient, MAX_SUPPLY_CONTROLS, SupplyError, SupplyOutcome, SupplyReceipt, SupplyStatus,
 };

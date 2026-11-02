@@ -12,6 +12,7 @@
 | 音频 | WAV PCM16 44.1／48 kHz 单／双声道准备、独立组件绑定／增益／隐藏、原始素材与组件试听、监听音量；其他编码可只保留原字节。设备需显式启用，普通 GUI 未载入歌曲背景 |
 | 预览 | 两个占位场景、冻结下编辑刷新及全屏入口；没有完整 stable 内核。正常 Windows 使用分离声音和 MemoryUsage，图形故障冻结／诊断，不自动重开窗口 |
 | 文件与接口 | 配置保留原始记录，未实现 skin.ini 解析 UI、项目文件、导出、谱面读取、在线素材库或外部 AI 服务 |
+| 存储基础 | infrastructure 有带版本的真实项目状态块编解码、分页共享及有界严格验证；尚无完整历史捕获、原字节文件校验或正式保存／打开入口 |
 
 模型版本2、application API6、预览端口2、音效编辑端口3是不同的进程内契约，尚无正式项目文件读写；P3-0独立实验格式不属于产品支持格式。平台结果、硬件后补项和性能限制见[验收记录](docs/P2_FINAL_ACCEPTANCE.md)，不能将本机结果视为 Linux／macOS 通过。
 
@@ -52,7 +53,7 @@ python tools/check_desktop.py --run-audio --output artifacts/p2/audio-new-run
 
 ## 审阅与版本管理
 
-长期约定见[数据兼容设计](docs/DATA_COMPATIBILITY.md)。P3-0[格式与加载审阅](docs/P3_0_LOAD_REVIEW.md)仅供审阅，未接入产品。可用 `python -B tools/check_p3_storage.py` 运行独立无窗口存储测试；依赖Python标准库sqlite3，不需要窗口／声卡或额外Cargo依赖。
+长期约定见[数据兼容设计](docs/DATA_COMPATIBILITY.md)。实际 Rust 状态 schema 1 的入口、检查与限制见[P3-1A审阅](docs/P3_1_STATE_REVIEW.md)，其无窗口测试包含在桌面检查中；它不是可打开的工程文件。P3-0[格式与加载审阅](docs/P3_0_LOAD_REVIEW.md)是独立工具实验。可用 `python -B tools/check_p3_storage.py` 运行该实验存储测试；依赖Python标准库sqlite3，不需要窗口／声卡或额外Cargo依赖。
 
 [架构](docs/ARCHITECTURE.md)解释当前模块／依赖和数据流；[审阅包](docs/review/README.md)列出对象、方法、trait／组合关系、引用、待讨论决定及完整源码清单。[文档索引](docs/INDEX.md)区分现行契约、未来设计与历史证据。
 

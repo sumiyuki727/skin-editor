@@ -8,7 +8,7 @@ PACKAGES = {
     "skin-editor-audio": ("desktop/audio", {"skin-editor-domain"}),
     "skin-editor-rendering": ("desktop/rendering", {"skin-editor-domain", "wgpu"}),
     "skin-editor-preview": ("desktop/preview", set()),
-    "skin-editor-infrastructure": ("desktop/infrastructure", {"skin-editor-application", "skin-editor-rendering", "skin-editor-audio", "image", "sha2", "cpal", "rtrb"}),
+    "skin-editor-infrastructure": ("desktop/infrastructure", {"skin-editor-application", "skin-editor-rendering", "skin-editor-audio", "image", "sha2", "cpal", "rtrb", "serde", "serde_json"}),
     "skin-editor-ui": ("desktop/ui", {"skin-editor-application", "egui"}),
     "skin-editor-desktop": ("desktop/host", {"skin-editor-application", "skin-editor-audio", "skin-editor-rendering", "skin-editor-preview", "skin-editor-infrastructure", "skin-editor-ui", "eframe", "pollster", "getrandom", "profiling", "tracing", "winit"}),
 }
@@ -16,6 +16,8 @@ VERSIONS = {"wgpu": "=30.0.1", "egui": "=0.37.0", "eframe": "=0.37.0", "image": 
 FEATURES = {"wgpu": {"std", "wgsl"}, "egui": {"default_fonts"}, "eframe": {"default_fonts", "wgpu", "x11", "wayland", "system_fonts", "clipboard"}, "image": {"png"}, "sha2": set(), "pollster": set(), "getrandom": set(), "cpal": set(), "rtrb": set()}
 VERSIONS.update(profiling='=1.0.18',tracing='=0.1.44',winit='=0.30.13')
 FEATURES.update(profiling={'profile-with-tracing'},tracing={'std'},winit=set())
+VERSIONS.update(serde='=1.0.229',serde_json='=1.0.154')
+FEATURES.update(serde={'std'},serde_json={'std','float_roundtrip'})
 HOST_FEATURES={'framework-trace':['dep:profiling','dep:tracing','dep:winit']}
 
 def validate_metadata(metadata, root):
@@ -53,7 +55,7 @@ def validate_metadata(metadata, root):
             elif dep in VERSIONS:
                 if d.get("path") or d.get("req") != VERSIONS[dep] or not (d.get("source") or "").startswith("registry+") or set(d.get("features", [])) != FEATURES[dep]:
                     errors.append(name + ": unreviewed version/source/features " + dep)
-                if dep in {"wgpu", "egui", "eframe", "image", "cpal", "rtrb", "profiling", "tracing", "winit"} and d.get("uses_default_features"):
+                if dep in {"wgpu", "egui", "eframe", "image", "cpal", "rtrb", "profiling", "tracing", "winit", "serde", "serde_json"} and d.get("uses_default_features"):
                     errors.append(name + ": broad default features " + dep)
             else:
                 errors.append(name + ": unknown direct dependency " + dep)

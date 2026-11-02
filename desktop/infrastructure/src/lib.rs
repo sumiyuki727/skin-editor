@@ -11,6 +11,8 @@ mod callback_audit;
 /// Versioned detached project-state blocks; no active-session or filesystem writer.
 pub mod project_format;
 mod project_identity;
+/// Versioned SQLite archive and fully checked detached restoration.
+pub mod project_storage;
 pub use audio_supply::{
     AudioSupplyClient, MAX_SUPPLY_CONTROLS, SupplyError, SupplyOutcome, SupplyReceipt, SupplyStatus,
 };

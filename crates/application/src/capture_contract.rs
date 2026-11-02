@@ -7,7 +7,7 @@ use crate::{
 };
 use skin_editor_domain::{BlobRef, ObjectId, ProjectId, SkinProject};
 
-pub const HISTORY_CAPTURE_VERSION: u16 = 1;
+pub const HISTORY_CAPTURE_VERSION: u16 = 2;
 
 #[derive(Clone, Default)]
 pub struct CaptureCancellation(Arc<AtomicBool>);
@@ -75,7 +75,7 @@ pub enum OperationOrigin {
 pub struct CapturedOperation {
     pub version: u16,
     pub origin: OperationOrigin,
-    pub steps: Vec<&'static str>,
+    pub steps: Vec<String>,
 }
 impl CapturedOperation {
     pub(crate) fn root() -> Self {
@@ -96,6 +96,7 @@ pub struct CapturedNodeInfo {
     pub depth: u64,
     pub operation: Arc<CapturedOperation>,
     pub changed_objects: Vec<ObjectId>,
+    pub origin: Option<Arc<crate::OriginalNodeRecord>>,
 }
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct CapturedAdmission {
@@ -119,6 +120,7 @@ pub struct CaptureManifest {
     /// Zero means the existing local counter is exhausted, not a reusable ID.
     pub next_alias: u64,
     pub next_branch: u64,
+    pub archive_metadata: Arc<crate::ArchiveMetadata>,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]

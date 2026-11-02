@@ -18,6 +18,8 @@
 
 ## 全量代码清单
 
+P3-1C新增 application 存储端口、恢复DTO／工厂，以及 infrastructure SQLite／文件／原始资源完整验证的方法与组合关系，见[存储审阅](../P3_1_STORAGE_REVIEW.md)。此增量单列，不重生成旧源码清单或改写旧证明。私有远端与本地空间整理见[Git管理](../GIT_WORKFLOW.md)。
+
 P3-1B新增的捕获／永久身份、共享补丁和租约对象及方法，见[完整历史捕获审阅](../P3_1_CAPTURE_REVIEW.md)；不倒填旧清单或改写旧证明。
 
 清单来自Rust 1.95私有项rustdoc、实际Cargo metadata及源码索引，所有项带源码位置。重导出别名合并，宏／derive生成内容注明来源限制。**Rust没有类继承**：清单列trait／supertrait实现、组合字段和签名引用；Python类另外列真实基类。

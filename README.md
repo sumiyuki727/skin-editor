@@ -11,12 +11,12 @@
 | 桌面交互 | 画布拾取、Shift比例约束、旋转控制框、集中快捷键及文本／游戏输入隔离；历史面板为有界祖先／直接分支，不是完整树视图 |
 | 音频 | WAV PCM16 44.1／48 kHz 单／双声道准备、独立组件绑定／增益／隐藏、原始素材与组件试听、监听音量；其他编码可只保留原字节。设备需显式启用，普通 GUI 未载入歌曲背景 |
 | 预览 | 两个占位场景、冻结下编辑刷新及全屏入口；没有完整 stable 内核。正常 Windows 使用分离声音和 MemoryUsage，图形故障冻结／诊断，不自动重开窗口 |
-| 文件与接口 | 配置保留原始记录，未实现 skin.ini 解析 UI、项目文件、导出、谱面读取、在线素材库或外部 AI 服务 |
-| 存储基础 | 状态块编解码／分页共享，application 固定截面捕获完整历史与分支、永久身份映射和独立原字节租约；尚无磁盘恢复、原字节文件校验或正式保存／打开入口 |
+| 文件与接口 | 配置保留原始记录，未实现 skin.ini 解析 UI、项目保存／打开 UI、导出、谱面读取、在线素材库或外部 AI 服务 |
+| 存储基础 | 状态块编解码、完整历史捕获与永久身份；Rust SQLite 增量适配、完整文件／原字节验证和脱离活动会话的恢复候选。尚未接入正式保存／打开 UI、自动保护、另存或迁移 |
 
-模型版本2、application API6、预览端口2、音效编辑端口3是不同的进程内契约，尚无正式项目文件读写；P3-0独立实验格式不属于产品支持格式。平台结果、硬件后补项和性能限制见[验收记录](docs/P2_FINAL_ACCEPTANCE.md)，不能将本机结果视为 Linux／macOS 通过。
+模型版本2、application API6、预览端口2、音效编辑端口3是不同的进程内契约。Rust 文件适配使用独立 profile，尚无正式项目保存入口；P3-0实验格式不是它的输入。平台结果、硬件后补项和性能限制见[验收记录](docs/P2_FINAL_ACCEPTANCE.md)，不能将本机结果视为 Linux／macOS 通过。
 
-历史捕获端口单独使用版本1，不改变现有命令协议；方法、限制与验证见[P3-1B审阅](docs/P3_1_CAPTURE_REVIEW.md)。其核心／字节存储测试包含在正式检查入口中，不需要设备或窗口。
+历史捕获端口单独使用版本2，存储端口版本1，不改变现有命令协议；对象、限制和文件恢复验证见[P3-1C审阅](docs/P3_1_STORAGE_REVIEW.md)。测试包含在正式检查入口中，不需要设备或窗口。
 
 ## 安装依赖
 
@@ -25,10 +25,10 @@
 首次获取桌面公开依赖的已验证 Windows 命令：
 
 ```text
-cargo fetch --manifest-path desktop/Cargo.toml --locked --target x86_64-pc-windows-msvc
+cargo fetch --manifest-path desktop/Cargo.toml --locked
 ```
 
-检查脚本离线运行，不自动安装工具、下载依赖或改变全局 Rust。已有独立工具链可传 `--toolchain-dir <bin目录>`，或设置本机 `SKIN_EDITOR_RUST_TOOLCHAIN_DIR`。`.p0-tools` 是本机忽略缓存，不是产品依赖。
+检查脚本离线运行，其 Cargo metadata 会检查完整锁文件，因此首次预取不限制 target。脚本不自动安装工具、下载依赖或改变全局 Rust。已有独立工具链可传 `--toolchain-dir <bin目录>`，或设置本机 `SKIN_EDITOR_RUST_TOOLCHAIN_DIR`。`.p0-tools` 是本机忽略缓存，不是产品依赖。SQLite bundled 绑定另需本机 C 编译器；Windows 使用已有 MSVC。
 
 ## 启动与测试
 
@@ -41,6 +41,8 @@ python tools/run_desktop.py
 ```
 
 核心检查包括格式、Clippy、无窗口测试、实际 Cargo 图与源码边界；桌面检查包含默认／全部 feature，不默认打开窗口、GPU或声卡。`--architecture-only` 只检查边界。远程 Windows／Linux CI 已配置但未在本机替代实测。
+
+私有远端、检查后提交／同步和缓存整理规则见[Git 管理](docs/GIT_WORKFLOW.md)。
 
 启动后拖入 PNG，或填写路径导入，再“加入当前元素”。编辑工具下选择图片，拖动／角点缩放／圆柄旋转；Shift锁定比例，拖动中Esc取消，松手一次提交。多选形成临时共同框；切交互工具清空视觉选择。音效编辑窗口支持 WAV 路径导入、组件绑定及显式试听；同源增益可作用于当前试听，Esc恢复本次增益。
 

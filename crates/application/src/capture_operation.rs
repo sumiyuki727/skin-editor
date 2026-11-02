@@ -33,6 +33,7 @@ impl CapturedOperation {
                 Command::SetAudioAsset { .. } => "sound.asset",
                 Command::SetAudioProperties { .. } => "sound.properties",
             })
+            .map(str::to_owned)
             .collect();
         Self {
             version: 1,

@@ -5,7 +5,7 @@ use std::fmt;
 
 use super::{CodecError, FormatLimits};
 
-pub(super) fn parse(raw: &[u8], limits: FormatLimits) -> Result<Value, CodecError> {
+pub(crate) fn parse(raw: &[u8], limits: FormatLimits) -> Result<Value, CodecError> {
     if raw.len() > limits.block_bytes {
         return Err(CodecError::ResourceLimit("block_bytes"));
     }

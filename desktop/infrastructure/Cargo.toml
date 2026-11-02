@@ -15,5 +15,7 @@ rtrb = { version = "=0.4.0", default-features = false }
 serde = { version = "=1.0.229", default-features = false, features = ["std"] }
 serde_json = { version = "=1.0.154", default-features = false, features = ["std", "float_roundtrip"] }
 getrandom = "=0.4.3"
+rusqlite = { version = "=0.41.1", default-features = false, features = ["bundled", "hooks", "limits"] }
+same-file = { version = "=1.0.6", default-features = false }
 [lints]
 workspace = true

@@ -12,6 +12,7 @@
 | 解码 | 产品内有界PCM16 WAV解析器 | 44.1／48 kHz、单／双声道监听；Symphonia仅在P0独立实验，未加入产品 |
 | 其他 | sha2 =0.10.9、pollster =1.0.1、getrandom =0.4.3 | 实际摘要、初始化等待、宿主会话身份及infrastructure捕获身份源；不将随机／设备能力引入domain或application |
 | 状态codec（2026-11-02） | serde =1.0.229（std）、serde_json =1.0.154（std／float_roundtrip） | 仅infrastructure；默认feature关闭，有界Visitor及显式schema，不序列化领域布局；纯Rust，Windows离线检查通过，其他平台未实测 |
+| Rust文件存储（2026-11-02） | rusqlite =0.41.1（bundled／hooks／limits）、same-file =1.0.6 | 仅infrastructure，默认feature关闭；SQLite C源码随依赖编译，需已有C编译器，文件身份通过平台句柄核对；不启用动态扩展或新后台线程 |
 | 可选诊断 | profiling =1.0.18、tracing =0.1.44、winit =0.30.13 | host的framework-trace默认关闭；有界观察成本不得从产品CPU估算扣除 |
 
 八个产品包及实际依赖、全部对象与方法见[架构审阅](review/README.md)。根／桌面两个Cargo.lock保留；不新增插件框架、第二套UI、跨语言核心或后台服务。Windows ETW的C采集器是外部诊断工具，不是产品运行依赖。
@@ -25,6 +26,8 @@
 128 MiB原始字节、80 MiB RGBA、32 MiB PCM、工作区／预览大小等均为目前实现／资源策略，不是未经验证的stable规则。P3前要决定实际项目规模／超限素材的保留与导出策略，见[待讨论决定](review/DECISIONS.md)。
 
 ## 后续重审条件
+
+P3-1C在桌面锁文件新增rusqlite、libsqlite3-sys、fallible-iterator、fallible-streaming-iterator、vcpkg五个包，same-file原已间接锁定；没有顺带升级其他包。SQLite／连接、受限JSON、摘要及完整模型恢复均有内存／CPU成本，见[审阅](P3_1_STORAGE_REVIEW.md)，逻辑配额不替代进程实测。Bundled避免依赖用户安装不同SQLite版本，但增加C编译、上游安全更新及分发许可审查责任；最终打包前还须验证目标平台VFS、硬链接／断电恢复和第三方声明。核心继续零第三方依赖。
 
 P3-1B为infrastructure增加已锁定getrandom的直接边，实现application定义的永久身份候选源；没有新增包或版本。完整捕获与原字节租约见[审阅](P3_1_CAPTURE_REVIEW.md)，OS熵延迟与GUI冻结阶段尚未实测；本轮不以逻辑准入替代整进程内存测量。
 

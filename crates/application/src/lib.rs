@@ -2,6 +2,7 @@
 #![forbid(unsafe_code)]
 
 mod address;
+mod archive;
 mod audio_editor;
 mod audio_port;
 mod capture;
@@ -18,15 +19,18 @@ mod history_control;
 mod history_queries;
 mod preview_port;
 mod resources;
+mod restore;
+pub use archive::*;
 pub use audio_editor::*;
 pub use audio_port::*;
 pub use capture::{CaptureSnapshot, HistoryCapture};
 pub use capture_contract::*;
 pub use capture_identity::{
-    AddressEpoch, HistoryIdentitySource, IdentityError, LineageId, PersistentHistoryId,
+    AddressEpoch, CommitId, HistoryIdentitySource, IdentityError, LineageId, PersistentHistoryId,
     PersistentHistoryIdentity, PersistentNodeId, PersistentNodeReference,
 };
 pub use preview_port::*;
+pub use restore::{RestoreBuilder, RestoreCandidate};
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::Arc;
@@ -165,6 +169,7 @@ pub struct ProjectSession {
     next_draft_id: u64,
     persistence: Option<capture_identity::PersistenceMap>,
     capture_in_flight: Arc<std::sync::atomic::AtomicBool>,
+    archive_metadata: Arc<ArchiveMetadata>,
     /// Cancellation tombstones are bounded by the admitted Begin requests.
     cancelled_drafts: BTreeSet<DraftId>,
 }
@@ -220,6 +225,7 @@ impl ProjectSession {
             next_draft_id: 1,
             persistence: None,
             capture_in_flight: Arc::default(),
+            archive_metadata: Arc::default(),
             cancelled_drafts: BTreeSet::new(),
         })
     }

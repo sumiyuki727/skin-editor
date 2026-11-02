@@ -6,7 +6,7 @@
 
 ## 已实现的模块
 
-2026-11-02的[P3-1B](P3_1_CAPTURE_REVIEW.md)加入application完整历史捕获、永久身份映射与独立原字节租约；未接入正式文件保存／打开。捕获端口版本1与API6分开，模块方向不变。
+2026-11-02的[P3-1C](P3_1_STORAGE_REVIEW.md)加入 application 定义的 ProjectArchive 端口、RestoreBuilder／RestoreCandidate 及 infrastructure 的 SqliteProjectFile。捕获端口升为2，存储端口1与API6分开；完整历史已可通过无窗口存储用例验证并恢复为新会话，普通编辑器尚未接文件入口。模块方向不变。
 
 P3-0工具原型审阅修订2见[最新结果](P3_0_LOAD_REVIEW.md)：独立地址表／映射代次、只追加的Schema表示、同一读取事务内的流式完整校验。该存储器尚未接入产品。2026-11-02的[P3-1A](P3_1_STATE_REVIEW.md)已在infrastructure加入真实项目状态codec，以下项目内依赖图及唯一写入口保持不变。
 
@@ -19,7 +19,7 @@ P3-0工具原型审阅修订2见[最新结果](P3_0_LOAD_REVIEW.md)：独立地�
 | audio · desktop/audio | SoundPlan、共享PCM配额、有界声音／混音与来源门控 | domain |
 | rendering · desktop/rendering | Plan、CPU/GPU合成、像素／上传所有权 | domain |
 | preview · desktop/preview | 当前仅占位PreviewState、场景与冻结／输入计数 | 无 |
-| infrastructure · desktop/infrastructure | 字节／RGBA缓存、PNG／WAV、准备／供给／设备适配；带版本的脱离会话项目状态codec | application、audio、rendering |
+| infrastructure · desktop/infrastructure | 字节／RGBA缓存、PNG／WAV、准备／供给／设备适配；项目状态codec、SQLite增量文件与完整验证 | application、audio、rendering |
 | ui · desktop/ui | 面板、选择／手势、输入路由；定义窄Presenter | application |
 | desktop · desktop/host | Editor组装、原生呈现／生命周期、线程及诊断入口 | application、audio、rendering、preview、infrastructure、ui |
 
@@ -62,19 +62,21 @@ PreviewState、EditorUi选择／面板、监听音量、设备、Voice、缓存�
 
 History保留父子、补丁和有界坐标；检出旧节点再编辑不删旧分支。NodeId为会话内非零u64，外部引用必须带HistorySessionId；n地址≤14、b坐标≤28字符，不随深度增长。Undo在分叉父节点记住刚离开的直接子分支，普通Redo优先返回该分支；没有有效记忆且多个后继时才报告歧义。显式Checkout重置导航记忆，不创建内容节点。
 
-当前没有历史持久化、同时多个活动分支工作区或完整树UI。六类系统标签是显示／导航契约，保存标签必须等真实保存成功关联捕获节点。首版完整历史持久化已确认；持久身份与短地址约定见[文件格式](PROJECT_FORMAT_V1.md)，不能直接把API v6会话或私有Patch写成永久格式。回执寿命和素材导入语义仍见[决策清单](review/DECISIONS.md)。
+当前普通 GUI 没有历史持久化、同时多个活动分支工作区或完整树UI；独立存储适配已可恢复完整树。六类系统标签是显示／导航契约，保存标签必须由真实保存关联捕获节点。永久引用见[文件格式](PROJECT_FORMAT_V1.md)，不能把API6会话或私有Patch写成永久格式。回执寿命和素材导入语义仍见[决策清单](review/DECISIONS.md)。
 
 ## 状态编码与后续文件交接
 
 infrastructure::project_format通过application::values只读查询SkinProject，并用显式schema 1映射生成小块／分页索引。serde与serde_json仅在infrastructure使用，domain不持有序列化derive或文件依赖。解码验证字节摘要、引用闭包、结构限额及领域不变量，返回脱离活动会话的SkinProject；没有替换ProjectSession的入口。详见[状态契约](PROJECT_STATE_SCHEMA.md)。
 
-一个StateBundle只覆盖一个内容状态，媒体为原字节引用；required_originals列全已登记素材但不校验字节存在性或申请租约。P3-1B现已增加完整历史捕获／身份／租约，文件验证和恢复激活仍须后续专用用例及存储适配器。当前codec没有文件I/O或SQLite接线，不以此宣称工程可保存。将来迁移追加表示，既有节点的原始状态摘要不被重新编码替换。
+一个StateBundle只覆盖一个内容状态，媒体为原字节引用；required_originals列全已登记素材但不校验字节存在性或申请租约。完整捕获负责固定全部历史原字节，P3-1C的独立文件适配负责实际字节与全树验证；状态codec本身仍没有文件I/O。将来迁移追加表示，既有节点的原始状态摘要不被重新编码替换。
 
 ProjectSession.capture_history捕获根与全部分支、永久身份、首次对象准入、导航和全历史原始租约。HistoryCapture仅保留共享不可变Patch和固定拓扑，不持有ProjectSession／ResourceStore；适配器通过有界poll得到验证后的完整SkinProject，私有Patch不成为文件协议。显式栈使每条边最多前后各走一次，状态验证／编码成本仍按状态总内容计量。
 
 CaptureSnapshot及每个输出状态共享独立租约；成功、取消或失败不能提前回收消费者仍持有的资源。当前一会话只接纳一份在途捕获，最后所有者释放后才归还槽；命令／导航仍可继续。全部遍历结束才标is_complete，这不是文件保存成功。身份源由application定义、infrastructure用getrandom实现，首次接纳后永久映射保留，取消不改号；原始字节通过已有验证租约固定，不执行文件读取或解码。
 
-完整历史的文件验证／恢复激活、真实保存／保护事实及标签用例仍未实现；捕获source中的运行epoch不应写回文件或复活旧事件。接口、逻辑成本、取消与实际ByteBudget释放证据见[P3-1B审阅](P3_1_CAPTURE_REVIEW.md)。
+完整文件交接现为：application 固定捕获 → infrastructure 编码／增量事务 → 文件回执；读取则在同一只读事务内验证完整文件 → application RestoreBuilder 校验全树、身份准入、导航及资源闭包 → RestoreCandidate → 通过专用工厂创建新 ProjectSession。工厂重建私有补丁而不重放旧 Command，不提供覆盖活动会话的 setter。GUI 保存回执、退出／自动保护调度、标签编辑仍待后续。
+
+适配器持有文件句柄、SQLite 连接及有界元数据缓存；候选持有不可变完整状态与原字节租约。新会话独立固定资源，候选／文件释放不会提前回收历史仍需的原字节。新打开 epoch 由宿主提供，文件不恢复旧请求／草稿／Voice／GPU句柄。每个原始节点保留首写 action、状态引用与摘要；重新编码仅用于派生一致性比较，不重新绑定旧记录。具体对象和所有权见[P3-1C审阅](P3_1_STORAGE_REVIEW.md)。
 
 ## 图像与GPU交接
 

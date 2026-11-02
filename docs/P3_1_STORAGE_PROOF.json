@@ -1,0 +1,346 @@
+{
+  "evidence_schema": 1,
+  "phase": "P3-1C",
+  "date": "2026-11-02",
+  "status": "checked Rust archive and detached restore foundation; no formal save/open UI",
+  "checkpoint_commit": "8cb882e1389f955f95b6059431fd0c7025adad9e",
+  "git_management_commit": "1778c378e9dd4662a4a1e2cd39473f905b4330a6",
+  "git_policy": "Git management changes committed via normal hook and pushed; current storage increment remains unstaged/uncommitted for review",
+  "contracts": {
+    "model": 2,
+    "application_api": 6,
+    "history_capture": 2,
+    "archive_port": 1,
+    "profile": "skin-editor-rust-v1",
+    "container": 2,
+    "project_schema": 1,
+    "history_schema": 2,
+    "record_version": 2,
+    "state_schema": 1,
+    "operation_summary": 1,
+    "sqlite_runtime": "3.54.1",
+    "required_features": [
+      "storage.core:2",
+      "state.editor:1",
+      "history.summary:1",
+      "history.delta-index:1"
+    ]
+  },
+  "checks": [
+    {
+      "entry": "normal .githooks/pre-commit",
+      "status": "pass",
+      "log": "artifacts/github-backup-20261102/git-migration-commit.log",
+      "sha256": "7d43db6093e09d03e4c0e3761ef2080d78698924a4e38ca87a40797a87aa0449",
+      "scope": "core format/Clippy/tests/guards and desktop default+all-features; current working storage sources were tested though not included in the four-path commit",
+      "python_tests": 418,
+      "new_core_restore_tests": 3,
+      "new_storage_integration_tests": 6,
+      "new_storage_private_tests": 12,
+      "infrastructure_unit_tests_each_feature_set": 188
+    },
+    {
+      "entry": "tools/check_desktop.py",
+      "status": "pass",
+      "log": "desktop-complete-r2.log",
+      "note": "default started before three final private tests; final normal hook verifies all current tests in both feature sets"
+    },
+    {
+      "entry": "post-LF core+desktop architecture-only checks",
+      "status": "pass",
+      "logs": [
+        "core-boundaries-final.log",
+        "desktop-boundaries-final.log"
+      ],
+      "note": "two changed text files normalized to declared LF only after full hook; parsed content unchanged"
+    },
+    {
+      "entry": "selected compiled SQLite runtime and immutable-delta regression",
+      "status": "pass",
+      "log": "sqlite-runtime.log"
+    },
+    {
+      "entry": "bounded release depth10000 file roundtrip",
+      "status": "pass",
+      "log": "storage-depth-release.log"
+    },
+    {
+      "entry": "post-review metadata rejection regression plus affected infrastructure release fmt/Clippy/all tests",
+      "status": "pass",
+      "log": "storage-metadata-final.log",
+      "infrastructure_unit_tests": 189,
+      "storage_private_tests": 13,
+      "new_regression_log_before_fix": "metadata-rejection-before-fix.log",
+      "before_fix_status": "failed as expected: old code committed while dropping requested tag data; fixed by explicit rejection before transaction",
+      "features": "all-features; infrastructure declares no own features; broader desktop default/all checks precede this narrow guard"
+    }
+  ],
+  "depth_workload": {
+    "nodes": 10001,
+    "small_configuration_edits": 10000,
+    "media_in_this_timing": false,
+    "release_write_and_full_verify_ms": 7925,
+    "release_read_to_candidate_ms": 2257,
+    "file_bytes": 45039616,
+    "first_debug_write_and_verify_ms": 36500,
+    "first_debug_read_to_candidate_ms": 17131,
+    "scope": "current metadata-guard build; one Windows local diagnostic with newly written file in OS page cache; excludes candidate activation/UI and representative media; not a product CPU/memory or cold-start gate",
+    "log": "storage-depth-release-final.log"
+  },
+  "regressions": [
+    "full tree and non-selected branches verified",
+    "permanent identities, aliases, admission tombstones and redo route retained",
+    "manual default and latest protection checkpoints separated; unchanged default-open exit preserves newer recovery",
+    "precommit faults/cancellation roll back to byte-identical old file",
+    "postcommit or postpublish ambiguity resolved after full reopen by CommitId",
+    "first publication never overwrites target",
+    "corrupt nodes, address/index/control/state/original data and unsupported profile/feature rejected",
+    "typed PNG/WAV plus opaque raw bytes preserved",
+    "busy/external change/budget rejected without publishing candidate",
+    "20 restore/drop cycles return actual original-byte budget to zero",
+    "unsupported tag/extension edits are explicitly rejected before transaction without discarding the source project edits or altering the file"
+  ],
+  "dependencies": {
+    "new_lock_packages": [
+      {
+        "name": "fallible-iterator",
+        "version": "0.3.0"
+      },
+      {
+        "name": "fallible-streaming-iterator",
+        "version": "0.1.9"
+      },
+      {
+        "name": "libsqlite3-sys",
+        "version": "0.39.1"
+      },
+      {
+        "name": "rusqlite",
+        "version": "0.41.1"
+      },
+      {
+        "name": "vcpkg",
+        "version": "0.2.15"
+      }
+    ],
+    "removed_or_upgraded_prior_packages": [],
+    "core_third_party_dependencies": 0,
+    "bundled_sqlite_requires_existing_c_compiler": true
+  },
+  "preservation": {
+    "baseline_files": 727,
+    "missing": [],
+    "protected_changed": [],
+    "frozen_p2_sha256": "07852b969bdd88153a79e2e185a29548dc9844038fb7f9639ec71860a15fada8",
+    "old_proofs_archives_and_golden_vectors_unchanged": true
+  },
+  "github": {
+    "repository": "https://github.com/sumiyuki727/skin-editor",
+    "visibility_verified": "PRIVATE",
+    "remote_head_verified": "1778c378e9dd4662a4a1e2cd39473f905b4330a6",
+    "ci_run": "https://github.com/sumiyuki727/skin-editor/actions/runs/41462169265",
+    "ci_status": "completed",
+    "ci_conclusion": "success",
+    "ci_jobs": [
+      {
+        "name": "desktop-windows",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "core (windows-2025)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "core (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "ci_scope": "management commit plus P3-1B baseline, NOT the uncommitted P3-1C source; current storage is locally Windows-tested",
+    "ci_result_sha256": "9a753f74f16696907017763b8ad74b5f5cfa0e3ea169fed825464e49d49bea37"
+  },
+  "backup": {
+    "url": "https://github.com/sumiyuki727/skin-editor/releases/tag/backup-20261102-8cb882e",
+    "archive_bytes": 7068705,
+    "archive_sha256": "79e41ba81472e75ed28d9f72824815acd5cdd83cc48e0ebeeb99553645ec6889",
+    "download_verified_files": 25,
+    "source_snapshot": "pre-completion uncommitted snapshot, explicitly unvalidated; not final P3-1C source"
+  },
+  "space": {
+    "initial_free_gib_rounded": 27.36,
+    "final_free_bytes_observed": 60966596608,
+    "cleanup_records": {
+      "cache-cleanup-completed.json": "332a1121f3597a999b142146de4f6a9ae09ffdcd2481a002346ec049574e59f5",
+      "final-cache-completed.json": "7b41c45b58ef9bee0f7d9b01b31d8487d1d6252c24853efcc27e439fdd392aa2"
+    },
+    "preserved": [
+      "all original diagnostics",
+      "tracked sources and evidence",
+      "frozen P2 binary",
+      "toolchains",
+      "release output"
+    ],
+    "debug_cache_removed_after_checks": true,
+    "note": "gross deletion sizes include regenerated caches; net free-space observation is separate"
+  },
+  "not_implemented_or_not_verified": [
+    "formal save/open UI and save acknowledgement",
+    "automatic/exit protection scheduler and preferences",
+    "verified Save As/copy and address remapping/merge",
+    "tag edit use cases",
+    "state_views schema migration implementation",
+    "hot-journal recovery, process-crash/power-loss and directory-entry durability",
+    "representative-media load/activation peak memory and combined editor load",
+    "Linux/macOS Rust archive runtime/VFS",
+    "actual skin file export"
+  ],
+  "retained_attempt_log_sha256": {
+    "check-first.log": "fe71942d3c56540e3ca32a95d77a5d422910c64b0c4b6fa960d8dd0dde668d3b",
+    "check-r2.log": "f7b0ac3787a6573440d973357e8695f0d4ea5016bde9195b4888f6c2d70519d9",
+    "check-r3.log": "f7b0ac3787a6573440d973357e8695f0d4ea5016bde9195b4888f6c2d70519d9",
+    "check-r4.log": "8c766bfa328ae055eaa6ea408f6dbcc674533db5e01e4a20c3cb7325f6dc9de1",
+    "checkpoint.log": "0c2cfa5b573c1c79879ccc13b287a030aa9ab8f3420281fc4acfe4efbfcdd2a1",
+    "cleanup-clippy.log": "6b03c870da153debb2c82444514e961a95b94474a45edd1d7c45146a5538ea0b",
+    "core-boundaries-final.log": "5d48df8cf76612d871c22ff85987c4b853aaa33e38ff792ad07c4a43827473f0",
+    "core-complete-first.log": "2e1221d1ae2fbd3537bb2b41accee5416ec02a1938c5dd41988313376add38e2",
+    "core-complete-r2.log": "4d42fb91f311e897a4224b36667d95e5cfb158107debb8bc48575ebff356ccb4",
+    "core-first.log": "a7bc6769174ba5f7cf172a9a90f43f9f0f65ad96a6accc67b7cd49c28a81a5be",
+    "core-restore-first.log": "422f6c160f0514732f35db5c5b8e4253f0605b1b267b87088d00f92a7cd52b3f",
+    "desktop-boundaries-final.log": "e39086420d077ded1eb9c6dd0d08179071b1ee472683409d919774be6f587f4d",
+    "desktop-complete-first.log": "81d19ba4326956c38323302b60df9e011cf0b0094cb3b7cf3011077689eb1187",
+    "desktop-complete-r2.log": "89d416bde161828d6f57241699171c54fe350312d564120cb9b65d6f64cba74f",
+    "fetch-approved.log": "e464add84de53fcf92a44baae2f7341ffb78c7db6fa0e46ec304ac35e32dbd54",
+    "fetch.log": "9bb9e9ee7960e7d2c6cc91cb360123f220cb737305c8b634d53a18a3b715ff92",
+    "metadata-rejection-before-fix.log": "5294615d5598e6a96c6a59d5455f74f779423e690c7ddd4f8d79f7439f98dda3",
+    "sqlite-runtime.log": "5b14f8ea8aec41b141093f69b4d7cb019a41f4068d5c0dffc63a2efa7943750c",
+    "storage-depth-release-final.log": "e0c877107b8a4f4906d89ac2844468078cb8a6f90ef37797d65d19c855648a9c",
+    "storage-depth-release.log": "96ffc53f3e2e8763cd0a9e8cdfcd1311892c6e849a212b4bbca71cddecb49150",
+    "storage-metadata-final.log": "53739087b9f1820b35326738bea1769ef6f5071ad1a26ddc907afea927a70a2e",
+    "storage-negative-first.log": "f9c4a0019a8d7aac4950fd1aeeaae1ee46b8aedf7ed62998194ef9e47c4d132c",
+    "storage-negative-r2.log": "cca6b4924cff6fe6735e4247e5cba2b003e8309095fbb8c1c2534d1c4cc4faf2",
+    "tests-first.log": "0073e130362d984af89b781db39ebe3d0452b167bd6d9ce03f71bb0d396c6822",
+    "tests-r3.log": "638230f3a36ec53f9bce301b242e2c918adaf99867d86f36c71e190d74d3e520",
+    "tests-raw-r2.log": "739de867dfc95477ac4e8a76a49d308afc31b57d7a0a96b362e28eb3eb2bae09"
+  },
+  "source_sha256": {
+    ".github/workflows/core.yml": "7aa86dbdb7b25eba095ea0c796c8d87df36fd2def376ae21dc73c05f9987cbcb",
+    "AGENTS.md": "8e1d9a2ad7f9936551bbc69d09e1898607636e1e5df24edfdbab2c119efe4dc4",
+    "crates/application/src/address.rs": "d6d1ba60051876c653bbb829caa243b1e166514f3256de37e9b227ccfcf07c0b",
+    "crates/application/src/archive.rs": "09c9fc4c55ba7bc6d4f9118a43778fbde6e65383e829bcfa30a4b64fece84dcf",
+    "crates/application/src/audio_editor.rs": "87247d6c14bfa4972c64ecdc87e1a2ec483bec65bda94cc0adc0ee4871524d03",
+    "crates/application/src/audio_port.rs": "4ce375c8689d82f51a715ca8d0d403e134521aefddc796f0c469e57e5d18d6bc",
+    "crates/application/src/capture.rs": "eff8e14858cc9df04e54491382dc97832771d7f186c8313c7f0e43d3caac3b66",
+    "crates/application/src/capture_contract.rs": "beeb99a4f84c302ea164bd60395e449a59e9c69292d1a92e40932efa56a2b4d9",
+    "crates/application/src/capture_cost.rs": "2b3b708d1bd478eb62aaeed9b9e6a4aa808607db2c6e7c51219801bcb2afdd8d",
+    "crates/application/src/capture_identity.rs": "f658bbb932f18bb62e9e991dbec1eddca0a047f75d23af9314c8c809b034315c",
+    "crates/application/src/capture_operation.rs": "24d3ee1cdd8e08bbf5c77acab2632eb785c17cb143c0498baf24d34988ea8c22",
+    "crates/application/src/contract.rs": "22153f8959866c4a3e9df2c2dc37648113ba849eb11b9b53e46cb30f0b07d099",
+    "crates/application/src/draft.rs": "d7fac9f0a44de2acfd93250e92f95c0bced216f21c91b2e748a1a125db53a55d",
+    "crates/application/src/draft_contract.rs": "9ca0e3fba10f8b8545511ed45fa649523e5fc07d6f538ce9ccc85f5175538bd7",
+    "crates/application/src/execute.rs": "735cbc5a56ac1256123ad9e69d74fae321b79a398fa43b6730de63b4a4f029dc",
+    "crates/application/src/history.rs": "32c3ebe5c6e6794101b76af9ef4f611acdc352e489c7e0655f131399d98f6cdc",
+    "crates/application/src/history_control.rs": "c63f63027d347bd747730eacc2c02c7037df1105cf4dfb7deabf49ce1e3b8d44",
+    "crates/application/src/history_queries.rs": "461058962269de64d73f4002065f75b6dbdfdc970abc4ad9d529078445ba0741",
+    "crates/application/src/lib.rs": "766470bf1f5da2912d55560110ce2c9fc6f3f3c2522fb09393da91164b0aa093",
+    "crates/application/src/preview_port.rs": "9dec4f42efc8201c4dc6bbbb784548e4beba30cac7fe8de305473bbefabd21aa",
+    "crates/application/src/resources.rs": "b21d2808b96457ea6fd35cdfdc3e45c89c61e4d69fe92f64477105e33c117770",
+    "crates/application/src/restore.rs": "ba12942f768c1e1a0f37f22ea98475f158a82214f337eb76dcbede46ad3fa645",
+    "crates/application/tests/restore.rs": "7f8df9f13ac956f14020de99dc4e6a0a7cd6f6ff0895c761ea68815f58d83b5b",
+    "crates/domain/src/assets.rs": "6daa3625dab9205497dd9230a460fa55441da022d83a237e644ce07c35e850a5",
+    "crates/domain/src/audio.rs": "807d2cbd247406d0e7a9a6305884e6c6122518f9eab919a3d43beb44db5efb7d",
+    "crates/domain/src/components.rs": "93276309ce2ccdcc165843633d26b2f90176d67fc02a6068fd0cfbfc8529d3c6",
+    "crates/domain/src/configuration.rs": "2472c94b2fac0fcb69ed967d361bd6a1feecc3137af31bf54138dbf6030418fa",
+    "crates/domain/src/forest.rs": "07731db4e0302b768fd995f297dc332aeda2f821f1b29055b1355a1df3ac7827",
+    "crates/domain/src/geometry.rs": "21ce8edbfb4ad963525dfe5ecfb79c7cef3cb8a53c8fc930939bff887335f4c9",
+    "crates/domain/src/identity.rs": "410d53bc95072343060772cac51c19c694cbb691f1cf3587aa3eaeec84e74b56",
+    "crates/domain/src/layers.rs": "ebefe1ea28a4e079c434469a7f4ed5e112acc9b60ca34f7675c4a2592f8e87df",
+    "crates/domain/src/lib.rs": "886b26f31d907a7aab8156624acb9a592a7b596ff9d08bc8b6fa5ac81c2f472d",
+    "crates/domain/src/output.rs": "238e5deb808cf3b5fd4064a5684e869406075cc45409bb8173a4f341d024f95a",
+    "crates/domain/src/project.rs": "bd371fad3ef3fa50939a9481ea6481ef789f5485dd7ea22cb8feed4dbbe077df",
+    "desktop/Cargo.lock": "3a601677285efbbed6cb541f9ca5791afa03a83826dc4dde3bd54b1dc6734e0b",
+    "desktop/infrastructure/Cargo.toml": "70601b525d0f35439fc624cfb18423b9bc9bec2be0c3bed6bde6cdb21a74e91f",
+    "desktop/infrastructure/src/lib.rs": "8318bb2edb243035be80d8338b99dd8a530db16c7e18952d22a1e7fe20cef8f4",
+    "desktop/infrastructure/src/project_format/json.rs": "eb6dd8c6b92cb5a00fdcd98dc1bb741861a34a8c0b8e4c1ac728df6dd1288a77",
+    "desktop/infrastructure/src/project_format/mod.rs": "059f28d0fb4bea24d84663833ddb248442381fc307fc8336531bf39cc2abf78a",
+    "desktop/infrastructure/src/project_format/read.rs": "f2c07b799851d8ac2bb540fea97288dc0d8ffebce491d057036bf88ea6266754",
+    "desktop/infrastructure/src/project_format/write.rs": "6ddcd4f97f327cc96718e0d50a6a57537cab5fe540e941e788fe77bde2eee774",
+    "desktop/infrastructure/src/project_storage/blocks.rs": "df3d6164bcccf693bca83f00fd5f3d4e584364ce173394dd5b9bfdc8777723b7",
+    "desktop/infrastructure/src/project_storage/mod.rs": "a548ac515cbd3419abac57407d78be353e18f082589553de539a3f1710b468a8",
+    "desktop/infrastructure/src/project_storage/read.rs": "ec943dd206a5748124eb296b75bd5d087b2eb9c3dd1098579f0524a99dfd5cf9",
+    "desktop/infrastructure/src/project_storage/schema.rs": "f9179afc25d5e899f74d7ba793bde44a151fcd4201d4bd9d5bbc5a9601b14f78",
+    "desktop/infrastructure/src/project_storage/tests.rs": "f72d364e7db44c3adc64b1c64ca73a5657337e86dd413dfb9dbdc2b2a6848988",
+    "desktop/infrastructure/src/project_storage/values.rs": "b84d57ca1f4de0d4a4cd23993b64cd310d253299ac5cc4fdacbb883503b998c5",
+    "desktop/infrastructure/src/project_storage/write.rs": "f579475e0d08e687896122d8c5593be30aca2fbcc4da1cb480d7fa501babbfb3",
+    "desktop/infrastructure/tests/project_storage.rs": "5dc094d7d9f178b84eccf8e16a6233020379392ace56a277b7ad001f649af377",
+    "tools/check_desktop_architecture.py": "f74a15a116dfb0877521fbd21e6daa16dd2eb4ae556b62770f8397d56cf14a4e",
+    "tools/test_check_desktop_architecture.py": "df016dec616112ef19759bfe2b84c054dfe27dc64101fd354fed07eca3fbef21",
+    "tools/test_check_stable_window.py": "8a2b7bc36b36847fc0e23e38b83027111113095869bbf8c81ac52f2e2895b2da"
+  },
+  "depth_workload_before_metadata_fix": {
+    "nodes": 10001,
+    "small_configuration_edits": 10000,
+    "media_in_this_timing": false,
+    "release_write_and_full_verify_ms": 7907,
+    "release_read_to_candidate_ms": 2138,
+    "file_bytes": 45039616,
+    "first_debug_write_and_verify_ms": 36500,
+    "first_debug_read_to_candidate_ms": 17131,
+    "scope": "one Windows local diagnostic; newly written file with OS page cache; excludes candidate activation/UI; not an accepted product CPU/memory or cold-start budget",
+    "source_sha256": {
+      ".github/workflows/core.yml": "7aa86dbdb7b25eba095ea0c796c8d87df36fd2def376ae21dc73c05f9987cbcb",
+      "AGENTS.md": "8e1d9a2ad7f9936551bbc69d09e1898607636e1e5df24edfdbab2c119efe4dc4",
+      "crates/application/src/address.rs": "d6d1ba60051876c653bbb829caa243b1e166514f3256de37e9b227ccfcf07c0b",
+      "crates/application/src/archive.rs": "09c9fc4c55ba7bc6d4f9118a43778fbde6e65383e829bcfa30a4b64fece84dcf",
+      "crates/application/src/audio_editor.rs": "87247d6c14bfa4972c64ecdc87e1a2ec483bec65bda94cc0adc0ee4871524d03",
+      "crates/application/src/audio_port.rs": "4ce375c8689d82f51a715ca8d0d403e134521aefddc796f0c469e57e5d18d6bc",
+      "crates/application/src/capture.rs": "eff8e14858cc9df04e54491382dc97832771d7f186c8313c7f0e43d3caac3b66",
+      "crates/application/src/capture_contract.rs": "beeb99a4f84c302ea164bd60395e449a59e9c69292d1a92e40932efa56a2b4d9",
+      "crates/application/src/capture_cost.rs": "2b3b708d1bd478eb62aaeed9b9e6a4aa808607db2c6e7c51219801bcb2afdd8d",
+      "crates/application/src/capture_identity.rs": "f658bbb932f18bb62e9e991dbec1eddca0a047f75d23af9314c8c809b034315c",
+      "crates/application/src/capture_operation.rs": "24d3ee1cdd8e08bbf5c77acab2632eb785c17cb143c0498baf24d34988ea8c22",
+      "crates/application/src/contract.rs": "22153f8959866c4a3e9df2c2dc37648113ba849eb11b9b53e46cb30f0b07d099",
+      "crates/application/src/draft.rs": "d7fac9f0a44de2acfd93250e92f95c0bced216f21c91b2e748a1a125db53a55d",
+      "crates/application/src/draft_contract.rs": "9ca0e3fba10f8b8545511ed45fa649523e5fc07d6f538ce9ccc85f5175538bd7",
+      "crates/application/src/execute.rs": "735cbc5a56ac1256123ad9e69d74fae321b79a398fa43b6730de63b4a4f029dc",
+      "crates/application/src/history.rs": "32c3ebe5c6e6794101b76af9ef4f611acdc352e489c7e0655f131399d98f6cdc",
+      "crates/application/src/history_control.rs": "c63f63027d347bd747730eacc2c02c7037df1105cf4dfb7deabf49ce1e3b8d44",
+      "crates/application/src/history_queries.rs": "461058962269de64d73f4002065f75b6dbdfdc970abc4ad9d529078445ba0741",
+      "crates/application/src/lib.rs": "766470bf1f5da2912d55560110ce2c9fc6f3f3c2522fb09393da91164b0aa093",
+      "crates/application/src/preview_port.rs": "9dec4f42efc8201c4dc6bbbb784548e4beba30cac7fe8de305473bbefabd21aa",
+      "crates/application/src/resources.rs": "b21d2808b96457ea6fd35cdfdc3e45c89c61e4d69fe92f64477105e33c117770",
+      "crates/application/src/restore.rs": "ba12942f768c1e1a0f37f22ea98475f158a82214f337eb76dcbede46ad3fa645",
+      "crates/application/tests/restore.rs": "7f8df9f13ac956f14020de99dc4e6a0a7cd6f6ff0895c761ea68815f58d83b5b",
+      "crates/domain/src/assets.rs": "6daa3625dab9205497dd9230a460fa55441da022d83a237e644ce07c35e850a5",
+      "crates/domain/src/audio.rs": "807d2cbd247406d0e7a9a6305884e6c6122518f9eab919a3d43beb44db5efb7d",
+      "crates/domain/src/components.rs": "93276309ce2ccdcc165843633d26b2f90176d67fc02a6068fd0cfbfc8529d3c6",
+      "crates/domain/src/configuration.rs": "2472c94b2fac0fcb69ed967d361bd6a1feecc3137af31bf54138dbf6030418fa",
+      "crates/domain/src/forest.rs": "07731db4e0302b768fd995f297dc332aeda2f821f1b29055b1355a1df3ac7827",
+      "crates/domain/src/geometry.rs": "21ce8edbfb4ad963525dfe5ecfb79c7cef3cb8a53c8fc930939bff887335f4c9",
+      "crates/domain/src/identity.rs": "410d53bc95072343060772cac51c19c694cbb691f1cf3587aa3eaeec84e74b56",
+      "crates/domain/src/layers.rs": "ebefe1ea28a4e079c434469a7f4ed5e112acc9b60ca34f7675c4a2592f8e87df",
+      "crates/domain/src/lib.rs": "886b26f31d907a7aab8156624acb9a592a7b596ff9d08bc8b6fa5ac81c2f472d",
+      "crates/domain/src/output.rs": "238e5deb808cf3b5fd4064a5684e869406075cc45409bb8173a4f341d024f95a",
+      "crates/domain/src/project.rs": "bd371fad3ef3fa50939a9481ea6481ef789f5485dd7ea22cb8feed4dbbe077df",
+      "desktop/Cargo.lock": "3a601677285efbbed6cb541f9ca5791afa03a83826dc4dde3bd54b1dc6734e0b",
+      "desktop/infrastructure/Cargo.toml": "70601b525d0f35439fc624cfb18423b9bc9bec2be0c3bed6bde6cdb21a74e91f",
+      "desktop/infrastructure/src/lib.rs": "8318bb2edb243035be80d8338b99dd8a530db16c7e18952d22a1e7fe20cef8f4",
+      "desktop/infrastructure/src/project_format/json.rs": "eb6dd8c6b92cb5a00fdcd98dc1bb741861a34a8c0b8e4c1ac728df6dd1288a77",
+      "desktop/infrastructure/src/project_format/mod.rs": "059f28d0fb4bea24d84663833ddb248442381fc307fc8336531bf39cc2abf78a",
+      "desktop/infrastructure/src/project_format/read.rs": "f2c07b799851d8ac2bb540fea97288dc0d8ffebce491d057036bf88ea6266754",
+      "desktop/infrastructure/src/project_format/write.rs": "6ddcd4f97f327cc96718e0d50a6a57537cab5fe540e941e788fe77bde2eee774",
+      "desktop/infrastructure/src/project_storage/blocks.rs": "df3d6164bcccf693bca83f00fd5f3d4e584364ce173394dd5b9bfdc8777723b7",
+      "desktop/infrastructure/src/project_storage/mod.rs": "a548ac515cbd3419abac57407d78be353e18f082589553de539a3f1710b468a8",
+      "desktop/infrastructure/src/project_storage/read.rs": "ec943dd206a5748124eb296b75bd5d087b2eb9c3dd1098579f0524a99dfd5cf9",
+      "desktop/infrastructure/src/project_storage/schema.rs": "f9179afc25d5e899f74d7ba793bde44a151fcd4201d4bd9d5bbc5a9601b14f78",
+      "desktop/infrastructure/src/project_storage/tests.rs": "041c4f7b15ed9f6dae68f12f2a76c1dad625b06cab3a4a2f3fc215e30649d86a",
+      "desktop/infrastructure/src/project_storage/values.rs": "b84d57ca1f4de0d4a4cd23993b64cd310d253299ac5cc4fdacbb883503b998c5",
+      "desktop/infrastructure/src/project_storage/write.rs": "6e81701cc3d99d7e33ac91dbd1a0f826afd40db53582e00a307de2116beac77f",
+      "desktop/infrastructure/tests/project_storage.rs": "5dc094d7d9f178b84eccf8e16a6233020379392ace56a277b7ad001f649af377",
+      "tools/check_desktop_architecture.py": "f74a15a116dfb0877521fbd21e6daa16dd2eb4ae556b62770f8397d56cf14a4e",
+      "tools/test_check_desktop_architecture.py": "df016dec616112ef19759bfe2b84c054dfe27dc64101fd354fed07eca3fbef21",
+      "tools/test_check_stable_window.py": "8a2b7bc36b36847fc0e23e38b83027111113095869bbf8c81ac52f2e2895b2da"
+    }
+  }
+}

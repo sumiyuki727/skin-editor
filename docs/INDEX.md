@@ -4,6 +4,9 @@
 
 ## 当前阅读入口
 
+- [P3-1C Rust存储／完整恢复候选](P3_1_STORAGE_REVIEW.md) · [本轮证据](P3_1_STORAGE_PROOF.json)
+- [私有 GitHub 与空间整理规则](GIT_WORKFLOW.md)
+
 - [P3-1B完整捕获／身份／租约](P3_1_CAPTURE_REVIEW.md) · [本轮证据](P3_1_CAPTURE_PROOF.json)
 
 - [P3-1A实际状态codec](P3_1_STATE_REVIEW.md) · [schema 1契约](PROJECT_STATE_SCHEMA.md) · [检查证据](P3_1_STATE_PROOF.json)
@@ -36,6 +39,8 @@
 | [HISTORY_PRESENTATION.md](HISTORY_PRESENTATION.md) | 现行专题契约 |
 | [ONLINE_ASSETS.md](ONLINE_ASSETS.md) | 未来设计／部分接线 |
 | [PROJECT_STATE_SCHEMA.md](PROJECT_STATE_SCHEMA.md) | P3-1A已实现的内容状态schema；不是完整文件或历史格式 |
+| [P3_1_STORAGE_REVIEW.md](P3_1_STORAGE_REVIEW.md) | Rust增量文件、完整历史验证与脱离活动会话恢复；未接正式保存／打开UI |
+| [GIT_WORKFLOW.md](GIT_WORKFLOW.md) | 私有远端、检查／提交／同步、附件和缓存整理规则 |
 | [P3_1_STATE_REVIEW.md](P3_1_STATE_REVIEW.md) | P3-1A实现、对象／方法与后续范围 |
 | [P3_1_CAPTURE_REVIEW.md](P3_1_CAPTURE_REVIEW.md) | P3-1B完整历史捕获、永久身份、准入／取消与实际原字节释放；尚无正式文件恢复 |
 | [P1_PLAN.md](P1_PLAN.md) | P1阶段记录 |

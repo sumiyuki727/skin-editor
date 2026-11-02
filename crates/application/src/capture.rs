@@ -143,6 +143,7 @@ impl ProjectSession {
         cost.count(self.history.nodes.len(), 512)?;
         cost.count(self.used_ids.len(), 128)?;
         cost.count(self.redo_preferences.len(), 64)?;
+        cost.add(self.archive_metadata.logical_bytes()?)?;
         cost.count(3, crate::capture_cost::project(&self.history.root)?)?;
         let mut originals = BTreeSet::new();
         for a in self.history.root.assets().iter() {
@@ -180,6 +181,13 @@ impl ProjectSession {
                 .checked_add(node.children.len())
                 .ok_or(invalid())?;
             cost.count(node.operation.steps.len(), 32)?;
+            for step in &node.operation.steps {
+                cost.add(step.len())?;
+            }
+            if let Some(origin) = &node.origin {
+                cost.add(origin.action.len())?;
+                cost.add(128)?;
+            }
             cost.count(node.admitted.len(), 32)?;
             cost.count(node.children.len(), 16)?;
             if let Some(patch) = &node.patch {
@@ -263,6 +271,7 @@ impl ProjectSession {
                     .patch
                     .as_ref()
                     .map_or_else(Vec::new, |p| p.changed.clone()),
+                origin: node.origin.clone(),
             });
             frozen.push(FrozenNode {
                 patch: node.patch.clone(),
@@ -299,6 +308,7 @@ impl ProjectSession {
             originals: originals.into_iter().collect(),
             next_alias: self.history.next_id,
             next_branch: self.history.next_branch_id,
+            archive_metadata: self.archive_metadata.clone(),
         };
         let current = definition(&self.history.root);
         cancelled(&request.cancellation)?;

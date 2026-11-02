@@ -16,4 +16,8 @@
 
 用户授权的恢复附件见 [backup-20261102-8cb882e](https://github.com/sumiyuki727/skin-editor/releases/tag/backup-20261102-8cb882e)，压缩包 7,068,705 字节，SHA-256 `79e41ba81472e75ed28d9f72824815acd5cdd83cc48e0ebeeb99553645ec6889`；已回下载校验全部 25 个文件。该附件的 WIP 源码不等同于后续已验证源码。
 
-本次只清理列明的无受跟踪文件、无重解析点构建缓存：桌面 debug/incremental 12.49 GiB，以及四个旧 P0 实验 target 共约 6.30 GiB。执行清单留在本机 artifacts/github-backup-20261102/cache-cleanup-completed.json；未删除诊断、工程或原始证据，清理后编译产生的新缓存另计。
+首次只清理列明的无受跟踪文件、无重解析点构建缓存：桌面 debug/incremental 12.49 GiB，以及四个旧 P0 实验 target 共约 6.30 GiB。执行清单留在本机 artifacts/github-backup-20261102/cache-cleanup-completed.json；未删除诊断、工程或原始证据，清理后编译产生的新缓存另计。
+
+管理提交 `1778c378e9dd4662a4a1e2cd39473f905b4330a6` 已正常通过仓库hook并推送，独立保留P3-1C工作区增量。其检查结束后，再核对无活动构建／编辑器、无受跟踪文件／重解析点／潜在用户素材，清理 desktop/target/debug 约23.99 GiB（其中包含本轮重新生成的缓存，不能与前次删除量相加冒充净释放）。E盘实际空闲由约27.36增至56.92 GiB。第二次清单为本机 artifacts/github-backup-20261102/final-cache-completed.json；release输出和冻结程序保留，下次桌面调试编译需重新构建。
+
+修复后 [CI 41462169265](https://github.com/sumiyuki727/skin-editor/actions/runs/41462169265) 的Windows核心、Linux核心及Windows桌面三项均通过。它验证管理提交1778c37及其P3-1B基线，不包含本轮尚未提交的P3-1C；当前存储代码另由本机检查证明，不把远端结果套用到未上传源码。

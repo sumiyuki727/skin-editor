@@ -1,6 +1,6 @@
 //! Versioned detached state blocks. No filesystem, SQLite, renderer or session writer.
 //! This codec is not a project file or a complete persisted history.
-mod json;
+pub(crate) mod json;
 mod read;
 mod write;
 

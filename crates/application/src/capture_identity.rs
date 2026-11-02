@@ -25,6 +25,7 @@ identity!(PersistentHistoryId);
 identity!(PersistentNodeId);
 identity!(LineageId);
 identity!(AddressEpoch);
+identity!(CommitId);
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum IdentityError {

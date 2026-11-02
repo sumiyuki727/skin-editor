@@ -5,6 +5,7 @@
 ## 当前阅读入口
 
 - [编辑器新对话交接](HANDOFF_EDITOR_CONTINUATION.md) · [素材制作／未来编辑器操作skill交接](HANDOFF_SKIN_ASSET_SKILL.md)（2026-11-03快照，含可粘贴开场提示）
+- [动画来源／原始帧时长／stable重采样](ANIMATION_ASSETS.md)（设计已记录；模型、版本和功能未改；AN01–AN16全部待实施）
 - [P3-1C 热日志／进程中断恢复补充](P3_1_RECOVERY_REVIEW.md) · [独立证据](P3_1_RECOVERY_PROOF.json)
 - [P3-1C Rust存储／完整恢复候选](P3_1_STORAGE_REVIEW.md) · [本轮证据](P3_1_STORAGE_PROOF.json)
 - [私有 GitHub 与空间整理规则](GIT_WORKFLOW.md)
@@ -30,6 +31,7 @@
 | --- | --- |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | 当前契约／入口 |
 | [AUDIO_EDITING_REVIEW.md](AUDIO_EDITING_REVIEW.md) | 当前契约／入口 |
+| [ANIMATION_ASSETS.md](ANIMATION_ASSETS.md) | 动画导入、精确原时序、元素输出计划及后续AN验收；尚未实现，不能将静态PNG／分页sequence视作动画 |
 | [COMMANDS.md](COMMANDS.md) | 当前契约／入口 |
 | [COMPONENT_MODEL.md](COMPONENT_MODEL.md) | 当前契约／入口 |
 | [CORE_COST_BASELINE.md](CORE_COST_BASELINE.md) | P1阶段记录 |

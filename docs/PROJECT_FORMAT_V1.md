@@ -6,6 +6,8 @@
 
 P3-1C后续实现：[Rust profile与恢复契约](P3_1_STORAGE_REVIEW.md)明确注册 `skin-editor-rust-v1`，必要能力为 storage.core:2／state.editor:1／history.summary:1／history.delta-index:1。容器2／项目1／历史2与本文一致，状态使用真实schema1，DDL与摘要规范另以该实现和审阅为准。它显式拒绝P3-0 fixture profile，尚无正式保存UI、另存或迁移；下文p3-0-r2字段是独立原型的历史范围。
 
+2026-11-03设计补充：[动画原件／时序与元素重采样](ANIMATION_ASSETS.md)将作为后续内容语义／必要能力演进，不属于当前state.editor:1。当前版本与DDL不变；新增动画时须完整保管原件及逐帧时间，旧节点保留原始引用／摘要，未知必要动画语义禁止覆写，不能借Opaque或首帧替代宣称动画已支持。
+
 工程扩展名 `.oskproj`，识别以文件内容为准，不做系统关联。容器采用 SQLite 3 文件，4096 字节页，`application_id=0x534b4550`（SKEP），`user_version=2`。这里的 2 是本产品容器版本，不是 SQLite 内部格式版本。头记录包括：
 
 | 字段 | 本轮实验约定 |

@@ -1,6 +1,8 @@
 # 项目状态块：Rust schema 1
 
-2026-11-02，P3-1A。本文记录已实现的 `infrastructure::project_format`，供后续正式工程文件接线使用；它编码一个完整 SkinProject **内容状态**，不包含历史树、标签、保存检查点、原始媒体字节或运行状态。外层 `.oskproj` 容器／永久历史约定继续见[文件格式](PROJECT_FORMAT_V1.md)。当前没有正式可保存／打开的产品文件 profile。
+2026-11-02，P3-1A。本文记录已实现的 `infrastructure::project_format`，供后续正式工程文件接线使用；它编码一个完整 SkinProject **内容状态**，不包含历史树、标签、保存检查点、原始媒体字节或运行状态。外层 `.oskproj` 容器／永久历史约定继续见[文件格式](PROJECT_FORMAT_V1.md)。普通GUI仍无正式保存／打开入口，独立文件profile的后续状态见下文。
+
+后续状态：P3-1C已加入[Rust文件profile与完整恢复](P3_1_STORAGE_REVIEW.md)，普通GUI仍未接正式保存／打开。本页仍精确描述已实现内容schema1；2026-11-03的[动画设计](ANIMATION_ASSETS.md)没有向该schema添加帧表、时长或动画输出字段。
 
 ## 版本与边界
 
@@ -95,3 +97,11 @@ local／mapping 数组遵循现行 Affine2 的 `[a,b,c,d,tx,ty]`：`x'=a*x+c*y+t
 失败包括 ResourceLimit、InvalidJson／Field、UnsupportedSchema／Kind／Field、摘要／引用／闭包错误和领域 ModelError。失败只返回结构化错误，源项目和输入 bundle 保留；调用者后续仍须保留原文件，不能把失败当作空项目加载。
 
 实现及固定黄金样例见[本轮审阅](P3_1_STATE_REVIEW.md)。后续读取性能、全历史捕获和实际资源租约须独立验证，不从本轮无窗口状态往返推断正式保存已完成。
+
+## 后续动画扩展：未实现，不属于schema1
+
+上面的sequence／page是对象及ID列表的分页承载，**不是动画帧序列**；asset的image、layer和output字段仍是现有静态语义。不能保留schema1号而附加未声明的frames／duration字段，也不能用一张默认图表示已保存完整动画。
+
+未来状态需显式表达动画原件／输入帧引用、完整帧序与精确原时基／时长及其来源、画布／合成信息、用户配方、元素规则绑定与持久导出策略，并让资源闭包覆盖全部原字节。实际块／字段名、必要能力、模型／内容schema及相关端口升级在实现前定稿，本轮不分配版本号或修改codec。原始声明与编辑后时间覆盖分离，不能只存浮点平均FPS；运行播放位置、解码RGBA／GPU和编译计划不写入内容块。
+
+迁移保留旧静态语义、原始块及节点摘要，追加有版本表示；旧读取器遇到必要动画语义拒绝覆写，不静默丢字段或改首帧。验收按[数据D22](DATA_COMPATIBILITY.md)与[AN01–AN16](ANIMATION_ASSETS.md)，包含完整分支资源／时序往返、未知版本拒绝和原生／目标预览差异；这些尚无功能测试结果。

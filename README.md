@@ -52,7 +52,7 @@ python tools/check_desktop.py --run-audio --output artifacts/p2/audio-new-run
 
 ## 审阅与版本管理
 
-长期约定见[数据兼容设计](docs/DATA_COMPATIBILITY.md)。P3-0[格式与实验结果](docs/P3_0_REVIEW.md)仅供审阅，未接入产品。可用 `python -B tools/check_p3_storage.py` 运行独立无窗口存储测试；依赖Python标准库sqlite3，不需要窗口／声卡或额外Cargo依赖。
+长期约定见[数据兼容设计](docs/DATA_COMPATIBILITY.md)。P3-0[格式与加载审阅](docs/P3_0_LOAD_REVIEW.md)仅供审阅，未接入产品。可用 `python -B tools/check_p3_storage.py` 运行独立无窗口存储测试；依赖Python标准库sqlite3，不需要窗口／声卡或额外Cargo依赖。
 
 [架构](docs/ARCHITECTURE.md)解释当前模块／依赖和数据流；[审阅包](docs/review/README.md)列出对象、方法、trait／组合关系、引用、待讨论决定及完整源码清单。[文档索引](docs/INDEX.md)区分现行契约、未来设计与历史证据。
 
@@ -61,6 +61,6 @@ python tools/check_repository.py
 python tools/check_repository.py --staged
 ```
 
-仓库检查扫描常见敏感信息及生成／私人路径，不是资源授权证明。Git hook 复用正式检查；不自动暂存、提交或推送。用户设置、原版皮肤／头像／谱面／音乐、密钥和构建诊断不得进入版本库，详见[长期约束](AGENTS.md)。
+仓库检查扫描常见敏感信息及生成／私人路径，不是资源授权证明。Git hook复用正式检查；每轮项目工作先按[长期规则](AGENTS.md)检查并提交已有可审查变更作为本地回退点，用户明确要求不提交时除外；不自动推送。用户设置、原版皮肤／头像／谱面／音乐、密钥和构建诊断不得进入版本库，详见[长期约束](AGENTS.md)。
 
 旧 stable 源码仅作外部只读研究，不进入产品或实验。预览只使用自制或获准输入；对照通过明确的 F12 本地图片及受限文件／日志完成，不依赖系统窗口捕获。发布资源和项目自身许可证仍须在分发前明确。

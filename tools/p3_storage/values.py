@@ -14,8 +14,9 @@ MAX_JSON_BYTES = 1024 * 1024
 MAX_ACTION_BYTES = 64 * 1024
 MAX_JSON_DEPTH = 32
 APP_ID = 0x534B4550
-FORMAT_VERSION = 1
-REQUIRED_FEATURES = (("storage.core", "1"), ("state.p3-fixture", "1"))
+FORMAT_VERSION = 2
+PROJECT_EXTENSION = ".oskproj"
+REQUIRED_FEATURES = (("storage.core", "2"), ("state.p3-fixture", "2"))
 
 
 def digest(value):
@@ -98,23 +99,11 @@ class Block:
     raw: bytes
 
     def __post_init__(self):
-        value = decode_json(self.raw)
-        if set(value) != {"kind", "schema", "blocks", "blobs", "value"}:
-            raise ContractError("invalid block envelope")
-        if (type(value["kind"]) is not str
-                or not re.fullmatch(r"[a-z][a-z0-9.-]{0,63}", value["kind"])
-                or type(value["schema"]) is not int or value["schema"] != 1):
-            raise ContractError("unsupported block envelope")
-        for key in ("blocks", "blobs"):
-            refs = value[key]
-            if (type(refs) is not list or len(refs) > 8192
-                    or any(type(r) is not str or not re.fullmatch(r"[0-9a-f]{64}", r) for r in refs)
-                    or refs != sorted(set(refs))):
-                raise ContractError("invalid block references")
+        inspect_block(self.raw)
 
     @classmethod
-    def make(cls, kind, value, blocks=(), blobs=()):
-        return cls(encode_json({"kind": kind, "schema": 1,
+    def make(cls, kind, value, blocks=(), blobs=(), *, schema=1):
+        return cls(encode_json({"kind": kind, "schema": schema,
                                "blocks": sorted({digest(v).hex() for v in blocks}),
                                "blobs": sorted({digest(v).hex() for v in blobs}), "value": value}))
 
@@ -125,6 +114,25 @@ class Block:
     def envelope(self):
         return decode_json(self.raw)
 
+
+def inspect_block(raw):
+    """Parse and validate exactly once; no retained whole-file JSON cache."""
+    value = decode_json(raw)
+    if set(value) != {"kind", "schema", "blocks", "blobs", "value"}:
+        raise ContractError("invalid block envelope")
+    if (type(value["kind"]) is not str
+            or not re.fullmatch(r"[a-z][a-z0-9.-]{0,63}", value["kind"])
+            or type(value["schema"]) is not int or value["schema"] not in (1, 2)
+            or (value["schema"] == 2 and value["kind"] != "fixture.project")):
+        raise ContractError("unsupported block envelope")
+    for key in ("blocks", "blobs"):
+        refs = value[key]
+        if (type(refs) is not list or len(refs) > 8192
+                or any(type(r) is not str or not re.fullmatch(r"[0-9a-f]{64}", r) for r in refs)
+                or refs != sorted(set(refs))):
+            raise ContractError("invalid block references")
+
+    return value
 
 @dataclass(frozen=True)
 class BlobInput:
@@ -168,6 +176,7 @@ class BlobInput:
 
 @dataclass(frozen=True)
 class Node:
+    """Query/capture entry pairing immutable history with a display binding."""
     id: bytes
     parent: object
     state: bytes
@@ -189,9 +198,70 @@ class Node:
 
     def record(self):
         # Hash original action bytes, never a language-specific JSON re-encoding.
-        return (b"skin-editor.node.v1\0" + self.id + optional(self.parent)
-                + self.state + u64(self.alias) + u64(self.branch)
-                + u64(self.ordinal, zero=True) + sized(self.action))
+        return (b"skin-editor.node.v2\0" + self.id + optional(self.parent)
+                + self.state + sized(self.action))
+
+    @property
+    def address(self):
+        return AddressBinding(self.id, self.alias, self.branch, self.ordinal)
+
+    @property
+    def checksum(self):
+        return hashlib.sha256(self.record()).digest()
+
+
+@dataclass(frozen=True)
+class AddressBinding:
+    node: bytes
+    alias: int
+    branch: int
+    ordinal: int
+
+    def __post_init__(self):
+        identity(self.node)
+        u64(self.alias)
+        u64(self.branch)
+        u64(self.ordinal, zero=True)
+
+    def record(self):
+        return (b"skin-editor.address.v1\0" + self.node + u64(self.alias)
+                + u64(self.branch) + u64(self.ordinal, zero=True))
+
+    @property
+    def checksum(self):
+        return hashlib.sha256(self.record()).digest()
+
+
+def fixture_projection(source):
+    """Known self-authored 1 -> 2 conversion; never a general migration engine."""
+    envelope = source.envelope()
+    value = envelope["value"]
+    if (envelope["kind"] != "fixture.project" or envelope["schema"] != 1
+            or type(value) is not dict or type(value.get("step")) is not int
+            or "edit_index" in value):
+        raise ContractError("unsupported fixture conversion")
+    projected = dict(value)
+    projected["edit_index"] = projected.pop("step")
+    return Block.make("fixture.project", projected,
+                      [bytes.fromhex(v) for v in envelope["blocks"]],
+                      [bytes.fromhex(v) for v in envelope["blobs"]], schema=2)
+
+
+@dataclass(frozen=True)
+class StateView:
+    origin: bytes
+    target: bytes
+    converter: str = "fixture.step-to-index.v1"
+
+    def __post_init__(self):
+        digest(self.origin)
+        digest(self.target)
+        if self.converter != "fixture.step-to-index.v1":
+            raise ContractError("unsupported converter")
+
+    def record(self):
+        return (b"skin-editor.state-view.v1\0" + self.origin + self.target
+                + u64(2) + sized(self.converter.encode("ascii")))
 
     @property
     def checksum(self):
@@ -219,6 +289,7 @@ class Batch:
     commit_id: bytes
     expected_save: object
     origin: str
+    address_epoch: object = None
     head: object = None
     navigation: object = None
     nodes: tuple = ()
@@ -227,10 +298,16 @@ class Batch:
     tags: tuple = ()
     identities: tuple = ()
     extensions: tuple = ()
+    new_address_epoch: object = None
+    remap: tuple = ()
+    views: tuple = ()
 
     def fingerprint(self):
         identity(self.epoch)
         identity(self.commit_id)
+        identity(self.address_epoch)
+        if self.new_address_epoch is not None:
+            identity(self.new_address_epoch)
         if self.expected_save is not None:
             identity(self.expected_save)
         if self.head is not None:
@@ -243,17 +320,20 @@ class Batch:
             raise ContractError("manual save needs a captured head")
         if self.origin == "metadata" and (self.head is not None or self.navigation is not None):
             raise ContractError("metadata edit cannot move a checkpoint")
-        prefix = (b"skin-editor.batch.v1\0" + self.commit_id + optional(self.expected_save)
+        prefix = (b"skin-editor.batch.v2\0" + self.commit_id + optional(self.expected_save)
                   + bytes(({"manual": 1, "automatic": 2, "exit": 3, "metadata": 4}[self.origin],))
-                  + optional(self.head) + optional(self.navigation))
+                  + optional(self.head) + optional(self.navigation)
+                  + self.address_epoch + optional(self.new_address_epoch))
         sequences = (
-            [n.checksum for n in self.nodes],
+            [n.checksum + n.address.checksum for n in self.nodes],
             [b.sha for b in self.blocks],
             [b.sha + u64(b.byte_len, zero=True) for b in self.blobs],
             [t.node + sized(t.key.encode("utf8")) + optional_text(t.value) for t in self.tags],
             [sized(k.encode("utf8")) + identity(i) + identity(n) for k, i, n in self.identities],
             [sized(k.encode("utf8")) + u64(len(v), zero=True) + hashlib.sha256(v).digest()
-             for k, v in self.extensions])
+             for k, v in self.extensions],
+            [b.checksum for b in self.remap],
+            [v.checksum for v in self.views])
         hasher = hashlib.sha256(prefix)
         for values in sequences:
             hasher.update(len(values).to_bytes(4, "big"))

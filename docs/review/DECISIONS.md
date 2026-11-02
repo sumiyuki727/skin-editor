@@ -4,6 +4,8 @@
 
 ## R01：节点地址、会话与保存后重开（P3前确认）
 
+P3-0审阅修订2已移除显示地址与永久节点摘要的绑定，重分配由address_epoch保护，跨Schema表示保留原节点state／record_version／checksum，见[加载与格式修订](../P3_0_LOAD_REVIEW.md)。这是实验协议2；当前产品API6仍未升级。
+
 当前事实：NodeId是HistorySessionId内的非零u64；规范短地址`n`＋base36最多14字符，辅助`b<branch>:<ordinal>`最多28字符。后者是创建时分支／序号，不是祖先路径；不因深度变长或UI排序重编号。完整请求另外携带会话和expected head／revision，裸`n3`不能跨打开会话通用。源码：[address.rs](../../crates/application/src/address.rs)、[contract.rs](../../crates/application/src/contract.rs)。
 
 2026-11-01已确认：P3首版必须保存整棵历史与全部分支，重开恢复节点／头／导航，不再采用新根替换旧树。每次打开仍必须生成新运行会话，使旧AI请求、草稿、音频和GPU结果失效；持久HistoryId与运行HistorySessionId分开。

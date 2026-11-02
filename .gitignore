@@ -43,6 +43,12 @@ service-account*.json
 # User-provided skins, avatars, audio and machine-specific preview settings.
 /local-data/
 
+# Editable user projects and transient SQLite sidecars.
+*.oskproj
+*.oskproj-journal
+*.oskproj-wal
+*.oskproj-shm
+
 # Generated files and editor/OS state.
 *.log
 *.tmp

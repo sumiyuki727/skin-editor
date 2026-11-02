@@ -25,6 +25,8 @@
 
 ## 后续重审条件
 
+P3-0审阅修订2采用同一SQLite容器路线，增加独立地址绑定、Schema表示、完整索引检查及流式读取；两引擎同文件对照见[加载审阅](P3_0_LOAD_REVIEW.md)。未新增Cargo依赖或更改产品声音／GPU策略，结果仍限Windows本机工具原型。
+
 P3-0使用Python标准库sqlite3作独立实验，未向产品加入Python运行时、SQLite绑定或第三方Rust依赖。v1候选为SQLite DELETE journal／EXTRA同步；Windows两套SQLite运行时的数据、资源成本和未测范围见[P3-0审阅](P3_0_REVIEW.md)。Rust绑定、打包版本、许可证、平台VFS与首次文件发布协议在正式接入前另行确定；根核心继续零第三方依赖。
 
 - P3引入项目格式、压缩或编码器前，说明必要能力、平台、资源成本及迁移，不复用P0依赖作为默认批准。

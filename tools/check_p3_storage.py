@@ -52,7 +52,7 @@ def benchmark(directory):
     directory = checked_output(directory)
     media = write_media(directory, large_mib=128)
     before = snapshot()
-    store, root, initial_receipt = make_store(directory / "scale.skinproj", media)
+    store, root, initial_receipt = make_store(directory / "scale.oskproj", media)
     initial = difference(before, snapshot())
     common = root.state
     last, alias = root, 1
@@ -80,7 +80,7 @@ def benchmark(directory):
     original_state = root.record()
     def old_nodes_digest():
         hasher = hashlib.sha256()
-        for value, checksum in store._db.execute("SELECT id,checksum FROM nodes WHERE alias<=? ORDER BY alias",
+        for value, checksum in store._db.execute("SELECT n.id,n.checksum FROM nodes n JOIN addresses a ON a.node_id=n.id WHERE a.alias<=? ORDER BY a.alias",
                                                 ((20001).to_bytes(8, "big"),)):
             hasher.update(value + checksum)
         return hasher.hexdigest()
@@ -108,7 +108,7 @@ def benchmark(directory):
     assert store.status()["nodes"] == 20301
     assert old_nodes_digest() == originals
     # Compare three equivalent tag commits with and without whole-file copy.
-    baseline_path = directory / "rewrite-baseline.skinproj"
+    baseline_path = directory / "rewrite-baseline.oskproj"
     shutil.copyfile(store.path, baseline_path)
     before = snapshot()
     for index in range(3):
@@ -116,7 +116,7 @@ def benchmark(directory):
     phases["incremental_3"] = difference(before, snapshot())
     before = snapshot()
     for index in range(3):
-        temporary = directory / ("rewrite-" + str(index) + ".skinproj")
+        temporary = directory / ("rewrite-" + str(index) + ".oskproj")
         shutil.copyfile(baseline_path, temporary)
         # Trusted, exact copy of the fully verified fixture; opening/guard checks
         # remain enabled, but avoid a second whole-media validation in comparison.
@@ -180,7 +180,7 @@ def crash_child(path, media_directory, phase):
 
 def crash_matrix(directory):
     directory = checked_output(directory, create=True)
-    baseline = directory / "baseline.skinproj"
+    baseline = directory / "baseline.oskproj"
     store, root, _ = make_store(baseline)
     original = store.node(root.id).record()
     store.close()
@@ -188,7 +188,7 @@ def crash_matrix(directory):
     for phase in ("begin", "originals", "blocks", "nodes", "tags", "before_commit", "after_commit"):
         case = directory / phase
         case.mkdir()
-        path = case / "crash.skinproj"
+        path = case / "crash.oskproj"
         shutil.copyfile(baseline, path)
         process = subprocess.Popen([sys.executable, "-B", str(Path(__file__).resolve()),
                                     "--crash-child", str(path), "--media", str(case), "--phase", phase],

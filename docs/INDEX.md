@@ -4,6 +4,7 @@
 
 ## 当前阅读入口
 
+- [P3-0最新审阅：地址、Schema与加载](P3_0_LOAD_REVIEW.md) · [本轮证明](P3_0_LOAD_PROOF.json)
 - [P3-0审阅包](P3_0_REVIEW.md) · [身份／文件格式v1](PROJECT_FORMAT_V1.md) · [原型证据](P3_0_PROOF.json)
 - [系统对象／方法与引用](review/SYSTEM_MAP.md) · [完整清单](review/README.md#全量代码清单) · [待讨论决定](review/DECISIONS.md)
 - [用户数据与长期兼容](DATA_COMPATIBILITY.md)：首版完整历史已确认；P3-0身份／容器已定稿供审阅，偏好与正式迁移尚未实现

@@ -1,0 +1,2056 @@
+{
+  "date": "2026-11-02",
+  "scope": "P3-0 review revision 2; no formal product persistence integration",
+  "checkpoint": {
+    "commit": "fbea6b33faa9444e9d7a14d5a375a1b25d267fe2",
+    "clean_worktree": true,
+    "commit_hook_passed": true,
+    "pushed": false
+  },
+  "versions": {
+    "extension": ".oskproj",
+    "application_id": "0x534b4550",
+    "container": 2,
+    "profile": "p3-0-r2",
+    "project_schema": 1,
+    "history_schema": 2,
+    "node_record": 2,
+    "fixture_state_schemas": [
+      1,
+      2
+    ],
+    "required_features": [
+      [
+        "storage.core",
+        "2"
+      ],
+      [
+        "state.p3-fixture",
+        "2"
+      ]
+    ]
+  },
+  "sources_sha256": {
+    "tools/p3_storage/fixtures.py": "5c5bf7d44789fa57cb48edf7165dbeb154d99270bcb16de86058a016cf1b4a3e",
+    "tools/p3_storage/identity.py": "a2d2bb7343f278377f9df6e33946a591e8b2643952249097e0c61619705506ac",
+    "tools/p3_storage/metrics.py": "c2d1d91a462dab41cdef8af90b1f902b91b0e473e79925ca2abcf98735ba86b0",
+    "tools/p3_storage/schema.py": "b8791323c53bb358a2354388d0d1d1d5396213b886c584d7cb9f7db707eb8110",
+    "tools/p3_storage/store.py": "a31a6b8bea7464364e5fdda1229a8f153b21dcd94b2201525d67d54a200b5b65",
+    "tools/p3_storage/values.py": "02f6e620f02b0fbc4191c04c31b65a5a5037332a3f0f86d35278434fe7c86304",
+    "tools/p3_storage/__init__.py": "d7e7b5eb309a71bdac1c4c9be1b9f1ffbb72794a50d9875d02a38969f095d396",
+    "tools/check_p3_storage.py": "651e9f367746309efa041c91ee80054cf0701e2b2eb6c324eb3a8932a841fb58",
+    "tools/measure_p3_load.py": "d5ed7fbb8feb3bd0a88380184afaed55a1b2b1e9a68f4a736fb30c4462b8e965",
+    "tools/test_check_p3_storage.py": "287e57543ec8208b2ff926c8fcfa03fa082ebbcf924ee5201895fc74c8dc3d71",
+    "tools/p3_storage/golden_v1.json": "d9706a1fbcd0c544ff3fe98bc5a3b2f2498b413baa797e90d6839bcd41f2cd44",
+    "tools/p3_storage/golden_v2.json": "168215a702fc5a331e9e2775b76744b8e0e6471d7b0e3eddaa6fd0422618ec11"
+  },
+  "checks": {
+    "core": "PASS: 416 Python tool tests, Rust format/Clippy/headless/graph/private access checks",
+    "desktop_post_change": "PASS: architecture-only; product Rust/manifests/locks unchanged",
+    "desktop_checkpoint_hook": "PASS: full default/all-features checks and build before edits",
+    "prototype_tests_per_runtime": 57,
+    "controlled_kill_cases_per_runtime": 7,
+    "no_native_devices_or_uac": "No windows/GPU/audio device or UAC trace collector opened"
+  },
+  "preservation": {
+    "round_start_files": 702,
+    "changed_existing": [
+      "docs/DATA_COMPATIBILITY.md",
+      "docs/INDEX.md",
+      "docs/P3_0_REVIEW.md",
+      "docs/PROJECT_FORMAT_V1.md",
+      "docs/review/DECISIONS.md",
+      "tools/check_p3_storage.py",
+      "tools/p3_storage/README.md",
+      "tools/p3_storage/schema.py",
+      "tools/p3_storage/store.py",
+      "tools/p3_storage/values.py",
+      "tools/test_check_p3_storage.py",
+      ".gitattributes",
+      ".gitignore",
+      "AGENTS.md",
+      "README.md",
+      "docs/ARCHITECTURE.md",
+      "docs/HISTORY_ADDRESSING.md",
+      "docs/ROADMAP.md",
+      "docs/TECH_STACK.md"
+    ],
+    "protected_source_evidence_archives": 364,
+    "protected_all_byte_identical": true,
+    "archive_spec_sha256": "6ad1d51df21cc62a25549cd71c3d72aa10463b13757a5649c04772ac9f9fc5ec",
+    "legacy_golden_unchanged": true,
+    "frozen_p2_binary_sha256": "07852b969bdd88153a79e2e185a29548dc9844038fb7f9639ec71860a15fada8",
+    "current_index_empty": true,
+    "post_checkpoint_changes_uncommitted": true,
+    "pushed": false
+  },
+  "evidence_sha256": {
+    "artifacts/p3-0/review-r2-20261102/load-final-py39/result.json": "df7eb334f395f931124c205d658dd656b5e89a0b824ccf20f138b92ddd489f4c",
+    "artifacts/p3-0/review-r2-20261102/load-final-py312/result.json": "a359655d7c81ee2532ac96207c3f24e5706b4e3f5d1362a6c18629bfad9ec425",
+    "artifacts/p3-0/review-r2-20261102/load-lf-py39/result.json": "a8bb37a66dd5b6683313cc4e14e119984d23e3491540ee19383cc218c9866cf7",
+    "artifacts/p3-0/review-r2-20261102/load-lf-py312/result.json": "a3ea0d67b47106fafd08852a82b82f1c00d2c66ce8113f9947819a063a8c16a3",
+    "artifacts/p3-0/review-r2-20261102/crashes-py39/result.json": "9caea343ae1ce69da284183123e313d67aa30ea97be471f9086ebe79402d78b8",
+    "artifacts/p3-0/review-r2-20261102/crashes-py312/result.json": "4bf87d171e99d23b9dc4f5d9080f27128b36948584a649614ae0a6c59ad466c8",
+    "artifacts/p3-0/review-r2-20261102/fixture-freeze/result.json": "2a4b6f3591dc8f5ea00255e71c34c8b59493e2e21a2f68879480ab475d84d145"
+  },
+  "logs_sha256": {
+    "checkpoint-commit.log": "57e0bbe80642689b173021e65cce5af455f26c8cb763634d3db81fce9f73d4e7",
+    "check-core-final.log": "3022305dd53b5702a26a703cda1f08089bd3a2abe2cca34fc37c89d4981787a1",
+    "check-desktop-boundary.log": "e39086420d077ded1eb9c6dd0d08179071b1ee472683409d919774be6f587f4d",
+    "tests-final-py312-r2.log": "5d2a3cdfb6873921296deec62d63bb9f0f7fdb86e1d2ece5c41e85fd9c1795ab",
+    "check-repository.log": "3f0b84fe84c5629379758545c57f3d7179a3ada65681c9e4d7a5054d5b1ce188"
+  },
+  "reports": {
+    "load-final-py39": {
+      "python": "3.9.6",
+      "sqlite": "3.35.5",
+      "source_sha256_before_after": "e4ac17d4e32f306ef43b80f44ce5ae40d37cbcf6173539dd78560f3d200bb577",
+      "file_bytes": 154468352,
+      "expected": {
+        "generation": 684,
+        "save_id": "69fc842711bcd8a5bdf13362434cce05",
+        "manual_id": "0fbcca896c3e6414e5c7471a6088d027",
+        "protected_id": "95982ebfe068b3c3a5fb55ef04fc3c54",
+        "nodes": 20301,
+        "blocks": 20301,
+        "blob_bytes": 134227478,
+        "metadata_bytes": 8890163,
+        "address_epoch": "75b62665ecf43bb523149eab9aee0b30"
+      },
+      "methods": {
+        "reference": {
+          "latency": {
+            "count": 5,
+            "median_ms": 3357.8921,
+            "p95_ms": 3376.9963999999995,
+            "max_ms": 3376.9963999999995
+          },
+          "samples": [
+            {
+              "wall_ms": 3357.8921,
+              "cpu_ms": 3343.75,
+              "read_bytes": 438161540,
+              "write_bytes": 0,
+              "private_after": 13463552,
+              "working_after": 20926464,
+              "lifetime_peak_working": 23048192,
+              "lifetime_peak_commit": 15306752,
+              "verification": {
+                "reference": true,
+                "phases_ms": {
+                  "admission": 0.0032999999999283602,
+                  "sqlite_integrity": 273.79840000000024,
+                  "blocks": 1002.3445999999998,
+                  "nodes": 1889.1852000000003,
+                  "originals": 172.14159999999978,
+                  "metadata": 4.2295999999995
+                },
+                "sql_statements": null,
+                "total_ms": 3341.7054000000003,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 3372.4893000000015,
+              "cpu_ms": 3359.375,
+              "read_bytes": 438161540,
+              "write_bytes": 0,
+              "private_after": 13717504,
+              "working_after": 20996096,
+              "lifetime_peak_working": 23298048,
+              "lifetime_peak_commit": 15806464,
+              "verification": {
+                "reference": true,
+                "phases_ms": {
+                  "admission": 0.004800000001026206,
+                  "sqlite_integrity": 276.29289999999963,
+                  "blocks": 1014.7502,
+                  "nodes": 1894.8350000000005,
+                  "originals": 175.75649999999854,
+                  "metadata": 4.360700000001216
+                },
+                "sql_statements": null,
+                "total_ms": 3366.0033000000008,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 3376.9963999999995,
+              "cpu_ms": 3375.0,
+              "read_bytes": 438161540,
+              "write_bytes": 0,
+              "private_after": 13377536,
+              "working_after": 20951040,
+              "lifetime_peak_working": 23306240,
+              "lifetime_peak_commit": 15806464,
+              "verification": {
+                "reference": true,
+                "phases_ms": {
+                  "admission": 0.002600000000185787,
+                  "sqlite_integrity": 311.0285000000008,
+                  "blocks": 1031.0208999999998,
+                  "nodes": 1851.0796000000003,
+                  "originals": 173.26279999999983,
+                  "metadata": 4.172499999999246
+                },
+                "sql_statements": null,
+                "total_ms": 3370.5686000000005,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 3305.2004,
+              "cpu_ms": 3312.5,
+              "read_bytes": 438161540,
+              "write_bytes": 0,
+              "private_after": 13443072,
+              "working_after": 21086208,
+              "lifetime_peak_working": 23330816,
+              "lifetime_peak_commit": 16113664,
+              "verification": {
+                "reference": true,
+                "phases_ms": {
+                  "admission": 0.0031000000006997652,
+                  "sqlite_integrity": 274.11820000000023,
+                  "blocks": 996.2413999999989,
+                  "nodes": 1853.0490999999997,
+                  "originals": 171.48620000000037,
+                  "metadata": 4.235899999997628
+                },
+                "sql_statements": null,
+                "total_ms": 3299.1361999999995,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 3331.9335000000015,
+              "cpu_ms": 3328.125,
+              "read_bytes": 438161540,
+              "write_bytes": 0,
+              "private_after": 13336576,
+              "working_after": 20934656,
+              "lifetime_peak_working": 23437312,
+              "lifetime_peak_commit": 16113664,
+              "verification": {
+                "reference": true,
+                "phases_ms": {
+                  "admission": 0.0029000000019152594,
+                  "sqlite_integrity": 275.16569999999876,
+                  "blocks": 1013.8597000000011,
+                  "nodes": 1859.2864999999997,
+                  "originals": 172.96269999999936,
+                  "metadata": 4.234799999998984
+                },
+                "sql_statements": null,
+                "total_ms": 3325.5146999999993,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            }
+          ]
+        },
+        "streaming": {
+          "latency": {
+            "count": 5,
+            "median_ms": 1627.1977999999995,
+            "p95_ms": 1657.7848999999994,
+            "max_ms": 1657.7848999999994
+          },
+          "samples": [
+            {
+              "wall_ms": 1640.8211000000001,
+              "cpu_ms": 1640.625,
+              "read_bytes": 427831428,
+              "write_bytes": 0,
+              "private_after": 13819904,
+              "working_after": 20750336,
+              "lifetime_peak_working": 23298048,
+              "lifetime_peak_commit": 15806464,
+              "verification": {
+                "reference": false,
+                "phases_ms": {
+                  "admission": 0.002600000000185787,
+                  "sqlite_integrity": 274.8305999999996,
+                  "blocks": 588.4559999999999,
+                  "nodes": 594.5244,
+                  "originals": 172.41790000000012,
+                  "metadata": 4.294800000000265
+                },
+                "sql_statements": null,
+                "total_ms": 1634.5282000000002,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 1627.1977999999995,
+              "cpu_ms": 1625.0,
+              "read_bytes": 427831428,
+              "write_bytes": 0,
+              "private_after": 13561856,
+              "working_after": 20938752,
+              "lifetime_peak_working": 23298048,
+              "lifetime_peak_commit": 15806464,
+              "verification": {
+                "reference": false,
+                "phases_ms": {
+                  "admission": 0.0027999999998584713,
+                  "sqlite_integrity": 287.7702000000006,
+                  "blocks": 576.4804999999998,
+                  "nodes": 580.2874999999998,
+                  "originals": 172.1737000000001,
+                  "metadata": 4.205699999999979
+                },
+                "sql_statements": null,
+                "total_ms": 1620.9232000000009,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 1619.8094000000012,
+              "cpu_ms": 1609.375,
+              "read_bytes": 427831428,
+              "write_bytes": 0,
+              "private_after": 13176832,
+              "working_after": 20836352,
+              "lifetime_peak_working": 23330816,
+              "lifetime_peak_commit": 15839232,
+              "verification": {
+                "reference": false,
+                "phases_ms": {
+                  "admission": 0.0029000000001389026,
+                  "sqlite_integrity": 272.7044999999997,
+                  "blocks": 581.9057,
+                  "nodes": 582.7686000000015,
+                  "originals": 172.02809999999857,
+                  "metadata": 4.249200000000286
+                },
+                "sql_statements": null,
+                "total_ms": 1613.661200000001,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 1612.2495000000008,
+              "cpu_ms": 1609.375,
+              "read_bytes": 427831428,
+              "write_bytes": 0,
+              "private_after": 14028800,
+              "working_after": 21094400,
+              "lifetime_peak_working": 23330816,
+              "lifetime_peak_commit": 16113664,
+              "verification": {
+                "reference": false,
+                "phases_ms": {
+                  "admission": 0.0049000000004184585,
+                  "sqlite_integrity": 276.56119999999976,
+                  "blocks": 574.6211999999992,
+                  "nodes": 578.6975000000006,
+                  "originals": 171.17040000000117,
+                  "metadata": 4.357999999999862
+                },
+                "sql_statements": null,
+                "total_ms": 1605.4160000000018,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 1657.7848999999994,
+              "cpu_ms": 1656.25,
+              "read_bytes": 427831428,
+              "write_bytes": 0,
+              "private_after": 13524992,
+              "working_after": 21094400,
+              "lifetime_peak_working": 23437312,
+              "lifetime_peak_commit": 16113664,
+              "verification": {
+                "reference": false,
+                "phases_ms": {
+                  "admission": 0.0031999999983156613,
+                  "sqlite_integrity": 279.98210000000154,
+                  "blocks": 601.1726999999994,
+                  "nodes": 594.8053000000009,
+                  "originals": 171.31919999999923,
+                  "metadata": 4.439999999998889
+                },
+                "sql_statements": null,
+                "total_ms": 1651.7254999999977,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "traced_diagnostics": {
+        "reference": {
+          "reference": true,
+          "phases_ms": {
+            "admission": 0.0037000000006059963,
+            "sqlite_integrity": 275.4349999999981,
+            "blocks": 1377.2590999999998,
+            "nodes": 2110.2184000000007,
+            "originals": 175.05900000000096,
+            "metadata": 5.158099999999166
+          },
+          "sql_statements": 142821,
+          "total_ms": 3943.1440000000002,
+          "counts": [
+            20301,
+            20301,
+            134227478,
+            8890163
+          ]
+        },
+        "streaming": {
+          "reference": false,
+          "phases_ms": {
+            "admission": 0.0034000000042055945,
+            "sqlite_integrity": 279.0692999999962,
+            "blocks": 599.1651000000004,
+            "nodes": 616.1263999999989,
+            "originals": 174.54650000000527,
+            "metadata": 5.141099999995902
+          },
+          "sql_statements": 717,
+          "total_ms": 1674.063100000005,
+          "counts": [
+            20301,
+            20301,
+            134227478,
+            8890163
+          ]
+        }
+      },
+      "limits": {
+        "both_validate_full_resources_and_indexes": true,
+        "cold_os_cache_controlled": false,
+        "power_loss_tested": false,
+        "diagnostic_trace_and_profile_excluded_from_latency": true,
+        "product_ui_audio_load": false
+      }
+    },
+    "load-final-py312": {
+      "python": "3.12.14",
+      "sqlite": "3.53.1",
+      "source_sha256_before_after": "e4ac17d4e32f306ef43b80f44ce5ae40d37cbcf6173539dd78560f3d200bb577",
+      "file_bytes": 154468352,
+      "expected": {
+        "generation": 684,
+        "save_id": "69fc842711bcd8a5bdf13362434cce05",
+        "manual_id": "0fbcca896c3e6414e5c7471a6088d027",
+        "protected_id": "95982ebfe068b3c3a5fb55ef04fc3c54",
+        "nodes": 20301,
+        "blocks": 20301,
+        "blob_bytes": 134227478,
+        "metadata_bytes": 8890163,
+        "address_epoch": "75b62665ecf43bb523149eab9aee0b30"
+      },
+      "methods": {
+        "reference": {
+          "latency": {
+            "count": 5,
+            "median_ms": 3121.8848999997135,
+            "p95_ms": 3129.217699999572,
+            "max_ms": 3129.217699999572
+          },
+          "samples": [
+            {
+              "wall_ms": 3097.2460999983014,
+              "cpu_ms": 3093.75,
+              "read_bytes": 437061634,
+              "write_bytes": 0,
+              "private_after": 18010112,
+              "working_after": 25690112,
+              "lifetime_peak_working": 27979776,
+              "lifetime_peak_commit": 19472384,
+              "verification": {
+                "reference": true,
+                "phases_ms": {
+                  "admission": 0.0031999989005271345,
+                  "sqlite_integrity": 271.9037999995635,
+                  "blocks": 941.092100001697,
+                  "nodes": 1697.9086999999708,
+                  "originals": 163.8783999987936,
+                  "metadata": 3.7998000007064547
+                },
+                "sql_statements": null,
+                "total_ms": 3078.590000000986,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 3080.268400000932,
+              "cpu_ms": 3078.125,
+              "read_bytes": 437061634,
+              "write_bytes": 0,
+              "private_after": 17420288,
+              "working_after": 25894912,
+              "lifetime_peak_working": 28225536,
+              "lifetime_peak_commit": 19746816,
+              "verification": {
+                "reference": true,
+                "phases_ms": {
+                  "admission": 0.0025999979698099196,
+                  "sqlite_integrity": 270.30830000148853,
+                  "blocks": 947.5878999983252,
+                  "nodes": 1689.6365000029618,
+                  "originals": 162.35029999734252,
+                  "metadata": 3.7838000025658403
+                },
+                "sql_statements": null,
+                "total_ms": 3073.6714999984542,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 3123.0754000025627,
+              "cpu_ms": 3125.0,
+              "read_bytes": 437061634,
+              "write_bytes": 0,
+              "private_after": 17096704,
+              "working_after": 25726976,
+              "lifetime_peak_working": 28225536,
+              "lifetime_peak_commit": 19746816,
+              "verification": {
+                "reference": true,
+                "phases_ms": {
+                  "admission": 0.0027999994927085936,
+                  "sqlite_integrity": 274.9081000001752,
+                  "blocks": 980.2331999999296,
+                  "nodes": 1701.7430999985663,
+                  "originals": 155.79490000163787,
+                  "metadata": 3.802499999437714
+                },
+                "sql_statements": null,
+                "total_ms": 3116.4865999999165,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 3121.8848999997135,
+              "cpu_ms": 3125.0,
+              "read_bytes": 437061634,
+              "write_bytes": 0,
+              "private_after": 17207296,
+              "working_after": 25784320,
+              "lifetime_peak_working": 28299264,
+              "lifetime_peak_commit": 19750912,
+              "verification": {
+                "reference": true,
+                "phases_ms": {
+                  "admission": 0.0026999987312592566,
+                  "sqlite_integrity": 272.6617000007536,
+                  "blocks": 981.1714999996184,
+                  "nodes": 1697.5936999988335,
+                  "originals": 159.96480000103475,
+                  "metadata": 3.844099999696482
+                },
+                "sql_statements": null,
+                "total_ms": 3115.240499999345,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 3129.217699999572,
+              "cpu_ms": 3125.0,
+              "read_bytes": 437061634,
+              "write_bytes": 0,
+              "private_after": 16969728,
+              "working_after": 25591808,
+              "lifetime_peak_working": 28299264,
+              "lifetime_peak_commit": 19750912,
+              "verification": {
+                "reference": true,
+                "phases_ms": {
+                  "admission": 0.0026999987312592566,
+                  "sqlite_integrity": 273.31740000227,
+                  "blocks": 979.1698000008182,
+                  "nodes": 1703.5876999980246,
+                  "originals": 162.16419999909704,
+                  "metadata": 3.898200000548968
+                },
+                "sql_statements": null,
+                "total_ms": 3122.1422999988135,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            }
+          ]
+        },
+        "streaming": {
+          "latency": {
+            "count": 5,
+            "median_ms": 1560.3234000009252,
+            "p95_ms": 1612.282399997639,
+            "max_ms": 1612.282399997639
+          },
+          "samples": [
+            {
+              "wall_ms": 1551.6460000035295,
+              "cpu_ms": 1546.875,
+              "read_bytes": 426854402,
+              "write_bytes": 0,
+              "private_after": 17448960,
+              "working_after": 25796608,
+              "lifetime_peak_working": 28114944,
+              "lifetime_peak_commit": 19472384,
+              "verification": {
+                "reference": false,
+                "phases_ms": {
+                  "admission": 0.0022999993234407157,
+                  "sqlite_integrity": 266.6539999991073,
+                  "blocks": 555.501999999251,
+                  "nodes": 564.4019999999728,
+                  "originals": 154.6550000020943,
+                  "metadata": 3.919099999620812
+                },
+                "sql_statements": null,
+                "total_ms": 1545.1369999973394,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 1527.6884000013524,
+              "cpu_ms": 1531.25,
+              "read_bytes": 426854402,
+              "write_bytes": 0,
+              "private_after": 16801792,
+              "working_after": 25493504,
+              "lifetime_peak_working": 28225536,
+              "lifetime_peak_commit": 19746816,
+              "verification": {
+                "reference": false,
+                "phases_ms": {
+                  "admission": 0.0026000016077887267,
+                  "sqlite_integrity": 265.04449999993085,
+                  "blocks": 540.9158000002208,
+                  "nodes": 555.9447999985423,
+                  "originals": 155.24309999818797,
+                  "metadata": 3.8359999998647254
+                },
+                "sql_statements": null,
+                "total_ms": 1520.989600001485,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 1560.3234000009252,
+              "cpu_ms": 1562.5,
+              "read_bytes": 426854402,
+              "write_bytes": 0,
+              "private_after": 16826368,
+              "working_after": 25513984,
+              "lifetime_peak_working": 28225536,
+              "lifetime_peak_commit": 19746816,
+              "verification": {
+                "reference": false,
+                "phases_ms": {
+                  "admission": 0.0023000029614195228,
+                  "sqlite_integrity": 272.1615999980713,
+                  "blocks": 543.7168999997084,
+                  "nodes": 576.8353000021307,
+                  "originals": 156.97369999907096,
+                  "metadata": 4.020000000309665
+                },
+                "sql_statements": null,
+                "total_ms": 1553.7124000002223,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 1564.8922000000312,
+              "cpu_ms": 1562.5,
+              "read_bytes": 426854402,
+              "write_bytes": 0,
+              "private_after": 17223680,
+              "working_after": 25759744,
+              "lifetime_peak_working": 28299264,
+              "lifetime_peak_commit": 19746816,
+              "verification": {
+                "reference": false,
+                "phases_ms": {
+                  "admission": 0.0022999993234407157,
+                  "sqlite_integrity": 276.01529999810737,
+                  "blocks": 553.0883000028552,
+                  "nodes": 566.6411999991396,
+                  "originals": 157.99669999978505,
+                  "metadata": 3.860799999529263
+                },
+                "sql_statements": null,
+                "total_ms": 1557.606799997302,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 1612.282399997639,
+              "cpu_ms": 1609.375,
+              "read_bytes": 426854402,
+              "write_bytes": 0,
+              "private_after": 17227776,
+              "working_after": 25804800,
+              "lifetime_peak_working": 28299264,
+              "lifetime_peak_commit": 19750912,
+              "verification": {
+                "reference": false,
+                "phases_ms": {
+                  "admission": 0.0027999994927085936,
+                  "sqlite_integrity": 275.6326999988232,
+                  "blocks": 556.8320999991556,
+                  "nodes": 613.8086000028125,
+                  "originals": 155.02939999714727,
+                  "metadata": 3.823200000624638
+                },
+                "sql_statements": null,
+                "total_ms": 1605.1310000002559,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "traced_diagnostics": {
+        "reference": {
+          "reference": true,
+          "phases_ms": {
+            "admission": 0.0032999996619764715,
+            "sqlite_integrity": 270.98060000207624,
+            "blocks": 1055.1319000005606,
+            "nodes": 1892.5215999988723,
+            "originals": 154.97790000154055,
+            "metadata": 4.679999998188578
+          },
+          "sql_statements": 142821,
+          "total_ms": 3378.3073000013246,
+          "counts": [
+            20301,
+            20301,
+            134227478,
+            8890163
+          ]
+        },
+        "streaming": {
+          "reference": false,
+          "phases_ms": {
+            "admission": 0.017300000763498247,
+            "sqlite_integrity": 267.92939999722876,
+            "blocks": 554.2543000010483,
+            "nodes": 569.4210000001476,
+            "originals": 154.34610000011162,
+            "metadata": 4.6518999988620635
+          },
+          "sql_statements": 717,
+          "total_ms": 1550.6314000012935,
+          "counts": [
+            20301,
+            20301,
+            134227478,
+            8890163
+          ]
+        }
+      },
+      "limits": {
+        "both_validate_full_resources_and_indexes": true,
+        "cold_os_cache_controlled": false,
+        "power_loss_tested": false,
+        "diagnostic_trace_and_profile_excluded_from_latency": true,
+        "product_ui_audio_load": false
+      }
+    },
+    "load-lf-py39": {
+      "python": "3.9.6",
+      "sqlite": "3.35.5",
+      "source_sha256_before_after": "e4ac17d4e32f306ef43b80f44ce5ae40d37cbcf6173539dd78560f3d200bb577",
+      "file_bytes": 154468352,
+      "expected": {
+        "generation": 684,
+        "save_id": "69fc842711bcd8a5bdf13362434cce05",
+        "manual_id": "0fbcca896c3e6414e5c7471a6088d027",
+        "protected_id": "95982ebfe068b3c3a5fb55ef04fc3c54",
+        "nodes": 20301,
+        "blocks": 20301,
+        "blob_bytes": 134227478,
+        "metadata_bytes": 8890163,
+        "address_epoch": "75b62665ecf43bb523149eab9aee0b30"
+      },
+      "methods": {
+        "reference": {
+          "latency": {
+            "count": 5,
+            "median_ms": 3343.1084999999994,
+            "p95_ms": 3397.6434,
+            "max_ms": 3397.6434
+          },
+          "samples": [
+            {
+              "wall_ms": 3375.272,
+              "cpu_ms": 3375.0,
+              "read_bytes": 438161540,
+              "write_bytes": 0,
+              "private_after": 13271040,
+              "working_after": 20389888,
+              "lifetime_peak_working": 22474752,
+              "lifetime_peak_commit": 14589952,
+              "verification": {
+                "reference": true,
+                "phases_ms": {
+                  "admission": 0.0032999999999283602,
+                  "sqlite_integrity": 274.6638999999997,
+                  "blocks": 1021.4234000000002,
+                  "nodes": 1884.7803999999999,
+                  "originals": 172.60089999999994,
+                  "metadata": 4.324300000000392
+                },
+                "sql_statements": null,
+                "total_ms": 3357.7987999999996,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 3397.6434,
+              "cpu_ms": 3390.625,
+              "read_bytes": 438161540,
+              "write_bytes": 0,
+              "private_after": 12591104,
+              "working_after": 20430848,
+              "lifetime_peak_working": 22614016,
+              "lifetime_peak_commit": 14864384,
+              "verification": {
+                "reference": true,
+                "phases_ms": {
+                  "admission": 0.0024999999990171773,
+                  "sqlite_integrity": 282.50680000000017,
+                  "blocks": 1047.7073000000007,
+                  "nodes": 1884.1583999999987,
+                  "originals": 172.81610000000035,
+                  "metadata": 4.253000000000284
+                },
+                "sql_statements": null,
+                "total_ms": 3391.446199999999,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 3343.1084999999994,
+              "cpu_ms": 3343.75,
+              "read_bytes": 438161540,
+              "write_bytes": 0,
+              "private_after": 13385728,
+              "working_after": 20557824,
+              "lifetime_peak_working": 22614016,
+              "lifetime_peak_commit": 14864384,
+              "verification": {
+                "reference": true,
+                "phases_ms": {
+                  "admission": 0.0049000000004184585,
+                  "sqlite_integrity": 296.5169000000003,
+                  "blocks": 1003.4875999999997,
+                  "nodes": 1860.5333,
+                  "originals": 171.88250000000062,
+                  "metadata": 4.212199999999555
+                },
+                "sql_statements": null,
+                "total_ms": 3336.6404,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 3340.0382999999997,
+              "cpu_ms": 3343.75,
+              "read_bytes": 438161540,
+              "write_bytes": 0,
+              "private_after": 12877824,
+              "working_after": 20713472,
+              "lifetime_peak_working": 23031808,
+              "lifetime_peak_commit": 15302656,
+              "verification": {
+                "reference": true,
+                "phases_ms": {
+                  "admission": 0.002500000000793534,
+                  "sqlite_integrity": 274.9971000000002,
+                  "blocks": 1011.7706999999996,
+                  "nodes": 1871.7714999999978,
+                  "originals": 171.06100000000168,
+                  "metadata": 4.26739999999981
+                },
+                "sql_statements": null,
+                "total_ms": 3333.872700000001,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 3310.0439,
+              "cpu_ms": 3312.5,
+              "read_bytes": 438161540,
+              "write_bytes": 0,
+              "private_after": 12898304,
+              "working_after": 20819968,
+              "lifetime_peak_working": 23158784,
+              "lifetime_peak_commit": 15577088,
+              "verification": {
+                "reference": true,
+                "phases_ms": {
+                  "admission": 0.00269999999957804,
+                  "sqlite_integrity": 272.5602999999985,
+                  "blocks": 1008.535400000003,
+                  "nodes": 1845.2332999999967,
+                  "originals": 171.5806000000022,
+                  "metadata": 4.183399999998727
+                },
+                "sql_statements": null,
+                "total_ms": 3302.097199999999,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            }
+          ]
+        },
+        "streaming": {
+          "latency": {
+            "count": 5,
+            "median_ms": 1627.0521999999978,
+            "p95_ms": 1634.8196999999977,
+            "max_ms": 1634.8196999999977
+          },
+          "samples": [
+            {
+              "wall_ms": 1629.4316999999996,
+              "cpu_ms": 1625.0,
+              "read_bytes": 427831428,
+              "write_bytes": 0,
+              "private_after": 13086720,
+              "working_after": 20283392,
+              "lifetime_peak_working": 22556672,
+              "lifetime_peak_commit": 14864384,
+              "verification": {
+                "reference": false,
+                "phases_ms": {
+                  "admission": 0.0025999999992976086,
+                  "sqlite_integrity": 275.14109999999994,
+                  "blocks": 584.4811000000005,
+                  "nodes": 588.0218,
+                  "originals": 171.26329999999967,
+                  "metadata": 4.333100000000201
+                },
+                "sql_statements": null,
+                "total_ms": 1623.2461999999996,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 1617.2944000000005,
+              "cpu_ms": 1609.375,
+              "read_bytes": 427831428,
+              "write_bytes": 0,
+              "private_after": 12541952,
+              "working_after": 20180992,
+              "lifetime_peak_working": 22556672,
+              "lifetime_peak_commit": 14864384,
+              "verification": {
+                "reference": false,
+                "phases_ms": {
+                  "admission": 0.0031000000006997652,
+                  "sqlite_integrity": 281.2063,
+                  "blocks": 574.8333999999993,
+                  "nodes": 576.7642999999998,
+                  "originals": 173.64889999999988,
+                  "metadata": 4.303800000000635
+                },
+                "sql_statements": null,
+                "total_ms": 1610.7622,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 1627.0521999999978,
+              "cpu_ms": 1609.375,
+              "read_bytes": 427831428,
+              "write_bytes": 0,
+              "private_after": 12554240,
+              "working_after": 20455424,
+              "lifetime_peak_working": 22937600,
+              "lifetime_peak_commit": 15249408,
+              "verification": {
+                "reference": false,
+                "phases_ms": {
+                  "admission": 0.0029000000001389026,
+                  "sqlite_integrity": 273.43390000000056,
+                  "blocks": 579.9202000000001,
+                  "nodes": 588.8463000000002,
+                  "originals": 174.31369999999902,
+                  "metadata": 4.297799999999796
+                },
+                "sql_statements": null,
+                "total_ms": 1620.8173000000006,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 1626.4567999999997,
+              "cpu_ms": 1625.0,
+              "read_bytes": 427831428,
+              "write_bytes": 0,
+              "private_after": 12976128,
+              "working_after": 20721664,
+              "lifetime_peak_working": 22958080,
+              "lifetime_peak_commit": 15253504,
+              "verification": {
+                "reference": false,
+                "phases_ms": {
+                  "admission": 0.0028000000007466497,
+                  "sqlite_integrity": 279.1238000000007,
+                  "blocks": 586.1541999999993,
+                  "nodes": 578.4541999999994,
+                  "originals": 171.81030000000064,
+                  "metadata": 4.441799999998608
+                },
+                "sql_statements": null,
+                "total_ms": 1619.9892000000027,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 1634.8196999999977,
+              "cpu_ms": 1625.0,
+              "read_bytes": 427831428,
+              "write_bytes": 0,
+              "private_after": 13242368,
+              "working_after": 20865024,
+              "lifetime_peak_working": 23158784,
+              "lifetime_peak_commit": 15577088,
+              "verification": {
+                "reference": false,
+                "phases_ms": {
+                  "admission": 0.00269999999957804,
+                  "sqlite_integrity": 275.0912000000021,
+                  "blocks": 584.8431000000005,
+                  "nodes": 589.7182999999977,
+                  "originals": 174.38410000000104,
+                  "metadata": 4.494799999999799
+                },
+                "sql_statements": null,
+                "total_ms": 1628.537099999999,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "traced_diagnostics": {
+        "reference": {
+          "reference": true,
+          "phases_ms": {
+            "admission": 0.004100000001727722,
+            "sqlite_integrity": 277.75789999999745,
+            "blocks": 1389.088600000001,
+            "nodes": 2080.6132999999995,
+            "originals": 172.2311000000012,
+            "metadata": 5.034099999999597
+          },
+          "sql_statements": 142821,
+          "total_ms": 3924.739800000001,
+          "counts": [
+            20301,
+            20301,
+            134227478,
+            8890163
+          ]
+        },
+        "streaming": {
+          "reference": false,
+          "phases_ms": {
+            "admission": 0.004699999998081239,
+            "sqlite_integrity": 275.4422000000005,
+            "blocks": 584.0770000000007,
+            "nodes": 606.6834000000015,
+            "originals": 175.24039999999985,
+            "metadata": 5.114299999995353
+          },
+          "sql_statements": 717,
+          "total_ms": 1646.5749999999985,
+          "counts": [
+            20301,
+            20301,
+            134227478,
+            8890163
+          ]
+        }
+      },
+      "limits": {
+        "both_validate_full_resources_and_indexes": true,
+        "cold_os_cache_controlled": false,
+        "power_loss_tested": false,
+        "diagnostic_trace_and_profile_excluded_from_latency": true,
+        "product_ui_audio_load": false
+      }
+    },
+    "load-lf-py312": {
+      "python": "3.12.14",
+      "sqlite": "3.53.1",
+      "source_sha256_before_after": "e4ac17d4e32f306ef43b80f44ce5ae40d37cbcf6173539dd78560f3d200bb577",
+      "file_bytes": 154468352,
+      "expected": {
+        "generation": 684,
+        "save_id": "69fc842711bcd8a5bdf13362434cce05",
+        "manual_id": "0fbcca896c3e6414e5c7471a6088d027",
+        "protected_id": "95982ebfe068b3c3a5fb55ef04fc3c54",
+        "nodes": 20301,
+        "blocks": 20301,
+        "blob_bytes": 134227478,
+        "metadata_bytes": 8890163,
+        "address_epoch": "75b62665ecf43bb523149eab9aee0b30"
+      },
+      "methods": {
+        "reference": {
+          "latency": {
+            "count": 5,
+            "median_ms": 3042.037100000016,
+            "p95_ms": 3172.553099997458,
+            "max_ms": 3172.553099997458
+          },
+          "samples": [
+            {
+              "wall_ms": 3039.7190999974555,
+              "cpu_ms": 3031.25,
+              "read_bytes": 437061634,
+              "write_bytes": 0,
+              "private_after": 16965632,
+              "working_after": 25620480,
+              "lifetime_peak_working": 28143616,
+              "lifetime_peak_commit": 19587072,
+              "verification": {
+                "reference": true,
+                "phases_ms": {
+                  "admission": 0.0027000023692380637,
+                  "sqlite_integrity": 260.55799999812734,
+                  "blocks": 937.8290999993624,
+                  "nodes": 1666.912600001524,
+                  "originals": 154.3134999992617,
+                  "metadata": 3.801700000622077
+                },
+                "sql_statements": null,
+                "total_ms": 3023.4215000018594,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 3042.037100000016,
+              "cpu_ms": 3046.875,
+              "read_bytes": 437061634,
+              "write_bytes": 0,
+              "private_after": 17358848,
+              "working_after": 25718784,
+              "lifetime_peak_working": 28209152,
+              "lifetime_peak_commit": 19832832,
+              "verification": {
+                "reference": true,
+                "phases_ms": {
+                  "admission": 0.0022999993234407157,
+                  "sqlite_integrity": 263.2195000005595,
+                  "blocks": 940.3053999994881,
+                  "nodes": 1670.6445999989228,
+                  "originals": 157.51580000141985,
+                  "metadata": 3.864199999952689
+                },
+                "sql_statements": null,
+                "total_ms": 3035.553699999582,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 3172.553099997458,
+              "cpu_ms": 3156.25,
+              "read_bytes": 437061634,
+              "write_bytes": 0,
+              "private_after": 16711680,
+              "working_after": 25362432,
+              "lifetime_peak_working": 28209152,
+              "lifetime_peak_commit": 19849216,
+              "verification": {
+                "reference": true,
+                "phases_ms": {
+                  "admission": 0.0026999987312592566,
+                  "sqlite_integrity": 266.04389999920386,
+                  "blocks": 960.9530000016093,
+                  "nodes": 1773.7596000006306,
+                  "originals": 160.1604999996198,
+                  "metadata": 4.698400000052061
+                },
+                "sql_statements": null,
+                "total_ms": 3165.620499999932,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 3061.1404000010225,
+              "cpu_ms": 3062.5,
+              "read_bytes": 437061634,
+              "write_bytes": 0,
+              "private_after": 16752640,
+              "working_after": 25444352,
+              "lifetime_peak_working": 28209152,
+              "lifetime_peak_commit": 19894272,
+              "verification": {
+                "reference": true,
+                "phases_ms": {
+                  "admission": 0.0026000016077887267,
+                  "sqlite_integrity": 263.67969999773777,
+                  "blocks": 953.0158000015945,
+                  "nodes": 1678.2252000011795,
+                  "originals": 155.94909999708761,
+                  "metadata": 3.7990000018908177
+                },
+                "sql_statements": null,
+                "total_ms": 3054.6729000016057,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 3038.839699998789,
+              "cpu_ms": 3046.875,
+              "read_bytes": 437061634,
+              "write_bytes": 0,
+              "private_after": 17092608,
+              "working_after": 25632768,
+              "lifetime_peak_working": 28209152,
+              "lifetime_peak_commit": 19894272,
+              "verification": {
+                "reference": true,
+                "phases_ms": {
+                  "admission": 0.0022999993234407157,
+                  "sqlite_integrity": 265.3107000005548,
+                  "blocks": 943.0242999987968,
+                  "nodes": 1665.1005000021541,
+                  "originals": 154.79530000084196,
+                  "metadata": 3.775999997742474
+                },
+                "sql_statements": null,
+                "total_ms": 3032.011200000852,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            }
+          ]
+        },
+        "streaming": {
+          "latency": {
+            "count": 5,
+            "median_ms": 1534.616200002347,
+            "p95_ms": 1572.2032000012405,
+            "max_ms": 1572.2032000012405
+          },
+          "samples": [
+            {
+              "wall_ms": 1534.616200002347,
+              "cpu_ms": 1531.25,
+              "read_bytes": 426854402,
+              "write_bytes": 0,
+              "private_after": 16986112,
+              "working_after": 25772032,
+              "lifetime_peak_working": 28151808,
+              "lifetime_peak_commit": 19587072,
+              "verification": {
+                "reference": false,
+                "phases_ms": {
+                  "admission": 0.0025000008463393897,
+                  "sqlite_integrity": 263.5197999989032,
+                  "blocks": 539.2487999997684,
+                  "nodes": 565.4089000017848,
+                  "originals": 155.89239999826532,
+                  "metadata": 3.9192000003822614
+                },
+                "sql_statements": null,
+                "total_ms": 1527.9939000029117,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 1515.1369000013801,
+              "cpu_ms": 1500.0,
+              "read_bytes": 426854402,
+              "write_bytes": 0,
+              "private_after": 17092608,
+              "working_after": 25608192,
+              "lifetime_peak_working": 28151808,
+              "lifetime_peak_commit": 19587072,
+              "verification": {
+                "reference": false,
+                "phases_ms": {
+                  "admission": 0.0025000008463393897,
+                  "sqlite_integrity": 262.7959999990708,
+                  "blocks": 530.390100000659,
+                  "nodes": 556.2055999980657,
+                  "originals": 155.22060000148485,
+                  "metadata": 3.765400000702357
+                },
+                "sql_statements": null,
+                "total_ms": 1508.382399999391,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 1572.2032000012405,
+              "cpu_ms": 1562.5,
+              "read_bytes": 426854402,
+              "write_bytes": 0,
+              "private_after": 16740352,
+              "working_after": 25391104,
+              "lifetime_peak_working": 28209152,
+              "lifetime_peak_commit": 19849216,
+              "verification": {
+                "reference": false,
+                "phases_ms": {
+                  "admission": 0.0025000008463393897,
+                  "sqlite_integrity": 292.3642999994627,
+                  "blocks": 541.0067999982857,
+                  "nodes": 572.3147000026074,
+                  "originals": 155.38879999803612,
+                  "metadata": 3.927900001144735
+                },
+                "sql_statements": null,
+                "total_ms": 1565.0070999981835,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 1528.173999999126,
+              "cpu_ms": 1515.625,
+              "read_bytes": 426854402,
+              "write_bytes": 0,
+              "private_after": 17416192,
+              "working_after": 25583616,
+              "lifetime_peak_working": 28209152,
+              "lifetime_peak_commit": 19849216,
+              "verification": {
+                "reference": false,
+                "phases_ms": {
+                  "admission": 0.0023000029614195228,
+                  "sqlite_integrity": 263.3691999981238,
+                  "blocks": 540.7082999990962,
+                  "nodes": 558.9689000007638,
+                  "originals": 154.8216000010143,
+                  "metadata": 3.8236000000324566
+                },
+                "sql_statements": null,
+                "total_ms": 1521.696300002077,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            },
+            {
+              "wall_ms": 1538.7491000001319,
+              "cpu_ms": 1531.25,
+              "read_bytes": 426854402,
+              "write_bytes": 0,
+              "private_after": 16728064,
+              "working_after": 25378816,
+              "lifetime_peak_working": 28209152,
+              "lifetime_peak_commit": 19894272,
+              "verification": {
+                "reference": false,
+                "phases_ms": {
+                  "admission": 0.0026999987312592566,
+                  "sqlite_integrity": 263.5353000005125,
+                  "blocks": 534.9225999998453,
+                  "nodes": 574.9619000016537,
+                  "originals": 154.82089999932214,
+                  "metadata": 3.8103000006231014
+                },
+                "sql_statements": null,
+                "total_ms": 1532.0562999986578,
+                "counts": [
+                  20301,
+                  20301,
+                  134227478,
+                  8890163
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "traced_diagnostics": {
+        "reference": {
+          "reference": true,
+          "phases_ms": {
+            "admission": 0.0033000032999552786,
+            "sqlite_integrity": 265.3277999997954,
+            "blocks": 1059.9972999989404,
+            "nodes": 1895.9703000000445,
+            "originals": 155.0083000001905,
+            "metadata": 4.697100001067156
+          },
+          "sql_statements": 142821,
+          "total_ms": 3381.016000003001,
+          "counts": [
+            20301,
+            20301,
+            134227478,
+            8890163
+          ]
+        },
+        "streaming": {
+          "reference": false,
+          "phases_ms": {
+            "admission": 0.017700000171316788,
+            "sqlite_integrity": 264.1938000015216,
+            "blocks": 553.8543000002392,
+            "nodes": 574.7931999976572,
+            "originals": 160.12830000181566,
+            "metadata": 4.7229999981937
+          },
+          "sql_statements": 717,
+          "total_ms": 1557.7212999996846,
+          "counts": [
+            20301,
+            20301,
+            134227478,
+            8890163
+          ]
+        }
+      },
+      "limits": {
+        "both_validate_full_resources_and_indexes": true,
+        "cold_os_cache_controlled": false,
+        "power_loss_tested": false,
+        "diagnostic_trace_and_profile_excluded_from_latency": true,
+        "product_ui_audio_load": false
+      }
+    },
+    "crashes-py39": {
+      "python": "3.9.6",
+      "sqlite": "3.35.5",
+      "cases": [
+        {
+          "phase": "begin",
+          "gate": {
+            "phase": "begin",
+            "journal_exists": false,
+            "main_bytes": 167936
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "281ea057a3d57ce5f3b58a535e54a190651bc72a9e00a200a8d7f8118d62ff2f",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "originals",
+          "gate": {
+            "phase": "originals",
+            "journal_exists": true,
+            "main_bytes": 15310848
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "281ea057a3d57ce5f3b58a535e54a190651bc72a9e00a200a8d7f8118d62ff2f",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "blocks",
+          "gate": {
+            "phase": "blocks",
+            "journal_exists": true,
+            "main_bytes": 15331328
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "281ea057a3d57ce5f3b58a535e54a190651bc72a9e00a200a8d7f8118d62ff2f",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "nodes",
+          "gate": {
+            "phase": "nodes",
+            "journal_exists": true,
+            "main_bytes": 15360000
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "281ea057a3d57ce5f3b58a535e54a190651bc72a9e00a200a8d7f8118d62ff2f",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "tags",
+          "gate": {
+            "phase": "tags",
+            "journal_exists": true,
+            "main_bytes": 15368192
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "281ea057a3d57ce5f3b58a535e54a190651bc72a9e00a200a8d7f8118d62ff2f",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "before_commit",
+          "gate": {
+            "phase": "before_commit",
+            "journal_exists": true,
+            "main_bytes": 15384576
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "281ea057a3d57ce5f3b58a535e54a190651bc72a9e00a200a8d7f8118d62ff2f",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "after_commit",
+          "gate": {
+            "phase": "after_commit",
+            "journal_exists": false,
+            "main_bytes": 17100800
+          },
+          "recovered_nodes": 2,
+          "generation": 2,
+          "root_record_sha256": "281ea057a3d57ce5f3b58a535e54a190651bc72a9e00a200a8d7f8118d62ff2f",
+          "journal_after_recovery": false
+        }
+      ],
+      "controlled_process_kill": true,
+      "kill_inside_commit_syscall": false,
+      "power_loss": false
+    },
+    "crashes-py312": {
+      "python": "3.12.14",
+      "sqlite": "3.53.1",
+      "cases": [
+        {
+          "phase": "begin",
+          "gate": {
+            "phase": "begin",
+            "journal_exists": false,
+            "main_bytes": 167936
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "a4a39688f42e395897b90be1830175dd4de2749a9c6a5dfb4f7a3c797dbd8e96",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "originals",
+          "gate": {
+            "phase": "originals",
+            "journal_exists": true,
+            "main_bytes": 15310848
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "a4a39688f42e395897b90be1830175dd4de2749a9c6a5dfb4f7a3c797dbd8e96",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "blocks",
+          "gate": {
+            "phase": "blocks",
+            "journal_exists": true,
+            "main_bytes": 15331328
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "a4a39688f42e395897b90be1830175dd4de2749a9c6a5dfb4f7a3c797dbd8e96",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "nodes",
+          "gate": {
+            "phase": "nodes",
+            "journal_exists": true,
+            "main_bytes": 15360000
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "a4a39688f42e395897b90be1830175dd4de2749a9c6a5dfb4f7a3c797dbd8e96",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "tags",
+          "gate": {
+            "phase": "tags",
+            "journal_exists": true,
+            "main_bytes": 15368192
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "a4a39688f42e395897b90be1830175dd4de2749a9c6a5dfb4f7a3c797dbd8e96",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "before_commit",
+          "gate": {
+            "phase": "before_commit",
+            "journal_exists": true,
+            "main_bytes": 15384576
+          },
+          "recovered_nodes": 1,
+          "generation": 1,
+          "root_record_sha256": "a4a39688f42e395897b90be1830175dd4de2749a9c6a5dfb4f7a3c797dbd8e96",
+          "journal_after_recovery": false
+        },
+        {
+          "phase": "after_commit",
+          "gate": {
+            "phase": "after_commit",
+            "journal_exists": false,
+            "main_bytes": 17100800
+          },
+          "recovered_nodes": 2,
+          "generation": 2,
+          "root_record_sha256": "a4a39688f42e395897b90be1830175dd4de2749a9c6a5dfb4f7a3c797dbd8e96",
+          "journal_after_recovery": false
+        }
+      ],
+      "controlled_process_kill": true,
+      "kill_inside_commit_syscall": false,
+      "power_loss": false
+    },
+    "fixture-freeze": {
+      "runtime": {
+        "python": "3.9.6",
+        "sqlite": "3.35.5",
+        "platform": "Windows-10-10.0.19045-SP0",
+        "process_clock": "namespace(implementation='GetProcessTimes()', monotonic=True, adjustable=False, resolution=1e-07)"
+      },
+      "fixture": {
+        "raw_bytes": 134227478,
+        "nodes": 20301,
+        "depth": 10300,
+        "wide_children": 10001,
+        "tag_edits": 303,
+        "single_content_edits": 300,
+        "old_nodes_unchanged": 20001,
+        "old_node_records_sha256": "dbdeba56e1511f00e045eec55e80daffcce23ce1e4e7c4fb0ac3b9cea88e681b",
+        "file_bytes": 154468352,
+        "blocks": 20301,
+        "metadata_payload_bytes": 8890163
+      },
+      "initial": {
+        "wall_ms": 731.6098,
+        "cpu_ms": 656.25,
+        "read_bytes": 134489750,
+        "write_bytes": 135944972,
+        "private_after": 14790656,
+        "working_after": 22720512,
+        "lifetime_peak_working": 22724608,
+        "lifetime_peak_commit": 14790656
+      },
+      "initial_commit_ms": 705.6437999999999,
+      "phases": {
+        "deep": {
+          "wall_ms": 3058.5727,
+          "cpu_ms": 2843.75,
+          "read_bytes": 11449600,
+          "write_bytes": 102054872,
+          "private_after": 14790656,
+          "working_after": 22949888,
+          "lifetime_peak_working": 22953984,
+          "lifetime_peak_commit": 14790656,
+          "batch_latency": {
+            "count": 40,
+            "median_ms": 60.72379999999988,
+            "p95_ms": 82.05080000000021,
+            "max_ms": 88.40559999999975
+          }
+        },
+        "wide": {
+          "wall_ms": 4271.5418,
+          "cpu_ms": 3765.625,
+          "read_bytes": 93078784,
+          "write_bytes": 203536384,
+          "private_after": 14819328,
+          "working_after": 22982656,
+          "lifetime_peak_working": 22986752,
+          "lifetime_peak_commit": 14819328,
+          "batch_latency": {
+            "count": 40,
+            "median_ms": 92.96590000000026,
+            "p95_ms": 103.97529999999921,
+            "max_ms": 107.86870000000093
+          }
+        },
+        "content_300": {
+          "wall_ms": 1707.1813999999997,
+          "cpu_ms": 1265.625,
+          "read_bytes": 4797824,
+          "write_bytes": 46978880,
+          "private_after": 14888960,
+          "working_after": 22994944,
+          "lifetime_peak_working": 22999040,
+          "lifetime_peak_commit": 14888960,
+          "latency": {
+            "count": 300,
+            "median_ms": 5.080899999999389,
+            "p95_ms": 5.936999999999415,
+            "max_ms": 6.46109999999922
+          }
+        },
+        "tags_300": {
+          "wall_ms": 1222.9834999999998,
+          "cpu_ms": 859.375,
+          "read_bytes": 30080,
+          "write_bytes": 15450152,
+          "private_after": 14888960,
+          "working_after": 22999040,
+          "lifetime_peak_working": 23003136,
+          "lifetime_peak_commit": 14888960,
+          "latency": {
+            "count": 300,
+            "median_ms": 3.657399999999811,
+            "p95_ms": 4.054899999999861,
+            "max_ms": 6.9926000000002375
+          }
+        },
+        "incremental_3": {
+          "wall_ms": 12.802699999999945,
+          "cpu_ms": 15.625,
+          "read_bytes": 360544,
+          "write_bytes": 157372,
+          "private_after": 15024128,
+          "working_after": 23064576,
+          "lifetime_peak_working": 24121344,
+          "lifetime_peak_commit": 16142336
+        },
+        "rewrite_3": {
+          "wall_ms": 502.72760000000005,
+          "cpu_ms": 328.125,
+          "read_bytes": 464986904,
+          "write_bytes": 463562428,
+          "private_after": 15880192,
+          "working_after": 23797760,
+          "lifetime_peak_working": 24854528,
+          "lifetime_peak_commit": 16998400
+        },
+        "verify_full": {
+          "wall_ms": 1642.312200000001,
+          "cpu_ms": 1640.625,
+          "read_bytes": 427761680,
+          "write_bytes": 0,
+          "private_after": 15908864,
+          "working_after": 24035328,
+          "lifetime_peak_working": 24854528,
+          "lifetime_peak_commit": 16998400
+        }
+      },
+      "closed": {
+        "wall": 13.7111755,
+        "cpu": 11.875,
+        "memory_source": "GetProcessMemoryInfo; lifetime peaks, not sampled phase peaks",
+        "working": 20881408,
+        "private": 13500416,
+        "lifetime_peak_working": 24854528,
+        "lifetime_peak_commit": 16998400,
+        "read_bytes": 1438191871,
+        "write_bytes": 1256380890,
+        "read_operations": 141410,
+        "write_operations": 212247,
+        "io_source": "GetProcessIoCounters; this process including SQLite journal I/O"
+      },
+      "open_close_cycles": [
+        {
+          "wall_ms": 1640.9809000000007,
+          "cpu_ms": 1640.625,
+          "read_bytes": 427897112,
+          "write_bytes": 0,
+          "private_after": 13275136,
+          "working_after": 20983808,
+          "lifetime_peak_working": 24854528,
+          "lifetime_peak_commit": 16998400
+        },
+        {
+          "wall_ms": 1665.0613000000014,
+          "cpu_ms": 1625.0,
+          "read_bytes": 427897112,
+          "write_bytes": 0,
+          "private_after": 14798848,
+          "working_after": 21360640,
+          "lifetime_peak_working": 24854528,
+          "lifetime_peak_commit": 16998400
+        },
+        {
+          "wall_ms": 1633.2667000000001,
+          "cpu_ms": 1625.0,
+          "read_bytes": 427897112,
+          "write_bytes": 0,
+          "private_after": 13201408,
+          "working_after": 21225472,
+          "lifetime_peak_working": 24854528,
+          "lifetime_peak_commit": 16998400
+        },
+        {
+          "wall_ms": 1665.0948999999996,
+          "cpu_ms": 1671.875,
+          "read_bytes": 427897112,
+          "write_bytes": 0,
+          "private_after": 13471744,
+          "working_after": 21241856,
+          "lifetime_peak_working": 24854528,
+          "lifetime_peak_commit": 16998400
+        },
+        {
+          "wall_ms": 1651.4442999999978,
+          "cpu_ms": 1640.625,
+          "read_bytes": 427897112,
+          "write_bytes": 0,
+          "private_after": 13467648,
+          "working_after": 21258240,
+          "lifetime_peak_working": 24854528,
+          "lifetime_peak_commit": 16998400
+        },
+        {
+          "wall_ms": 1641.6874999999998,
+          "cpu_ms": 1640.625,
+          "read_bytes": 427897112,
+          "write_bytes": 0,
+          "private_after": 13508608,
+          "working_after": 21315584,
+          "lifetime_peak_working": 24854528,
+          "lifetime_peak_commit": 16998400
+        },
+        {
+          "wall_ms": 1648.3397999999986,
+          "cpu_ms": 1656.25,
+          "read_bytes": 427897112,
+          "write_bytes": 0,
+          "private_after": 14032896,
+          "working_after": 21610496,
+          "lifetime_peak_working": 24854528,
+          "lifetime_peak_commit": 16998400
+        },
+        {
+          "wall_ms": 1637.9155999999994,
+          "cpu_ms": 1640.625,
+          "read_bytes": 427897112,
+          "write_bytes": 0,
+          "private_after": 14123008,
+          "working_after": 21721088,
+          "lifetime_peak_working": 24854528,
+          "lifetime_peak_commit": 16998400
+        },
+        {
+          "wall_ms": 1637.0303000000029,
+          "cpu_ms": 1640.625,
+          "read_bytes": 427897112,
+          "write_bytes": 0,
+          "private_after": 13516800,
+          "working_after": 21405696,
+          "lifetime_peak_working": 24854528,
+          "lifetime_peak_commit": 16998400
+        },
+        {
+          "wall_ms": 1642.3865000000005,
+          "cpu_ms": 1640.625,
+          "read_bytes": 427897112,
+          "write_bytes": 0,
+          "private_after": 13484032,
+          "working_after": 21377024,
+          "lifetime_peak_working": 24854528,
+          "lifetime_peak_commit": 16998400
+        }
+      ],
+      "limits": {
+        "device_gpu_audio_opened": false,
+        "is_product_cpu_acceptance": false,
+        "fixture_state_is_full_domain_codec": false,
+        "io_includes_journal_and_process_overhead": true,
+        "power_loss_tested": false
+      }
+    }
+  },
+  "limitations": [
+    "Experimental profile only; old experimental container1 refused, not overwritten; its reader retained in checkpoint commit",
+    "Known fixture conversion only, not a full SkinProject codec or general migration engine",
+    "No GUI open/save, autosave, Rust SQLite binding or export integration",
+    "Warm/uncleared OS file-cache tests, not cold-disk guarantees; five samples per method so nearest-rank p95 is maximum",
+    "Reference and streaming both use full integrity/FK/byte/node/index checks; diagnostics measured separately",
+    "Same Windows file and two SQLite runtimes; no Linux/macOS or arbitrary filesystem/power-loss validation",
+    "GetProcessTimes and own-process I/O are diagnostics, not P2 independent CPU or GUI/audio/GPU storage acceptance",
+    "Pre-freeze scratch fixtures and concurrent diagnostic pre-rounds retained; final reports use fixture-freeze only"
+  ]
+}

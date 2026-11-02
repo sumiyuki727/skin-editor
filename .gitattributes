@@ -35,8 +35,10 @@ tools/review_inventory.py text eol=lf
 tools/test_check_review_inventory.py text eol=lf
 tools/check_p3_storage.py text eol=lf
 tools/test_check_p3_storage.py text eol=lf
+tools/measure_p3_load.py text eol=lf
 tools/p3_storage/** text eol=lf
 docs/archive/2026-10-30-pre-review/*.txt -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+docs/archive/p3-0-r1/*.txt -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 
 # Historical evidence is byte-addressed by later proofs; no newline conversion.
 docs/*_PROOF.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

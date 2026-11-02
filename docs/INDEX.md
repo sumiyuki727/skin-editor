@@ -4,6 +4,7 @@
 
 ## 当前阅读入口
 
+- [编辑器新对话交接](HANDOFF_EDITOR_CONTINUATION.md) · [素材制作／未来编辑器操作skill交接](HANDOFF_SKIN_ASSET_SKILL.md)（2026-11-03快照，含可粘贴开场提示）
 - [P3-1C 热日志／进程中断恢复补充](P3_1_RECOVERY_REVIEW.md) · [独立证据](P3_1_RECOVERY_PROOF.json)
 - [P3-1C Rust存储／完整恢复候选](P3_1_STORAGE_REVIEW.md) · [本轮证据](P3_1_STORAGE_PROOF.json)
 - [私有 GitHub 与空间整理规则](GIT_WORKFLOW.md)

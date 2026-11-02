@@ -61,7 +61,7 @@ class StableWindowTests(unittest.TestCase):
             self.assertTrue(all(record['original_checks'].values()))
     def test_product_child_preserves_bounded_long_window_timeouts(self):
         for mode,timeout in (('product-empty',95),('product-stable',220)):
-            with tempfile.TemporaryDirectory() as directory,patch('measure_main_work.c.WinDLL',return_value=Mock()),patch(
+            with tempfile.TemporaryDirectory() as directory,patch('measure_main_work.c.WinDLL',return_value=Mock(),create=True),patch(
                     'measure_main_work.launch_owned',return_value={}) as launch:
                 run_child(Path(directory)/'owned','product',binary=Path('frozen.exe'),ui_mode=mode)
                 self.assertEqual(launch.call_args.kwargs['timeout'],timeout)

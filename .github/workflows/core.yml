@@ -38,6 +38,6 @@ jobs:
       - name: Install pinned Rust components
         run: rustup toolchain install 1.95.0 --profile minimal --component rustfmt --component clippy
       - name: Fetch locked desktop dependencies
-        run: cargo fetch --manifest-path desktop/Cargo.toml --locked --target x86_64-pc-windows-msvc
+        run: cargo fetch --manifest-path desktop/Cargo.toml --locked
       - name: Check desktop without GPU or windows
         run: python tools/check_desktop.py

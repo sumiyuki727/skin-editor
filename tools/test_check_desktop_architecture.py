@@ -18,9 +18,9 @@ def fixture():
     return dict(packages=packages, workspace_root=str(ROOT / "desktop"), workspace_members=[p["id"] for p in packages if p["name"] not in {"skin-editor-domain", "skin-editor-application"}])
 
 class Boundaries(unittest.TestCase):
-    def test_project_codec_dependencies_are_infrastructure_only_and_pinned(self):
+    def test_project_storage_dependencies_are_adapter_only_and_pinned(self):
         for name in ["skin-editor-application", "skin-editor-domain", "skin-editor-ui", "skin-editor-preview", "skin-editor-audio", "skin-editor-rendering"]:
-            for edge in ["serde", "serde_json"]:
+            for edge in ["serde", "serde_json", "getrandom"]:
                 data=fixture();package=next(p for p in data['packages'] if p['name']==name)
                 package['dependencies'].append(dict(name=edge,req=VERSIONS[edge],features=list(FEATURES[edge]),source='registry+https://github.com/rust-lang/crates.io-index'))
                 self.assertTrue(validate_metadata(data,ROOT))

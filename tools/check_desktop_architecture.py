@@ -8,7 +8,7 @@ PACKAGES = {
     "skin-editor-audio": ("desktop/audio", {"skin-editor-domain"}),
     "skin-editor-rendering": ("desktop/rendering", {"skin-editor-domain", "wgpu"}),
     "skin-editor-preview": ("desktop/preview", set()),
-    "skin-editor-infrastructure": ("desktop/infrastructure", {"skin-editor-application", "skin-editor-rendering", "skin-editor-audio", "image", "sha2", "cpal", "rtrb", "serde", "serde_json"}),
+    "skin-editor-infrastructure": ("desktop/infrastructure", {"skin-editor-application", "skin-editor-rendering", "skin-editor-audio", "image", "sha2", "cpal", "rtrb", "serde", "serde_json", "getrandom"}),
     "skin-editor-ui": ("desktop/ui", {"skin-editor-application", "egui"}),
     "skin-editor-desktop": ("desktop/host", {"skin-editor-application", "skin-editor-audio", "skin-editor-rendering", "skin-editor-preview", "skin-editor-infrastructure", "skin-editor-ui", "eframe", "pollster", "getrandom", "profiling", "tracing", "winit"}),
 }

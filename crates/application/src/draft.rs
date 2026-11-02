@@ -180,12 +180,16 @@ impl ProjectSession {
                     }
                     .into());
                 }
-                let (project, used, pins) = (
+                let (project, used, pins, operation) = (
                     draft.project.clone(),
                     draft.used.clone(),
                     draft.pins.clone(),
+                    crate::CapturedOperation::transaction(
+                        &draft.commands,
+                        crate::OperationOrigin::Draft,
+                    ),
                 );
-                let result = self.publish(request.request_id, project, used, &pins)?;
+                let result = self.publish(request.request_id, project, used, &pins, operation)?;
                 self.draft = None;
                 return Ok(DraftOutcome::Committed(result));
             }

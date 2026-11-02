@@ -4,6 +4,11 @@
 mod address;
 mod audio_editor;
 mod audio_port;
+mod capture;
+mod capture_contract;
+mod capture_cost;
+mod capture_identity;
+mod capture_operation;
 mod contract;
 mod draft;
 mod draft_contract;
@@ -15,6 +20,12 @@ mod preview_port;
 mod resources;
 pub use audio_editor::*;
 pub use audio_port::*;
+pub use capture::{CaptureSnapshot, HistoryCapture};
+pub use capture_contract::*;
+pub use capture_identity::{
+    AddressEpoch, HistoryIdentitySource, IdentityError, LineageId, PersistentHistoryId,
+    PersistentHistoryIdentity, PersistentNodeId, PersistentNodeReference,
+};
 pub use preview_port::*;
 
 use std::collections::{BTreeMap, BTreeSet};
@@ -152,6 +163,8 @@ pub struct ProjectSession {
     limits: SessionLimits,
     draft: Option<draft::Draft>,
     next_draft_id: u64,
+    persistence: Option<capture_identity::PersistenceMap>,
+    capture_in_flight: Arc<std::sync::atomic::AtomicBool>,
     /// Cancellation tombstones are bounded by the admitted Begin requests.
     cancelled_drafts: BTreeSet<DraftId>,
 }
@@ -205,6 +218,8 @@ impl ProjectSession {
             limits,
             draft: None,
             next_draft_id: 1,
+            persistence: None,
+            capture_in_flight: Arc::default(),
             cancelled_drafts: BTreeSet::new(),
         })
     }
@@ -402,7 +417,13 @@ impl ProjectSession {
 
     fn commit(&mut self, request: &CommandRequest) -> Result<CommandResult, CommandError> {
         let (candidate, used) = self.prepare(request.expected, &request.commands)?;
-        self.publish(request.request_id, candidate, used, &BTreeMap::new())
+        self.publish(
+            request.request_id,
+            candidate,
+            used,
+            &BTreeMap::new(),
+            CapturedOperation::transaction(&request.commands, OperationOrigin::Command),
+        )
     }
 
     fn pin_candidate(
@@ -450,6 +471,7 @@ impl ProjectSession {
         candidate: SkinProject,
         used: BTreeSet<ObjectId>,
         temporary: &BTreeMap<BlobRef, Arc<dyn BlobLease>>,
+        operation: CapturedOperation,
     ) -> Result<CommandResult, CommandError> {
         if candidate == self.project {
             return Ok(CommandResult {
@@ -484,7 +506,9 @@ impl ProjectSession {
             configuration_changed: patch.configuration_changed(),
         };
         // All fallible validation/acquisition is complete before publishing.
-        self.history.append(plan, patch, request_id);
+        let admitted = used.difference(&self.used_ids).copied().collect();
+        self.history
+            .append_record(plan, patch, request_id, operation, admitted);
         self.project = candidate;
         self.state = result.state;
         self.used_ids = used;

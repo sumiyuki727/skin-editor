@@ -4,6 +4,8 @@
 
 ## 当前阅读入口
 
+- [P3-1B完整捕获／身份／租约](P3_1_CAPTURE_REVIEW.md) · [本轮证据](P3_1_CAPTURE_PROOF.json)
+
 - [P3-1A实际状态codec](P3_1_STATE_REVIEW.md) · [schema 1契约](PROJECT_STATE_SCHEMA.md) · [检查证据](P3_1_STATE_PROOF.json)
 - [P3-0最新审阅：地址、Schema与加载](P3_0_LOAD_REVIEW.md) · [本轮证明](P3_0_LOAD_PROOF.json)
 - [P3-0审阅包](P3_0_REVIEW.md) · [身份／文件格式v1](PROJECT_FORMAT_V1.md) · [原型证据](P3_0_PROOF.json)
@@ -35,6 +37,7 @@
 | [ONLINE_ASSETS.md](ONLINE_ASSETS.md) | 未来设计／部分接线 |
 | [PROJECT_STATE_SCHEMA.md](PROJECT_STATE_SCHEMA.md) | P3-1A已实现的内容状态schema；不是完整文件或历史格式 |
 | [P3_1_STATE_REVIEW.md](P3_1_STATE_REVIEW.md) | P3-1A实现、对象／方法与后续范围 |
+| [P3_1_CAPTURE_REVIEW.md](P3_1_CAPTURE_REVIEW.md) | P3-1B完整历史捕获、永久身份、准入／取消与实际原字节释放；尚无正式文件恢复 |
 | [P1_PLAN.md](P1_PLAN.md) | P1阶段记录 |
 | [P1_PROGRESS.md](P1_PROGRESS.md) | 当前契约／入口 |
 | [P2_ACTIVE_EDIT_FAULTS.md](P2_ACTIVE_EDIT_FAULTS.md) | 历史增量／测量 |

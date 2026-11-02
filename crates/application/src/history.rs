@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+use std::sync::Arc;
 
 use skin_editor_domain::{
     Asset, AssetId, AudioComponent, AudioComponentId, ComponentTree, DocumentId, ElementDocument,
@@ -64,6 +65,46 @@ pub(crate) struct Patch {
 }
 
 impl Patch {
+    pub(crate) fn originals(&self) -> impl Iterator<Item = skin_editor_domain::BlobRef> + '_ {
+        self.assets
+            .iter()
+            .flat_map(|c| c.before.iter().chain(c.after.iter()))
+            .map(Asset::blob)
+    }
+
+    pub(crate) fn capture_cost(&self) -> Result<usize, crate::CaptureError> {
+        let mut c = crate::capture_cost::Cost::default();
+        c.count(self.changed.len(), 64)?;
+        for v in &self.assets {
+            for a in v.before.iter().chain(v.after.iter()) {
+                c.asset(a)?;
+            }
+        }
+        for v in &self.documents {
+            for d in v.before.iter().chain(v.after.iter()) {
+                c.document(d)?;
+            }
+        }
+        for v in &self.audio_components {
+            for a in v.before.iter().chain(v.after.iter()) {
+                c.sound(a)?;
+            }
+        }
+        if let Some((a, b)) = &self.components {
+            c.components(a)?;
+            c.components(b)?;
+        }
+        if let Some((a, b)) = &self.configuration {
+            c.configuration(a)?;
+            c.configuration(b)?;
+        }
+        if let Some((a, b)) = &self.outputs {
+            c.outputs(a)?;
+            c.outputs(b)?;
+        }
+        Ok(c.bytes())
+    }
+
     pub fn between(old: &SkinProject, new: &SkinProject) -> Self {
         let assets = changes(
             old.assets().iter().map(|a| (a.id(), a.clone())).collect(),
@@ -143,7 +184,7 @@ impl Patch {
         SkinProject::from_definition(input)
     }
 
-    fn apply_definition(&self, input: &mut ProjectDefinition, forward: bool) {
+    pub(crate) fn apply_definition(&self, input: &mut ProjectDefinition, forward: bool) {
         for change in &self.assets {
             input.assets.retain(|a| a.id() != change.id);
             input.assets.extend(
@@ -194,7 +235,9 @@ impl Patch {
 
 pub(crate) struct Node {
     pub parent: Option<NodeId>,
-    pub patch: Option<Patch>,
+    pub patch: Option<Arc<Patch>>,
+    pub operation: Arc<crate::CapturedOperation>,
+    pub admitted: Arc<[ObjectId]>,
     pub request: Option<RequestId>,
     pub children: Vec<NodeId>,
     pub depth: u64,
@@ -228,6 +271,8 @@ impl History {
             Node {
                 parent: None,
                 patch: None,
+                operation: Arc::new(crate::CapturedOperation::root()),
+                admitted: Arc::from([]),
                 request: None,
                 children: Vec::new(),
                 depth: 0,
@@ -282,7 +327,25 @@ impl History {
     }
 
     /// Called only after all validation and resource pinning succeeds.
+    #[cfg(test)]
     pub fn append(&mut self, plan: AppendPlan, patch: Patch, request: RequestId) {
+        self.append_record(
+            plan,
+            patch,
+            request,
+            crate::CapturedOperation::root(),
+            Vec::new(),
+        );
+    }
+
+    pub fn append_record(
+        &mut self,
+        plan: AppendPlan,
+        patch: Patch,
+        request: RequestId,
+        operation: crate::CapturedOperation,
+        admitted: Vec<ObjectId>,
+    ) {
         self.nodes
             .get_mut(&plan.parent)
             .expect("validated parent")
@@ -293,7 +356,9 @@ impl History {
             plan.id,
             Node {
                 parent: Some(plan.parent),
-                patch: Some(patch),
+                patch: Some(Arc::new(patch)),
+                operation: Arc::new(operation),
+                admitted: admitted.into(),
                 request: Some(request),
                 children: Vec::new(),
                 depth: plan.depth,
@@ -347,7 +412,7 @@ impl History {
             configuration_changed: node
                 .patch
                 .as_ref()
-                .is_some_and(Patch::configuration_changed),
+                .is_some_and(|p| p.configuration_changed()),
         })
     }
     pub fn materialize(&self, id: NodeId) -> Result<SkinProject, HistoryQueryError> {

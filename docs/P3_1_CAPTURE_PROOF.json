@@ -1,0 +1,178 @@
+{
+  "evidence_schema": 1,
+  "phase": "P3-1B",
+  "date": "2026-11-02",
+  "status": "capture-identity-and-original-lease-foundation-checked; no formal save/open",
+  "checkpoint_commit": "6972c555a6a1f9fa63951380069cdf3e65b094c2",
+  "git_policy": "P3-1A checkpoint committed at turn start with normal hook; current increment left unstaged/uncommitted; no push",
+  "contracts": {
+    "application_api": 6,
+    "model_version": 2,
+    "history_capture_version": 1,
+    "operation_summary_version": 1,
+    "state_schema": 1,
+    "formal_file_profile": null,
+    "persistent_identity_bits": 128,
+    "max_k_characters": 26,
+    "hp1_characters": 102
+  },
+  "checks": [
+    {
+      "entry": "tools/check_core.py",
+      "status": "pass",
+      "log": "check-core-final.log",
+      "tool_tests": 417,
+      "new_capture_integration_tests": 12,
+      "new_capture_private_unit_tests": 3
+    },
+    {
+      "entry": "tools/check_desktop.py",
+      "status": "pass",
+      "features": [
+        "default",
+        "all-features"
+      ],
+      "log": "check-desktop.log",
+      "scope": "followed by current-source affected-package checks"
+    },
+    {
+      "entry": "final infrastructure fmt / Clippy / capture+state tests",
+      "status": "pass",
+      "log": "desktop-final.log",
+      "capture_tests": 2,
+      "state_tests": 14
+    },
+    {
+      "entry": "first test-style Clippy check",
+      "status": "failed-then-fixed",
+      "log": "check-core.log",
+      "resolution": "collapse two nested if expressions; thresholds/check policy unchanged"
+    },
+    {
+      "entry": "tools/check_repository.py",
+      "status": "pass",
+      "candidate_files": 727,
+      "log": "repository.log"
+    },
+    {
+      "entry": "local links / source hashes / diff whitespace / empty index",
+      "status": "pass",
+      "local_links": 303,
+      "log": "final-audit.json"
+    }
+  ],
+  "capture_scope": [
+    "all nodes and branches",
+    "immutable per-node full state output",
+    "stable permanent history/node identities separate from local aliases",
+    "first-admission ledger including transient and removed objects",
+    "head and fork redo preferences",
+    "all unique historical original refs and independent shared leases",
+    "runtime capture source separate from persistent identity",
+    "completion marker only after complete traversal"
+  ],
+  "asserted_cases": {
+    "deep_nodes": 10001,
+    "forward_edges": 10000,
+    "reverse_edges": 10000,
+    "real_blob_cancel_cycles": 20,
+    "media_allocations_duplicated_by_capture": false,
+    "media_budget_zero_after_final_owner": true,
+    "worker_patch_weak_refs_expire_after_cancel_or_failure": true,
+    "old_branches_and_states_unchanged": true,
+    "only_successful_start_admits_permanent_identity_mapping": true,
+    "cancel_after_admission_keeps_permanent_ids": true,
+    "active_capture_capacity_per_session": 1,
+    "slot_waits_for_final_snapshot_owner": true
+  },
+  "limits": {
+    "nodes": 65536,
+    "object_ids": 262144,
+    "originals": 4096,
+    "original_bytes": 134217728,
+    "retained_metadata_logical_bytes": 33554432,
+    "state_logical_bytes": 8388608,
+    "total_emitted_state_logical_bytes": 536870912,
+    "max_edges_per_poll": 1024,
+    "policy": "logical/conservative admission; original physical allocation managed separately by BlobStore; not process memory measurement"
+  },
+  "dependency_delta": {
+    "infrastructure_direct_getrandom": "=0.4.3",
+    "new_locked_packages": 0,
+    "new_package_versions": 0,
+    "core_external_dependencies": 0,
+    "purpose": "OS entropy candidates via application port; deterministic tests use controlled sources"
+  },
+  "platform": "Windows offline non-native checks; Linux/macOS not run",
+  "not_implemented": [
+    "formal file save/open and full-history disk restore",
+    "binding original node state/action bytes to file records",
+    "full-file candidate validation and runtime identity rehydration",
+    "Rust SQLite adapter and initial publish",
+    "real manual/protective checkpoints or tag editing",
+    "autosave/preferences/export"
+  ],
+  "not_measured": [
+    "GUI freeze/capture-start latency",
+    "OS entropy latency",
+    "disk I/O or whole-process memory/CPU budget",
+    "capture with native graphics/audio load"
+  ],
+  "preservation": {
+    "baseline_files": 717,
+    "changed": [
+      "README.md",
+      "crates/application/src/draft.rs",
+      "crates/application/src/history.rs",
+      "crates/application/src/lib.rs",
+      "desktop/Cargo.lock",
+      "desktop/infrastructure/Cargo.toml",
+      "desktop/infrastructure/src/lib.rs",
+      "docs/ARCHITECTURE.md",
+      "docs/DATA_COMPATIBILITY.md",
+      "docs/INDEX.md",
+      "docs/P3_1_STATE_REVIEW.md",
+      "docs/PROJECT_FORMAT_V1.md",
+      "docs/ROADMAP.md",
+      "docs/TECH_STACK.md",
+      "docs/review/README.md",
+      "tools/check_desktop_architecture.py",
+      "tools/test_check_desktop_architecture.py"
+    ],
+    "missing": [],
+    "protected_count": 151,
+    "protected_unchanged": true,
+    "frozen_p2_sha256": "07852b969bdd88153a79e2e185a29548dc9844038fb7f9639ec71860a15fada8"
+  },
+  "source_sha256": {
+    "crates/application/src/lib.rs": "20f2f90fdb8e412100cd42af818f168004c820eb23b8aabd17d42fc7e89af39b",
+    "crates/application/src/history.rs": "67e91f6b7bda1c266190543ac32b5aaed2dfea8be260e8cc0b0f9224109123fb",
+    "crates/application/src/draft.rs": "d7fac9f0a44de2acfd93250e92f95c0bced216f21c91b2e748a1a125db53a55d",
+    "crates/application/tests/capture.rs": "fb7ae5e2353562146529f3d3ce3ff9317166021b0ab12594c9258d8743029c43",
+    "desktop/infrastructure/Cargo.toml": "5947deda86740a3aa0cea8debf627ca7525308b175a0d61dfd66605302969d92",
+    "desktop/Cargo.lock": "4b490c45b8cffe89bb2020a64a91eca41615c46239753ee3dcbcd9527594e472",
+    "desktop/infrastructure/src/lib.rs": "793a6dfa5c1b4a6442f0f958d9ae29cbeab91ff7bf7674954c4503940c508c93",
+    "desktop/infrastructure/src/project_identity.rs": "ca3708dcb9d6e01edc5e48a4e8495cdaeacf31a217357cc05347bd52be31de70",
+    "desktop/infrastructure/tests/project_capture.rs": "7e90de5d67fe8497d97268019c21849812edfe522e7cf731fe2f023d7abda3cc",
+    "tools/check_desktop_architecture.py": "8602ac2ea685badb8666253ebf105f4ab16a481415a0ef645679e3439a5f2918",
+    "tools/test_check_desktop_architecture.py": "3352f0ba9914997ad74192dd030785a78c1ae9a8d6ae35ce8511b43b67e26b7d",
+    "crates/application/src/capture.rs": "92d6a4543daf3a514880cddde4236a4c958cec4957cbf8a0f15b180a7039ced1",
+    "crates/application/src/capture_contract.rs": "4ec596e0c7af7ace01dc24dab6078f1caf3569fb05dd7d1fb907b620a295f1bc",
+    "crates/application/src/capture_cost.rs": "2b3b708d1bd478eb62aaeed9b9e6a4aa808607db2c6e7c51219801bcb2afdd8d",
+    "crates/application/src/capture_identity.rs": "903bd57de7a590a1e70cb9d08f4d6caaa753cf4db77266f7f3b58eaa90f0521e",
+    "crates/application/src/capture_operation.rs": "e7d679eb633e4c1c8acff12c40ce9236b896d81b05e47b0a5e71a3141fc90a0e"
+  },
+  "log_directory": "artifacts/p3-1/20261102-capture",
+  "log_sha256": {
+    "checkpoint.log": "89171af557d0c5f8995c5b9dee2e018376c48f97ff4b4260b0e8111196c85559",
+    "check-core.log": "0bee7b91b2e0d162cc0c303409048e17f90bbc64891ec1abed4963506a06757a",
+    "check-core-r2.log": "d84fe6d8ab30f94d4058f496ea39bf1efe934d5a1739e5f5baa621cf8478762e",
+    "check-core-final.log": "5cc5a47d36a7e6fe00ecb0c21deadd60b1a57be5b37ab9cd54dc83b84c4299a1",
+    "check-desktop.log": "bf1d00e1cddc8c9a629c712db06e5daa0c4830521ac22060418d41b1ec7520f3",
+    "core-final.log": "9ce1bd12990fbc3f5383389668a28d7af4c434e2c6806775d196027c88c163c0",
+    "desktop-final.log": "1a5b5eb64d2dd46cb01adf109167add195c6e821b44a15b1cd25477f74fc6363",
+    "preservation.json": "24a369969373a3671848799fed8d111c0e0f6b1f0f59fdb94a4baed801a871ea",
+    "repository.log": "e21def63715359c64893aebf741e0a3ddd197ec709b281421a437be16ba1f936",
+    "final-audit.json": "e9b964849b88fcce57241b11cb30a8dfb6bf9f2d07845becbfa8350de10b197a"
+  }
+}

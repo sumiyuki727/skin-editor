@@ -2500,6 +2500,7 @@ name = "skin-editor-infrastructure"
 version = "0.1.0"
 dependencies = [
  "cpal",
+ "getrandom 0.4.3",
  "image",
  "rtrb",
  "serde",

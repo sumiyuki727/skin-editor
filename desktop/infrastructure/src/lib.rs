@@ -10,9 +10,11 @@ pub mod background_stream;
 mod callback_audit;
 /// Versioned detached project-state blocks; no active-session or filesystem writer.
 pub mod project_format;
+mod project_identity;
 pub use audio_supply::{
     AudioSupplyClient, MAX_SUPPLY_CONTROLS, SupplyError, SupplyOutcome, SupplyReceipt, SupplyStatus,
 };
+pub use project_identity::RandomHistoryIdentities;
 mod native_audio;
 mod output_fence;
 /// CPAL executor used by the current Windows policy; other platforms remain unverified.

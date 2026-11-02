@@ -10,7 +10,7 @@
 | 图像 | image =0.25.10，仅PNG feature | 资源准备与CPU/GPU共享合成语义；不宣称完整stable图片格式支持 |
 | 原生音频 | CPAL =0.18.2、rtrb =0.4.0 | Windows普通组装使用分离背景／声音路径；其他平台未验，真实输出端点变化硬件后补 |
 | 解码 | 产品内有界PCM16 WAV解析器 | 44.1／48 kHz、单／双声道监听；Symphonia仅在P0独立实验，未加入产品 |
-| 其他 | sha2 =0.10.9、pollster =1.0.1、getrandom =0.4.3 | 实际摘要、初始化等待、宿主会话身份，不将随机／设备能力引入domain |
+| 其他 | sha2 =0.10.9、pollster =1.0.1、getrandom =0.4.3 | 实际摘要、初始化等待、宿主会话身份及infrastructure捕获身份源；不将随机／设备能力引入domain或application |
 | 状态codec（2026-11-02） | serde =1.0.229（std）、serde_json =1.0.154（std／float_roundtrip） | 仅infrastructure；默认feature关闭，有界Visitor及显式schema，不序列化领域布局；纯Rust，Windows离线检查通过，其他平台未实测 |
 | 可选诊断 | profiling =1.0.18、tracing =0.1.44、winit =0.30.13 | host的framework-trace默认关闭；有界观察成本不得从产品CPU估算扣除 |
 
@@ -25,6 +25,8 @@
 128 MiB原始字节、80 MiB RGBA、32 MiB PCM、工作区／预览大小等均为目前实现／资源策略，不是未经验证的stable规则。P3前要决定实际项目规模／超限素材的保留与导出策略，见[待讨论决定](review/DECISIONS.md)。
 
 ## 后续重审条件
+
+P3-1B为infrastructure增加已锁定getrandom的直接边，实现application定义的永久身份候选源；没有新增包或版本。完整捕获与原字节租约见[审阅](P3_1_CAPTURE_REVIEW.md)，OS熵延迟与GUI冻结阶段尚未实测；本轮不以逻辑准入替代整进程内存测量。
 
 P3-0审阅修订2采用同一SQLite容器路线，增加独立地址绑定、Schema表示、完整索引检查及流式读取；两引擎同文件对照见[加载审阅](P3_0_LOAD_REVIEW.md)。该工具增量未新增Cargo依赖，结果仍限Windows本机原型。
 

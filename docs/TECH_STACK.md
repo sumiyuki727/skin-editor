@@ -27,6 +27,8 @@
 
 ## 后续重审条件
 
+2026-11-03的[恢复增量](P3_1_RECOVERY_REVIEW.md)没有增加依赖或线程：Windows使用std文件只读独占共享句柄，已有sha2计算流式摘要，SQLite仅在物理副本回滚，same-file核对身份／源sidecar目标别名。其他平台缺少验证后的冻结原语时明确Unsupported。复制需要额外完整文件／日志磁盘空间及有界验证成本，不能把逻辑配额／租约释放测试当作峰值预算或断电证明。
+
 P3-1C在桌面锁文件新增rusqlite、libsqlite3-sys、fallible-iterator、fallible-streaming-iterator、vcpkg五个包，same-file原已间接锁定；没有顺带升级其他包。SQLite／连接、受限JSON、摘要及完整模型恢复均有内存／CPU成本，见[审阅](P3_1_STORAGE_REVIEW.md)，逻辑配额不替代进程实测。Bundled避免依赖用户安装不同SQLite版本，但增加C编译、上游安全更新及分发许可审查责任；最终打包前还须验证目标平台VFS、硬链接／断电恢复和第三方声明。核心继续零第三方依赖。
 
 P3-1B为infrastructure增加已锁定getrandom的直接边，实现application定义的永久身份候选源；没有新增包或版本。完整捕获与原字节租约见[审阅](P3_1_CAPTURE_REVIEW.md)，OS熵延迟与GUI冻结阶段尚未实测；本轮不以逻辑准入替代整进程内存测量。

@@ -573,6 +573,10 @@ fn run(
     {
         return Err(StorageError::Limit("file bytes"));
     }
+    #[cfg(test)]
+    if probe.pause_at == Some(Stage::BeforeCommit) {
+        tx.conn.cache_flush()?;
+    }
     probe.step(Stage::BeforeCommit, &request.cancellation)?;
     tx.commit()
         .map_err(|_| StorageError::OutcomeUnknown(request.commit))?;

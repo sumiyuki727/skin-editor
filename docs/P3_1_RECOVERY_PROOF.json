@@ -1,0 +1,205 @@
+{
+  "evidence_schema": 1,
+  "phase": "P3-1C recovery supplement",
+  "date": "2026-11-03",
+  "status": "passed controlled recovery, full core and desktop default/all-feature checks; review increment only, no formal save/open UI",
+  "checkpoint_commit": "bd3b6262d2a39830d3c94c4c81227cb5725a1700",
+  "checkpoint_remote": "private sumiyuki727/skin-editor, codex/p1-bootstrap; normal fast-forward SHA verified",
+  "git_policy": "previous increment checked, committed via normal hook and pushed at turn start; current recovery increment remains unstaged and uncommitted",
+  "contracts": {
+    "recovery_report": 1,
+    "file_profile": "skin-editor-rust-v1",
+    "container": 2,
+    "project_schema": 1,
+    "history_schema": 2,
+    "node_record": 2,
+    "state_schema": 1,
+    "capture_port": 2,
+    "archive_port": 1,
+    "application_api": 6,
+    "model": 2,
+    "new_dependencies": []
+  },
+  "checks": [
+    {
+      "entry": "checkpoint normal pre-commit hook",
+      "status": "pass",
+      "scope": "previous full-history storage increment only",
+      "log": {
+        "path": "artifacts/p3-1/20261103-recovery/checkpoint.log",
+        "sha256": "bc3c0d14479ff2794b27a79844ed229d268357ba31010b4cc3b95eb8312b4a4b"
+      }
+    },
+    {
+      "entry": "targeted infrastructure fmt, all-feature/all-target Clippy and controlled recovery tests",
+      "status": "pass",
+      "tests": 16,
+      "behavior_tests": 15,
+      "child_entry_tests": 1,
+      "log": {
+        "path": "artifacts/p3-1/20261103-recovery/process-final.log",
+        "sha256": "a53d9cb087be246bf992feaf37f52f71860596b91ea7c3f021c5e2afee82bb79"
+      }
+    },
+    {
+      "entry": "tools/check_core.py",
+      "status": "pass",
+      "python_tool_tests": 418,
+      "log": {
+        "path": "artifacts/p3-1/20261103-recovery/core-final.log",
+        "sha256": "9e0e8d3acfabf806fcc68e105ad54d10eaea2ca08c0a7aa99a73a102f7bb16a6"
+      }
+    },
+    {
+      "entry": "tools/check_desktop.py",
+      "status": "pass",
+      "scope": "default and all-features; no native options",
+      "log": {
+        "path": "artifacts/p3-1/20261103-recovery/desktop-final.log",
+        "sha256": "7ab7af42025499b4871b50b650613ec556f78f01f8e2338f44f2ff648436b76e"
+      },
+      "infrastructure_unit_tests_each_feature_set": 205,
+      "storage_integration_tests_each_feature_set": 6,
+      "ten_thousand_deep_file_roundtrip_each_feature_set": true,
+      "ordinary_desktop_build": true
+    },
+    {
+      "entry": "tools/check_repository.py",
+      "status": "pass",
+      "candidate_files": 747,
+      "log": {
+        "path": "artifacts/p3-1/20261103-recovery/repository-final.log",
+        "sha256": "85121e381507c349447f80d9ba02d0d21e0d184272d1ac0a9784df26e7ab07ef"
+      }
+    },
+    {
+      "entry": "changed document relative links",
+      "status": "pass",
+      "documents": 10,
+      "relative_links": 304,
+      "log": {
+        "path": "artifacts/p3-1/20261103-recovery/document-links.json",
+        "sha256": "8df21465bbaaf3c53dd6b7e03fbb9ef0f4968d4d6788e023b13c2f62907d9c06"
+      }
+    },
+    {
+      "entry": "exact changed-path, no staged bytes, no deletions or runtime/dependency changes",
+      "status": "pass",
+      "log": {
+        "path": "artifacts/p3-1/20261103-recovery/change-boundaries.log",
+        "sha256": "b0f0b5ae8785b160fdacbf96fed7c693835e8428949430c4f740cc43c77dcdff"
+      }
+    },
+    {
+      "entry": "preservation against 741-file pre-checkpoint snapshot",
+      "status": "pass",
+      "log": {
+        "path": "artifacts/p3-1/20261103-recovery/preservation.json",
+        "sha256": "7887d06d9cfeda3d2db138ce9c171617eda8c096fca2ca7a6e7d83f751c3f180"
+      }
+    }
+  ],
+  "regressions": [
+    "real process termination before commit restores the old durable full tree from a physical copy; original database and hot journal untouched",
+    "real process termination after commit recovers the new transaction and lost acknowledgement; all old permanent IDs and checksums retained",
+    "first publish interrupted before or after non-overwriting hard-link publication remains recoverable",
+    "recovery interrupted after copying journal, after full validation, and after publication preserves source and leaves diagnostic orphans unchanged on retry",
+    "branch-only originals and pending new originals retained; Manual and Latest choose different heads while both keep all nodes",
+    "live writer Busy, can resume; an existing adapter refuses known hot journal before SQL inspection",
+    "16 fail/cancel combinations across eight recovery stages release raw budget, owned scratch and actual exclusive file handles",
+    "corrupt unselected branch and malformed journal refused without pruning",
+    "limits, pre-cancel, WAL, super-journal and existing or source-sidecar destinations refused",
+    "postpublication fault or cancel yields OutcomeUnknown; cleanup failure yields explicit RecoveryCleanup and retained diagnostic residue",
+    "20 repeated recover/drop cycles reuse shared originals without early release; final anchor drop returns raw bytes to zero"
+  ],
+  "controlled_process_harness": {
+    "platform": "Windows",
+    "gate": "owned child stdin/stdout with per-child random nonce and exact stage",
+    "ready_timeout_seconds": 30,
+    "sleep_to_guess_races": false,
+    "test_only_cache_flush_before_commit": true,
+    "terminates_only_owned_test_children": true
+  },
+  "resource_policy": {
+    "stream_chunk_bytes": 65536,
+    "journal_max_input": "2 * file_bytes + 1 MiB",
+    "journal_record_metadata_admission": "min(file_bytes / 4096, metadata_bytes / 32)",
+    "raw_allocation": "existing shared BlobStore budget and actual leases; raw original bytes only",
+    "measured_product_peak_cpu_memory_or_disk": false
+  },
+  "limitations": [
+    "Windows local filesystem source-freezing primitive only; Linux/macOS explicitly Unsupported and untested",
+    "process interruption is not physical power-loss, torn-sector or directory-durability proof",
+    "uncommitted in-memory edits are not guaranteed by file rollback; formal autosave and exit protection not connected",
+    "no automatic orphan discovery, cleanup, salvage by pruning or in-place recovery",
+    "WAL, super-journals, unknown/torn journal forms refused and retained",
+    "no large-media recovery latency, whole-process peak-memory, network VFS or true disk-full validation",
+    "no formal save/open/recovery UI, SaveAs identity branching, schema converter, tag-edit transactions, preferences or skin export",
+    "no GPU, native audio, GUI, UAC or P2 budget remeasurement"
+  ],
+  "fixed_regression": {
+    "issue": "destination equal to a source -journal name could create a source sidecar from a clean source",
+    "scope": "self-authored temporary test only",
+    "before_fix_log": {
+      "path": "artifacts/p3-1/20261103-recovery/sidecar-before-fix.log",
+      "sha256": "2b3e005b5767d7fd9d9f798f1ed007015fc0dc9fba1d3095292b05672e5f8d2f"
+    },
+    "resolution": "reject source sidecar namespace using same-file prefix identity, ASCII case and Windows trailing dot/space handling"
+  },
+  "preservation": {
+    "baseline_files": 741,
+    "changed": [
+      "README.md",
+      "desktop/infrastructure/src/project_storage/mod.rs",
+      "desktop/infrastructure/src/project_storage/schema.rs",
+      "desktop/infrastructure/src/project_storage/tests.rs",
+      "desktop/infrastructure/src/project_storage/write.rs",
+      "docs/ARCHITECTURE.md",
+      "docs/DATA_COMPATIBILITY.md",
+      "docs/GIT_WORKFLOW.md",
+      "docs/INDEX.md",
+      "docs/P3_1_STORAGE_REVIEW.md",
+      "docs/ROADMAP.md",
+      "docs/TECH_STACK.md",
+      "docs/review/README.md"
+    ],
+    "missing": [],
+    "unchanged_old_proofs": 85,
+    "old_proof_changes": [],
+    "frozen_p2_sha256": "07852b969bdd88153a79e2e185a29548dc9844038fb7f9639ec71860a15fada8"
+  },
+  "canonical_source_note": "schema.rs was CRLF in the previous Windows working snapshot and normalized to LF; current bytes match HEAD canonically, no Git content diff and Rust input CRLF normalization leaves the DDL unchanged; old proof hashes not rewritten",
+  "source_sha256": {
+    "desktop/infrastructure/src/project_storage/blocks.rs": "df3d6164bcccf693bca83f00fd5f3d4e584364ce173394dd5b9bfdc8777723b7",
+    "desktop/infrastructure/src/project_storage/mod.rs": "9639960bc78f5e95893112d57101789180d96ac2baea5e9a466cd7a941c72b1e",
+    "desktop/infrastructure/src/project_storage/read.rs": "ec943dd206a5748124eb296b75bd5d087b2eb9c3dd1098579f0524a99dfd5cf9",
+    "desktop/infrastructure/src/project_storage/recovery/journal.rs": "04b2c5625f85af5dc849b814a0a4e6c67d281a0a414c428c85adc1729ca621ed",
+    "desktop/infrastructure/src/project_storage/recovery/mod.rs": "c267d2019b75aeeb03cbd395d139a1464a4a3cf8fee3077cbd20c563ecc788b2",
+    "desktop/infrastructure/src/project_storage/recovery/source.rs": "123c56eae90fc8b1bfb9730c57cf95861ee97e4e56be5fbb3a46f94886d2265b",
+    "desktop/infrastructure/src/project_storage/schema.rs": "713f3850740db024c4b861327de560f4eb81f5820980d1f89672dcdcfd499125",
+    "desktop/infrastructure/src/project_storage/tests/recovery_process.rs": "0e388d770e4bd64566c044ea51724c1395e33ca77c9ab1f85c4cd38370e21799",
+    "desktop/infrastructure/src/project_storage/tests.rs": "5fb97076d60bdeb2e8ddb97ce29b2d027b53c51437e49ce09f44f4a1bcba2a91",
+    "desktop/infrastructure/src/project_storage/values.rs": "b84d57ca1f4de0d4a4cd23993b64cd310d253299ac5cc4fdacbb883503b998c5",
+    "desktop/infrastructure/src/project_storage/write.rs": "b18cfd56e331ec18811340b95bf57f2204d66256ef30d6839d03aae30dd6f664"
+  },
+  "build_environment": {
+    "platform": "Windows x86_64 MSVC",
+    "rust": "1.95.0",
+    "incremental_compilation": false,
+    "reason": "bound rebuildable cache growth only; no product code/profile/feature or acceptance-policy change",
+    "offline_locked": true
+  },
+  "source_references": [
+    "https://www.sqlite.org/lockingv3.html",
+    "https://www.sqlite.org/fileformat2.html#the_rollback_journal",
+    "https://www.sqlite.org/c3ref/db_cacheflush.html",
+    "https://doc.rust-lang.org/std/os/windows/fs/trait.OpenOptionsExt.html",
+    "https://doc.rust-lang.org/reference/input-format.html#r-input.crlf"
+  ],
+  "git_final": {
+    "head": "bd3b6262d2a39830d3c94c4c81227cb5725a1700",
+    "staged_paths": [],
+    "current_increment_committed": false,
+    "current_increment_pushed": false
+  }
+}

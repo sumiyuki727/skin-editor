@@ -2,6 +2,8 @@
 
 2026-11-02。已加入 infrastructure 的 Rust SQLite 适配及 application 管理的脱离活动会话恢复。**普通桌面仍是内存编辑器，没有正式保存／打开 UI、自动保护、退出补存或皮肤导出。** 本增量供审阅，不把独立文件测试当作这些产品流程已完成。
 
+2026-11-03补充：[热日志与进程中断恢复](P3_1_RECOVERY_REVIEW.md)新增Windows原件冻结／副本回滚／完整验证及真实进程终止测试。下文“尚未验证进程强杀”是本篇初轮范围；物理断电、其他平台和正式恢复UI仍未完成，旧证明保持原样。
+
 本轮开始的 P3-1B 回退点为 `8cb882e1389f955f95b6059431fd0c7025adad9e`，现已上传私有 GitHub。Git 管理和空间清理见 [GIT_WORKFLOW.md](GIT_WORKFLOW.md)。原 P2／P3 证明、黄金向量及冻结程序没有改写；新检查日志和源码摘要另见 [P3_1_STORAGE_PROOF.json](P3_1_STORAGE_PROOF.json)。
 
 ## 对象、方法、依赖和所有权

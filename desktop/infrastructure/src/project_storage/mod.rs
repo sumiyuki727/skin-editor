@@ -1,6 +1,7 @@
 //! Rust archive profile. No UI or active project write access.
 mod blocks;
 mod read;
+mod recovery;
 mod schema;
 mod values;
 mod write;
@@ -8,6 +9,9 @@ use crate::project_format::{
     CodecError, FormatLimits, StateBlock, StateBundle, StateHash, decode_project, encode_project,
 };
 use crate::{BlobStore, RawBlob};
+pub use recovery::{
+    RECOVERY_VERSION, RecoveredArchive, RecoveryDigest, RecoveryMode, RecoveryReport,
+};
 use rusqlite::{Connection, params};
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
@@ -67,6 +71,10 @@ pub enum StorageError {
     Codec(CodecError),
     MissingOriginal(BlobRef),
     OutcomeUnknown(CommitId),
+    RecoveryCleanup {
+        token: u128,
+        cause: Box<StorageError>,
+    },
 }
 impl From<rusqlite::Error> for StorageError {
     fn from(e: rusqlite::Error) -> Self {
@@ -145,14 +153,36 @@ enum Stage {
     AfterPublish,
     ReadOriginal,
     ReadNodes,
+    CopyMain,
+    CopyJournal,
+    BeforeRecovery,
+    AfterRecovery,
+    RecoveryValidated,
 }
 #[derive(Clone, Copy, Default)]
 struct Probe {
     fault: Option<Stage>,
     cancel_at: Option<Stage>,
+    #[cfg(test)]
+    pause_at: Option<Stage>,
+    #[cfg(test)]
+    fail_cleanup: bool,
 }
 impl Probe {
     fn step(self, stage: Stage, cancel: &CaptureCancellation) -> Result<(), StorageError> {
+        #[cfg(test)]
+        if self.pause_at == Some(stage) {
+            use std::io::Write;
+            let token = std::env::var("SKIN_EDITOR_STORAGE_CHILD_NONCE")
+                .map_err(|_| StorageError::Invalid("test gate token"))?;
+            println!("READY:{token}");
+            std::io::stdout().flush().map_err(io)?;
+            let mut line = String::new();
+            std::io::stdin().read_line(&mut line).map_err(io)?;
+            if line.trim() != "go" {
+                return Err(StorageError::Io);
+            }
+        }
         if self.cancel_at == Some(stage) {
             cancel.cancel();
         }
@@ -345,6 +375,8 @@ impl SqliteProjectFile {
         if self.invalid {
             return Err(StorageError::Invalidated);
         }
+        // Do not ask SQLite to inspect a known pending source journal.
+        sidecars(&self.path)?;
         if !self.stamp.matches(&self.path)?
             || self
                 .conn

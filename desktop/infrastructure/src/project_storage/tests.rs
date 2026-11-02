@@ -194,11 +194,13 @@ fn all_precommit_faults_and_cancellation_leave_old_file_exactly_readable() {
                 Probe {
                     cancel_at: Some(stage),
                     fault: None,
+                    ..Probe::default()
                 }
             } else {
                 Probe {
                     fault: Some(stage),
                     cancel_at: None,
+                    ..Probe::default()
                 }
             };
             let error = write::existing(
@@ -239,6 +241,7 @@ fn committed_but_unacknowledged_write_is_resolved_by_id_after_reopen() {
         Probe {
             fault: Some(Stage::AfterCommit),
             cancel_at: None,
+            ..Probe::default()
         },
     )
     .unwrap_err();
@@ -281,6 +284,7 @@ fn first_publication_is_non_overwriting_and_temp_failure_has_no_half_file() {
             Probe {
                 fault: Some(stage),
                 cancel_at: None,
+                ..Probe::default()
             },
         )
         .unwrap_err();
@@ -336,6 +340,7 @@ fn cancel_during_original_and_state_validation_releases_leases_without_touching_
             Probe {
                 cancel_at: Some(stage),
                 fault: None,
+                ..Probe::default()
             },
         )
         .err()
@@ -769,3 +774,6 @@ fn unsupported_metadata_edits_are_rejected_instead_of_silently_discarded() {
         assert_eq!(before, digest(&dir.file()));
     }
 }
+
+#[cfg(windows)]
+mod recovery_process;

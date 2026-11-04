@@ -47,17 +47,8 @@ impl SyntheticRun {
             if self.failure.is_some() || self.mode != ControlMode::Running {
                 return Err(RunError::GateClosed);
             }
-            if self.sealed.is_some_and(|sealed| input.at <= sealed) {
-                return Err(self.fail(RunError::LateInput));
-            }
-            if input.at < self.start {
-                return Err(self.fail(RunError::InputBeforeStart));
-            }
             added[new_len] = Some(input);
             new_len += 1;
-        }
-        if self.input_len + new_len > self.limits.inputs {
-            return Err(self.fail(RunError::InputCapacity));
         }
 
         // A bounded batch (at most 64), ordered before any queue/window write.
@@ -76,13 +67,29 @@ impl SyntheticRun {
         // batch, captured releases arm only later sequence numbers; rejection
         // cannot leave half the batch or half its arming changes behind.
         let mut armed_after = self.armed;
+        let mut armed_from_after = self.armed_from;
         for input in added[..new_len].iter().flatten() {
             let slot = input.slot.index();
-            match input.edge {
-                InputEdge::Release => armed_after[slot] = true,
-                InputEdge::Press(_) if !armed_after[slot] => return Err(RunError::RearmRequired),
-                InputEdge::Press(_) => {}
+            // A quarantined key has no admission permission yet. Its repeat
+            // must not turn a valid queued prefix into a time/capacity fault.
+            if matches!(input.edge, InputEdge::Press(_))
+                && (!armed_after[slot] || armed_from_after[slot].is_some_and(|at| input.at < at))
+            {
+                return Err(RunError::RearmRequired);
             }
+            if self.sealed.is_some_and(|sealed| input.at <= sealed) {
+                return Err(self.fail(RunError::LateInput));
+            }
+            if input.at < self.start {
+                return Err(self.fail(RunError::InputBeforeStart));
+            }
+            if matches!(input.edge, InputEdge::Release) && !armed_after[slot] {
+                armed_after[slot] = true;
+                armed_from_after[slot] = Some(input.at);
+            }
+        }
+        if self.input_len + new_len > self.limits.inputs {
+            return Err(self.fail(RunError::InputCapacity));
         }
         for input in added[..new_len].iter().flatten().copied() {
             let mut at = self.input_len;
@@ -101,6 +108,7 @@ impl SyntheticRun {
             self.highest_input = input.sequence.get();
         }
         self.armed = armed_after;
+        self.armed_from = armed_from_after;
         Ok(Admission {
             added: new_len,
             repeated,

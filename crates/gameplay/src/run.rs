@@ -330,6 +330,9 @@ pub struct SyntheticRun {
     replay_next: usize,
     held: [bool; 4],
     armed: [bool; 4],
+    // A timed release cannot authorize a gameplay edge earlier than itself.
+    // Initial/untimed arming has no extra floor beyond the ordinary seal.
+    armed_from: [Option<MapTime>; 4],
     mode: ControlMode,
     freeze_info: Option<FreezeInfo>,
     cancelled_sound_through: u64,
@@ -358,7 +361,9 @@ impl SyntheticRun {
     /// Upper bound for the fixed owned storage plus bounded admission scratch.
     /// This is not a process memory or native stack measurement.
     pub const fn static_storage_bytes() -> usize {
-        core::mem::size_of::<Self>() + core::mem::size_of::<[Option<InputEvent>; MAX_INPUTS]>()
+        core::mem::size_of::<Self>()
+            + core::mem::size_of::<[Option<InputEvent>; MAX_INPUTS]>()
+            + core::mem::size_of::<([bool; 4], [Option<MapTime>; 4])>()
     }
     pub fn new(
         source: RunSource,
@@ -393,6 +398,7 @@ impl SyntheticRun {
             replay_next: 0,
             held: [false; 4],
             armed: [true; 4],
+            armed_from: [None; 4],
             mode: ControlMode::Running,
             freeze_info: None,
             cancelled_sound_through: 0,
@@ -514,6 +520,7 @@ impl SyntheticRun {
             self.active = None;
             self.work = Work::Select;
             self.armed.fill(false);
+            self.armed_from.fill(None);
         }
         cause
     }

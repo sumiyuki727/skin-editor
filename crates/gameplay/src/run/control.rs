@@ -60,6 +60,7 @@ impl SyntheticRun {
             cancelled_inputs: 0,
         });
         self.armed.fill(false);
+        self.armed_from.fill(None);
         self.active = None;
         self.work = match self.work {
             Work::Search(draft) | Work::Commit(draft) if draft.input.at > boundary => Work::Select,
@@ -144,6 +145,7 @@ impl SyntheticRun {
         self.replay_next = 0;
         self.held.fill(false);
         self.armed.fill(false);
+        self.armed_from.fill(None);
         self.cancelled_sound_through = self.issued_through;
         self.mode = ControlMode::Running;
         if let Some(index) = self.ready {
@@ -179,6 +181,9 @@ impl SyntheticRun {
         }
         let slot = fact.slot.index();
         let newly_armed = !self.armed[slot];
+        if newly_armed {
+            self.armed_from[slot] = None;
+        }
         self.armed[slot] = true;
         self.replay[self.replay_next] = Some(record);
         self.replay_next = (self.replay_next + 1) % self.limits.replay;

@@ -809,3 +809,171 @@ fn freezing_at_each_advance_yield_preserves_only_the_authenticated_prefix() {
     );
     assert_eq!(future.event_at(0), None);
 }
+
+#[test]
+fn quarantined_press_precedes_time_errors_without_reopening_the_sealed_prefix() {
+    let mut run = run(60_000, &[1_000_000], Limits::tiny());
+    stop(&mut run, 900_000, WorkBudget::one());
+    let current = run.resume(run.source()).unwrap();
+    let before = run.observation();
+    for at in [900_000, 799_998] {
+        assert_eq!(
+            run.submit_inputs(current, &[press(1, at, PhysicalSlot::PrimaryOne, 0)]),
+            Err(RunError::RearmRequired)
+        );
+        assert_eq!(run.observation(), before);
+    }
+    run.observe_release(current, fact(2, PhysicalSlot::PrimaryOne))
+        .unwrap();
+    assert_eq!(
+        run.submit_inputs(current, &[press(1, 900_001, PhysicalSlot::PrimaryOne, 0)]),
+        Err(RunError::OldInputSequence)
+    );
+    // Once the slot is armed, ordinary C1 remains strict, including F itself.
+    assert_eq!(
+        run.submit_inputs(current, &[press(3, 900_000, PhysicalSlot::PrimaryOne, 0)]),
+        Err(RunError::LateInput)
+    );
+    assert_eq!(
+        run.observation().status,
+        RunStatus::Failed(Failure {
+            cause: RunError::LateInput,
+            cancelled_inputs: 0
+        })
+    );
+}
+
+#[test]
+fn quarantined_press_cannot_cancel_a_full_valid_input_prefix() {
+    let mut run = run(60_001, &[1_000_000], Limits::tiny());
+    stop(&mut run, 900_000, WorkBudget::one());
+    let current = run.resume(run.source()).unwrap();
+    run.submit_inputs(
+        current,
+        &[
+            release(1, 1_000_000, PhysicalSlot::PrimaryOne),
+            press(2, 1_000_000, PhysicalSlot::PrimaryOne, 0),
+            release(3, 1_000_000, PhysicalSlot::SecondaryOne),
+            press(4, 1_000_000, PhysicalSlot::SecondaryOne, 0),
+        ],
+    )
+    .unwrap();
+    let before = run.observation();
+    assert_eq!(before.pending_inputs, 4);
+    assert_eq!(
+        run.submit_inputs(current, &[press(5, 1_000_000, PhysicalSlot::PrimaryTwo, 0)]),
+        Err(RunError::RearmRequired)
+    );
+    assert_eq!(run.observation(), before);
+    advance(&mut run, 1_000_000, WorkBudget::one());
+    assert_eq!(run.observation().pending_inputs, 0);
+    assert_eq!(
+        run.observation().committed_judgements[0].unwrap().result,
+        Judgement::Hit
+    );
+    assert_eq!(run.observation().pending_events, 2);
+}
+
+#[test]
+fn timed_rearm_cannot_qualify_an_earlier_press_in_the_same_or_later_batch() {
+    for (case, same_batch) in [true, false].into_iter().enumerate() {
+        let mut run = run(
+            60_010 + u128::try_from(case).unwrap(),
+            &[1_000_000],
+            Limits::tiny(),
+        );
+        stop(&mut run, 900_000, WorkBudget::one());
+        let current = run.resume(run.source()).unwrap();
+        let up = release(1, 1_000_010, PhysicalSlot::PrimaryOne);
+        let early = press(2, 1_000_000, PhysicalSlot::PrimaryOne, 0);
+        if same_batch {
+            let before = run.observation();
+            assert_eq!(
+                run.submit_inputs(current, &[up, early]),
+                Err(RunError::RearmRequired)
+            );
+            assert_eq!(run.observation(), before);
+        }
+        run.submit_inputs(current, &[up]).unwrap();
+        let before = run.observation();
+        assert_eq!(
+            run.submit_inputs(current, &[early]),
+            Err(RunError::RearmRequired)
+        );
+        assert_eq!(run.observation(), before);
+        // Equal map time is valid: the release's lower sequence is consumed first.
+        run.submit_inputs(current, &[press(2, 1_000_010, PhysicalSlot::PrimaryOne, 0)])
+            .unwrap();
+        advance(&mut run, 1_000_010, WorkBudget::one());
+        assert_eq!(
+            run.observation().committed_judgements[0].unwrap().at,
+            time(1_000_010)
+        );
+        assert_eq!(run.observation().pending_events, 2);
+    }
+}
+
+#[test]
+fn timed_arming_evidence_survives_receipt_eviction_and_repeated_untimed_facts() {
+    let mut run = run(60_012, &[1_000_000], Limits::tiny());
+    stop(&mut run, 900_000, WorkBudget::one());
+    let current = run.resume(run.source()).unwrap();
+    let up = release(1, 1_000_010, PhysicalSlot::PrimaryOne);
+    run.submit_inputs(current, &[up]).unwrap();
+    assert_eq!(
+        run.observe_release(current, fact(2, PhysicalSlot::PrimaryOne)),
+        Ok(RearmReport::Observed { newly_armed: false })
+    );
+    for (seq, slot) in [
+        (3, PhysicalSlot::SecondaryOne),
+        (4, PhysicalSlot::SecondaryTwo),
+        (5, PhysicalSlot::PrimaryTwo),
+    ] {
+        run.observe_release(current, fact(seq, slot)).unwrap();
+    }
+    assert_eq!(
+        run.submit_inputs(current, &[up]),
+        Err(RunError::OldInputSequence)
+    );
+    let before = run.observation();
+    assert_eq!(
+        run.submit_inputs(current, &[press(6, 1_000_000, PhysicalSlot::PrimaryOne, 0)]),
+        Err(RunError::RearmRequired)
+    );
+    assert_eq!(
+        run.observe_release(current, fact(2, PhysicalSlot::PrimaryOne)),
+        Ok(RearmReport::Repeated)
+    );
+    assert_eq!(run.observation(), before);
+    run.submit_inputs(current, &[press(6, 1_000_010, PhysicalSlot::PrimaryOne, 0)])
+        .unwrap();
+    advance(&mut run, 1_000_010, WorkBudget::one());
+    assert_eq!(
+        run.observation().committed_judgements[0].unwrap().at,
+        time(1_000_010)
+    );
+}
+
+#[test]
+fn next_freeze_cycle_does_not_inherit_cancelled_timed_arming_evidence() {
+    let mut run = run(60_013, &[1_000_000], Limits::tiny());
+    stop(&mut run, 900_000, WorkBudget::one());
+    let previous = run.resume(run.source()).unwrap();
+    run.submit_inputs(previous, &[release(1, 1_000_010, PhysicalSlot::PrimaryOne)])
+        .unwrap();
+    assert_eq!(stop(&mut run, 925_000, WorkBudget::one()), 1);
+    let current = run.resume(previous).unwrap();
+    assert_eq!(
+        run.observe_release(previous, fact(2, PhysicalSlot::PrimaryOne)),
+        Err(RunError::StaleSource)
+    );
+    run.observe_release(current, fact(1, PhysicalSlot::PrimaryOne))
+        .unwrap();
+    run.submit_inputs(current, &[press(2, 925_001, PhysicalSlot::PrimaryOne, 0)])
+        .unwrap();
+    advance(&mut run, 925_001, WorkBudget::one());
+    assert_eq!(
+        run.observation().committed_judgements[0].unwrap().at,
+        time(925_001)
+    );
+}

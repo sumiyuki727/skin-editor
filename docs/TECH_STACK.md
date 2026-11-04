@@ -4,7 +4,7 @@
 
 | 部分 | 当前实际选择 | 范围／限制 |
 | --- | --- | --- |
-| 核心 | Rust 1.95.0／2024 edition，domain＋application | 无第三方依赖、禁止unsafe；本机Windows检查通过，Linux实测延期 |
+| 核心 | Rust 1.95.0／2024 edition，domain＋application＋gameplay | 无第三方依赖、禁止unsafe；gameplay仅4对象SyntheticTest、未接产品，本机Windows无窗口检查通过，Linux实测延期 |
 | UI／宿主 | egui／eframe =0.37.0 | 可折叠普通面板及独立音效窗口，无复杂停靠；实际布局不是最终产品设计 |
 | GPU | wgpu =30.0.1；Windows普通配置MemoryUsage | 本机Vulkan验证；DX12／UMA及其他设备不继承数据 |
 | 图像 | image =0.25.10，仅PNG feature | 资源准备与CPU/GPU共享合成语义；不宣称完整stable图片格式支持 |
@@ -15,7 +15,7 @@
 | Rust文件存储（2026-11-02） | rusqlite =0.41.1（bundled／hooks／limits）、same-file =1.0.6 | 仅infrastructure，默认feature关闭；SQLite C源码随依赖编译，需已有C编译器，文件身份通过平台句柄核对；不启用动态扩展或新后台线程 |
 | 可选诊断 | profiling =1.0.18、tracing =0.1.44、winit =0.30.13 | host的framework-trace默认关闭；有界观察成本不得从产品CPU估算扣除 |
 
-八个产品包及实际依赖、全部对象与方法见[架构审阅](review/README.md)。根／桌面两个Cargo.lock保留；不新增插件框架、第二套UI、跨语言核心或后台服务。Windows ETW的C采集器是外部诊断工具，不是产品运行依赖。
+当前九个本地包及依赖见[当前架构](ARCHITECTURE.md)；[架构审阅](review/README.md)是原八包快照，新增gameplay见[K1-1审阅](K1_1_SYNTHETIC_REVIEW.md)。根锁文件新增无依赖的gameplay记录，桌面锁文件未改；没有新增第三方库、线程、设备、插件框架或服务。Windows ETW的C采集器是外部诊断工具，不是产品运行依赖。
 
 ## 平台和资源结论
 

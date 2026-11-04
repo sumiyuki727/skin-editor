@@ -24,6 +24,24 @@ def metadata_fixture():
 
 
 class ArchitectureChecks(unittest.TestCase):
+    def test_gameplay_is_independent_and_cannot_be_imported_by_project_packages(self):
+        for edge in ("skin-editor-domain", "skin-editor-application", "skin-editor-preview", "wgpu"):
+            metadata = metadata_fixture()
+            gameplay = next(p for p in metadata["packages"] if p["name"] == "skin-editor-gameplay")
+            gameplay["dependencies"].append({"name": edge})
+            self.assertTrue(any("forbidden dependency" in e for e in validate_metadata(metadata, ROOT)), edge)
+        for name in ("skin-editor-domain", "skin-editor-application"):
+            metadata = metadata_fixture()
+            package = next(p for p in metadata["packages"] if p["name"] == name)
+            package["dependencies"].append({"name": "skin-editor-gameplay"})
+            self.assertTrue(validate_metadata(metadata, ROOT), name)
+
+    def test_gameplay_source_cannot_hide_runtime_or_project_imports(self):
+        for source in ["use skin_editor_domain::SkinProject;", "use skin_editor_application as hidden;",
+                       "use egui::Ui;", "use wgpu::Device;", "use std::time::Instant;", "use std::fs;"]:
+            self.assertTrue(source_issues(source, "skin-editor-gameplay"), source)
+        self.assertEqual(source_issues("use core::num::NonZeroU128; use skin_editor_gameplay::MapTime;", "skin-editor-gameplay"), [])
+
     def test_reviewed_graph_is_allowed(self):
         self.assertEqual(validate_metadata(metadata_fixture(), ROOT), [])
 
@@ -74,8 +92,8 @@ class ArchitectureChecks(unittest.TestCase):
         parent.mkdir(parents=True, exist_ok=True)
         with tempfile.TemporaryDirectory(prefix="dependency-canary-", dir=parent) as directory:
             base = Path(directory)
-            (base / "Cargo.toml").write_text('[workspace]\nmembers=["crates/domain","crates/application","crates/ui"]\nresolver="3"\n', encoding="utf-8")
-            for name, relative in [("skin-editor-domain", "domain"), ("skin-editor-application", "application"), ("forbidden-ui", "ui")]:
+            (base / "Cargo.toml").write_text('[workspace]\nmembers=["crates/domain","crates/application","crates/gameplay","crates/ui"]\nresolver="3"\n', encoding="utf-8")
+            for name, relative in [("skin-editor-domain", "domain"), ("skin-editor-application", "application"), ("skin-editor-gameplay", "gameplay"), ("forbidden-ui", "ui")]:
                 folder = base / "crates" / relative
                 (folder / "src").mkdir(parents=True)
                 text = '[package]\nname="' + name + '"\nversion="0.1.0"\nedition="2024"\nrust-version="1.95"\npublish=false\n'

@@ -11,6 +11,7 @@
 | 桌面交互 | 画布拾取、Shift比例约束、旋转控制框、集中快捷键及文本／游戏输入隔离；历史面板为有界祖先／直接分支，不是完整树视图 |
 | 音频 | WAV PCM16 44.1／48 kHz 单／双声道准备、独立组件绑定／增益／隐藏、原始素材与组件试听、监听音量；其他编码可只保留原字节。设备需显式启用，普通 GUI 未载入歌曲背景 |
 | 预览 | 两个占位场景、冻结下编辑刷新及全屏入口；没有完整 stable 内核。正常 Windows 使用分离声音和 MemoryUsage，图形故障冻结／诊断，不自动重开窗口 |
+| 合成玩法核心 | 独立纯Rust `gameplay`：最多4个预编译圆圈、绝对时间、输入封口／去重、生命周期及有界事件；仅SyntheticTest，无窗口回归，不接桌面预览、不宣称stable兼容 |
 | 文件与接口 | 配置保留原始记录，未实现 skin.ini 解析 UI、项目保存／打开 UI、导出、谱面读取、在线素材库或外部 AI 服务 |
 | 存储基础 | 状态块编解码、完整历史捕获与永久身份；Rust SQLite 增量适配、完整文件／原字节验证和恢复候选；Windows显式副本热日志恢复及进程中断测试。尚未接入正式保存／打开 UI、自动保护、另存或迁移 |
 
@@ -22,7 +23,7 @@ Windows的[恢复补充](docs/P3_1_RECOVERY_REVIEW.md)保留原件并恢复到�
 
 ## 安装依赖
 
-需要 Python 3.9+、Rust 1.95.0（rustfmt／clippy）及本机链接工具。Windows 使用 MSVC x64 和 Windows SDK；Linux 音频还需要 ALSA 开发库／pkg-config，Linux／macOS 未实机验证。根工作区只有两个纯核心包；桌面依赖由 `desktop/Cargo.lock` 单独锁定。
+需要 Python 3.9+、Rust 1.95.0（rustfmt／clippy）及本机链接工具。Windows 使用 MSVC x64 和 Windows SDK；Linux 音频还需要 ALSA 开发库／pkg-config，Linux／macOS 未实机验证。根工作区有domain／application／gameplay三个纯核心包；桌面依赖由 `desktop/Cargo.lock` 单独锁定。
 
 首次获取桌面公开依赖的已验证 Windows 命令：
 

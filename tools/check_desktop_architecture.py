@@ -1,6 +1,7 @@
 """Explicit desktop package edges; complements the stricter independent core gate."""
 from pathlib import Path
 import re
+from check_core_architecture import validate_sources as validate_core_sources
 
 PACKAGES = {
     "skin-editor-domain": ("crates/domain", set()),
@@ -79,7 +80,9 @@ def source_issues(module, source):
 
 def validate_sources(root):
     root = Path(root)
-    errors = []
+    # Gameplay is not a desktop dependency in K1-1. Keep the exact reachable
+    # desktop graph above, and still check every pure core's source boundary.
+    errors = validate_core_sources(root)
     for directory in ("audio", "rendering", "preview", "infrastructure", "ui", "host"):
         for path in (root / "desktop" / directory / "src").rglob("*.rs"):
             errors.extend(str(path.relative_to(root)) + ": " + issue for issue in source_issues(directory, path.read_text(encoding="utf-8")))

@@ -12,3 +12,7 @@ dependencies = [
 [[package]]
 name = "skin-editor-domain"
 version = "0.1.0"
+
+[[package]]
+name = "skin-editor-gameplay"
+version = "0.1.0"

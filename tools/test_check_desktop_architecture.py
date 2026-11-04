@@ -1,7 +1,9 @@
 import copy
 from pathlib import Path
 import unittest
-from check_desktop_architecture import PACKAGES, VERSIONS, FEATURES, HOST_FEATURES, validate_metadata, source_issues
+import tempfile
+from check_desktop_architecture import PACKAGES, VERSIONS, FEATURES, HOST_FEATURES, validate_metadata, source_issues, validate_sources
+from check_core_architecture import PACKAGES as CORE_PACKAGES
 
 ROOT = Path(__file__).resolve().parents[1]
 def fixture():
@@ -18,6 +20,35 @@ def fixture():
     return dict(packages=packages, workspace_root=str(ROOT / "desktop"), workspace_members=[p["id"] for p in packages if p["name"] not in {"skin-editor-domain", "skin-editor-application"}])
 
 class Boundaries(unittest.TestCase):
+    def test_gameplay_is_not_silently_wired_into_desktop(self):
+        for name in ("skin-editor-preview", "skin-editor-ui", "skin-editor-desktop"):
+            data = fixture()
+            package = next(p for p in data["packages"] if p["name"] == name)
+            package["dependencies"].append(dict(name="skin-editor-gameplay", path=str(ROOT / "crates/gameplay")))
+            self.assertTrue(validate_metadata(data, ROOT), name)
+        data = fixture()
+        data["packages"].append(dict(name="skin-editor-gameplay", source=None))
+        self.assertTrue(validate_metadata(data, ROOT))
+
+    def test_desktop_source_gate_also_checks_unwired_gameplay(self):
+        parent = (ROOT / "artifacts/k1/architecture").resolve()
+        self.assertIn(ROOT, parent.parents)
+        parent.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="pure-core-canary-", dir=parent) as directory:
+            base = Path(directory)
+            for relative, _ in CORE_PACKAGES.values():
+                entry = base / relative / "src/lib.rs"
+                entry.parent.mkdir(parents=True, exist_ok=True)
+                entry.write_text("#![forbid(unsafe_code)]\n", encoding="utf-8")
+            for relative, _ in PACKAGES.values():
+                if relative.startswith("desktop/"):
+                    entry = base / relative / "src" / ("main.rs" if relative == "desktop/host" else "lib.rs")
+                    entry.parent.mkdir(parents=True, exist_ok=True)
+                    entry.write_text("#![forbid(unsafe_code)]\n", encoding="utf-8")
+            self.assertEqual(validate_sources(base), [])
+            (base / "crates/gameplay/src/lib.rs").write_text("#![forbid(unsafe_code)]\nuse std::fs;\n", encoding="utf-8")
+            self.assertTrue(any("gameplay" in e and "I/O" in e for e in validate_sources(base)))
+
     def test_project_storage_dependencies_are_adapter_only_and_pinned(self):
         for name in ["skin-editor-application", "skin-editor-domain", "skin-editor-ui", "skin-editor-preview", "skin-editor-audio", "skin-editor-rendering"]:
             for edge in ["serde", "serde_json", "getrandom", "rusqlite", "same-file"]:

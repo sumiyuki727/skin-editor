@@ -1,0 +1,121 @@
+use super::*;
+
+impl SyntheticRun {
+    /// Serial core admission only. The host must complete capture handoff before
+    /// sealing; this method cannot infer unhanded platform events.
+    pub fn submit_inputs(
+        &mut self,
+        source: RunSource,
+        batch: &[InputEvent],
+    ) -> Result<Admission, RunError> {
+        self.check_source(source)?;
+        if batch.len() > self.limits.inputs {
+            return Err(self.fail(RunError::InputCapacity));
+        }
+        let mut added = [None; MAX_INPUTS];
+        let mut new_len = 0;
+        let mut repeated = 0;
+        for input in batch.iter().copied() {
+            if let Some(old) = self.replay[..self.limits.replay]
+                .iter()
+                .flatten()
+                .find(|old| old.sequence == input.sequence)
+            {
+                if *old != input {
+                    return Err(self.fail(RunError::InputConflict));
+                }
+                repeated += 1;
+                continue;
+            }
+            if let Some(old) = added[..new_len]
+                .iter()
+                .flatten()
+                .find(|old: &&InputEvent| old.sequence == input.sequence)
+            {
+                if *old != input {
+                    return Err(self.fail(RunError::InputConflict));
+                }
+                repeated += 1;
+                continue;
+            }
+            if input.sequence.get() <= self.highest_input {
+                return Err(RunError::OldInputSequence);
+            }
+            if self.failure.is_some() {
+                return Err(RunError::GateClosed);
+            }
+            if self.sealed.is_some_and(|sealed| input.at <= sealed) {
+                return Err(self.fail(RunError::LateInput));
+            }
+            if input.at < self.start {
+                return Err(self.fail(RunError::InputBeforeStart));
+            }
+            added[new_len] = Some(input);
+            new_len += 1;
+        }
+        if self.input_len + new_len > self.limits.inputs {
+            return Err(self.fail(RunError::InputCapacity));
+        }
+
+        // A bounded batch (at most 64), ordered before any queue/window write.
+        for index in 0..new_len {
+            let mut smallest = index;
+            for next in index + 1..new_len {
+                if added[next].expect("new input").sequence
+                    < added[smallest].expect("new input").sequence
+                {
+                    smallest = next;
+                }
+            }
+            added.swap(index, smallest);
+        }
+        for input in added[..new_len].iter().flatten().copied() {
+            let mut at = self.input_len;
+            while at > 0 {
+                let previous = self.inputs[at - 1].expect("queued input");
+                if (previous.at, previous.sequence) <= (input.at, input.sequence) {
+                    break;
+                }
+                self.inputs[at] = self.inputs[at - 1];
+                at -= 1;
+            }
+            self.inputs[at] = Some(input);
+            self.input_len += 1;
+            self.replay[self.replay_next] = Some(input);
+            self.replay_next = (self.replay_next + 1) % self.limits.replay;
+            self.highest_input = input.sequence.get();
+        }
+        Ok(Admission {
+            added: new_len,
+            repeated,
+        })
+    }
+
+    pub fn seal_through(&mut self, source: RunSource, through: MapTime) -> Result<(), RunError> {
+        self.check_source(source)?;
+        if self.failure.is_some() {
+            return Err(RunError::Faulted);
+        }
+        if through < self.start || self.sealed.is_some_and(|old| through < old) {
+            return Err(RunError::InvalidTarget);
+        }
+        self.sealed = Some(through);
+        Ok(())
+    }
+
+    /// Cancellation uses the operation key, not a consumable result slot. It
+    /// does not need event/input capacity or another request identifier.
+    pub fn cancel_request(&mut self, key: RequestKey) -> Result<(), RunError> {
+        self.check_source(key.source)?;
+        if self.active.is_none_or(|active| active.key != key) {
+            return Err(RunError::StaleCursor);
+        }
+        self.active = None;
+        let keep_publication =
+            matches!(self.work, Work::Publish { at, .. } if self.dirty == Some(at));
+        if !keep_publication {
+            self.work = Work::Select;
+        }
+        Ok(())
+    }
+}

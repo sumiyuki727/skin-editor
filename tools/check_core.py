@@ -88,7 +88,7 @@ def main():
     errors = validate_metadata(metadata, ROOT) + validate_sources(ROOT)
     if errors:
         raise RuntimeError("\n".join(errors))
-    print("PASS: two pure core packages; application -> domain; no third-party/P0 dependencies", flush=True)
+    print("PASS: three pure core packages; application -> domain; gameplay independent; no third-party/P0 dependencies", flush=True)
     if options.architecture_only:
         return
     linker = linker_arguments(environment)

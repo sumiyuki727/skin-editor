@@ -1,4 +1,4 @@
-"""Small, explicit P1 package and source rules; not a Rust security sandbox."""
+"""Explicit pure-core package/source rules; not a Rust security sandbox."""
 
 from pathlib import Path
 import re
@@ -7,6 +7,7 @@ import re
 PACKAGES = {
     "skin-editor-domain": ("crates/domain", set()),
     "skin-editor-application": ("crates/application", {"skin-editor-domain"}),
+    "skin-editor-gameplay": ("crates/gameplay", set()),
 }
 FORBIDDEN_SOURCE = (
     ("core I/O or platform module", r"\bstd\s*::\s*(?:fs|net|process|env|thread|ffi)\b"),
@@ -24,7 +25,7 @@ def validate_metadata(metadata, root):
     packages = metadata.get("packages", [])
     by_name = {p["name"]: p for p in packages}
     if len(packages) != len(PACKAGES) or set(by_name) != set(PACKAGES):
-        errors.append("P1 workspace must contain only domain and application; no third-party or P0 packages")
+        errors.append("core workspace must contain domain, application and independent gameplay; no third-party or P0 packages")
     if Path(metadata["workspace_root"]).resolve() != root:
         errors.append("unexpected workspace root")
     if set(metadata.get("workspace_members", [])) != {p["id"] for p in packages}:
@@ -61,21 +62,25 @@ def validate_metadata(metadata, root):
     return errors
 
 
-def source_issues(text):
+def source_issues(text, package=None):
     # Conservatively inspect source text, including comments. Keep opaque import
     # forms out of the small core; compiler visibility tests provide another gate.
-    return [description for description, expression in FORBIDDEN_SOURCE if re.search(expression, text)]
+    errors = [description for description, expression in FORBIDDEN_SOURCE if re.search(expression, text)]
+    if package == "skin-editor-gameplay" and re.search(
+            r"\b(?:skin_editor_(?:domain|application|preview|audio|rendering|infrastructure|ui|desktop)|egui|wgpu|cpal)\s*(?:::|as\b)", text):
+        errors.append("gameplay must not import project, adapter or device runtimes")
+    return errors
 
 
 def validate_sources(root):
     root = Path(root)
     errors = []
-    for directory, _ in PACKAGES.values():
+    for name, (directory, _) in PACKAGES.items():
         base = root / directory
         entry = base / "src/lib.rs"
         if not entry.is_file() or "#![forbid(unsafe_code)]" not in entry.read_text(encoding="utf-8"):
             errors.append(directory + ": crate must forbid unsafe code")
         for source in base.rglob("*.rs"):
-            for issue in source_issues(source.read_text(encoding="utf-8")):
+            for issue in source_issues(source.read_text(encoding="utf-8"), name):
                 errors.append(source.relative_to(root).as_posix() + ": " + issue)
     return errors

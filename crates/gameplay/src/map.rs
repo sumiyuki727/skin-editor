@@ -91,6 +91,8 @@ pub enum PreparationProgress {
 pub struct MapPreparation<'a> {
     input: &'a [Circle],
     candidate: SyntheticMap,
+    pending: Option<Circle>,
+    next_id: usize,
     cancelled: bool,
     error: Option<ValueError>,
 }
@@ -106,6 +108,8 @@ impl<'a> MapPreparation<'a> {
                 circles: [None; MAX_CIRCLES],
                 len: 0,
             },
+            pending: None,
+            next_id: 0,
             cancelled: false,
             error: None,
         })
@@ -119,25 +123,29 @@ impl<'a> MapPreparation<'a> {
         }
         for _ in 0..budget.get() {
             let index = self.candidate.len;
-            let Some(circle) = self.input.get(index).copied() else {
-                break;
-            };
-            let error = if self.candidate.circles[..index]
-                .iter()
-                .flatten()
-                .any(|old| old.id == circle.id)
-            {
-                Some(ValueError::DuplicateObject)
-            } else if let Some(previous) =
-                index.checked_sub(1).and_then(|i| self.candidate.circles[i])
-            {
-                if circle.target < previous.target {
-                    Some(ValueError::UnsortedMap)
-                } else if circle.open <= previous.close {
-                    Some(ValueError::UnsupportedOverlap)
+            let Some(circle) = self.pending else {
+                let Some(circle) = self.input.get(index).copied() else {
+                    break;
+                };
+                // One input-record inspection. Later calls retain this value
+                // while inspecting at most one previous identity per unit.
+                if index == 0 {
+                    self.candidate.circles[0] = Some(circle);
+                    self.candidate.len = 1;
                 } else {
-                    None
+                    self.pending = Some(circle);
+                    self.next_id = 0;
                 }
+                continue;
+            };
+            let previous = self.candidate.circles[self.next_id].expect("validated predecessor");
+            let last = self.next_id + 1 == index;
+            let error = if previous.id == circle.id {
+                Some(ValueError::DuplicateObject)
+            } else if last && circle.target < previous.target {
+                Some(ValueError::UnsortedMap)
+            } else if last && circle.open <= previous.close {
+                Some(ValueError::UnsupportedOverlap)
             } else {
                 None
             };
@@ -145,8 +153,13 @@ impl<'a> MapPreparation<'a> {
                 self.error = Some(error);
                 return Err(error);
             }
-            self.candidate.circles[index] = Some(circle);
-            self.candidate.len += 1;
+            if last {
+                self.candidate.circles[index] = Some(circle);
+                self.candidate.len += 1;
+                self.pending = None;
+            } else {
+                self.next_id += 1;
+            }
         }
         Ok(if self.candidate.len == self.input.len() {
             PreparationProgress::Complete {

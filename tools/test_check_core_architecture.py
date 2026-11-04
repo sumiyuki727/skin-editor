@@ -24,6 +24,13 @@ def metadata_fixture():
 
 
 class ArchitectureChecks(unittest.TestCase):
+    def test_pure_core_rejects_standard_io_platform_and_opaque_clock_imports(self):
+        for source in ["use std::io;", "std::io::stdin();", "use std::os::windows::fs::MetadataExt;",
+                       "use std::time as clock;", "use std::time;", "use std::time::{Instant as Clock};",
+                       "use std::time::*;"]:
+            self.assertTrue(source_issues(source, "skin-editor-gameplay"), source)
+        self.assertEqual(source_issues("use std::time::Duration;", "skin-editor-gameplay"), [])
+
     def test_gameplay_is_independent_and_cannot_be_imported_by_project_packages(self):
         for edge in ("skin-editor-domain", "skin-editor-application", "skin-editor-preview", "wgpu"):
             metadata = metadata_fixture()

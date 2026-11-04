@@ -10,8 +10,9 @@ PACKAGES = {
     "skin-editor-gameplay": ("crates/gameplay", set()),
 }
 FORBIDDEN_SOURCE = (
-    ("core I/O or platform module", r"\bstd\s*::\s*(?:fs|net|process|env|thread|ffi)\b"),
+    ("core I/O or platform module", r"\bstd\s*::\s*(?:fs|io|os|net|process|env|thread|ffi)\b"),
     ("wall clock", r"\bstd\s*::\s*time\s*::\s*(?:Instant|SystemTime)\b"),
+    ("opaque clock import", r"\buse\s+std\s*::\s*time\s*(?:as\b|;|::\s*(?:\*|\{))"),
     ("opaque std import", r"\buse\s+std\s*(?:as\b|::\s*(?:\*|\{))"),
     ("extern crate alias", r"\bextern\s+crate\b"),
     ("external include or environment", r"\b(?:include|include_str|include_bytes|env|option_env)\s*!"),

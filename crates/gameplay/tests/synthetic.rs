@@ -218,6 +218,13 @@ fn preparation_is_complete_or_cancelled_and_preserves_original_identities() {
     preparing.step(WorkBudget::one()).unwrap();
     assert_eq!(
         preparing.step(WorkBudget::one()).unwrap(),
+        PreparationProgress::Pending {
+            checked: 1,
+            total: 2
+        }
+    );
+    assert_eq!(
+        preparing.step(WorkBudget::one()).unwrap(),
         PreparationProgress::Complete { checked: 2 }
     );
     let map = preparing.finish().unwrap();
@@ -236,8 +243,14 @@ fn invalid_candidates_never_yield_partial_maps_or_change_an_existing_run() {
     let before = existing.observation();
     let data = [circle(1, 0), circle(2, 1_000_000), circle(1, 2_000_000)];
     let mut preparing = MapPreparation::new(MapRevision::new(8), &data).unwrap();
-    preparing.step(WorkBudget::one()).unwrap();
-    preparing.step(WorkBudget::one()).unwrap();
+    preparing.step(WorkBudget::new(3).unwrap()).unwrap();
+    assert_eq!(
+        preparing.step(WorkBudget::one()).unwrap(),
+        PreparationProgress::Pending {
+            checked: 2,
+            total: 3
+        }
+    );
     assert_eq!(
         preparing.step(WorkBudget::one()),
         Err(ValueError::DuplicateObject)
@@ -876,4 +889,364 @@ fn full_event_queue_cannot_prevent_cancellation() {
             _ => panic!("miss must wait for event credit"),
         }
     }
+}
+
+#[test]
+fn preparation_budget_counts_each_record_and_previous_identity_check() {
+    let data = [circle(0, 0), circle(1, 1_000_000), circle(1, 2_000_000)];
+    let mut preparing = MapPreparation::new(MapRevision::new(7), &data).unwrap();
+    // Load/commit the first record, load the second, then check its predecessor.
+    assert_eq!(
+        preparing.step(WorkBudget::new(3).unwrap()).unwrap(),
+        PreparationProgress::Pending {
+            checked: 2,
+            total: 3
+        }
+    );
+    // Loading the third and comparing ID 0 must not hide the later ID 1 check.
+    for _ in 0..2 {
+        assert_eq!(
+            preparing.step(WorkBudget::one()).unwrap(),
+            PreparationProgress::Pending {
+                checked: 2,
+                total: 3
+            }
+        );
+    }
+    assert_eq!(
+        preparing.step(WorkBudget::one()),
+        Err(ValueError::DuplicateObject)
+    );
+    assert_eq!(preparing.finish(), Err(ValueError::DuplicateObject));
+    let mut cancelled = MapPreparation::new(MapRevision::new(7), &data).unwrap();
+    cancelled.step(WorkBudget::new(5).unwrap()).unwrap();
+    cancelled.cancel();
+    assert_eq!(cancelled.finish(), Err(ValueError::PreparationCancelled));
+}
+
+#[test]
+fn mixed_retry_is_checked_against_the_pre_batch_window_before_eviction() {
+    let limits = Limits::try_new(8, 2, 4, 1, 64 * 1024).unwrap();
+    let mut run = single(50, limits);
+    let first = press(1, 900_000, PhysicalSlot::PrimaryOne, 11);
+    run.submit_inputs(
+        run.source(),
+        &[
+            first,
+            release(2, 900_001, PhysicalSlot::PrimaryOne),
+            press(3, 900_002, PhysicalSlot::PrimaryOne, 11),
+            release(4, 900_003, PhysicalSlot::PrimaryOne),
+        ],
+    )
+    .unwrap();
+    complete(&mut run, 900_003, WorkBudget::one());
+    let next = [
+        press(5, 900_004, PhysicalSlot::PrimaryOne, 11),
+        release(6, 900_005, PhysicalSlot::PrimaryOne),
+        press(7, 900_006, PhysicalSlot::PrimaryOne, 11),
+        release(8, 900_007, PhysicalSlot::PrimaryOne),
+    ];
+    let mut batch = next.to_vec();
+    batch.push(first);
+    assert_eq!(
+        run.submit_inputs(run.source(), &batch).unwrap(),
+        Admission {
+            added: 4,
+            repeated: 1
+        }
+    );
+    assert_eq!(
+        run.submit_inputs(run.source(), &[first]),
+        Err(RunError::OldInputSequence)
+    );
+    complete(&mut run, 900_007, WorkBudget::one());
+    assert_eq!(run.observation().committed_judgements, [None; MAX_CIRCLES]);
+    assert_eq!(run.observation().held_slots, [false; 4]);
+    assert_eq!(run.observation().pending_events, 0);
+}
+
+#[test]
+fn same_time_edges_follow_sequence_not_batch_position() {
+    let batch = [
+        release(4, 1_000_000, PhysicalSlot::PrimaryOne),
+        press(3, 1_000_000, PhysicalSlot::PrimaryOne, 0),
+        release(2, 1_000_000, PhysicalSlot::PrimaryOne),
+        press(1, 1_000_000, PhysicalSlot::PrimaryOne, 11),
+    ];
+    let mut run = single(51, Limits::tiny());
+    run.submit_inputs(run.source(), &batch).unwrap();
+    complete(&mut run, 1_000_000, WorkBudget::one());
+    assert_eq!(
+        run.observation().committed_judgements[0].unwrap().result,
+        Judgement::Hit
+    );
+    assert_eq!(run.observation().held_slots, [false; 4]);
+    assert_eq!(run.observation().pending_events, 2);
+}
+
+type CanonicalEvent = (u64, ObjectId, MapTime, EventKind);
+fn four_circle_trace(
+    id: u128,
+    limits: Limits,
+    budget: WorkBudget,
+    cancel_at: Option<usize>,
+) -> (Vec<CanonicalEvent>, usize) {
+    let circles = [
+        circle(99, 0),
+        circle(8, 200_001),
+        circle(4, 400_002),
+        circle(77, 1_000_000),
+    ];
+    let mut run = make_run(id, &circles, -200_001, limits);
+    run.submit_inputs(
+        run.source(),
+        &[
+            press(1, 100_001, PhysicalSlot::PrimaryOne, 0),
+            release(2, 100_002, PhysicalSlot::PrimaryOne),
+            press(3, 400_002, PhysicalSlot::SecondaryTwo, 0),
+            release(4, 400_003, PhysicalSlot::SecondaryTwo),
+        ],
+    )
+    .unwrap();
+    run.seal_through(run.source(), time(1_300_000)).unwrap();
+    let mut report = run.advance(run.source(), time(1_300_000), budget).unwrap();
+    let mut events = Vec::new();
+    for call in 0..256 {
+        let (steps, cursor, backpressure) = match report {
+            AdvanceReport::Complete { steps, .. } => (steps, None, false),
+            AdvanceReport::Pending {
+                cursor,
+                reason,
+                steps,
+                ..
+            } => (
+                steps,
+                Some(cursor),
+                reason == PendingReason::EventBackpressure,
+            ),
+        };
+        assert!(steps <= budget.get());
+        if backpressure || cursor.is_none() {
+            let mut read = Vec::new();
+            collect_events(&mut run, &mut read);
+            for event in read {
+                assert_eq!(event.key.run(), run.source().run);
+                assert_eq!(event.key.transport(), run.source().transport);
+                assert_eq!(event.evidence, Evidence::SyntheticTest);
+                events.push((
+                    event.key.sequence().get(),
+                    event.object,
+                    event.at,
+                    event.kind,
+                ));
+            }
+        }
+        let Some(cursor) = cursor else {
+            let observation = run.observation();
+            assert_eq!(observation.status, RunStatus::Ready);
+            assert_eq!(observation.completed_through, Some(time(1_300_000)));
+            assert_eq!(observation.pending_inputs, 0);
+            assert_eq!(observation.pending_events, 0);
+            assert_eq!(observation.held_slots, [false; 4]);
+            for (index, (result, at)) in [
+                (Judgement::Miss, 100_001),
+                (Judgement::Hit, 100_001),
+                (Judgement::Hit, 400_002),
+                (Judgement::Miss, 1_100_001),
+            ]
+            .into_iter()
+            .enumerate()
+            {
+                assert_eq!(
+                    observation.committed_judgements[index],
+                    Some(JudgementRecord {
+                        object: circles[index].id(),
+                        at: time(at),
+                        result
+                    })
+                );
+                assert_eq!(frame(&run, index).phase, Phase::Retired);
+                assert_eq!(
+                    frame(&run, index).judgement,
+                    observation.committed_judgements[index]
+                );
+            }
+            return (events, call);
+        };
+        if cancel_at == Some(call) {
+            run.cancel_request(cursor.request()).unwrap();
+            let before = run.observation();
+            assert_eq!(
+                run.continue_advance(cursor, budget),
+                Err(RunError::StaleCursor)
+            );
+            assert_eq!(run.observation(), before);
+            report = run.advance(run.source(), time(1_300_000), budget).unwrap();
+        } else {
+            report = run.continue_advance(cursor, budget).unwrap();
+        }
+    }
+    panic!("four-circle trace exceeded its finite call bound");
+}
+
+#[test]
+fn tiny_and_reference_agree_after_cancellation_at_every_yield() {
+    let expected = vec![
+        (
+            1,
+            ObjectId::new(8),
+            time(100_001),
+            EventKind::Judgement(Judgement::Hit),
+        ),
+        (2, ObjectId::new(8), time(100_001), EventKind::SoundIntent),
+        (
+            3,
+            ObjectId::new(99),
+            time(100_001),
+            EventKind::Judgement(Judgement::Miss),
+        ),
+        (
+            4,
+            ObjectId::new(4),
+            time(400_002),
+            EventKind::Judgement(Judgement::Hit),
+        ),
+        (5, ObjectId::new(4), time(400_002), EventKind::SoundIntent),
+        (
+            6,
+            ObjectId::new(77),
+            time(1_100_001),
+            EventKind::Judgement(Judgement::Miss),
+        ),
+    ];
+    let configurations = [
+        (Limits::tiny(), WorkBudget::one()),
+        (Limits::reference(), WorkBudget::one()),
+        (Limits::reference(), WorkBudget::full()),
+    ];
+    let mut id = 1_000;
+    for (limits, budget) in configurations {
+        id += 1;
+        let (events, yields) = four_circle_trace(id, limits, budget, None);
+        assert_eq!(events, expected);
+        for cut in 0..yields {
+            id += 1;
+            assert_eq!(
+                four_circle_trace(id, limits, budget, Some(cut)).0,
+                expected,
+                "{budget:?}/{cut}"
+            );
+        }
+    }
+}
+
+#[test]
+fn radius_uses_both_axes_relative_to_center_and_valid_time_endpoints_survive() {
+    for (case, (dx, dy, expected)) in [
+        (6, 8, Judgement::Hit),
+        (-6, -8, Judgement::Hit),
+        (6, 9, Judgement::Miss),
+        (0, 11, Judgement::Miss),
+    ]
+    .into_iter()
+    .enumerate()
+    {
+        let center = point(100, -100);
+        let object = Circle::new(ObjectId::new(0), time(1_000_000), center).unwrap();
+        let mut run = make_run(
+            60 + u128::try_from(case).unwrap(),
+            &[object],
+            799_999,
+            Limits::reference(),
+        );
+        let mut input = press(1, 1_000_000, PhysicalSlot::PrimaryOne, 0);
+        input.edge = InputEdge::Press(point(100 + dx, -100 + dy));
+        run.submit_inputs(run.source(), &[input]).unwrap();
+        complete(&mut run, 1_300_000, WorkBudget::full());
+        assert_eq!(
+            run.observation().committed_judgements[0].unwrap().result,
+            expected
+        );
+    }
+    for (id, target) in [(70, i64::MIN + 200_000), (71, i64::MAX - 300_000)] {
+        let object = circle(0, target);
+        let start = target - 200_000;
+        let mut run = make_run(id, &[object], start, Limits::reference());
+        run.submit_inputs(
+            run.source(),
+            &[press(1, target, PhysicalSlot::PrimaryOne, 0)],
+        )
+        .unwrap();
+        complete(&mut run, target + 300_000, WorkBudget::full());
+        assert_eq!(
+            run.observation().committed_judgements[0].unwrap().result,
+            Judgement::Hit
+        );
+        assert_eq!(frame(&run, 0).phase, Phase::Retired);
+    }
+    let map = SyntheticMap::try_new(MapRevision::new(8), &[circle(0, 1_000_000)]).unwrap();
+    assert!(matches!(
+        SyntheticRun::new(source(72), map, time(799_999), Limits::tiny()),
+        Err(ValueError::RevisionMismatch)
+    ));
+    let map = SyntheticMap::try_new(MapRevision::new(7), &[circle(0, 1_000_000)]).unwrap();
+    assert!(matches!(
+        SyntheticRun::new(source(73), map, time(800_001), Limits::tiny()),
+        Err(ValueError::InvalidStart)
+    ));
+}
+
+#[test]
+fn call_errors_and_foreign_tokens_leave_the_active_continuation_usable() {
+    let mut first = single(80, Limits::tiny());
+    let before = first.observation();
+    assert_eq!(
+        first.advance(first.source(), time(799_998), WorkBudget::one()),
+        Err(RunError::InvalidTarget)
+    );
+    assert_eq!(first.observation(), before);
+    first.seal_through(first.source(), time(1_000_000)).unwrap();
+    let AdvanceReport::Pending {
+        cursor: foreign, ..
+    } = first
+        .advance(first.source(), time(1_000_000), WorkBudget::one())
+        .unwrap()
+    else {
+        panic!()
+    };
+    let mut second = single(81, Limits::tiny());
+    second
+        .seal_through(second.source(), time(1_000_000))
+        .unwrap();
+    let AdvanceReport::Pending { cursor, .. } = second
+        .advance(second.source(), time(1_000_000), WorkBudget::one())
+        .unwrap()
+    else {
+        panic!()
+    };
+    let before = second.observation();
+    assert_eq!(
+        second.continue_advance(foreign, WorkBudget::full()),
+        Err(RunError::StaleSource)
+    );
+    assert_eq!(
+        second.cancel_request(foreign.request()),
+        Err(RunError::StaleSource)
+    );
+    assert_eq!(
+        second.continue_advance(cursor, WorkBudget::full()),
+        Err(RunError::BudgetLimit)
+    );
+    assert_eq!(
+        second.advance(second.source(), time(1_000_000), WorkBudget::one()),
+        Err(RunError::Busy)
+    );
+    assert_eq!(
+        second.seal_through(second.source(), time(999_999)),
+        Err(RunError::InvalidTarget)
+    );
+    assert_eq!(second.observation(), before);
+    assert!(second.continue_advance(cursor, WorkBudget::one()).is_ok());
+    second.cancel_request(cursor.request()).unwrap();
+    first.cancel_request(foreign.request()).unwrap();
 }

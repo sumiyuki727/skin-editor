@@ -6,9 +6,9 @@
 
 - 工作区：`E:\skin-editor`；当前分支 `codex/p1-bootstrap`。
 - 私有远端：[sumiyuki727/skin-editor](https://github.com/sumiyuki727/skin-editor)。本轮再次核对为 PRIVATE。
-- 最新已保存且远端SHA核对一致的交接文档基线：`6e26e9dd02c5011cb1c1c0e0c778b8c5e32e79a5`；恢复代码基线仍为`2719d0fbd3a57c024f501416085855f7979b8032`。
+- 最新已保存且远端SHA核对一致的动画设计回退点：`d3f4b2b34b2c088932acf1641163c72915163e41`；交接初版为`6e26e9dd02c5011cb1c1c0e0c778b8c5e32e79a5`，恢复代码基线仍为`2719d0fbd3a57c024f501416085855f7979b8032`。
 - 上一存储基线：`bd3b6262d2a39830d3c94c4c81227cb5725a1700`；Git 管理基线：`1778c378e9dd4662a4a1e2cd39473f905b4330a6`。
-- `2719d0f`正常运行仓库hook，包含18个已审查文件；两份交接文档初版及索引后来保存于`6e26e9d`，不混为恢复代码变更。本轮动画设计及交接修订按交付时状态保留待审阅，未实现功能。
+- `2719d0f`正常运行仓库hook，包含18个已审查文件；两份交接初版及索引保存于`6e26e9d`，动画设计经正常完整hook后保存于`d3f4b2b`。这些文档提交不增加动画／玩法功能；本轮独立内核设计按交付时状态保留待审阅。
 
 先读根 [AGENTS.md](../AGENTS.md) 和 [Git 流程](GIT_WORKFLOW.md)，再检查状态、最近提交、实际暂存差异及远端。最新默认规则是：每轮先把已有、来源明确且可审查的上一轮工作通过检查保存成回退 Commit，并同步到核对过的私有 origin；用户明确要求不提交／推送时除外。轮末新工作不自动一起提交。不要回退到聊天早期的“不自动推送”旧规则。
 
@@ -25,6 +25,7 @@
 | 完整存储／恢复对象与限制 | [存储审阅](P3_1_STORAGE_REVIEW.md)、[存储证明](P3_1_STORAGE_PROOF.json) |
 | 数据兼容与文件版本 | [数据约定](DATA_COMPATIBILITY.md)、[格式设计](PROJECT_FORMAT_V1.md)、[内容schema](PROJECT_STATE_SCHEMA.md) |
 | 新增动画设计，尚未实现 | [动画来源／原时长／元素重采样及AN01–AN16](ANIMATION_ASSETS.md) |
+| 独立兼容内核设计，尚未实现 | [standard／No Mod／圆圈架构及K／KT计划](STABLE_KERNEL_PLAN.md)、[内核专用交接](HANDOFF_STABLE_KERNEL.md) |
 | 捕获与保存调度 | [捕获审阅](P3_1_CAPTURE_REVIEW.md)、[自动保护设计](AUTOSAVE_POLICY.md) |
 | 后续顺序与待定事项 | [路线图](ROADMAP.md)、[决策清单](review/DECISIONS.md)、[文档索引](INDEX.md) |
 | 对象／方法／trait／组合关系 | [代码审阅包](review/README.md)、[系统图](review/SYSTEM_MAP.md)及各P3增量审阅 |
@@ -129,6 +130,8 @@ UI与未来AI都提交application值请求；不能互相调用内部实现，�
 - D22及AN01–AN16全部待实施，F12静态图不能单独证明FPS。当前P3静态子集可继续，但动画导入／保存／输出的能力声明必须等待自身验收。
 
 ## 7. 继续工作的建议顺序
+
+若新任务是独立stable兼容内核，改从[专用交接](HANDOFF_STABLE_KERNEL.md)与[方案](STABLE_KERNEL_PLAN.md)开始；不要误按下方P3存储建议自动接保存UI。该设计建议先审阅，再以SyntheticTest无窗口圆圈小模型推进K1，之后解析／profile、编辑器自动预览、手动圆圈对照及原生收口。当前没有gameplay／compatibility实现，时间戳捕获、权威时钟／排程和多实例绘制尚须接线验证。
 
 先审阅P3-1C恢复边界，再按新对话的具体任务选择一个小增量。当前候选包括：代表性媒体／分支规模下恢复与激活成本、剩余受控存储故障、正式保存编排所需的文件绑定／回执／保存范围状态。Linux原生实测仍按用户安排暂缓，不把它重新设成所有Windows工作必等的前提。
 

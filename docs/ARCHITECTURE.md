@@ -46,6 +46,16 @@ flowchart TD
 
 `compatibility`和`automation`尚不是已实现包。真实玩法／定时／资源回退和AI传输仍是未来设计；引入时须更新实际依赖规则与负向回归。原先设计图中的preview→rendering／compatibility、application→compatibility不是当前已有边。
 
+## 独立兼容内核：设计预留，尚未实现
+
+2026-11-03新增[独立stable兼容内核方案](STABLE_KERNEL_PLAN.md)与[新对话交接](HANDOFF_STABLE_KERNEL.md)。首批只做osu!standard／No Mod／受测圆圈子集，未来从无窗口小模型、格式／规则编译、编辑器自动预览、手动圆圈测试推进到原生稳定性验收；当前仍是上图中的占位preview，没有新增包或功能。
+
+建议gameplay拥有规范化谱面、绝对时间／输入、对象生命周期和判定；compatibility依赖gameplay并提供无I/O的有证据格式／规则编译，preview依赖gameplay管理运行。infrastructure负责受限读取和设备适配，host注入application定义的窄控制／观察端口；application不直接依赖玩法运行时，渲染和声音不承担判定。完整未来依赖方向见专题，不把该设计写成当前Cargo图。
+
+玩法状态可由其运行器修改，但没有项目写权限；模拟tick、歌曲位置、载入和成绩不进入项目Command／历史。皮肤热替换／历史检出更新只读材料来源，不重置对象或歌曲。模拟采用有符号绝对MapTime，与单调宿主时、音频生成／复制／消费锚点和GUI取样分开；现有u64占位计时及FrameSource不能冒充完整玩法协议。输入捕获／封口、时序精度和多实例绘制均须接线验证。
+
+K1–K5与KT01–KT24全部待实施，K0只完成本轮设计稿；未验证规则拒绝或明确未支持，不删对象后宣称完整谱面／standard。项目／持久化版本和当前代码边界保持，新增模块时再同步两套依赖与负向检查。
+
 ## 对象、状态与所有权
 
 `SkinProject`持有AssetLibrary、ElementDocument／LayerTree、ComponentTree、独立AudioComponent、SkinConfiguration及OutputMapping。原始Asset、图层实例和输出文件分离；同一素材可多处引用。构造／纯转换所得的脱离副本不等于活动项目写入口。

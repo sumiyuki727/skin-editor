@@ -4,6 +4,7 @@
 
 ## 当前阅读入口
 
+- [独立stable兼容内核架构／K计划](STABLE_KERNEL_PLAN.md) · [专用新对话交接](HANDOFF_STABLE_KERNEL.md)（2026-11-03设计；standard／No Mod／圆圈子集，K1–K5及KT01–KT24均未实施）
 - [编辑器新对话交接](HANDOFF_EDITOR_CONTINUATION.md) · [素材制作／未来编辑器操作skill交接](HANDOFF_SKIN_ASSET_SKILL.md)（2026-11-03快照，含可粘贴开场提示）
 - [动画来源／原始帧时长／stable重采样](ANIMATION_ASSETS.md)（设计已记录；模型、版本和功能未改；AN01–AN16全部待实施）
 - [P3-1C 热日志／进程中断恢复补充](P3_1_RECOVERY_REVIEW.md) · [独立证据](P3_1_RECOVERY_PROOF.json)
@@ -30,6 +31,8 @@
 | 文档 | 阅读身份 |
 | --- | --- |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | 当前契约／入口 |
+| [STABLE_KERNEL_PLAN.md](STABLE_KERNEL_PLAN.md) | 独立兼容内核设计、时间／输入／生命周期、模块交接与K／KT待验；不是已实现玩法 |
+| [HANDOFF_STABLE_KERNEL.md](HANDOFF_STABLE_KERNEL.md) | 新对话接手内核规划的范围、代码入口、风险、检查及可粘贴任务 |
 | [AUDIO_EDITING_REVIEW.md](AUDIO_EDITING_REVIEW.md) | 当前契约／入口 |
 | [ANIMATION_ASSETS.md](ANIMATION_ASSETS.md) | 动画导入、精确原时序、元素输出计划及后续AN验收；尚未实现，不能将静态PNG／分页sequence视作动画 |
 | [COMMANDS.md](COMMANDS.md) | 当前契约／入口 |

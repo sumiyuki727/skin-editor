@@ -10,6 +10,9 @@ impl SyntheticRun {
     ) -> Result<Admission, RunError> {
         self.check_source(source)?;
         if batch.len() > self.limits.inputs {
+            if self.mode != ControlMode::Running || self.failure.is_some() {
+                return Err(RunError::GateClosed);
+            }
             return Err(self.fail(RunError::InputCapacity));
         }
         let mut added = [None; MAX_INPUTS];
@@ -19,9 +22,9 @@ impl SyntheticRun {
             if let Some(old) = self.replay[..self.limits.replay]
                 .iter()
                 .flatten()
-                .find(|old| old.sequence == input.sequence)
+                .find(|old| old.sequence() == input.sequence)
             {
-                if *old != input {
+                if *old != InputRecord::Gameplay(input) {
                     return Err(self.fail(RunError::InputConflict));
                 }
                 repeated += 1;
@@ -41,7 +44,7 @@ impl SyntheticRun {
             if input.sequence.get() <= self.highest_input {
                 return Err(RunError::OldInputSequence);
             }
-            if self.failure.is_some() {
+            if self.failure.is_some() || self.mode != ControlMode::Running {
                 return Err(RunError::GateClosed);
             }
             if self.sealed.is_some_and(|sealed| input.at <= sealed) {
@@ -69,6 +72,18 @@ impl SyntheticRun {
             }
             added.swap(index, smallest);
         }
+        // Admission permission is separate from the consumed held state. In a
+        // batch, captured releases arm only later sequence numbers; rejection
+        // cannot leave half the batch or half its arming changes behind.
+        let mut armed_after = self.armed;
+        for input in added[..new_len].iter().flatten() {
+            let slot = input.slot.index();
+            match input.edge {
+                InputEdge::Release => armed_after[slot] = true,
+                InputEdge::Press(_) if !armed_after[slot] => return Err(RunError::RearmRequired),
+                InputEdge::Press(_) => {}
+            }
+        }
         for input in added[..new_len].iter().flatten().copied() {
             let mut at = self.input_len;
             while at > 0 {
@@ -81,10 +96,11 @@ impl SyntheticRun {
             }
             self.inputs[at] = Some(input);
             self.input_len += 1;
-            self.replay[self.replay_next] = Some(input);
+            self.replay[self.replay_next] = Some(InputRecord::Gameplay(input));
             self.replay_next = (self.replay_next + 1) % self.limits.replay;
             self.highest_input = input.sequence.get();
         }
+        self.armed = armed_after;
         Ok(Admission {
             added: new_len,
             repeated,
@@ -98,6 +114,12 @@ impl SyntheticRun {
         }
         if through < self.start || self.sealed.is_some_and(|old| through < old) {
             return Err(RunError::InvalidTarget);
+        }
+        if self.mode != ControlMode::Running
+            && through > self.freeze_info.expect("closed boundary").boundary
+            && self.sealed != Some(through)
+        {
+            return Err(RunError::GateClosed);
         }
         self.sealed = Some(through);
         Ok(())

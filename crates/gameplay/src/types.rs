@@ -158,6 +158,14 @@ pub struct InputEvent {
     pub edge: InputEdge,
 }
 
+/// A current-input-epoch release fact, not a timestamped gameplay edge.
+/// Its sequence shares the admission fence with gameplay inputs.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct ReleaseObservation {
+    pub sequence: InputSequence,
+    pub slot: PhysicalSlot,
+}
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct WorkBudget(u16);
 impl WorkBudget {

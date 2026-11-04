@@ -1,11 +1,13 @@
 use crate::{
-    EventSequence, Evidence, InputEdge, InputEvent, MAX_CIRCLES, MAX_EVENTS, MAX_INPUTS, MapTime,
-    ObjectId, RunId, RunSource, SYNTHETIC_PROFILE_VERSION, SyntheticMap, TransportEpoch,
-    ValueError, WorkBudget,
+    EventSequence, Evidence, InputEdge, InputEvent, InputSequence, MAX_CIRCLES, MAX_EVENTS,
+    MAX_INPUTS, MapTime, ObjectId, ReleaseObservation, RunId, RunSource, SYNTHETIC_PROFILE_VERSION,
+    SyntheticMap, TransportEpoch, ValueError, WorkBudget,
 };
 
 mod admission;
+mod control;
 mod engine;
+pub use control::{FreezeInfo, FreezeReport, RearmReport};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum RunError {
@@ -24,6 +26,9 @@ pub enum RunError {
     CounterExhausted,
     Faulted,
     BudgetLimit,
+    RearmRequired,
+    NotFrozen,
+    NotFreezing,
 }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct Failure {
@@ -35,6 +40,8 @@ pub enum RunStatus {
     Prepared,
     Ready,
     Pending,
+    Freezing,
+    Frozen,
     Failed(Failure),
 }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -95,6 +102,10 @@ pub struct Observation {
     pub pending_inputs: usize,
     pub pending_events: usize,
     pub held_slots: [bool; 4],
+    pub armed_slots: [bool; 4],
+    pub sealed_through: Option<MapTime>,
+    pub freeze: Option<FreezeInfo>,
+    pub cancelled_sound_through: Option<EventSequence>,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -280,6 +291,31 @@ struct EventReservation {
     count: usize,
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum ControlMode {
+    Running,
+    Freezing,
+    Frozen,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum InputRecord {
+    Gameplay(InputEvent),
+    Release(ReleaseObservation),
+}
+impl InputRecord {
+    const fn sequence(self) -> InputSequence {
+        match self {
+            Self::Gameplay(event) => event.sequence,
+            Self::Release(fact) => fact.sequence,
+        }
+    }
+}
+enum PumpReport {
+    Complete { steps: u16 },
+    Pending { reason: PendingReason, steps: u16 },
+}
+
 /// Owned preview state only; no project/session writer and no heap allocation.
 pub struct SyntheticRun {
     source: RunSource,
@@ -290,9 +326,13 @@ pub struct SyntheticRun {
     highest_input: u64,
     inputs: [Option<InputEvent>; MAX_INPUTS],
     input_len: usize,
-    replay: [Option<InputEvent>; MAX_INPUTS],
+    replay: [Option<InputRecord>; MAX_INPUTS],
     replay_next: usize,
     held: [bool; 4],
+    armed: [bool; 4],
+    mode: ControlMode,
+    freeze_info: Option<FreezeInfo>,
+    cancelled_sound_through: u64,
     judgements: [Option<JudgementRecord>; MAX_CIRCLES],
     appeared: usize,
     expired: usize,
@@ -352,6 +392,10 @@ impl SyntheticRun {
             replay: [None; MAX_INPUTS],
             replay_next: 0,
             held: [false; 4],
+            armed: [true; 4],
+            mode: ControlMode::Running,
+            freeze_info: None,
+            cancelled_sound_through: 0,
             judgements: [None; MAX_CIRCLES],
             appeared: 0,
             expired: 0,
@@ -383,6 +427,10 @@ impl SyntheticRun {
     pub fn observation(&self) -> Observation {
         let status = if let Some(failure) = self.failure {
             RunStatus::Failed(failure)
+        } else if self.mode == ControlMode::Freezing {
+            RunStatus::Freezing
+        } else if self.mode == ControlMode::Frozen {
+            RunStatus::Frozen
         } else if self.active.is_some() || self.dirty.is_some() {
             RunStatus::Pending
         } else if self.ready.is_some() {
@@ -403,6 +451,10 @@ impl SyntheticRun {
             pending_inputs: self.input_len,
             pending_events: self.event_len,
             held_slots: self.held,
+            armed_slots: self.armed,
+            sealed_through: self.sealed,
+            freeze: self.freeze_info,
+            cancelled_sound_through: EventSequence::new(self.cancelled_sound_through).ok(),
         }
     }
     pub fn event_at(&self, index: usize) -> Option<GameEvent> {
@@ -461,8 +513,19 @@ impl SyntheticRun {
             self.input_len = 0;
             self.active = None;
             self.work = Work::Select;
+            self.armed.fill(false);
         }
         cause
+    }
+    fn has_freeze_cleanup(&self) -> bool {
+        self.mode == ControlMode::Freezing
+            && self
+                .input_len
+                .checked_sub(1)
+                .and_then(|index| self.inputs[index])
+                .is_some_and(|input| {
+                    input.at > self.freeze_info.expect("freezing boundary").boundary
+                })
     }
     fn reserve_events(&self, count: usize) -> Result<Option<EventReservation>, RunError> {
         if self.event_len + count > self.limits.events {

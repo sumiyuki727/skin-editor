@@ -29,6 +29,9 @@ impl SyntheticRun {
         if self.failure.is_some() {
             return Err(RunError::Faulted);
         }
+        if self.mode != ControlMode::Running {
+            return Err(RunError::GateClosed);
+        }
         if budget.get() > self.limits.max_work {
             return Err(RunError::BudgetLimit);
         }
@@ -74,30 +77,47 @@ impl SyntheticRun {
     }
     fn drive(&mut self, budget: WorkBudget) -> Result<AdvanceReport, RunError> {
         let active = self.active.expect("active advance");
+        match self.pump(active.target, budget)? {
+            PumpReport::Complete { steps } => {
+                self.active = None;
+                Ok(AdvanceReport::Complete {
+                    through: active.target,
+                    steps,
+                })
+            }
+            PumpReport::Pending { reason, steps } => Ok(self.pending(active, reason, steps)),
+        }
+    }
+    pub(super) fn pump(
+        &mut self,
+        target: MapTime,
+        budget: WorkBudget,
+    ) -> Result<PumpReport, RunError> {
         let mut steps = 0;
         loop {
             if matches!(self.work, Work::Select)
                 && self.dirty.is_none()
-                && self.completed() == Some(active.target)
-                && self
-                    .next_action()
-                    .is_none_or(|next| next.at > active.target)
+                && !self.has_freeze_cleanup()
+                && self.completed() == Some(target)
+                && self.next_action().is_none_or(|next| next.at > target)
             {
-                self.active = None;
-                return Ok(AdvanceReport::Complete {
-                    through: active.target,
-                    steps,
-                });
+                return Ok(PumpReport::Complete { steps });
             }
             if steps == budget.get() {
-                return Ok(self.pending(active, PendingReason::WorkBudget, steps));
+                return Ok(PumpReport::Pending {
+                    reason: PendingReason::WorkBudget,
+                    steps,
+                });
             }
             let Some(next_step) = self.step.checked_add(1) else {
                 return Err(self.fail(RunError::CounterExhausted));
             };
-            match self.perform_step(active.target) {
+            match self.perform_step(target) {
                 Ok(StepResult::Blocked) => {
-                    return Ok(self.pending(active, PendingReason::EventBackpressure, steps));
+                    return Ok(PumpReport::Pending {
+                        reason: PendingReason::EventBackpressure,
+                        steps,
+                    });
                 }
                 Ok(StepResult::Worked) => {
                     self.step = next_step;
@@ -150,6 +170,16 @@ impl SyntheticRun {
             .min_by_key(|value| (value.at, value.rank))
     }
     fn perform_step(&mut self, target: MapTime) -> Result<StepResult, RunError> {
+        if self.has_freeze_cleanup() {
+            self.input_len -= 1;
+            self.inputs[self.input_len] = None;
+            // Closed admission and a bounded queue limit this count to 64.
+            self.freeze_info
+                .as_mut()
+                .expect("freezing boundary")
+                .cancelled_inputs += 1;
+            return Ok(StepResult::Worked);
+        }
         match self.work {
             Work::Select => {
                 let next = self.next_action();
@@ -306,6 +336,7 @@ impl SyntheticRun {
         }
         if next + 1 >= self.map.len {
             self.frames[buffer].at = at;
+            self.frames[buffer].source = self.source;
             self.ready = Some(buffer);
             self.dirty = None;
             self.last_committed = Some(at);

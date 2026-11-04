@@ -2,7 +2,7 @@
 
 2026-11-03。这是架构与实施计划的交接，**没有实现内核功能**。新对话先读当前AGENTS／Git和用户本轮任务；本文件不授权自动开工、访问私人谱面、运行窗口或提升权限。
 
-2026-11-04补充三项执行契约及K0-A／K0-B准入要求，详见[方案](STABLE_KERNEL_PLAN.md)。本轮仅修改方案和本交接；未新增功能、fixture或KT通过记录，K0清单仍待逐项审阅／补齐。
+2026-11-04补充三项执行契约及K0-A／K0-B准入要求，详见[方案](STABLE_KERNEL_PLAN.md)；同日后续整理[K0-A开工规格](STABLE_KERNEL_K0_A.md)。本轮仅文档修改，未新增功能、fixture或KT通过记录，K0清单仍待逐项审阅／补齐。
 
 ## 1. 当前任务与停靠点
 
@@ -16,7 +16,8 @@
 
 - 工作区为 E:\skin-editor，分支codex/p1-bootstrap；远端[sumiyuki727/skin-editor](https://github.com/sumiyuki727/skin-editor)须再次核对PRIVATE。
 - 当前恢复代码基线为2719d0f；先前交接文档保存于6e26e9d。动画设计回退点为d3f4b2b34b2c088932acf1641163c72915163e41，经过正常仓库hook并同步私有origin；它没有增加动画功能。
-- 独立内核方案初版及关联交接已保存于881b6613625e4821036bd7fd2cb8a8cd710f96e5，完整本地hook通过并推送私有origin；2026-11-04本轮起点再次核对远端SHA一致。该文档提交没有增加内核功能；本轮契约／K0文档增量按交付时实际Git状态保留，不冒充已上传或已通过KT。
+- 独立内核方案初版及关联交接已保存于881b6613625e4821036bd7fd2cb8a8cd710f96e5，完整本地hook通过并推送私有origin；后续契约文档回退点见下一条。该初版文档提交没有增加内核功能，不证明KT或规则已验证。
+- C1／C2／C3及K0准入文档已保存于ff1a3081e2a5123a695bbbb1fc563c772ff94915，本轮正常完整hook通过、推送私有origin并核对远端SHA；它只包含两份文档。之后新增的K0-A规格及入口修订按实际Git状态交付，不冒充已推送。
 - 最新默认流程：先看status／log／实际暂存差异，将上一轮来源明确、可审查的工作通过检查及hook提交成回退点，默认同步核对过的私有origin；用户明确说不提交／推送时除外。新增量轮末不自动一起提交。
 - 保留其他对话工作，不并发Git写操作，不替其他对话暂存，不盲目全目录add、不跳过hook／强推／amend／重写历史。
 - schema.rs可能显示M而实际diff为空，已有核对属换行规范化现象；先检查内容，不为消标记修改DDL、清理源码或改旧证明。
@@ -28,7 +29,7 @@
 | 顺序 | 内容 |
 | --- | --- |
 | 1 | [AGENTS](../AGENTS.md)、[Git规则](GIT_WORKFLOW.md)、[README](../README.md) |
-| 2 | [内核方案](STABLE_KERNEL_PLAN.md)：范围、未来依赖、时间／输入／代次；重点读C1／C2／C3、K0准入、K切片与KT矩阵 |
+| 2 | [内核方案](STABLE_KERNEL_PLAN.md)：C1／C2／C3、K0总表与KT矩阵；再读[K0-A开工规格](STABLE_KERNEL_K0_A.md)的值约束／有限配置／S01–S04逐步预期及剩余项 |
 | 3 | [当前架构](ARCHITECTURE.md)、[技术栈](TECH_STACK.md)、[路线](ROADMAP.md) |
 | 4 | [传输／定位](PREVIEW_TRANSPORT.md)、[输入](EDITOR_INPUT.md)、[设置／外部来源](PREVIEW_SETTINGS.md)、[GPU交接](PRESENTATION_CONTRACT.md) |
 | 5 | [预算v2](RESOURCE_BUDGET.md)、[P2最终证据范围](P2_FINAL_ACCEPTANCE.md)、[首轮预览边界](p0/PREVIEW_SCOPE.md) |
@@ -79,7 +80,7 @@
 
 ## 6. 下一增量、检查和证据
 
-本轮用户明确要求只补文档，暂不开始功能开发。下一步先审阅并补齐[方案的K0准入要求](STABLE_KERNEL_PLAN.md#k0-准入要求)，记录每项已具备／待补／阻塞及依据；写下要求不等于通过，后续明确要求实施才启动对应增量。
+本轮沿用用户“暂不开发”的范围，继续补文档。下一步按用户任务审阅[方案的K0准入要求](STABLE_KERNEL_PLAN.md#k0-准入要求)及[K0-A开工规格](STABLE_KERNEL_K0_A.md)，记录每项已具备／待补／阻塞及依据。该规格已定义值约束、有限配置、S01–S04逐步预期和取消／确认边界，尚未宣称K0-A通过；文档审阅与后续K1实现验收分别记录，不形成先实现才能开工的循环。
 
 | 门槛 | 必须准备 | 当前边界 |
 | --- | --- | --- |
@@ -119,7 +120,7 @@ Rust1.95.0，工具链路径与本机缓存按README核对；不得静默下载�
 ```text
 请在 E:\skin-editor 接手独立stable兼容内核规划。先读AGENTS.md、docs/HANDOFF_STABLE_KERNEL.md、docs/STABLE_KERNEL_PLAN.md及当前Git状态／HEAD／暂存差异，按最新规则保护上一轮已审查工作，核对私有origin并保留其他对话修改，不并发Git写入。
 
-首批仅osu!standard／No Mod／纯圆圈受测子集。独立内核仍在同一模块化单体内；gameplay／compatibility尚未实现。application保持唯一项目写入口，运行控制与tick不进入项目Command／历史。先复核方案C1封口包含T及同刻顺序、C2完成截面／同刻继续和迁移预留、C3游戏事件到供给ID／回执的有界去重，以及K0-A／K0-B分层准入；未知stable数值不得硬编码成已验证规则，不复制旧stable源码，也不把lazer当stable证据。
+首批仅osu!standard／No Mod／纯圆圈受测子集。独立内核仍在同一模块化单体内；gameplay／compatibility尚未实现。application保持唯一项目写入口，运行控制与tick不进入项目Command／历史。先复核方案C1／C2／C3、K0-A／K0-B分层准入及docs/STABLE_KERNEL_K0_A.md的值约束、有限配置、S01–S04操作／黄金预期与剩余项；未知stable数值不得硬编码成已验证规则，不复制旧stable源码，也不把lazer当stable证据。
 
 按我本轮明确任务执行；交接本身不授权新增功能、接P3保存／打开UI、访问私人谱面或启动窗口／设备。2026-11-04停靠点只补文档，门槛及fixture仍待逐项满足。后续若我明确要求实施K1且K0-A满足，先做无窗口SyntheticTest小模型和KT05／06／08／10等确定性回归；K0-B和K3宿主交接分别验收，不跨阶段宣称兼容或完整standard。
 

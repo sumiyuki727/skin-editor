@@ -586,3 +586,218 @@ fn single_step_and_full_budget_produce_identical_inspection_and_later_events() {
         assert_eq!(tiny.event_at(index), reference.event_at(index));
     }
 }
+
+#[test]
+fn inspection_requires_a_completed_nonfaulted_freeze() {
+    let mut run = run(50_130, &[1_000_000], Limits::tiny());
+    let source = run.source();
+    let before = run.observation();
+    assert_eq!(
+        run.request_inspection(source, time(1_000_000)),
+        Err(RunError::NotFrozen)
+    );
+    assert_eq!(run.observation(), before);
+    run.submit_inputs(source, &[press(1, 1_000_000)]).unwrap();
+    run.request_freeze(source, time(1_000_000)).unwrap();
+    run.seal_through(source, time(1_000_000)).unwrap();
+    assert!(matches!(
+        run.settle_freeze(source, WorkBudget::one()).unwrap(),
+        FreezeReport::Pending { .. }
+    ));
+    let before = run.observation();
+    assert_eq!(before.status, RunStatus::Freezing);
+    assert_eq!(before.ready_frame, None);
+    assert_eq!(
+        run.request_inspection(source, time(1_000_000)),
+        Err(RunError::NotFrozen)
+    );
+    assert_eq!(run.observation(), before);
+    freeze(&mut run, 1_000_000, WorkBudget::one());
+    let conflict = InputEvent {
+        edge: InputEdge::Release,
+        ..press(1, 1_000_000)
+    };
+    assert_eq!(
+        run.submit_inputs(source, &[conflict]),
+        Err(RunError::InputConflict)
+    );
+    let before = run.observation();
+    assert!(matches!(before.status, RunStatus::Failed(_)));
+    assert_eq!(
+        run.request_inspection(source, time(1_000_001)),
+        Err(RunError::Faulted)
+    );
+    assert_eq!(run.observation(), before);
+}
+
+#[test]
+fn inspecting_at_window_close_misses_only_after_resuming_past_it() {
+    let mut run = run(50_131, &[1_000_000], Limits::tiny());
+    freeze(&mut run, 799_999, WorkBudget::one());
+    inspect(&mut run, 1_100_000, WorkBudget::one());
+    let circle = run.observation().ready_frame.unwrap().object(0).unwrap();
+    assert_eq!(circle.phase, Phase::VisibleUnjudged);
+    assert_eq!(circle.judgement, None);
+    assert_eq!(circle.unavailable, None);
+    assert_eq!(run.event_at(0), None);
+    run.resume(run.source()).unwrap();
+    advance(&mut run, 1_100_000, WorkBudget::one());
+    assert_eq!(run.observation().committed_judgements[0], None);
+    assert_eq!(run.event_at(0), None);
+    advance(&mut run, 1_100_001, WorkBudget::one());
+    let record = JudgementRecord {
+        object: ObjectId::new(0),
+        at: time(1_100_001),
+        result: Judgement::Miss,
+    };
+    assert_eq!(run.observation().committed_judgements[0], Some(record));
+    let event = run.event_at(0).unwrap();
+    assert_eq!(event.kind, EventKind::Judgement(Judgement::Miss));
+    assert_eq!(event.at, record.at);
+    assert_eq!(event.key.sequence().get(), 1);
+    assert_eq!(run.event_at(1), None);
+    advance(&mut run, 1_300_000, WorkBudget::one());
+    assert_eq!(run.event_at(0), Some(event));
+    assert_eq!(run.event_at(1), None);
+    let frame = run.observation().ready_frame.unwrap();
+    assert_eq!(frame.object(0).unwrap().judgement, Some(record));
+    assert_eq!(frame.object(0).unwrap().unavailable, None);
+    assert_eq!(
+        frame.statistics_origin,
+        StatisticsOrigin::Inspection {
+            at: time(1_100_000)
+        }
+    );
+}
+
+#[test]
+fn cancelling_a_candidate_keeps_acknowledgements_and_does_not_rearm_old_sound() {
+    let mut run = run(50_132, &[0, 1_000_000], Limits::tiny());
+    run.submit_inputs(run.source(), &[press(1, 0)]).unwrap();
+    freeze(&mut run, 0, WorkBudget::one());
+    let judgement = run.event_at(0).unwrap();
+    let sound = run.event_at(1).unwrap();
+    let cursor = run.request_inspection(run.source(), time(900_000)).unwrap();
+    assert!(matches!(
+        run.step_inspection(cursor, WorkBudget::one()).unwrap(),
+        InspectionReport::Pending { .. }
+    ));
+    assert!(matches!(
+        run.acknowledge(judgement.key).unwrap(),
+        Acknowledgement::Acknowledged { removed: 1, .. }
+    ));
+    let mut expected = run.observation();
+    expected.inspection = None;
+    run.cancel_inspection(cursor.key()).unwrap();
+    assert_eq!(run.observation(), expected);
+    assert_eq!(run.event_at(0), Some(sound));
+    assert_eq!(run.event_at(1), None);
+    assert_eq!(
+        run.acknowledge(judgement.key),
+        Ok(Acknowledgement::AlreadyRetired)
+    );
+    run.resume(run.source()).unwrap();
+    assert!(!run.sound_intent_allowed(sound.key).unwrap());
+    run.acknowledge(sound.key).unwrap();
+    assert_eq!(run.event_at(0), None);
+}
+
+#[test]
+fn overlapping_visibility_does_not_replay_skipped_deadlines() {
+    // The acceptance intervals touch at consecutive integer times while the
+    // visible/fade intervals overlap. Inspection must rebuild all four heads.
+    let mut run = run(50_133, &[0, 200_001], Limits::tiny());
+    freeze(&mut run, -200_001, WorkBudget::one());
+    inspect(&mut run, 100_001, WorkBudget::one());
+    run.resume(run.source()).unwrap();
+    rearm(&mut run);
+    run.submit_inputs(run.source(), &[press(2, 100_002)])
+        .unwrap();
+    advance(&mut run, 100_002, WorkBudget::one());
+    let state = run.observation();
+    assert_eq!(state.committed_judgements[0], None);
+    assert_eq!(
+        state.committed_judgements[1],
+        Some(JudgementRecord {
+            object: ObjectId::new(1),
+            at: time(100_002),
+            result: Judgement::Hit,
+        })
+    );
+    let frame = state.ready_frame.unwrap();
+    assert_eq!(
+        frame.object(0).unwrap().unavailable,
+        Some(UnavailableReason::InspectionSkipped)
+    );
+    assert_eq!(frame.object(1).unwrap().phase, Phase::ResolvedVisual);
+    let first = run.event_at(0).unwrap();
+    let second = run.event_at(1).unwrap();
+    assert_eq!(first.object, ObjectId::new(1));
+    assert_eq!(first.kind, EventKind::Judgement(Judgement::Hit));
+    assert_eq!(second.object, ObjectId::new(1));
+    assert_eq!(second.kind, EventKind::SoundIntent);
+    run.acknowledge(first.key).unwrap();
+    run.acknowledge(second.key).unwrap();
+    advance(&mut run, 500_001, WorkBudget::one());
+    assert_eq!(run.event_at(0), None);
+    assert_eq!(
+        run.observation().committed_judgements,
+        state.committed_judgements
+    );
+    let frame = run.observation().ready_frame.unwrap();
+    assert_eq!(frame.object(0).unwrap().phase, Phase::Retired);
+    assert_eq!(frame.object(1).unwrap().phase, Phase::Retired);
+}
+
+#[test]
+fn repeated_inspection_after_a_real_hit_rebuilds_ledger_and_freeze_state() {
+    let mut run = run(50_134, &[1_000_000], Limits::tiny());
+    freeze(&mut run, 799_999, WorkBudget::one());
+    inspect(&mut run, 1_000_000, WorkBudget::one());
+    run.resume(run.source()).unwrap();
+    rearm(&mut run);
+    run.submit_inputs(run.source(), &[press(2, 1_000_001)])
+        .unwrap();
+    advance(&mut run, 1_000_001, WorkBudget::one());
+    let old_event = run.event_at(0).unwrap();
+    freeze(&mut run, 1_000_001, WorkBudget::one());
+    let before = run.observation();
+    let cancelled = prepare(&mut run, 1_000_002, WorkBudget::one());
+    run.cancel_inspection(cancelled).unwrap();
+    assert_eq!(run.observation(), before);
+    let source = inspect(&mut run, 1_000_002, WorkBudget::one());
+    assert_eq!(source.transport.get(), old_event.key.transport().get() + 1);
+    assert_eq!(run.observation().committed_judgements, [None; MAX_CIRCLES]);
+    assert_eq!(run.event_at(0), None);
+    let before = run.observation();
+    run.request_freeze(source, time(1_000_002)).unwrap();
+    assert_eq!(
+        run.settle_freeze(source, WorkBudget::one()),
+        Ok(FreezeReport::Frozen {
+            at: time(1_000_002),
+            steps: 0,
+            cancelled_inputs: 0,
+        })
+    );
+    assert_eq!(run.observation(), before);
+    run.resume(source).unwrap();
+    rearm(&mut run);
+    run.submit_inputs(run.source(), &[press(2, 1_000_003)])
+        .unwrap();
+    advance(&mut run, 1_000_003, WorkBudget::one());
+    let current = run.observation();
+    assert_eq!(
+        current.statistics_origin,
+        StatisticsOrigin::Inspection {
+            at: time(1_000_002)
+        }
+    );
+    assert_eq!(current.committed_judgements[0].unwrap().at, time(1_000_003));
+    assert_eq!(run.event_at(0).unwrap().key.sequence().get(), 1);
+    assert_eq!(run.acknowledge(old_event.key), Err(RunError::StaleSource));
+    assert_eq!(run.observation(), current);
+    assert!(
+        run.sound_intent_allowed(run.event_at(1).unwrap().key)
+            .unwrap()
+    );
+}

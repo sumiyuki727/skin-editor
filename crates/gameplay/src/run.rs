@@ -257,7 +257,7 @@ impl Limits {
         limits.validate()?;
         Ok(limits)
     }
-    fn validate(self) -> Result<(), ValueError> {
+    pub(crate) fn validate(self) -> Result<(), ValueError> {
         if self.inputs == 0
             || self.inputs > MAX_INPUTS
             || self.events < 2

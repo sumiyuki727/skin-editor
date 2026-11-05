@@ -37,6 +37,7 @@ macro_rules! identity {
     };
 }
 identity!(RunId, u128, NonZeroU128);
+identity!(CoordinatorId, u128, NonZeroU128);
 identity!(TransportEpoch, u64, NonZeroU64);
 identity!(InputEpoch, u64, NonZeroU64);
 identity!(InputSequence, u64, NonZeroU64);

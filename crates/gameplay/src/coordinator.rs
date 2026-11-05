@@ -1,7 +1,7 @@
 //! Caller-stepped, bounded coordination; no project writer or native adapter.
 use crate::{
-    Circle, CoordinatorId, Limits, MAX_CIRCLES, MapPreparation, MapTime, RunError, RunSource,
-    RunStatus, SyntheticMap, SyntheticRun, ValueError,
+    Circle, CoordinatorId, InputDriver, Limits, MAX_CIRCLES, MapPreparation, MapTime, RunError,
+    RunSource, RunStatus, SyntheticMap, SyntheticRun, ValueError,
 };
 use core::cell::Cell;
 use std::rc::Rc;
@@ -30,6 +30,7 @@ pub struct PreparationKey {
     base: Option<(RunSource, RunStatus)>,
     operation: PreparationOperation,
     target: RunSource,
+    driver: InputDriver,
 }
 impl PreparationKey {
     pub const fn owner(self) -> CoordinatorId {
@@ -46,6 +47,9 @@ impl PreparationKey {
     }
     pub const fn target(self) -> RunSource {
         self.target
+    }
+    pub const fn driver(self) -> InputDriver {
+        self.driver
     }
 }
 
@@ -263,6 +267,12 @@ impl SyntheticCoordinator {
             base: self.pool.base.get(),
             operation,
             target,
+            driver: match operation {
+                PreparationOperation::Inspect { .. } => {
+                    self.current().expect("inspection base").driver()
+                }
+                _ => InputDriver::Manual,
+            },
         })
     }
     fn publish_request(&mut self, key: PreparationKey) {

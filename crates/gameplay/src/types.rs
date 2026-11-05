@@ -146,6 +146,13 @@ impl PhysicalSlot {
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum InputDriver {
+    Manual,
+    Automatic,
+    Regression,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum InputEdge {
     Press(Point),
     Release,

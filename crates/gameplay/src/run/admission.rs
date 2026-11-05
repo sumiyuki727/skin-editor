@@ -8,6 +8,23 @@ impl SyntheticRun {
         source: RunSource,
         batch: &[InputEvent],
     ) -> Result<Admission, RunError> {
+        self.submit_driver_inputs(source, InputDriver::Manual, batch)
+    }
+    /// External manual/regression input; automatic pulses have a private producer.
+    pub fn submit_driver_inputs(
+        &mut self,
+        source: RunSource,
+        driver: InputDriver,
+        batch: &[InputEvent],
+    ) -> Result<Admission, RunError> {
+        self.check_external_driver(source, driver)?;
+        self.admit_inputs(source, batch)
+    }
+    pub(super) fn admit_inputs(
+        &mut self,
+        source: RunSource,
+        batch: &[InputEvent],
+    ) -> Result<Admission, RunError> {
         self.check_source(source)?;
         if batch.len() > self.limits.inputs {
             if self.mode != ControlMode::Running || self.failure.is_some() {
@@ -122,6 +139,12 @@ impl SyntheticRun {
         }
         if through < self.start || self.sealed.is_some_and(|old| through < old) {
             return Err(RunError::InvalidTarget);
+        }
+        if self.driver == InputDriver::Automatic
+            && self.mode == ControlMode::Running
+            && self.automatic.ready.is_none_or(|ready| through > ready)
+        {
+            return Err(RunError::AutomaticInputsPending);
         }
         if self.mode != ControlMode::Running
             && through > self.freeze_info.expect("closed boundary").boundary

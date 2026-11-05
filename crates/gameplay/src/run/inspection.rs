@@ -212,6 +212,7 @@ impl SyntheticRun {
         self.retired = candidate.retired;
         self.judgements.fill(None);
         self.sealed = Some(key.target);
+        self.automatic = AutomaticState::after_boundary(key.target);
         self.highest_input = 0;
         self.inputs.fill(None);
         self.input_len = 0;

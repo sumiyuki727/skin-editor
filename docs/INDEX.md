@@ -4,7 +4,7 @@
 
 ## 当前阅读入口
 
-- [独立stable兼容内核架构／K计划](STABLE_KERNEL_PLAN.md) · [专用新对话交接](HANDOFF_STABLE_KERNEL.md) · [K1-1合成圆圈模型](K1_1_SYNTHETIC_REVIEW.md) · [K1-2冻结／恢复／重新武装](K1_2_FREEZE_REVIEW.md) · [K1-3同谱面检查定位](K1_3_INSPECTION_REVIEW.md) · [K1-4统一候选准备／激活](K1_4_PREPARATION_REVIEW.md)（API4、4对象无窗口，K1部分完成，未接GUI／设备，完整KT和stable兼容仍未验收）
+- [独立stable兼容内核架构／K计划](STABLE_KERNEL_PLAN.md) · [专用新对话交接](HANDOFF_STABLE_KERNEL.md) · [K1-1合成圆圈模型](K1_1_SYNTHETIC_REVIEW.md) · [K1-2冻结／恢复／重新武装](K1_2_FREEZE_REVIEW.md) · [K1-3同谱面检查定位](K1_3_INSPECTION_REVIEW.md) · [K1-4统一候选准备／激活](K1_4_PREPARATION_REVIEW.md) · [K1-5自动输入／驱动互斥](K1_5_DRIVER_REVIEW.md)（API5、4对象无窗口，K1部分完成，未接GUI／设备，完整KT和stable兼容仍未验收）
 - [编辑器新对话交接](HANDOFF_EDITOR_CONTINUATION.md) · [素材制作／未来编辑器操作skill交接](HANDOFF_SKIN_ASSET_SKILL.md)（2026-11-03快照，含可粘贴开场提示）
 - [动画来源／原始帧时长／stable重采样](ANIMATION_ASSETS.md)（设计已记录；模型、版本和功能未改；AN01–AN16全部待实施）
 - [P3-1C 热日志／进程中断恢复补充](P3_1_RECOVERY_REVIEW.md) · [独立证据](P3_1_RECOVERY_PROOF.json)

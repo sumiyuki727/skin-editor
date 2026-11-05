@@ -212,7 +212,13 @@ impl<'a> PreparationTask<'a> {
                             .map_or(MapTime::from_micros(0), |v| v.visible_from()),
                     ),
                 };
-                let mut run = SyntheticRun::new(source, content.map, start, self.limits)?;
+                let mut run = SyntheticRun::new_driven(
+                    source,
+                    content.map,
+                    start,
+                    self.limits,
+                    self.key.driver,
+                )?;
                 if matches!(self.key.operation, PreparationOperation::Inspect { .. }) {
                     // The private start section has no accepted inputs/deadlines.
                     run.request_freeze(source, start)?;

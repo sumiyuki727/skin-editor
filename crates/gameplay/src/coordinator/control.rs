@@ -1,10 +1,45 @@
 use super::*;
 use crate::{
-    Acknowledgement, Admission, AdvanceCursor, AdvanceReport, EventKey, FreezeReport, InputEvent,
-    RearmReport, ReleaseObservation, RequestKey, WorkBudget,
+    Acknowledgement, Admission, AdvanceCursor, AdvanceReport, AutomaticReport, EventKey,
+    FreezeReport, InputEvent, RearmReport, ReleaseObservation, RequestKey, WorkBudget,
 };
 
 impl SyntheticCoordinator {
+    pub fn select_driver(
+        &mut self,
+        source: RunSource,
+        driver: InputDriver,
+    ) -> Result<RunSource, PreparationError> {
+        self.check_base(source)?;
+        if self.pool.live.get().is_some() {
+            return Err(PreparationError::Busy);
+        }
+        self.control(|run| run.select_driver(source, driver))
+    }
+    pub fn submit_driver_inputs(
+        &mut self,
+        source: RunSource,
+        driver: InputDriver,
+        batch: &[InputEvent],
+    ) -> Result<Admission, PreparationError> {
+        self.control(|run| run.submit_driver_inputs(source, driver, batch))
+    }
+    pub fn observe_driver_release(
+        &mut self,
+        source: RunSource,
+        driver: InputDriver,
+        fact: ReleaseObservation,
+    ) -> Result<RearmReport, PreparationError> {
+        self.control(|run| run.observe_driver_release(source, driver, fact))
+    }
+    pub fn prepare_automatic_inputs(
+        &mut self,
+        source: RunSource,
+        through: MapTime,
+        budget: WorkBudget,
+    ) -> Result<AutomaticReport, PreparationError> {
+        self.control(|run| run.prepare_automatic_inputs(source, through, budget))
+    }
     fn control<T>(
         &mut self,
         action: impl FnOnce(&mut SyntheticRun) -> Result<T, RunError>,

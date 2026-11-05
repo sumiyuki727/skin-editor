@@ -54,6 +54,7 @@ impl SyntheticRun {
             return Err(RunError::InvalidTarget);
         }
         self.mode = ControlMode::Freezing;
+        self.automatic.pending = None;
         self.freeze_info = Some(FreezeInfo {
             source,
             boundary,
@@ -133,6 +134,11 @@ impl SyntheticRun {
         if self.inspection.is_some() {
             return Err(RunError::Busy);
         }
+        let source = self.renew_input_epoch()?;
+        self.mode = ControlMode::Running;
+        Ok(source)
+    }
+    pub(super) fn renew_input_epoch(&mut self) -> Result<RunSource, RunError> {
         let input = self
             .source
             .input
@@ -150,7 +156,11 @@ impl SyntheticRun {
         self.armed.fill(false);
         self.armed_from.fill(None);
         self.cancelled_sound_through = self.issued_through;
-        self.mode = ControlMode::Running;
+        self.automatic.pending = None;
+        self.automatic.rearm = true;
+        if let Some(sealed) = self.sealed {
+            self.automatic.cover(sealed);
+        }
         if let Some(index) = self.ready {
             self.frames[index].source = self.source;
         }
@@ -160,6 +170,22 @@ impl SyntheticRun {
     /// An untimed, current-source capture fact. It cannot clear consumed held
     /// state or grant settlement eligibility to externally supplied old inputs.
     pub fn observe_release(
+        &mut self,
+        source: RunSource,
+        fact: ReleaseObservation,
+    ) -> Result<RearmReport, RunError> {
+        self.observe_driver_release(source, InputDriver::Manual, fact)
+    }
+    pub fn observe_driver_release(
+        &mut self,
+        source: RunSource,
+        driver: InputDriver,
+        fact: ReleaseObservation,
+    ) -> Result<RearmReport, RunError> {
+        self.check_external_driver(source, driver)?;
+        self.admit_release(source, fact)
+    }
+    pub(super) fn admit_release(
         &mut self,
         source: RunSource,
         fact: ReleaseObservation,

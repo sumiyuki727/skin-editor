@@ -1,14 +1,17 @@
 use crate::{
-    EventSequence, Evidence, InputEdge, InputEvent, InputSequence, MAX_CIRCLES, MAX_EVENTS,
-    MAX_INPUTS, MapTime, ObjectId, ReleaseObservation, RunId, RunSource, SYNTHETIC_PROFILE_VERSION,
-    SyntheticMap, TransportEpoch, ValueError, WorkBudget,
+    EventSequence, Evidence, InputDriver, InputEdge, InputEvent, InputSequence, MAX_CIRCLES,
+    MAX_EVENTS, MAX_INPUTS, MapTime, ObjectId, ReleaseObservation, RunId, RunSource,
+    SYNTHETIC_PROFILE_VERSION, SyntheticMap, TransportEpoch, ValueError, WorkBudget,
 };
 
 mod admission;
 mod control;
+mod driver;
 mod engine;
 mod inspection;
 pub use control::{FreezeInfo, FreezeReport, RearmReport};
+use driver::AutomaticState;
+pub use driver::{AutomaticPendingReason, AutomaticReport};
 use inspection::InspectionCandidate;
 pub use inspection::{InspectionCursor, InspectionInfo, InspectionKey, InspectionReport};
 
@@ -34,6 +37,10 @@ pub enum RunError {
     NotFreezing,
     StaleInspection,
     InspectionIncomplete,
+    DriverMismatch,
+    AutomaticInputReserved,
+    AutomaticCapacity,
+    AutomaticInputsPending,
 }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct Failure {
@@ -108,6 +115,7 @@ impl ReadyFrame {
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct Observation {
     pub source: RunSource,
+    pub driver: InputDriver,
     pub evidence: Evidence,
     pub profile_version: u32,
     pub statistics_origin: StatisticsOrigin,
@@ -338,6 +346,8 @@ enum PumpReport {
 /// Owned preview state only; no project/session writer and no heap allocation.
 pub struct SyntheticRun {
     source: RunSource,
+    driver: InputDriver,
+    automatic: AutomaticState,
     map: SyntheticMap,
     start: MapTime,
     statistics_origin: StatisticsOrigin,
@@ -388,6 +398,7 @@ impl SyntheticRun {
             + core::mem::size_of::<[Option<InputEvent>; MAX_INPUTS]>()
             + core::mem::size_of::<([bool; 4], [Option<MapTime>; 4])>()
             + core::mem::size_of::<InspectionCandidate>()
+            + core::mem::size_of::<[InputEvent; 2]>()
     }
     pub fn new(
         source: RunSource,
@@ -395,7 +406,19 @@ impl SyntheticRun {
         start: MapTime,
         limits: Limits,
     ) -> Result<Self, ValueError> {
+        Self::new_driven(source, map, start, limits, InputDriver::Manual)
+    }
+    pub(crate) fn new_driven(
+        source: RunSource,
+        map: SyntheticMap,
+        start: MapTime,
+        limits: Limits,
+        driver: InputDriver,
+    ) -> Result<Self, ValueError> {
         limits.validate()?;
+        if driver == InputDriver::Automatic && limits.inputs < 2 {
+            return Err(ValueError::InvalidLimits);
+        }
         if source.revision != map.revision {
             return Err(ValueError::RevisionMismatch);
         }
@@ -412,6 +435,8 @@ impl SyntheticRun {
         };
         Ok(Self {
             source,
+            driver,
+            automatic: AutomaticState::new(),
             map,
             start,
             statistics_origin: StatisticsOrigin::FromStart { start },
@@ -475,6 +500,7 @@ impl SyntheticRun {
         };
         Observation {
             source: self.source,
+            driver: self.driver,
             evidence: Evidence::SyntheticTest,
             profile_version: SYNTHETIC_PROFILE_VERSION,
             statistics_origin: self.statistics_origin,

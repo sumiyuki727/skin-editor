@@ -104,6 +104,10 @@ fn epoch_exhaustion_and_wrong_operation_or_target_preserve_the_current_candidate
             },
             ..original
         },
+        PreparationKey {
+            driver: InputDriver::Regression,
+            ..original
+        },
     ] {
         assert_eq!(
             owner.activate(key, &mut job),

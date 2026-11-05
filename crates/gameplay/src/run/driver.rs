@@ -291,4 +291,111 @@ mod tests {
             assert_eq!(run.observation().status, RunStatus::Frozen);
         }
     }
+
+    #[test]
+    fn a_runtime_fault_keeps_retained_auto_work_inert_and_cannot_rearm_inputs() {
+        let source = RunSource {
+            run: RunId::new(91_002).unwrap(),
+            transport: TransportEpoch::new(1).unwrap(),
+            input: InputEpoch::new(1).unwrap(),
+            revision: MapRevision::new(2),
+        };
+        let circles: Vec<_> = [0, 1_000_000, 2_000_000]
+            .into_iter()
+            .enumerate()
+            .map(|(i, at)| {
+                Circle::new(
+                    ObjectId::new(i as u32),
+                    MapTime::from_micros(at),
+                    Point::new(0, 0).unwrap(),
+                )
+                .unwrap()
+            })
+            .collect();
+        let map = SyntheticMap::try_new(source.revision, &circles).unwrap();
+        let mut run = SyntheticRun::new_driven(
+            source,
+            map,
+            MapTime::from_micros(-200_001),
+            Limits::tiny(),
+            InputDriver::Automatic,
+        )
+        .unwrap();
+        for _ in 0..128 {
+            if matches!(
+                run.prepare_automatic_inputs(
+                    source,
+                    MapTime::from_micros(2_000_001),
+                    WorkBudget::one()
+                )
+                .unwrap(),
+                AutomaticReport::Pending {
+                    reason: AutomaticPendingReason::InputBackpressure,
+                    ..
+                }
+            ) {
+                break;
+            }
+        }
+        assert_eq!(run.observation().pending_inputs, 4);
+        assert!(run.automatic.pending.is_some());
+        run.next_event = None;
+        run.seal_through(source, MapTime::from_micros(1_000_001))
+            .unwrap();
+        let mut report = run.advance(source, MapTime::from_micros(0), WorkBudget::one());
+        for _ in 0..128 {
+            match report {
+                Ok(AdvanceReport::Pending { cursor, .. }) => {
+                    report = run.continue_advance(cursor, WorkBudget::one())
+                }
+                _ => break,
+            }
+        }
+        assert_eq!(report, Err(RunError::CounterExhausted));
+        let before = run.observation();
+        assert!(matches!(before.status, RunStatus::Failed(_)));
+        assert_eq!(before.armed_slots, [false; 4]);
+        let retained = (
+            run.automatic.next,
+            run.automatic.pending,
+            run.automatic.ready,
+            run.automatic.rearm,
+            run.highest_input,
+        );
+        assert_eq!(
+            run.prepare_automatic_inputs(
+                source,
+                MapTime::from_micros(i64::MAX),
+                WorkBudget::full()
+            ),
+            Err(RunError::Faulted)
+        );
+        assert_eq!(
+            run.select_driver(source, InputDriver::Regression),
+            Err(RunError::Faulted)
+        );
+        assert_eq!(run.resume(source), Err(RunError::Faulted));
+        assert_eq!(
+            run.observe_driver_release(
+                source,
+                InputDriver::Automatic,
+                ReleaseObservation {
+                    sequence: InputSequence::new(99).unwrap(),
+                    slot: PhysicalSlot::PrimaryOne
+                }
+            ),
+            Err(RunError::AutomaticInputReserved)
+        );
+        assert_eq!(run.observation(), before);
+        assert_eq!(
+            (
+                run.automatic.next,
+                run.automatic.pending,
+                run.automatic.ready,
+                run.automatic.rearm,
+                run.highest_input
+            ),
+            retained
+        );
+    }
 }

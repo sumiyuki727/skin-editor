@@ -828,3 +828,508 @@ fn coordinated_inspection_inherits_driver_load_defaults_manual_and_both_reject_o
 fn input_event_for_loaded() -> InputEvent {
     input(1, 2_000_000, InputEdge::Press(Point::new(0, 0).unwrap()))
 }
+
+fn freeze_with_retained_seal(run: &mut SyntheticRun, at: i64, budget: WorkBudget) {
+    let source = run.source();
+    run.request_freeze(source, time(at)).unwrap();
+    if run
+        .observation()
+        .sealed_through
+        .is_none_or(|old| old < time(at))
+    {
+        run.seal_through(source, time(at)).unwrap();
+    }
+    for _ in 0..256 {
+        match run.settle_freeze(source, budget).unwrap() {
+            FreezeReport::Frozen { .. } => return,
+            FreezeReport::Pending { reason, steps, .. } => {
+                assert_eq!(reason, PendingReason::WorkBudget);
+                assert!(steps <= budget.get());
+            }
+        }
+    }
+    panic!("retained seal freeze bound");
+}
+
+fn fill_with_pending_plan(run: &mut SyntheticRun) {
+    for _ in 0..128 {
+        if let AutomaticReport::Pending {
+            reason: AutomaticPendingReason::InputBackpressure,
+            ready_through,
+            ..
+        } = run
+            .prepare_automatic_inputs(run.source(), time(3_000_001), WorkBudget::one())
+            .unwrap()
+        {
+            assert_eq!(ready_through, Some(time(1_000_001)));
+            assert_eq!(run.observation().pending_inputs, 4);
+            return;
+        }
+    }
+    panic!("automatic backpressure bound");
+}
+
+#[test]
+fn freezing_at_each_advance_yield_keeps_the_auto_prefix_and_invalidates_old_controls() {
+    let mut passed_boundary = false;
+    let mut checked = 0;
+    for cut in 0..128 {
+        let mut run = selected(
+            &[0, 1_000_000, 2_000_000, 3_000_000],
+            Limits::tiny(),
+            InputDriver::Automatic,
+        );
+        fill_with_pending_plan(&mut run);
+        let old = run.source();
+        run.seal_through(old, time(1_000_001)).unwrap();
+        let mut cursor = None;
+        for step in 0..cut {
+            let report = if step == 0 {
+                run.advance(old, time(1_000_001), WorkBudget::one())
+                    .unwrap()
+            } else {
+                run.continue_advance(cursor.unwrap(), WorkBudget::one())
+                    .unwrap()
+            };
+            let AdvanceReport::Pending { cursor: next, .. } = report else {
+                panic!("full event queue must retain bounded progress");
+            };
+            cursor = Some(next);
+        }
+        if run
+            .observation()
+            .last_committed_time
+            .is_some_and(|at| at > time(0))
+        {
+            passed_boundary = true;
+            break;
+        }
+        checked += 1;
+        run.request_freeze(old, time(0)).unwrap();
+        let closed = run.observation();
+        assert_eq!(
+            run.prepare_automatic_inputs(old, time(3_000_001), WorkBudget::one()),
+            Err(RunError::GateClosed)
+        );
+        if let Some(cursor) = cursor {
+            assert_eq!(
+                run.continue_advance(cursor, WorkBudget::one()),
+                Err(RunError::StaleCursor)
+            );
+            assert_eq!(
+                run.cancel_request(cursor.request()),
+                Err(RunError::StaleCursor)
+            );
+        }
+        assert_eq!(run.observation(), closed);
+        freeze_with_retained_seal(&mut run, 0, WorkBudget::one());
+        let frozen = run.observation();
+        assert_eq!(frozen.completed_through, Some(time(0)));
+        assert_eq!(frozen.sealed_through, Some(time(1_000_001)));
+        assert_eq!(frozen.freeze.unwrap().cancelled_inputs, 3);
+        assert_eq!(
+            frozen.committed_judgements[0].unwrap().result,
+            Judgement::Hit
+        );
+        run.resume(old).unwrap();
+        let resumed = run.observation();
+        assert_eq!(
+            run.prepare_automatic_inputs(old, time(3_300_000), WorkBudget::one()),
+            Err(RunError::StaleSource)
+        );
+        assert_eq!(
+            run.observe_release(old, fact(1)),
+            Err(RunError::StaleSource)
+        );
+        if let Some(cursor) = cursor {
+            assert_eq!(
+                run.continue_advance(cursor, WorkBudget::one()),
+                Err(RunError::StaleSource)
+            );
+        }
+        assert_eq!(run.observation(), resumed);
+        let mut events = Vec::new();
+        drive(&mut run, 3_300_000, WorkBudget::one(), &mut events);
+        let results: Vec<_> = run
+            .observation()
+            .committed_judgements
+            .iter()
+            .flatten()
+            .map(|record| record.result)
+            .collect();
+        assert_eq!(
+            results,
+            [
+                Judgement::Hit,
+                Judgement::Miss,
+                Judgement::Hit,
+                Judgement::Hit
+            ]
+        );
+        assert_eq!(events.len(), 7);
+        for (index, event) in events.iter().enumerate() {
+            assert_eq!(event.key.sequence().get(), index as u64 + 1);
+        }
+    }
+    assert!(
+        passed_boundary && checked >= 4,
+        "all yields before and through the first hit must be checked"
+    );
+}
+
+#[test]
+fn event_backpressure_cannot_turn_an_automatic_freeze_into_half_a_hit_or_replay() {
+    let mut run = selected(
+        &[0, 1_000_000, 2_000_000, 3_000_000],
+        Limits::tiny(),
+        InputDriver::Automatic,
+    );
+    fill_with_pending_plan(&mut run);
+    let old = run.source();
+    run.seal_through(old, time(1_000_001)).unwrap();
+    let mut report = run
+        .advance(old, time(1_000_001), WorkBudget::one())
+        .unwrap();
+    let mut blocked = None;
+    for _ in 0..256 {
+        let AdvanceReport::Pending { cursor, reason, .. } = report else {
+            panic!("events must backpressure");
+        };
+        if reason == PendingReason::EventBackpressure {
+            blocked = Some(cursor);
+            break;
+        }
+        report = run.continue_advance(cursor, WorkBudget::one()).unwrap();
+    }
+    let blocked = blocked.expect("second automatic hit must wait for two event slots");
+    let judgement = run.event_at(0).unwrap();
+    let sound = run.event_at(1).unwrap();
+    run.request_freeze(old, time(1_000_000)).unwrap();
+    let mut pending = false;
+    for _ in 0..16 {
+        if matches!(
+            run.settle_freeze(old, WorkBudget::one()).unwrap(),
+            FreezeReport::Pending {
+                reason: PendingReason::EventBackpressure,
+                ..
+            }
+        ) {
+            pending = true;
+            break;
+        }
+    }
+    assert!(pending);
+    assert_eq!(run.observation().status, RunStatus::Freezing);
+    assert_eq!(run.observation().committed_judgements[1], None);
+    assert!(!run.sound_intent_allowed(sound.key).unwrap());
+    run.acknowledge(judgement.key).unwrap();
+    assert!(matches!(
+        run.settle_freeze(old, WorkBudget::one()).unwrap(),
+        FreezeReport::Pending {
+            reason: PendingReason::EventBackpressure,
+            ..
+        }
+    ));
+    assert_eq!(run.observation().committed_judgements[1], None);
+    run.acknowledge(sound.key).unwrap();
+    freeze_with_retained_seal(&mut run, 1_000_000, WorkBudget::one());
+    assert_eq!(run.observation().freeze.unwrap().cancelled_inputs, 1);
+    assert_eq!(
+        run.observation().committed_judgements[1].unwrap().result,
+        Judgement::Hit
+    );
+    run.resume(old).unwrap();
+    assert_eq!(
+        run.continue_advance(blocked, WorkBudget::one()),
+        Err(RunError::StaleSource)
+    );
+    let mut events = vec![judgement, sound];
+    drive(&mut run, 3_300_000, WorkBudget::one(), &mut events);
+    assert_eq!(events.len(), 8);
+    assert!(
+        run.observation()
+            .committed_judgements
+            .iter()
+            .flatten()
+            .all(|record| record.result == Judgement::Hit)
+    );
+    for (index, event) in events.iter().enumerate() {
+        assert_eq!(event.key.sequence().get(), index as u64 + 1);
+    }
+}
+
+#[test]
+fn every_external_slot_rearms_only_from_current_driver_release_and_preserves_time_floor() {
+    for driver in [InputDriver::Manual, InputDriver::Regression] {
+        for (index, slot) in [
+            PhysicalSlot::PrimaryOne,
+            PhysicalSlot::PrimaryTwo,
+            PhysicalSlot::SecondaryOne,
+            PhysicalSlot::SecondaryTwo,
+        ]
+        .into_iter()
+        .enumerate()
+        {
+            let mut run = selected(&[1_000_000], Limits::tiny(), driver);
+            let old = run.source();
+            run.observe_driver_release(old, driver, ReleaseObservation { slot, ..fact(1) })
+                .unwrap();
+            run.submit_driver_inputs(
+                old,
+                driver,
+                &[InputEvent {
+                    slot,
+                    ..input(2, 0, InputEdge::Press(Point::new(0, 0).unwrap()))
+                }],
+            )
+            .unwrap();
+            freeze(&mut run, 0, WorkBudget::one());
+            let other = if driver == InputDriver::Manual {
+                InputDriver::Regression
+            } else {
+                InputDriver::Manual
+            };
+            let intermediate = run.select_driver(old, other).unwrap();
+            let switched = run.select_driver(intermediate, driver).unwrap();
+            let active = run.resume(switched).unwrap();
+            let before = run.observation();
+            let press = InputEvent {
+                slot,
+                ..input(2, 1_000_000, InputEdge::Press(Point::new(0, 0).unwrap()))
+            };
+            assert_eq!(
+                run.submit_driver_inputs(active, driver, &[press]),
+                Err(RunError::RearmRequired)
+            );
+            for stale in [old, intermediate, switched] {
+                assert_eq!(
+                    run.observe_driver_release(
+                        stale,
+                        driver,
+                        ReleaseObservation { slot, ..fact(1) }
+                    ),
+                    Err(RunError::StaleSource)
+                );
+                assert_eq!(
+                    run.submit_driver_inputs(stale, driver, &[press]),
+                    Err(RunError::StaleSource)
+                );
+            }
+            assert_eq!(
+                run.observe_driver_release(active, other, ReleaseObservation { slot, ..fact(1) }),
+                Err(RunError::DriverMismatch)
+            );
+            let future_release = InputEvent {
+                slot,
+                ..input(1, 1_000_001, InputEdge::Release)
+            };
+            assert_eq!(
+                run.submit_driver_inputs(active, driver, &[future_release, press]),
+                Err(RunError::RearmRequired)
+            );
+            assert_eq!(run.observation(), before);
+            run.submit_driver_inputs(
+                active,
+                driver,
+                &[
+                    InputEvent {
+                        at: time(1_000_000),
+                        ..future_release
+                    },
+                    press,
+                ],
+            )
+            .unwrap();
+            let mut armed = [false; 4];
+            armed[index] = true;
+            assert_eq!(run.observation().armed_slots, armed);
+            let mut events = Vec::new();
+            advance(&mut run, 1_000_000, WorkBudget::one(), &mut events);
+            assert_eq!(events.len(), 2);
+            assert_eq!(events[0].kind, EventKind::Judgement(Judgement::Hit));
+        }
+    }
+}
+
+#[test]
+fn identical_admitted_auto_sets_keep_the_same_frozen_and_resumed_results_across_budgets() {
+    let mut runs = Vec::new();
+    for budget in [WorkBudget::one(), WorkBudget::full()] {
+        let mut run = selected(
+            &[0, 1_000_000, 2_000_000, 3_000_000],
+            Limits::reference(),
+            InputDriver::Automatic,
+        );
+        prepare(&mut run, 3_000_001, budget);
+        assert_eq!(run.observation().pending_inputs, 8);
+        freeze_with_retained_seal(&mut run, 1_000_000, budget);
+        assert_eq!(run.observation().freeze.unwrap().cancelled_inputs, 5);
+        let frozen = run.observation();
+        run.resume(run.source()).unwrap();
+        let mut events = Vec::new();
+        drive(&mut run, 3_300_000, budget, &mut events);
+        assert_eq!(events.len(), 6);
+        let results: Vec<_> = run
+            .observation()
+            .committed_judgements
+            .iter()
+            .flatten()
+            .map(|record| record.result)
+            .collect();
+        assert_eq!(
+            results,
+            [
+                Judgement::Hit,
+                Judgement::Hit,
+                Judgement::Miss,
+                Judgement::Miss
+            ]
+        );
+        runs.push((frozen, run.observation(), events));
+    }
+    assert_eq!(runs[0], runs[1]);
+}
+
+fn freeze_owner(owner: &mut SyntheticCoordinator, at: i64) {
+    let source = owner.current().unwrap().source();
+    owner.request_freeze(source, time(at)).unwrap();
+    if owner
+        .current()
+        .unwrap()
+        .observation()
+        .sealed_through
+        .is_none_or(|old| old < time(at))
+    {
+        owner.seal_through(source, time(at)).unwrap();
+    }
+    for _ in 0..256 {
+        if matches!(
+            owner.settle_freeze(source, WorkBudget::one()).unwrap(),
+            FreezeReport::Frozen { .. }
+        ) {
+            return;
+        }
+    }
+    panic!("owner freeze bound");
+}
+
+#[test]
+fn cancelled_automatic_candidates_cannot_cross_a_driver_switch_even_with_same_next_transport() {
+    let costs = SyntheticCoordinator::costs();
+    let limits = PreparationLimits::try_new(
+        costs.source_bytes,
+        costs.pool_bytes + costs.coordinator_bytes + 3 * costs.run_bytes + 2 * costs.task_bytes,
+        1,
+    )
+    .unwrap();
+    let input = circles(&[0, 1_000_000]);
+    for ready in [false, true] {
+        let mut owner =
+            SyntheticCoordinator::new(CoordinatorId::new(92_100).unwrap(), Limits::tiny(), limits)
+                .unwrap();
+        let mut create = owner
+            .request_create(source(92_101), &input, time(-200_001))
+            .unwrap();
+        complete(&mut create);
+        owner.activate(create.key(), &mut create).unwrap();
+        drop(create);
+        freeze_owner(&mut owner, -200_001);
+        let base = owner.current().unwrap().source();
+        let base = owner.select_driver(base, InputDriver::Automatic).unwrap();
+        owner.resume(base).unwrap();
+        freeze_owner(&mut owner, -200_001);
+        let old = owner.current().unwrap().source();
+        let mut a = owner.request_inspection(old, time(1_000_000)).unwrap();
+        if ready {
+            complete(&mut a);
+        } else {
+            a.step(a.cursor(), WorkBudget::one()).unwrap();
+        }
+        let cursor = a.cursor();
+        let held = owner.resources();
+        owner.cancel(a.key()).unwrap();
+        assert_eq!(owner.resources(), held);
+        let base = owner.select_driver(old, InputDriver::Regression).unwrap();
+        let mut b = owner.request_inspection(base, time(1_000_000)).unwrap();
+        assert_eq!(a.key().target().transport, b.key().target().transport);
+        assert_ne!(a.key().target().input, b.key().target().input);
+        assert_eq!(a.key().driver(), InputDriver::Automatic);
+        assert_eq!(b.key().driver(), InputDriver::Regression);
+        complete(&mut b);
+        let before = owner.current().unwrap().observation();
+        assert_eq!(
+            a.step(cursor, WorkBudget::one()),
+            Err(PreparationError::StaleRequest)
+        );
+        assert_eq!(
+            owner.activate(a.key(), &mut a),
+            Err(PreparationError::StaleRequest)
+        );
+        assert_eq!(
+            owner.activate(b.key(), &mut a),
+            Err(PreparationError::StaleRequest)
+        );
+        assert_eq!(owner.current().unwrap().observation(), before);
+        let held = owner.resources();
+        drop(a);
+        assert_eq!(owner.candidate(), Some(b.key()));
+        assert_eq!(
+            owner.resources().runtime_bytes,
+            held.runtime_bytes - costs.task_bytes - costs.run_bytes
+        );
+        assert_eq!(owner.resources().precompiled_bytes, costs.source_bytes);
+        let activated = owner.activate(b.key(), &mut b).unwrap();
+        drop(b);
+        assert_eq!(owner.current().unwrap().driver(), InputDriver::Regression);
+        let active = owner.resume(activated).unwrap();
+        assert_eq!(
+            owner.prepare_automatic_inputs(old, time(1_000_001), WorkBudget::one()),
+            Err(PreparationError::Runtime(RunError::StaleSource))
+        );
+        assert_eq!(
+            owner.observe_driver_release(old, InputDriver::Automatic, fact(1)),
+            Err(PreparationError::Runtime(RunError::StaleSource))
+        );
+        assert_eq!(
+            owner.current().unwrap().observation().armed_slots,
+            [false; 4]
+        );
+        owner
+            .observe_driver_release(active, InputDriver::Regression, fact(1))
+            .unwrap();
+        owner
+            .submit_driver_inputs(
+                active,
+                InputDriver::Regression,
+                &[crate::input(
+                    2,
+                    1_000_001,
+                    InputEdge::Press(Point::new(30, 0).unwrap()),
+                )],
+            )
+            .unwrap();
+        owner.seal_through(active, time(1_000_001)).unwrap();
+        let mut report = owner
+            .advance(active, time(1_000_001), WorkBudget::one())
+            .unwrap();
+        for _ in 0..256 {
+            match report {
+                AdvanceReport::Complete { .. } => break,
+                AdvanceReport::Pending { cursor, reason, .. } => {
+                    assert_eq!(reason, PendingReason::WorkBudget);
+                    report = owner.continue_advance(cursor, WorkBudget::one()).unwrap();
+                }
+            }
+        }
+        assert_eq!(
+            owner.current().unwrap().observation().completed_through,
+            Some(time(1_000_001))
+        );
+        assert_eq!(
+            owner.current().unwrap().observation().committed_judgements[1]
+                .unwrap()
+                .result,
+            Judgement::Hit
+        );
+    }
+}

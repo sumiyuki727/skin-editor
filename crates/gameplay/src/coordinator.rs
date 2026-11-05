@@ -11,10 +11,12 @@ mod control;
 mod task;
 #[cfg(test)]
 mod tests;
+use budget::Reservation;
 pub use budget::{
-    AllocationKind, PreparationCosts, PreparationLimits, ResourcePool, ResourceUsage,
+    AllocationKind, AllocationUsage, PreparationCosts, PreparationLimits, ResourcePool,
+    ResourceUsage,
 };
-use budget::{PoolState, Reservation};
+pub(crate) use budget::{PayloadLease, PoolState};
 pub use task::{PreparationCursor, PreparationReport, PreparationStage, PreparationTask};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -78,7 +80,11 @@ pub enum PreparationError {
 }
 impl From<ValueError> for PreparationError {
     fn from(value: ValueError) -> Self {
-        Self::Invalid(value)
+        if let ValueError::AllocationUnavailable(kind) = value {
+            Self::AllocationUnavailable(kind)
+        } else {
+            Self::Invalid(value)
+        }
     }
 }
 impl From<RunError> for PreparationError {
@@ -89,6 +95,7 @@ impl From<RunError> for PreparationError {
 
 struct CompiledSource {
     map: Rc<SyntheticMap>,
+    _payload: PayloadLease,
     // The last shared content owner releases this reservation.
     _credit: Reservation,
 }
@@ -96,6 +103,7 @@ struct ManagedRun {
     // Drop owned runtime/content before returning their reservations.
     run: Box<SyntheticRun>,
     content: Rc<CompiledSource>,
+    _payload: PayloadLease,
     _credit: Reservation,
 }
 
@@ -129,6 +137,11 @@ impl SyntheticCoordinator {
                 precompiled_bytes: 0,
                 runtime_bytes: Self::costs().pool_bytes,
             }),
+            allocated: Cell::new(AllocationUsage {
+                runtime_bytes: Self::costs().pool_bytes,
+                runtime_allocations: 1,
+                ..AllocationUsage::default()
+            }),
             live: Cell::new(None),
             base: Cell::new(None),
             alive: Cell::new(true),
@@ -145,28 +158,54 @@ impl SyntheticCoordinator {
             run_limits,
         })
     }
-    pub const fn costs() -> PreparationCosts {
-        PreparationCosts {
+    /// Four-slot minimum, retained for small fixtures. Variable runs must use
+    /// costs_for_objects before either pool is reserved.
+    pub fn costs() -> PreparationCosts {
+        Self::costs_for_objects(crate::MAX_CIRCLES).expect("four-slot layout")
+    }
+    pub fn costs_for_objects(objects: usize) -> Result<PreparationCosts, ValueError> {
+        let capacity = crate::storage::capacity(objects)?;
+        let circles = crate::storage::bytes::<Circle>(capacity)?;
+        let indices = crate::storage::bytes::<crate::map::IdKey>(capacity)?
+            .checked_mul(2)
+            .ok_or(ValueError::StorageLimit)?;
+        let states = crate::storage::bytes::<crate::run::ObjectState>(capacity)?;
+        let source_map_bytes = core::mem::size_of::<SyntheticMap>()
+            .checked_add(circles)
+            .ok_or(ValueError::StorageLimit)?;
+        let source_owner_bytes = core::mem::size_of::<CompiledSource>();
+        let source_bytes = source_map_bytes
+            .checked_add(source_owner_bytes)
+            .ok_or(ValueError::StorageLimit)?;
+        let task_bytes = core::mem::size_of::<PreparationTask<'static>>()
+            .checked_add(core::mem::size_of::<SyntheticRun>())
+            .and_then(|v| v.checked_add(core::mem::size_of::<SyntheticMap>()))
+            .and_then(|v| v.checked_add(source_owner_bytes))
+            .and_then(|v| v.checked_add(indices))
+            .ok_or(ValueError::StorageLimit)?;
+        Ok(PreparationCosts {
             coordinator_bytes: core::mem::size_of::<Self>(),
             pool_bytes: core::mem::size_of::<PoolState>(),
             // The inline initializer coexists briefly with its boxed runtime.
             // Keep this known scratch reserved until the task owner is dropped.
-            task_bytes: core::mem::size_of::<PreparationTask<'static>>()
-                + core::mem::size_of::<SyntheticRun>()
-                + core::mem::size_of::<SyntheticMap>()
-                + core::mem::size_of::<CompiledSource>(),
-            run_bytes: SyntheticRun::static_storage_bytes(),
-            source_bytes: core::mem::size_of::<CompiledSource>()
-                + core::mem::size_of::<SyntheticMap>(),
-            source_map_bytes: core::mem::size_of::<SyntheticMap>(),
-            source_owner_bytes: core::mem::size_of::<CompiledSource>(),
-        }
+            task_bytes,
+            run_bytes: SyntheticRun::storage_bytes_for_objects(objects)?,
+            source_bytes,
+            source_map_bytes,
+            source_owner_bytes,
+            object_capacity: capacity,
+            index_bytes: indices,
+            state_bytes: states,
+        })
     }
     pub fn current(&self) -> Option<&SyntheticRun> {
         self.active.as_ref().map(|v| v.run.as_ref())
     }
     pub fn resources(&self) -> ResourceUsage {
         self.pool.usage.get()
+    }
+    pub fn allocations(&self) -> AllocationUsage {
+        self.pool.allocated.get()
     }
     pub fn candidate(&self) -> Option<PreparationKey> {
         self.pool.live.get()
@@ -212,8 +251,17 @@ impl SyntheticCoordinator {
             return Err(ValueError::ObjectLimit.into());
         }
         let key = self.next_key(operation, source)?;
-        let credits = PoolState::reserve_task(&self.pool, true)?;
-        let preparation = MapPreparation::new(source.revision, input)?;
+        let costs = Self::costs_for_objects(input.len())?;
+        if self.run_limits.storage_bytes() < costs.run_bytes {
+            return Err(ValueError::StorageLimit.into());
+        }
+        let credits = PoolState::reserve_task(&self.pool, true, costs)?;
+        let preparation = MapPreparation::managed(
+            source.revision,
+            input,
+            self.run_limits,
+            Rc::clone(&self.pool),
+        )?;
         let task = PreparationTask::new(
             key,
             Rc::clone(&self.pool),
@@ -248,7 +296,9 @@ impl SyntheticCoordinator {
             ..base
         };
         let key = self.next_key(PreparationOperation::Inspect { at }, target)?;
-        let credits = PoolState::reserve_task(&self.pool, false)?;
+        let costs =
+            Self::costs_for_objects(self.current().expect("base").observation().object_count)?;
+        let credits = PoolState::reserve_task(&self.pool, false, costs)?;
         let content = Rc::clone(&self.active.as_ref().expect("checked base").content);
         let task = PreparationTask::new(
             key,

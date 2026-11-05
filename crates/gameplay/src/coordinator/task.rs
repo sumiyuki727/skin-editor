@@ -54,6 +54,8 @@ enum Work {
 pub struct PreparationTask<'a> {
     preparation: Option<MapPreparation<'a>>,
     pub(super) run: Option<ManagedRun>,
+    initialization: Option<crate::RunPreparation>,
+    stats: crate::WorkCounts,
     pub(super) content: Option<Rc<CompiledSource>>,
     source_credit: Option<Reservation>,
     run_credit: Option<Reservation>,
@@ -86,6 +88,8 @@ impl<'a> PreparationTask<'a> {
         Self {
             preparation,
             run: None,
+            initialization: None,
+            stats: crate::WorkCounts::default(),
             content,
             source_credit,
             run_credit: Some(run_credit),
@@ -105,6 +109,30 @@ impl<'a> PreparationTask<'a> {
             key: self.key,
             progress: self.progress,
         }
+    }
+    pub fn work_counts(&self) -> crate::WorkCounts {
+        let mut stats = self.stats;
+        if let Some(preparation) = &self.preparation {
+            stats.merge(preparation.work_counts());
+        }
+        if let Some(initialization) = &self.initialization {
+            stats.merge(initialization.work_counts());
+        }
+        if let Some(run) = &self.run {
+            stats.merge(run.run.work_counts());
+        }
+        stats
+    }
+    pub fn allocations(&self) -> AllocationUsage {
+        self.pool.allocated.get()
+    }
+    pub fn preparation_phase(&self) -> Option<crate::PreparationPhase> {
+        self.preparation.as_ref().map(MapPreparation::phase)
+    }
+    pub fn failed_record_index(&self) -> Option<usize> {
+        self.preparation
+            .as_ref()
+            .and_then(MapPreparation::failed_record_index)
     }
     pub fn resources(&self) -> ResourceUsage {
         self.pool.usage.get()
@@ -182,6 +210,10 @@ impl<'a> PreparationTask<'a> {
         })
     }
     fn step_one(&mut self) -> Result<(), PreparationError> {
+        self.stats.merge(crate::WorkCounts {
+            management_steps: 1,
+            ..crate::WorkCounts::default()
+        });
         match self.work {
             Work::Validate => {
                 if matches!(
@@ -191,11 +223,26 @@ impl<'a> PreparationTask<'a> {
                         .step(WorkBudget::one())?,
                     PreparationProgress::Complete { .. }
                 ) {
-                    let map = self.preparation.take().expect("complete map").finish()?;
+                    let preparation = self.preparation.take().expect("complete map");
+                    self.stats.merge(preparation.work_counts());
+                    let mut map = preparation.finish()?;
+                    self.stats.allocation(core::mem::size_of::<SyntheticMap>());
                     self.pool.check_allocation(AllocationKind::SourceMap)?;
+                    map.payload = Some(PayloadLease::new(
+                        &self.pool,
+                        ResourcePool::Precompiled,
+                        core::mem::size_of::<SyntheticMap>(),
+                    ));
                     let map = Rc::new(map);
+                    self.stats
+                        .allocation(core::mem::size_of::<CompiledSource>());
                     self.pool.check_allocation(AllocationKind::SourceOwner)?;
                     self.content = Some(Rc::new(CompiledSource {
+                        _payload: PayloadLease::new(
+                            &self.pool,
+                            ResourcePool::Precompiled,
+                            core::mem::size_of::<CompiledSource>(),
+                        ),
                         map,
                         _credit: self.source_credit.take().expect("reserved source"),
                     }));
@@ -215,16 +262,28 @@ impl<'a> PreparationTask<'a> {
                             .map_or(MapTime::from_micros(0), |v| v.visible_from()),
                     ),
                 };
-                self.pool.check_allocation(AllocationKind::Runtime)?;
-                let mut run = SyntheticRun::new_shared(
-                    source,
-                    Rc::clone(&content.map),
-                    start,
-                    self.limits,
-                    self.key.driver,
-                )?;
+                if self.initialization.is_none() {
+                    self.stats.allocation(core::mem::size_of::<SyntheticRun>());
+                    self.initialization = Some(crate::RunPreparation::managed(
+                        source,
+                        Rc::clone(&content.map),
+                        start,
+                        self.limits,
+                        self.key.driver,
+                        Some(Rc::clone(&self.pool)),
+                    )?);
+                    return Ok(());
+                }
+                let initialization = self.initialization.as_mut().expect("initializing");
+                if !matches!(
+                    initialization.step(WorkBudget::one())?,
+                    crate::RunPreparationProgress::Complete
+                ) {
+                    return Ok(());
+                }
+                let (mut run, payload) = initialization.take_ready().expect("initialized run");
+                self.initialization = None;
                 if matches!(self.key.operation, PreparationOperation::Inspect { .. }) {
-                    // The private start section has no accepted inputs/deadlines.
                     run.request_freeze(source, start)?;
                     run.seal_through(source, start)?;
                     self.work = Work::FreezeStart;
@@ -232,8 +291,9 @@ impl<'a> PreparationTask<'a> {
                     self.work = Work::Ready;
                 }
                 self.run = Some(ManagedRun {
-                    run: Box::new(run),
+                    run,
                     content: self.content.take().expect("validated source"),
+                    _payload: payload.expect("managed runtime payload"),
                     _credit: self.run_credit.take().expect("reserved runtime"),
                 });
             }

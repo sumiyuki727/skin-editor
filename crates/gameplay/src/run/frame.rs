@@ -149,7 +149,14 @@ impl SyntheticRun {
         index: usize,
     ) -> Result<Option<JudgementRecord>, FrameReadError> {
         self.check_read_source(source)?;
-        Ok(self.judgements.get(index).copied().flatten())
+        let state = self.objects.get(index);
+        if state.is_some() {
+            self.count(WorkCounts {
+                ledger_objects: 1,
+                ..WorkCounts::default()
+            });
+        }
+        Ok(state.and_then(|state| state.judgement))
     }
     /// No allocation or run mutation. Errors leave the caller's output intact.
     /// A missing complete section is distinct from stale source/frame errors.
@@ -203,8 +210,14 @@ impl SyntheticRun {
     }
     fn frame_object(&self, index: usize, at: MapTime) -> Option<CircleFrame> {
         let circle = self.map.circle(index)?;
-        let judgement = self.judgements[index].filter(|record| record.at <= at);
-        let skipped = self.inspection_skipped[index];
+        self.count(WorkCounts {
+            frame_objects: 1,
+            ..WorkCounts::default()
+        });
+        let judgement = self.objects[index]
+            .judgement
+            .filter(|record| record.at <= at);
+        let skipped = self.objects[index].inspection_skipped;
         Some(CircleFrame {
             object: circle.id,
             phase: if at < circle.visible {

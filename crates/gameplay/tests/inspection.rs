@@ -190,7 +190,8 @@ fn pending_and_ready_candidate_never_publish_a_partial_target() {
         run.activate_inspection(key),
         Err(RunError::InspectionIncomplete)
     );
-    for checked in 1..=4 {
+    // Allocation is a separate management step, with its own cursor progress.
+    for checked in 0..=4 {
         let previous = cursor;
         let report = run.step_inspection(cursor, WorkBudget::one()).unwrap();
         let state = run.snapshot();
@@ -270,6 +271,11 @@ fn cancelled_candidate_cannot_reappear_before_or_after_a_replacement() {
     );
     let InspectionReport::Pending { cursor, .. } =
         run.step_inspection(b, WorkBudget::one()).unwrap()
+    else {
+        panic!("allocation only");
+    };
+    let InspectionReport::Pending { cursor, .. } =
+        run.step_inspection(cursor, WorkBudget::one()).unwrap()
     else {
         panic!("first circle only");
     };

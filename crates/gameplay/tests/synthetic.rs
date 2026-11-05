@@ -199,13 +199,10 @@ fn time_and_spatial_edges_use_the_explicit_synthetic_rule() {
 fn preparation_is_complete_or_cancelled_and_preserves_original_identities() {
     let data = [circle(99, 0), circle(7, 1_000_000)];
     let mut preparing = MapPreparation::new(MapRevision::new(7), &data).unwrap();
-    assert_eq!(
+    assert!(matches!(
         preparing.step(WorkBudget::one()).unwrap(),
-        PreparationProgress::Pending {
-            checked: 1,
-            total: 2
-        }
-    );
+        PreparationProgress::Pending { .. }
+    ));
     preparing.cancel();
     preparing.cancel();
     assert_eq!(
@@ -214,18 +211,17 @@ fn preparation_is_complete_or_cancelled_and_preserves_original_identities() {
     );
     assert_eq!(preparing.finish(), Err(ValueError::PreparationCancelled));
     let mut preparing = MapPreparation::new(MapRevision::new(7), &data).unwrap();
-    preparing.step(WorkBudget::one()).unwrap();
-    assert_eq!(
-        preparing.step(WorkBudget::one()).unwrap(),
-        PreparationProgress::Pending {
-            checked: 1,
-            total: 2
+    let mut completed = false;
+    for _ in 0..128 {
+        if matches!(
+            preparing.step(WorkBudget::one()).unwrap(),
+            PreparationProgress::Complete { checked: 2 }
+        ) {
+            completed = true;
+            break;
         }
-    );
-    assert_eq!(
-        preparing.step(WorkBudget::one()).unwrap(),
-        PreparationProgress::Complete { checked: 2 }
-    );
+    }
+    assert!(completed);
     let map = preparing.finish().unwrap();
     assert_eq!(map.circle(0).unwrap().id(), ObjectId::new(99));
     assert_eq!(map.circle(1).unwrap().id(), ObjectId::new(7));
@@ -242,18 +238,19 @@ fn invalid_candidates_never_yield_partial_maps_or_change_an_existing_run() {
     let before = existing.snapshot();
     let data = [circle(1, 0), circle(2, 1_000_000), circle(1, 2_000_000)];
     let mut preparing = MapPreparation::new(MapRevision::new(8), &data).unwrap();
-    preparing.step(WorkBudget::new(3).unwrap()).unwrap();
-    assert_eq!(
-        preparing.step(WorkBudget::one()).unwrap(),
-        PreparationProgress::Pending {
-            checked: 2,
-            total: 3
+    let mut failed = false;
+    for _ in 0..128 {
+        match preparing.step(WorkBudget::one()) {
+            Err(error) => {
+                assert_eq!(error, ValueError::DuplicateObject);
+                failed = true;
+                break;
+            }
+            Ok(PreparationProgress::Pending { .. }) => {}
+            report => panic!("invalid map published: {report:?}"),
         }
-    );
-    assert_eq!(
-        preparing.step(WorkBudget::one()),
-        Err(ValueError::DuplicateObject)
-    );
+    }
+    assert!(failed);
     assert_eq!(preparing.finish(), Err(ValueError::DuplicateObject));
     assert_eq!(existing.snapshot(), before);
     assert_eq!(
@@ -891,31 +888,32 @@ fn full_event_queue_cannot_prevent_cancellation() {
 }
 
 #[test]
-fn preparation_budget_counts_each_record_and_previous_identity_check() {
+fn preparation_budget_counts_records_and_separate_merge_comparisons_and_moves() {
     let data = [circle(0, 0), circle(1, 1_000_000), circle(1, 2_000_000)];
     let mut preparing = MapPreparation::new(MapRevision::new(7), &data).unwrap();
-    // Load/commit the first record, load the second, then check its predecessor.
-    assert_eq!(
-        preparing.step(WorkBudget::new(3).unwrap()).unwrap(),
-        PreparationProgress::Pending {
-            checked: 2,
-            total: 3
-        }
-    );
-    // Loading the third and comparing ID 0 must not hide the later ID 1 check.
-    for _ in 0..2 {
-        assert_eq!(
-            preparing.step(WorkBudget::one()).unwrap(),
-            PreparationProgress::Pending {
-                checked: 2,
-                total: 3
+    let mut failed = false;
+    for _ in 0..128 {
+        let before = preparing.work_counts();
+        let report = preparing.step(WorkBudget::one());
+        let after = preparing.work_counts();
+        assert!(after.valid);
+        assert!(after.record_reads - before.record_reads <= 1);
+        assert!(after.record_copies - before.record_copies <= 1);
+        assert!(after.id_comparisons - before.id_comparisons <= 1);
+        assert!(after.index_moves - before.index_moves <= 1);
+        match report {
+            Err(error) => {
+                assert_eq!(error, ValueError::DuplicateObject);
+                failed = true;
+                break;
             }
-        );
+            Ok(PreparationProgress::Pending { .. }) => {}
+            report => panic!("invalid map published: {report:?}"),
+        }
     }
-    assert_eq!(
-        preparing.step(WorkBudget::one()),
-        Err(ValueError::DuplicateObject)
-    );
+    assert!(failed);
+    assert_eq!(preparing.failed_record_index(), Some(2));
+    assert_eq!(preparing.work_counts().record_reads, 3);
     assert_eq!(preparing.finish(), Err(ValueError::DuplicateObject));
     let mut cancelled = MapPreparation::new(MapRevision::new(7), &data).unwrap();
     cancelled.step(WorkBudget::new(5).unwrap()).unwrap();

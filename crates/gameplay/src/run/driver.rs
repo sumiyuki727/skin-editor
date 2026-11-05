@@ -143,6 +143,10 @@ impl SyntheticRun {
                 ));
             }
             steps += 1;
+            self.count(WorkCounts {
+                management_steps: 1,
+                ..WorkCounts::default()
+            });
             if self.automatic.rearm {
                 let sequence = self
                     .highest_input
@@ -179,9 +183,13 @@ impl SyntheticRun {
                     self.automatic.cover(through);
                     continue;
                 };
+                self.count(WorkCounts {
+                    automatic_objects: 1,
+                    ..WorkCounts::default()
+                });
                 if self.sealed.is_some_and(|sealed| circle.target <= sealed)
-                    || self.judgements[self.automatic.next].is_some()
-                    || self.inspection_skipped[self.automatic.next]
+                    || self.objects[self.automatic.next].judgement.is_some()
+                    || self.objects[self.automatic.next].inspection_skipped
                 {
                     self.automatic.next += 1;
                     continue;
@@ -300,18 +308,15 @@ mod tests {
             input: InputEpoch::new(1).unwrap(),
             revision: MapRevision::new(2),
         };
-        let circles: Vec<_> = [0, 1_000_000, 2_000_000]
-            .into_iter()
-            .enumerate()
-            .map(|(i, at)| {
-                Circle::new(
-                    ObjectId::new(i as u32),
-                    MapTime::from_micros(at),
-                    Point::new(0, 0).unwrap(),
-                )
-                .unwrap()
-            })
-            .collect();
+        let circles = core::array::from_fn::<_, 3, _>(|i| {
+            let at = [0, 1_000_000, 2_000_000][i];
+            Circle::new(
+                ObjectId::new(i as u32),
+                MapTime::from_micros(at),
+                Point::new(0, 0).unwrap(),
+            )
+            .unwrap()
+        });
         let map = SyntheticMap::try_new(source.revision, &circles).unwrap();
         let mut run = SyntheticRun::new_driven(
             source,

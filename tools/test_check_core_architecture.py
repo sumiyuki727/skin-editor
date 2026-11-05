@@ -24,6 +24,25 @@ def metadata_fixture():
 
 
 class ArchitectureChecks(unittest.TestCase):
+    def test_gameplay_variable_buffers_cannot_bypass_the_reviewed_allocation_module(self):
+        parent = ROOT / "artifacts/p1"
+        parent.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="storage-canary-", dir=parent) as directory:
+            base = Path(directory)
+            for relative, _ in PACKAGES.values():
+                entry = base / relative / "src/lib.rs"
+                entry.parent.mkdir(parents=True)
+                entry.write_text("#![forbid(unsafe_code)]\n", encoding="utf-8")
+            source = base / "crates/gameplay/src/map/preparation.rs"
+            source.parent.mkdir()
+            for content in ("let data = Vec::new();", "let data = vec![0; 10000];", "data.resize(10000, 0);", "data.sort_unstable();"):
+                source.write_text(content, encoding="utf-8")
+                self.assertTrue(any("reviewed storage" in error for error in validate_sources(base)))
+            source.write_text("let data = Buffer::new(10000);", encoding="utf-8")
+            storage = base / "crates/gameplay/src/storage.rs"
+            storage.write_text("let data = Vec::new();", encoding="utf-8")
+            self.assertEqual(validate_sources(base), [])
+
     def test_nested_gameplay_frame_module_uses_the_same_source_boundary_checks(self):
         parent = ROOT / "artifacts/p1"
         parent.mkdir(parents=True, exist_ok=True)

@@ -15,7 +15,7 @@
 | Rust文件存储（2026-11-02） | rusqlite =0.41.1（bundled／hooks／limits）、same-file =1.0.6 | 仅infrastructure，默认feature关闭；SQLite C源码随依赖编译，需已有C编译器，文件身份通过平台句柄核对；不启用动态扩展或新后台线程 |
 | 可选诊断 | profiling =1.0.18、tracing =0.1.44、winit =0.30.13 | host的framework-trace默认关闭；有界观察成本不得从产品CPU估算扣除 |
 
-当前九个本地包及依赖见[当前架构](ARCHITECTURE.md)；[架构审阅](review/README.md)是原八包快照，新增gameplay见[K1-1审阅](K1_1_SYNTHETIC_REVIEW.md)、[K1-2冻结／恢复](K1_2_FREEZE_REVIEW.md)、[K1-3检查定位](K1_3_INSPECTION_REVIEW.md)、[K1-4统一候选](K1_4_PREPARATION_REVIEW.md)、[K1-5自动输入／驱动互斥](K1_5_DRIVER_REVIEW.md)及[K1-6A固定四槽／只读截面](K1_6A_STORAGE_REVIEW.md)。当前API6／profile1仍为四对象纯Rust；运行与检查共享Rc地图payload及来源管理，独立运行核对自有来源额外存储。摘要／借用完整帧／有界分页分开，不复制对象数组到生产观察；保留实时账本及Pending旧截面。协调器继续用Box、Rc及私有Cell，无新依赖／feature／线程／设备，两个锁文件不变；固定payload、初始化及已知视图／回执临时值纳入有限预留。Rc控制头、分配器及完整栈仍未知，不代表进程峰值、成本基线或10000对象Reference验收。Windows ETW的C采集器是外部诊断工具，不是产品运行依赖。
+当前九个本地包及依赖见[当前架构](ARCHITECTURE.md)；[架构审阅](review/README.md)是原八包快照，gameplay各步见[K1-1](K1_1_SYNTHETIC_REVIEW.md)至[K1-6A](K1_6A_STORAGE_REVIEW.md)及[K1-6B容量证明](K1_6B_STORAGE_PROOF.md)。当前API7／profile1采用标准库私有有界缓冲、Box、Rc和局部Cell，Tiny4／Reference10000，G0无输入及分步初始化已测；完整输入规模轨迹待验。分配请求证明限定固定Rust1.95的空Vec单次预留路径，包装不复制N条；来源共享，账本独立，额度预留与当前已请求payload／工作计数分开。摘要／借用完整帧／分页不复制全图，Pending／Failed保留旧帧。无新依赖／feature／线程／设备，两个锁文件不变；Rc控制头、分配器和完整栈仍未知，不代表进程峰值或产品预算通过。Windows ETW的C采集器继续只是外部诊断工具。
 
 ## 平台和资源结论
 

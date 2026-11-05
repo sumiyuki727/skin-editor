@@ -14,10 +14,15 @@ pub use frame::{
     FrameCounts, FrameCursor, FrameHeader, FrameKey, FramePage, FrameReadError, ReadyFrame,
 };
 use std::rc::Rc;
+mod initialization;
 mod inspection;
+use crate::WorkCounts;
+use crate::storage::Buffer;
 pub use control::{FreezeInfo, FreezeReport, RearmReport};
+use core::cell::Cell;
 use driver::AutomaticState;
 pub use driver::{AutomaticPendingReason, AutomaticReport};
+pub use initialization::{RunPreparation, RunPreparationProgress};
 use inspection::InspectionCandidate;
 pub use inspection::{InspectionCursor, InspectionInfo, InspectionKey, InspectionReport};
 
@@ -36,6 +41,8 @@ pub enum RunError {
     StaleCursor,
     UnknownEvent,
     CounterExhausted,
+    AllocationUnavailable(crate::AllocationKind),
+    StorageLayout,
     Faulted,
     BudgetLimit,
     RearmRequired,
@@ -210,6 +217,7 @@ pub enum AdvanceReport {
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct Limits {
     objects: usize,
+    object_ceiling: usize,
     inputs: usize,
     events: usize,
     replay: usize,
@@ -220,6 +228,7 @@ impl Limits {
     pub const fn tiny() -> Self {
         Self {
             objects: MAX_CIRCLES,
+            object_ceiling: MAX_CIRCLES,
             inputs: 4,
             events: 2,
             replay: 4,
@@ -229,7 +238,8 @@ impl Limits {
     }
     pub const fn reference() -> Self {
         Self {
-            objects: MAX_CIRCLES,
+            objects: crate::MAX_REFERENCE_CIRCLES,
+            object_ceiling: crate::MAX_REFERENCE_CIRCLES,
             inputs: 64,
             events: 64,
             replay: 64,
@@ -246,6 +256,7 @@ impl Limits {
     ) -> Result<Self, ValueError> {
         let limits = Self {
             objects: MAX_CIRCLES,
+            object_ceiling: crate::MAX_REFERENCE_CIRCLES,
             inputs,
             events,
             replay,
@@ -260,12 +271,16 @@ impl Limits {
         self.validate()?;
         Ok(self)
     }
+    pub const fn storage_bytes(self) -> usize {
+        self.storage_bytes
+    }
     pub const fn object_capacity(self) -> usize {
         self.objects
     }
     pub(crate) fn validate(self) -> Result<(), ValueError> {
         if self.objects == 0
-            || self.objects > MAX_CIRCLES
+            || self.objects > self.object_ceiling
+            || self.object_ceiling > crate::MAX_REFERENCE_CIRCLES
             || self.inputs == 0
             || self.inputs > MAX_INPUTS
             || self.events < 2
@@ -339,15 +354,23 @@ enum PumpReport {
     Pending { reason: PendingReason, steps: u16 },
 }
 
-/// Fixed four-slot preview state with a shared immutable source; no project writer.
+#[derive(Clone, Copy, Default)]
+pub(crate) struct ObjectState {
+    judgement: Option<JudgementRecord>,
+    inspection_skipped: bool,
+}
+
+/// Bounded variable state with a shared immutable source; no project writer.
 pub struct SyntheticRun {
+    pool: Option<Rc<crate::coordinator::PoolState>>,
     source: RunSource,
     driver: InputDriver,
     automatic: AutomaticState,
     map: Rc<SyntheticMap>,
     start: MapTime,
     statistics_origin: StatisticsOrigin,
-    inspection_skipped: [bool; MAX_CIRCLES],
+    objects: Buffer<ObjectState>,
+    stats: Cell<WorkCounts>,
     inspection: Option<InspectionCandidate>,
     next_inspection: Option<u64>,
     limits: Limits,
@@ -365,7 +388,6 @@ pub struct SyntheticRun {
     mode: ControlMode,
     freeze_info: Option<FreezeInfo>,
     cancelled_sound_through: u64,
-    judgements: [Option<JudgementRecord>; MAX_CIRCLES],
     appeared: usize,
     expired: usize,
     retired: usize,
@@ -402,6 +424,7 @@ impl SyntheticRun {
             + core::mem::size_of::<[InputEvent; 2]>()
             + core::mem::size_of::<ReadyFrame<'static>>()
             + core::mem::size_of::<FramePage>()
+            + 2 * MAX_CIRCLES * core::mem::size_of::<ObjectState>()
     }
     pub fn new(
         source: RunSource,
@@ -418,16 +441,37 @@ impl SyntheticRun {
         limits: Limits,
         driver: InputDriver,
     ) -> Result<Self, ValueError> {
-        Self::validate_map(source, &map, start, limits, driver)?;
-        if limits.storage_bytes < Self::standalone_storage_bytes() {
-            return Err(ValueError::StorageLimit);
+        Self::validate_map(source, &map, start, limits, driver, MAX_CIRCLES)?;
+        let mut preparation = RunPreparation::new_driven(source, map, start, limits, driver)?;
+        for _ in 0..=MAX_CIRCLES {
+            if preparation.step(WorkBudget::one())? == RunPreparationProgress::Complete {
+                break;
+            }
         }
-        Self::new_shared(source, Rc::new(map), start, limits, driver)
+        preparation.finish()
     }
-    /// Unpooled fixture source plus its known inline initializer are additional
-    /// to fixed runtime storage. Managed runs use the separate source pool.
     pub const fn standalone_storage_bytes() -> usize {
-        Self::static_storage_bytes() + 2 * core::mem::size_of::<SyntheticMap>()
+        Self::static_storage_bytes()
+            + 3 * core::mem::size_of::<SyntheticMap>()
+            + core::mem::size_of::<Self>()
+            + MAX_CIRCLES * core::mem::size_of::<crate::Circle>()
+    }
+    pub fn storage_bytes_for_objects(objects: usize) -> Result<usize, ValueError> {
+        let capacity = crate::storage::capacity(objects)?;
+        let extra = crate::storage::bytes::<ObjectState>(capacity - MAX_CIRCLES)?
+            .checked_mul(2)
+            .ok_or(ValueError::StorageLimit)?;
+        Self::static_storage_bytes()
+            .checked_add(extra)
+            .ok_or(ValueError::StorageLimit)
+    }
+    pub fn standalone_bytes_for_objects(objects: usize) -> Result<usize, ValueError> {
+        let c = crate::storage::capacity(objects)?;
+        Self::storage_bytes_for_objects(objects)?
+            .checked_add(3 * core::mem::size_of::<SyntheticMap>())
+            .and_then(|v| v.checked_add(core::mem::size_of::<Self>()))
+            .and_then(|v| v.checked_add(crate::storage::bytes::<crate::Circle>(c).ok()?))
+            .ok_or(ValueError::StorageLimit)
     }
     fn validate_map(
         source: RunSource,
@@ -435,6 +479,7 @@ impl SyntheticRun {
         start: MapTime,
         limits: Limits,
         driver: InputDriver,
+        entry_capacity: usize,
     ) -> Result<(), ValueError> {
         limits.validate()?;
         if driver == InputDriver::Automatic && limits.inputs < 2 {
@@ -443,7 +488,7 @@ impl SyntheticRun {
         if source.revision != map.revision {
             return Err(ValueError::RevisionMismatch);
         }
-        if map.len > limits.objects {
+        if map.len > limits.objects || map.len > entry_capacity {
             return Err(ValueError::ObjectLimit);
         }
         if map.circle(0).is_some_and(|circle| start > circle.visible) {
@@ -451,22 +496,34 @@ impl SyntheticRun {
         }
         Ok(())
     }
-    pub(crate) fn new_shared(
+    pub(crate) fn uninitialized_shared(
         source: RunSource,
         map: Rc<SyntheticMap>,
         start: MapTime,
         limits: Limits,
         driver: InputDriver,
     ) -> Result<Self, ValueError> {
-        Self::validate_map(source, &map, start, limits, driver)?;
+        Self::validate_map(
+            source,
+            &map,
+            start,
+            limits,
+            driver,
+            crate::MAX_REFERENCE_CIRCLES,
+        )?;
+        if limits.storage_bytes < Self::storage_bytes_for_objects(map.len)? {
+            return Err(ValueError::StorageLimit);
+        }
         Ok(Self {
+            pool: None,
             source,
             driver,
             automatic: AutomaticState::new(),
-            map,
             start,
             statistics_origin: StatisticsOrigin::FromStart { start },
-            inspection_skipped: [false; MAX_CIRCLES],
+            objects: Buffer::new(crate::storage::capacity(map.len)?),
+            stats: Cell::new(WorkCounts::default()),
+            map,
             inspection: None,
             next_inspection: Some(1),
             limits,
@@ -482,7 +539,6 @@ impl SyntheticRun {
             mode: ControlMode::Running,
             freeze_info: None,
             cancelled_sound_through: 0,
-            judgements: [None; MAX_CIRCLES],
             appeared: 0,
             expired: 0,
             retired: 0,
@@ -511,7 +567,28 @@ impl SyntheticRun {
     fn completed(&self) -> Option<MapTime> {
         self.ready.map(|header| header.at)
     }
+    pub fn work_counts(&self) -> WorkCounts {
+        self.stats.get()
+    }
+    pub(crate) fn count(&self, delta: WorkCounts) {
+        let mut stats = self.stats.get();
+        stats.merge(delta);
+        self.stats.set(stats);
+    }
+    pub fn state_capacities(&self) -> [usize; 2] {
+        [
+            self.objects.capacity(),
+            self.inspection.as_ref().map_or(0, |v| v.objects.capacity()),
+        ]
+    }
+    pub fn source_capacity(&self) -> usize {
+        self.map.capacity()
+    }
     pub fn observation(&self) -> Observation {
+        self.count(WorkCounts {
+            summaries: 1,
+            ..WorkCounts::default()
+        });
         let status = if let Some(failure) = self.failure {
             RunStatus::Failed(failure)
         } else if self.mode == ControlMode::Freezing {
@@ -720,7 +797,7 @@ mod tests {
                 cancelled_inputs: 1
             })
         );
-        assert_eq!(run.judgements, [None; MAX_CIRCLES]);
+        assert!((0..run.map.len).all(|i| run.objects[i].judgement.is_none()));
         assert_eq!(result.held_slots, [false; 4]);
         assert_eq!(result.pending_events, 0);
         assert_eq!(run.event_at(0), None);

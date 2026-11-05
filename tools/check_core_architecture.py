@@ -82,6 +82,12 @@ def validate_sources(root):
         if not entry.is_file() or "#![forbid(unsafe_code)]" not in entry.read_text(encoding="utf-8"):
             errors.append(directory + ": crate must forbid unsafe code")
         for source in base.rglob("*.rs"):
-            for issue in source_issues(source.read_text(encoding="utf-8"), name):
+            content = source.read_text(encoding="utf-8")
+            for issue in source_issues(content, name):
                 errors.append(source.relative_to(root).as_posix() + ": " + issue)
+            relative = source.relative_to(base).as_posix()
+            if (name == "skin-editor-gameplay" and relative.startswith("src/")
+                    and relative != "src/storage.rs"
+                    and re.search(r"\bVec\b|\bvec\s*!|\.\s*(?:reserve|try_reserve|resize|sort)(?:_exact|_with|_unstable)?\s*\(", content)):
+                errors.append(source.relative_to(root).as_posix() + ": gameplay object buffers must use reviewed storage module")
     return errors

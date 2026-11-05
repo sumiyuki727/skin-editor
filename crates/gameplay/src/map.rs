@@ -51,16 +51,21 @@ impl Circle {
     }
 }
 
-/// Deliberately small: no arbitrary-length or partially validated map escapes.
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub(crate) mod preparation;
+use crate::storage::Buffer;
+pub(crate) use preparation::IdKey;
+pub use preparation::{MapPreparation, PreparationPhase, PreparationProgress};
+
+/// Immutable compiled source. Moving it moves only fixed descriptors.
+/// Debug prints metadata; object data requires explicit bounded reads.
 pub struct SyntheticMap {
     pub(crate) revision: MapRevision,
-    pub(crate) circles: [Option<Circle>; MAX_CIRCLES],
+    pub(crate) circles: Buffer<Circle>,
     pub(crate) len: usize,
+    pub(crate) payload: Option<crate::coordinator::PayloadLease>,
 }
 impl SyntheticMap {
-    /// Convenience for a fixed, at-most-four-element input. Larger preparations
-    /// and compatibility profiles are not supported by this API.
+    /// Bounded convenience path. Large maps require MapPreparation::with_limits.
     pub fn try_new(revision: MapRevision, circles: &[Circle]) -> Result<Self, ValueError> {
         let mut preparation = MapPreparation::new(revision, circles)?;
         preparation.step(WorkBudget::full())?;
@@ -75,116 +80,25 @@ impl SyntheticMap {
     pub const fn is_empty(&self) -> bool {
         self.len == 0
     }
+    pub fn capacity(&self) -> usize {
+        self.circles.capacity()
+    }
     pub fn circle(&self, index: usize) -> Option<Circle> {
-        self.circles.get(index).copied().flatten()
+        self.circles.get(index).copied()
     }
 }
-
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum PreparationProgress {
-    Pending { checked: usize, total: usize },
-    Complete { checked: usize },
-}
-
-/// Synchronous, caller-stepped preparation. It has no reference to an active
-/// runtime and can only yield a complete immutable map by consuming itself.
-pub struct MapPreparation<'a> {
-    input: &'a [Circle],
-    candidate: SyntheticMap,
-    pending: Option<Circle>,
-    next_id: usize,
-    cancelled: bool,
-    error: Option<ValueError>,
-}
-impl<'a> MapPreparation<'a> {
-    pub fn new(revision: MapRevision, input: &'a [Circle]) -> Result<Self, ValueError> {
-        if input.len() > MAX_CIRCLES {
-            return Err(ValueError::ObjectLimit);
-        }
-        Ok(Self {
-            input,
-            candidate: SyntheticMap {
-                revision,
-                circles: [None; MAX_CIRCLES],
-                len: 0,
-            },
-            pending: None,
-            next_id: 0,
-            cancelled: false,
-            error: None,
-        })
-    }
-    pub fn step(&mut self, budget: WorkBudget) -> Result<PreparationProgress, ValueError> {
-        if self.cancelled {
-            return Err(ValueError::PreparationCancelled);
-        }
-        if let Some(error) = self.error {
-            return Err(error);
-        }
-        for _ in 0..budget.get() {
-            let index = self.candidate.len;
-            let Some(circle) = self.pending else {
-                let Some(circle) = self.input.get(index).copied() else {
-                    break;
-                };
-                // One input-record inspection. Later calls retain this value
-                // while inspecting at most one previous identity per unit.
-                if index == 0 {
-                    self.candidate.circles[0] = Some(circle);
-                    self.candidate.len = 1;
-                } else {
-                    self.pending = Some(circle);
-                    self.next_id = 0;
-                }
-                continue;
-            };
-            let previous = self.candidate.circles[self.next_id].expect("validated predecessor");
-            let last = self.next_id + 1 == index;
-            let error = if previous.id == circle.id {
-                Some(ValueError::DuplicateObject)
-            } else if last && circle.target < previous.target {
-                Some(ValueError::UnsortedMap)
-            } else if last && circle.open <= previous.close {
-                Some(ValueError::UnsupportedOverlap)
-            } else {
-                None
-            };
-            if let Some(error) = error {
-                self.error = Some(error);
-                return Err(error);
-            }
-            if last {
-                self.candidate.circles[index] = Some(circle);
-                self.candidate.len += 1;
-                self.pending = None;
-            } else {
-                self.next_id += 1;
-            }
-        }
-        Ok(if self.candidate.len == self.input.len() {
-            PreparationProgress::Complete {
-                checked: self.candidate.len,
-            }
-        } else {
-            PreparationProgress::Pending {
-                checked: self.candidate.len,
-                total: self.input.len(),
-            }
-        })
-    }
-    pub fn cancel(&mut self) {
-        self.cancelled = true;
-    }
-    pub fn finish(self) -> Result<SyntheticMap, ValueError> {
-        if self.cancelled {
-            return Err(ValueError::PreparationCancelled);
-        }
-        if let Some(error) = self.error {
-            return Err(error);
-        }
-        if self.candidate.len != self.input.len() {
-            return Err(ValueError::PreparationIncomplete);
-        }
-        Ok(self.candidate)
+impl core::fmt::Debug for SyntheticMap {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        f.debug_struct("SyntheticMap")
+            .field("revision", &self.revision)
+            .field("len", &self.len)
+            .field("capacity", &self.capacity())
+            .finish()
     }
 }
+impl PartialEq for SyntheticMap {
+    fn eq(&self, other: &Self) -> bool {
+        self.revision == other.revision && self.circles == other.circles
+    }
+}
+impl Eq for SyntheticMap {}

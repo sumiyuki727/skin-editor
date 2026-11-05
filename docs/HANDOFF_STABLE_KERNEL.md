@@ -1,5 +1,7 @@
 # 独立 stable 兼容内核：新对话交接
 
+**2026-11-06最新B停靠点：** K1-6A一致性修订11文件已通过正常完整hook备份推送为`b3c5f08`，PRIVATE origin及远端SHA一致。本轮实现[K1-6B](K1_6B_STORAGE_PROOF.md)，gameplay API7／profile1，Tiny4／Reference10000；容量证明／回归先于默认上限开放，分步校验／初始化、原始计数、当前payload账本及G0无输入规模通过。正式核心通过425项Python及149项gameplay，桌面架构检查通过。本轮新增量未提交，下一步先独立审阅B；C完整输入／实际自动规模轨迹及D实际成本仍未完成，不接GUI／原生设备、不宣称stable兼容。下方A及早期记录保留各自时点。
+
 **2026-11-06最新停靠点：** K1-6A初版28文件已通过正常完整hook备份推送为`c447a2a`，远端SHA一致。[本次一致性审阅](K1_6A_STORAGE_REVIEW.md#2026-11-06一致性审阅记录)补5项来源寿命、同刻迁移、Pending／Failed旧完整帧／页及首次失败无帧回归，共137项gameplay通过；未发现需修改运行逻辑的偏差。API6／profile1、四对象及默认池保持，正式核心及桌面架构检查通过。本次测试／说明修订未提交，后续先备份再按明确任务推进；B–D、10000对象及实际成本仍待做，不接GUI／设备，不宣称stable兼容或完整K1／KT。下方早期记录按当时时点保留。
 
 2026-11-03。这是架构与实施计划的交接，**没有实现内核功能**。新对话先读当前AGENTS／Git和用户本轮任务；本文件不授权自动开工、访问私人谱面、运行窗口或提升权限。
@@ -14,7 +16,7 @@
 
 “独立”是纯Rust、可无窗口测试的模块；产品保持单进程模块化单体。不能裁剪、复制、翻译移植无授权旧stable源码，不能因为lazer有实现就当stable规则已验证。
 
-已实现SyntheticTest预编译圆圈、确定性时间／输入／生命周期、有界取消、冻结／恢复／重新武装、同谱面检查、统一候选／托管预算及自动输入／三驱动互斥；K1-1至K1-5各自一致性审阅已完成适用条款。纯驱动不代表产品自动预览、音乐／设备、平台捕获／失焦／工具门控已接通。K1-6A固定四槽共享来源、容量及只读截面／分页已实现并完成本次适用复核；不自动放大MAX_CIRCLES或转去接P3保存UI、素材skill或原生设备。
+已实现SyntheticTest预编译圆圈、确定性时间／输入／生命周期、有界取消、冻结／恢复／重新武装、同谱面检查、统一候选／托管预算及自动输入／三驱动互斥；K1-1至K1-6A及各自适用复核完成，B变长存储／分步工作及G0已实现待独立审阅。纯驱动不代表产品自动预览、音乐／设备、平台捕获／失焦／工具门控接通。MAX_CIRCLES仍是便捷入口4对象边界，Reference显式上限MAX_REFERENCE_CIRCLES=10000；不自动开始C／D或转去P3保存UI、素材skill或原生设备。
 
 ## 2. Git、代码基线和并行修改
 
@@ -37,6 +39,7 @@
 - K1-6开工规格初稿及入口7文件已保存为ffe2361a6a89bcc4c34f043c99b3974a217f35a2，本轮正常完整hook通过并推送PRIVATE origin、远端SHA一致。随后只修订规格／方案／交接等文档，未开发；旧“本轮未提交”按其当时状态保留。
 - K1-6规格审阅6文件已保存为f1c8dbfdd086a84eafdb0f6ed0a2c9a1f7734389，本轮正常完整hook通过并推送PRIVATE origin、远端SHA一致；之后K1-6A代码／测试／文档另作本轮未提交增量，旧“本轮未提交”保留当时含义。
 - K1-6A初版28文件已保存为c447a2a37380ee862699621917a8d366dd2a0d54，正常完整hook包含132项gameplay及桌面默认／全feature检查，推送PRIVATE origin并核对远端SHA；之后本次一致性回归／说明修订未提交，137项新状态另经正式核心检查，不沿用备份或远端CI结论。
+- K1-6A一致性修订11文件已保存为b3c5f088932666c97ae8576b468b0c7b177bc7d5，正常完整hook包含137项gameplay及桌面默认／全feature，推送PRIVATE origin并核对远端SHA；本轮B的149项新增状态另经正式核心检查，源码／测试／文档未提交，不能沿用备份或远端CI结论。
 - 最新默认流程：先看status／log／实际暂存差异，将上一轮来源明确、可审查的工作通过检查及hook提交成回退点，默认同步核对过的私有origin；用户明确说不提交／推送时除外。新增量轮末不自动一起提交。
 - 保留其他对话工作，不并发Git写操作，不替其他对话暂存，不盲目全目录add、不跳过hook／强推／amend／重写历史。
 - schema.rs可能显示M而实际diff为空，已有核对属换行规范化现象；先检查内容，不为消标记修改DDL、清理源码或改旧证明。
@@ -61,7 +64,7 @@
 
 | 入口 | 真实状态／可复用范围 |
 | --- | --- |
-| [crates/gameplay/src/lib.rs](../crates/gameplay/src/lib.rs)、[coordinator](../crates/gameplay/src/coordinator.rs)、[frame](../crates/gameplay/src/run/frame.rs)及[K1-6A审阅](K1_6A_STORAGE_REVIEW.md) | 独立SyntheticTest模型／API6、最多4圆圈；既有控制／驱动、固定共享来源及只读完整帧／分页，实时单项账本独立；未接桌面或stable规则 |
+| [crates/gameplay/src/lib.rs](../crates/gameplay/src/lib.rs)、[分步准备](../crates/gameplay/src/map/preparation.rs)、[初始化](../crates/gameplay/src/run/initialization.rs)、[存储](../crates/gameplay/src/storage.rs)、[计数](../crates/gameplay/src/work.rs)及[K1-6B证明](K1_6B_STORAGE_PROOF.md) | 独立SyntheticTest API7／profile1，Tiny4／Reference10000；变长容量、分步工作及G0已测，来源共享和只读帧／分页保持；无桌面或stable规则 |
 | [desktop/preview/src/lib.rs](../desktop/preview/src/lib.rs) | 占位PreviewState／Scene、冻结及输入计数；没有谱面、对象、判定或成绩 |
 | [application/preview_port.rs](../crates/application/src/preview_port.rs) | 现有PreviewPort、PreviewContext／FrameSource／FrameKey和静态PNG准备值；不是已存在的游戏运行端口 |
 | [desktop/ui/src/shortcuts.rs](../desktop/ui/src/shortcuts.rs) | 产品快捷键／修饰键统一入口；文本／IME／工具隔离继续复用 |
@@ -101,6 +104,8 @@
 **格式／动画。** 运行器不要求改工程schema；持久设置或必要项目语义确需演进再单独定版本／迁移。历史短地址继续与永久身份分离，不借用为对象ID。动画来源保留原始时长、按元素规则输出的AN设计不变，程序化接近圈动画不等于已实现动图导入。
 
 ## 6. 下一增量、检查和证据
+
+当前B步：固定Rust1.95容量证明／回归后开放Reference10000，Tiny4；分步归并、状态初始化、原始工作与当前payload账本、G0预算1／256及大图检查重建通过。正式check_core通过425项Python、格式、Clippy、三个核心包无窗口测试及release，gameplay149项；桌面architecture-only通过，日志为artifacts/k1-6b/。API7的SyntheticMap非Copy／Clone；大图走MapPreparation::with_limits、RunPreparation或协调器，costs_for_objects(N)按容量预留，旧costs／static_storage_bytes只表示四槽下界。下一步先备份并独立审阅B，不开始C／D。下列A与路线条目保留原时点，当前状态以本段及B记录为准。
 
 规格审阅已备份为f1c8dbf，正常完整hook验证旧API5／116项及桌面默认／全feature无窗口基线；随后实现[K1-6A](K1_6A_STORAGE_REVIEW.md)，API6／profile1、4对象。新增实现经正式check_core通过424项Python检查回归、格式、Clippy、三个核心包测试及release构建，gameplay共132项；桌面architecture-only通过。没有成本测量／窗口／设备接线，日志在本机忽略目录artifacts/k1-6a/。过程中一次夹具目标错误及换行整理误清空本轮源码均已修复，恢复／黄金内容核对和最终正式检查通过，历史日志保留。
 
@@ -148,9 +153,9 @@ K1-1至K1-5已运行适用纯核心回归，完整KT仍待验收，具体检查�
 ```text
 请在 E:\skin-editor 接手独立stable兼容内核规划。先读AGENTS.md、docs/HANDOFF_STABLE_KERNEL.md、docs/STABLE_KERNEL_PLAN.md及当前Git状态／HEAD／暂存差异，按最新规则保护上一轮已审查工作，核对私有origin并保留其他对话修改，不并发Git写入。
 
-首批仅osu!standard／No Mod／纯圆圈受测子集。独立内核仍在同一模块化单体内；gameplay已有API6的4对象SyntheticTest模型、既有控制／三驱动及K1-6A固定来源共享／容量／只读完整帧和分页，compatibility未实现。application保持唯一项目写入口，运行控制与tick不进入项目Command／历史。先读docs/K1_6A_STORAGE_REVIEW.md的API6实际接口、容量公式、137项测试与本次一致性审阅，再复核K1-6规格、K0-A、C1／C2／C3及先前控制／所有权契约。未知stable数值不得硬编码成已验证规则，不复制旧stable源码，也不把lazer当stable证据。
+首批仅osu!standard／No Mod／纯圆圈受测子集。独立内核仍在同一模块化单体内；gameplay已有API7／profile1，Tiny4／Reference10000，来源共享、只读完整帧／分页及分步校验／初始化／原始工作计数，G0无输入规模已测；compatibility未实现。application保持唯一项目写入口，运行控制与tick不进入项目Command／历史。先读docs/K1_6B_STORAGE_PROOF.md的固定工具链容量证明、API7接口／计费及149项回归，再读A记录和K1-6规格、K0-A、C1／C2／C3及先前控制／所有权契约。未知stable数值不得硬编码成已验证规则，不复制旧stable源码，也不把lazer当stable证据。
 
-按我本轮明确任务执行；交接本身不授权新增功能、接P3保存／打开UI、访问私人谱面或启动窗口／设备。2026-11-06最新停靠点是K1-6A初版已备份推送为c447a2a，随后完成本次适用一致性复核；API6／profile1、固定四槽及137项gameplay通过，未测成本。本轮测试／说明修订未提交，后续先备份再按明确任务推进。保留实时单项账本、Pending／Failed旧完整帧及页身份隔离；注意RunId在旧输入／事件／任务／帧键／游标仍可能到达期间不复用，独立运行与协调来源的静态计费分别核对，失败点不是任意OOM恢复。B变长上界／原始工作计量、C规模轨迹及D实际成本仍待明确任务。取消只撤销资格，保留任务继续计费；创建／载入的Prepared不能冒充已评估起点，检查激活才ReadyFrozen并继承驱动。自动输入经同一接纳／判定路径，冻结停止且恢复不补已关闭目标；原生冻结锚点／Voice／输入捕获仍未接线，K0-B和K3分别验收，不跨阶段宣称兼容或完整standard。
+按我本轮明确任务执行；交接本身不授权新增功能、接P3保存／打开UI、访问私人谱面或启动窗口／设备。2026-11-06最新停靠点是A一致性修订已备份推送b3c5f08，随后实现B，425项Python／149项gameplay和正式核心检查通过，未测实际成本。本轮新增量未提交，下一步先备份并独立审阅B，不自动开始C／D。重点复核固定Rust1.95请求布局、两池预留与实际payload、原始计数、归并错误位置及分步初始化；保留Pending／Failed旧完整帧及旧页隔离。RunId在旧输入／事件／任务／帧键／游标仍可能到达期间不复用，控制头／分配器／完整栈未知，受控拒绝不是任意OOM恢复。C完整固定输入／实际自动规模轨迹及控制交错、D实际成本仍待做。取消仅撤销资格，持有任务继续计费；Prepared不是已评估起点，检查激活才ReadyFrozen并继承驱动。冻结／恢复不补旧时间／输入／声音，原生冻结锚点／Voice／捕获仍未接线；K0-B、K3和兼容性分别验收。
 
 保持完整历史不删不覆盖、图片与音效独立、皮肤热替换不重置音乐／对象、冻结恢复不补跑及旧代次清理。零欠载、提交p95≤20ms、内存／GPU／实际释放门槛保持，播放CPU≤15%为优化目标。新原生路径和兼容性须另验，合成小模型测试不能替代这些证据。
 ```

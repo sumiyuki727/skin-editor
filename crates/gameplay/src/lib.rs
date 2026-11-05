@@ -1,6 +1,7 @@
 //! Small, deterministic SyntheticTest model. No stable compatibility claim.
 //!
-//! The model accepts at most four unambiguous precompiled circles.
+//! Tiny accepts four unambiguous circles; Reference accepts up to 10000 through
+//! explicit budgeted preparation. Convenience constructors remain four-object.
 //! The caller supplies absolute content time and serializes input admission.
 //! Project editing, rendering, parsing and native devices are outside this
 //! increment. Automatic input preparation is caller-stepped before sealing.
@@ -11,28 +12,32 @@
 //! Runtime state cannot be changed through a projection:
 //! ```compile_fail
 //! use skin_editor_gameplay::SyntheticRun;
-//! fn overwrite(run: &mut SyntheticRun) { run.judgements[0] = None; }
+//! fn overwrite(run: &mut SyntheticRun) { run.objects[0].judgement = None; }
 //! ```
 #![forbid(unsafe_code)]
 
 mod coordinator;
 mod map;
 mod run;
+mod storage;
 mod types;
+mod work;
+pub use work::WorkCounts;
 
 pub use coordinator::{
-    AllocationKind, PreparationCosts, PreparationCursor, PreparationError, PreparationKey,
-    PreparationLimits, PreparationOperation, PreparationReport, PreparationStage, PreparationTask,
-    ResourcePool, ResourceUsage, SyntheticCoordinator,
+    AllocationKind, AllocationUsage, PreparationCosts, PreparationCursor, PreparationError,
+    PreparationKey, PreparationLimits, PreparationOperation, PreparationReport, PreparationStage,
+    PreparationTask, ResourcePool, ResourceUsage, SyntheticCoordinator,
 };
-pub use map::{Circle, MapPreparation, PreparationProgress, SyntheticMap};
+pub use map::{Circle, MapPreparation, PreparationPhase, PreparationProgress, SyntheticMap};
 pub use run::{
     Acknowledgement, Admission, AdvanceCursor, AdvanceReport, AutomaticPendingReason,
     AutomaticReport, CircleFrame, EventKey, EventKind, Failure, FrameCounts, FrameCursor,
     FrameHeader, FrameKey, FramePage, FrameReadError, FreezeInfo, FreezeReport, GameEvent,
     InspectionCursor, InspectionInfo, InspectionKey, InspectionReport, Judgement, JudgementRecord,
     Limits, Observation, PendingReason, Phase, ReadyFrame, RearmReport, RequestKey, RunError,
-    RunStatus, StatisticsOrigin, SyntheticRun, UnavailableReason,
+    RunPreparation, RunPreparationProgress, RunStatus, StatisticsOrigin, SyntheticRun,
+    UnavailableReason,
 };
 pub use types::{
     CoordinatorId, EventSequence, InputDriver, InputEdge, InputEpoch, InputEvent, InputSequence,
@@ -40,9 +45,10 @@ pub use types::{
     TransportEpoch, ValueError, WorkBudget,
 };
 
-pub const GAMEPLAY_API_VERSION: u16 = 6;
+pub const GAMEPLAY_API_VERSION: u16 = 7;
 pub const SYNTHETIC_PROFILE_VERSION: u32 = 1;
 pub const MAX_CIRCLES: usize = 4;
+pub const MAX_REFERENCE_CIRCLES: usize = 10_000;
 pub const MAX_INPUTS: usize = 64;
 pub const MAX_EVENTS: usize = 64;
 pub const MAX_FRAME_PAGE: usize = 64;

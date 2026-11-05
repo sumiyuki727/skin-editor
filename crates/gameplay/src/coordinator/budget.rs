@@ -6,6 +6,11 @@ pub enum AllocationKind {
     SourceMap,
     SourceOwner,
     Runtime,
+    Circles,
+    IndexFirst,
+    IndexSecond,
+    ObjectStates,
+    InspectionStates,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -20,6 +25,15 @@ pub struct ResourceUsage {
     pub precompiled_bytes: usize,
     pub runtime_bytes: usize,
 }
+/// Live requested heap payloads, already covered by ResourceUsage reservations.
+/// This excludes caller storage, allocation headers and allocator retention.
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+pub struct AllocationUsage {
+    pub precompiled_bytes: usize,
+    pub runtime_bytes: usize,
+    pub precompiled_allocations: usize,
+    pub runtime_allocations: usize,
+}
 /// Quantified payload/owned-workspace reservations, not allocator overhead or
 /// process memory. Shared source payloads are charged once per allocation.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -31,6 +45,9 @@ pub struct PreparationCosts {
     pub source_bytes: usize,
     pub source_map_bytes: usize,
     pub source_owner_bytes: usize,
+    pub object_capacity: usize,
+    pub index_bytes: usize,
+    pub state_bytes: usize,
 }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct PreparationLimits {
@@ -71,18 +88,22 @@ impl PreparationLimits {
             return Err(ValueError::InvalidLimits);
         }
         let cost = SyntheticCoordinator::costs();
-        if self.precompiled_bytes < cost.source_bytes
-            || self.runtime_bytes
-                < cost.pool_bytes + cost.coordinator_bytes + cost.task_bytes + cost.run_bytes
-        {
+        let minimum = cost
+            .pool_bytes
+            .checked_add(cost.coordinator_bytes)
+            .and_then(|v| v.checked_add(cost.task_bytes))
+            .and_then(|v| v.checked_add(cost.run_bytes))
+            .ok_or(ValueError::StorageLimit)?;
+        if self.precompiled_bytes < cost.source_bytes || self.runtime_bytes < minimum {
             return Err(ValueError::StorageLimit);
         }
         Ok(())
     }
 }
-pub(super) struct PoolState {
+pub(crate) struct PoolState {
     pub(super) limits: PreparationLimits,
     pub(super) usage: Cell<ResourceUsage>,
+    pub(super) allocated: Cell<AllocationUsage>,
     pub(super) live: Cell<Option<PreparationKey>>,
     pub(super) base: Cell<Option<(RunSource, RunStatus)>>,
     pub(super) alive: Cell<bool>,
@@ -94,8 +115,57 @@ pub(super) struct Reservation {
     kind: ResourcePool,
     bytes: usize,
 }
+pub(crate) struct PayloadLease {
+    pool: Rc<PoolState>,
+    kind: ResourcePool,
+    bytes: usize,
+}
+impl PayloadLease {
+    pub(crate) fn new(pool: &Rc<PoolState>, kind: ResourcePool, bytes: usize) -> Self {
+        let mut used = pool.allocated.get();
+        let (total, count, limit) = match kind {
+            ResourcePool::Precompiled => (
+                &mut used.precompiled_bytes,
+                &mut used.precompiled_allocations,
+                pool.usage.get().precompiled_bytes,
+            ),
+            ResourcePool::Runtime => (
+                &mut used.runtime_bytes,
+                &mut used.runtime_allocations,
+                pool.usage.get().runtime_bytes,
+            ),
+        };
+        *total = total.checked_add(bytes).expect("pre-reserved payload");
+        *count = count.checked_add(1).expect("bounded allocations");
+        assert!(
+            *total <= limit,
+            "allocation must be reserved before requesting it"
+        );
+        pool.allocated.set(used);
+        Self {
+            pool: Rc::clone(pool),
+            kind,
+            bytes,
+        }
+    }
+}
+impl Drop for PayloadLease {
+    fn drop(&mut self) {
+        let mut used = self.pool.allocated.get();
+        let (total, count) = match self.kind {
+            ResourcePool::Precompiled => (
+                &mut used.precompiled_bytes,
+                &mut used.precompiled_allocations,
+            ),
+            ResourcePool::Runtime => (&mut used.runtime_bytes, &mut used.runtime_allocations),
+        };
+        *total = total.checked_sub(self.bytes).expect("live payload");
+        *count = count.checked_sub(1).expect("live allocation");
+        self.pool.allocated.set(used);
+    }
+}
 impl PoolState {
-    pub(super) fn check_allocation(&self, kind: AllocationKind) -> Result<(), PreparationError> {
+    pub(crate) fn check_allocation(&self, kind: AllocationKind) -> Result<(), PreparationError> {
         #[cfg(test)]
         if self.allocation_failure.get() == Some(kind) {
             self.allocation_failure.set(None);
@@ -108,7 +178,10 @@ impl PoolState {
     pub(super) fn reserve_owner(pool: &Rc<Self>) -> Reservation {
         let bytes = SyntheticCoordinator::costs().coordinator_bytes;
         let mut usage = pool.usage.get();
-        usage.runtime_bytes += bytes;
+        usage.runtime_bytes = usage
+            .runtime_bytes
+            .checked_add(bytes)
+            .expect("validated owner budget");
         pool.usage.set(usage);
         Reservation {
             pool: Rc::clone(pool),
@@ -119,10 +192,13 @@ impl PoolState {
     pub(super) fn reserve_task(
         pool: &Rc<Self>,
         content: bool,
+        costs: PreparationCosts,
     ) -> Result<(Reservation, Reservation, Option<Reservation>), PreparationError> {
-        let costs = SyntheticCoordinator::costs();
         let source_bytes = if content { costs.source_bytes } else { 0 };
-        let runtime_bytes = costs.task_bytes + costs.run_bytes;
+        let runtime_bytes = costs
+            .task_bytes
+            .checked_add(costs.run_bytes)
+            .ok_or(PreparationError::BudgetLimit)?;
         let used = pool.usage.get();
         let check = |kind, amount, used: usize, limit| {
             used.checked_add(amount)

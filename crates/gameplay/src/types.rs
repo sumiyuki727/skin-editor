@@ -17,6 +17,8 @@ pub enum ValueError {
     InvalidBudget,
     PreparationIncomplete,
     PreparationCancelled,
+    StorageLayout,
+    AllocationUnavailable(crate::AllocationKind),
 }
 
 macro_rules! identity {

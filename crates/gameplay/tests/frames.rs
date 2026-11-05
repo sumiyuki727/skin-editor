@@ -425,8 +425,8 @@ fn inspection_cancellation_keeps_pages_and_activation_closes_the_old_source() {
 #[test]
 fn capacities_apply_to_standalone_and_coordinated_entry_points_without_extra_pools() {
     assert_eq!(MAX_CIRCLES, 4);
-    assert_eq!(Limits::reference().object_capacity(), 4);
-    for bad in [0, 5, usize::MAX] {
+    assert_eq!(Limits::reference().object_capacity(), MAX_REFERENCE_CIRCLES);
+    for bad in [0, MAX_REFERENCE_CIRCLES + 1, usize::MAX] {
         assert_eq!(
             Limits::tiny().with_object_capacity(bad),
             Err(ValueError::InvalidLimits)
@@ -465,8 +465,12 @@ fn capacities_apply_to_standalone_and_coordinated_entry_points_without_extra_poo
         costs.source_bytes,
         costs.source_map_bytes + costs.source_owner_bytes
     );
-    assert_eq!(costs.source_map_bytes, core::mem::size_of::<SyntheticMap>());
+    assert_eq!(
+        costs.source_map_bytes,
+        core::mem::size_of::<SyntheticMap>() + MAX_CIRCLES * core::mem::size_of::<Circle>()
+    );
     let exact = Limits::try_new(4, 2, 4, 1, SyntheticRun::static_storage_bytes()).unwrap();
+    let map = SyntheticMap::try_new(s.revision, &circles(2)).unwrap();
     assert!(matches!(
         SyntheticRun::new(s, map, t(-200_001), exact.with_object_capacity(1).unwrap()),
         Err(ValueError::ObjectLimit)
@@ -477,6 +481,7 @@ fn capacities_apply_to_standalone_and_coordinated_entry_points_without_extra_poo
         Err(ValueError::StorageLimit)
     ));
     let standalone = Limits::try_new(4, 2, 4, 1, SyntheticRun::standalone_storage_bytes()).unwrap();
+    let empty = SyntheticMap::try_new(s.revision, &[]).unwrap();
     assert!(SyntheticRun::new(s, empty, t(0), standalone).is_ok());
     let pool = PreparationLimits::try_new(
         costs.source_bytes,

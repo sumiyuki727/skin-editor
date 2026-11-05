@@ -179,6 +179,10 @@ impl SyntheticRun {
                 .cancelled_inputs += 1;
             return Ok(StepResult::Worked);
         }
+        self.count(WorkCounts {
+            management_steps: 1,
+            ..WorkCounts::default()
+        });
         match self.work {
             Work::Select => {
                 let next = self.next_action();
@@ -222,7 +226,7 @@ impl SyntheticRun {
                         Ok(StepResult::Worked)
                     }
                     Action::Deadline(index) => {
-                        if self.judgements[index].is_none() {
+                        if self.objects[index].judgement.is_none() {
                             let Some(reservation) = self.reserve_events(1)? else {
                                 return Ok(StepResult::Blocked);
                             };
@@ -231,7 +235,7 @@ impl SyntheticRun {
                                 at: next.at,
                                 result: Judgement::Miss,
                             };
-                            self.judgements[index] = Some(record);
+                            self.objects[index].judgement = Some(record);
                             self.emit(reservation, record);
                         }
                         self.expired += 1;
@@ -253,6 +257,10 @@ impl SyntheticRun {
                 }
             }
             Work::Search(mut draft) => {
+                self.count(WorkCounts {
+                    search_objects: u64::from(draft.next < self.map.len),
+                    ..WorkCounts::default()
+                });
                 let Some(circle) = self.map.circle(draft.next) else {
                     self.work = Work::Commit(draft);
                     return Ok(StepResult::Worked);
@@ -264,7 +272,7 @@ impl SyntheticRun {
                 if draft.input.at < circle.open {
                     self.work = Work::Commit(draft);
                 } else if draft.input.at <= circle.close
-                    && self.judgements[draft.next].is_none()
+                    && self.objects[draft.next].judgement.is_none()
                     && point.within_synthetic_radius(circle.center)
                 {
                     draft.candidate = Some(draft.next);
@@ -292,7 +300,7 @@ impl SyntheticRun {
                         at: draft.input.at,
                         result: Judgement::Hit,
                     };
-                    self.judgements[index] = Some(record);
+                    self.objects[index].judgement = Some(record);
                     self.emit(reservation.expect("hit reservation"), record);
                 }
                 self.held = draft.held;
@@ -322,6 +330,10 @@ impl SyntheticRun {
     fn publish_section(&mut self, at: MapTime) -> Result<StepResult, RunError> {
         if self.ready.is_none_or(|old| old.at != at) {
             let publication = self.next_publication.ok_or(RunError::CounterExhausted)?;
+            self.count(WorkCounts {
+                publications: 1,
+                ..WorkCounts::default()
+            });
             self.ready = Some(FrameHeader {
                 source: self.source,
                 at,

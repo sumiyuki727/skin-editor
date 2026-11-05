@@ -87,6 +87,10 @@ fn controlled_allocation_rejections_keep_the_frozen_base_and_reservations_atomic
         AllocationKind::SourceMap,
         AllocationKind::SourceOwner,
         AllocationKind::Runtime,
+        AllocationKind::Circles,
+        AllocationKind::IndexFirst,
+        AllocationKind::IndexSecond,
+        AllocationKind::ObjectStates,
     ] {
         let mut owner = empty();
         let base = source(1, 1);
@@ -337,12 +341,67 @@ fn shared_inspection_allocation_failure_preserves_old_pages_and_real_hit_ledger(
     assert!(map.upgrade().is_none());
 }
 
+#[test]
+fn inspection_buffer_rejection_retains_payloads_until_failed_task_drop() {
+    let mut owner = four_frozen();
+    let before = owner.current().unwrap().observation();
+    let reserved = owner.resources();
+    let allocated = owner.allocations();
+    owner
+        .pool
+        .allocation_failure
+        .set(Some(AllocationKind::InspectionStates));
+    let mut task = owner
+        .request_inspection(before.source, MapTime::from_micros(1_000_000))
+        .unwrap();
+    let mut failed = false;
+    for _ in 0..128 {
+        match task.step(task.cursor(), WorkBudget::one()) {
+            Err(PreparationError::Runtime(RunError::AllocationUnavailable(
+                AllocationKind::InspectionStates,
+            ))) => {
+                failed = true;
+                break;
+            }
+            Ok(PreparationReport::Pending { .. }) => {}
+            report => panic!("unexpected allocation result: {report:?}"),
+        }
+    }
+    assert!(failed);
+    assert_eq!(task.stage(), PreparationStage::Failed);
+    assert_eq!(task.work_counts().allocation_attempts, 3);
+    assert_eq!(owner.candidate(), None);
+    assert_eq!(owner.current().unwrap().observation(), before);
+    assert_eq!(
+        owner.allocations().precompiled_bytes,
+        allocated.precompiled_bytes
+    );
+    let cost = SyntheticCoordinator::costs();
+    assert_eq!(
+        owner.allocations().runtime_bytes,
+        allocated.runtime_bytes + core::mem::size_of::<SyntheticRun>() + cost.state_bytes
+    );
+    let header = before.ready_frame.unwrap();
+    let mut output = [None; 4];
+    owner
+        .current()
+        .unwrap()
+        .read_frame_page(header.key().cursor(0), 64, &mut output)
+        .unwrap();
+    assert_eq!(
+        output[0].unwrap().judgement.unwrap().result,
+        crate::Judgement::Hit
+    );
+    drop(task);
+    assert_eq!(owner.resources(), reserved);
+    assert_eq!(owner.allocations(), allocated);
+}
+
 fn freeze_empty(owner: &mut SyntheticCoordinator, source: RunSource) {
     let mut job = owner
         .request_create(source, &[], MapTime::from_micros(0))
         .unwrap();
-    job.step(job.cursor(), WorkBudget::one()).unwrap();
-    job.step(job.cursor(), WorkBudget::one()).unwrap();
+    finish(&mut job);
     owner.activate(job.key(), &mut job).unwrap();
     owner
         .request_freeze(source, MapTime::from_micros(0))

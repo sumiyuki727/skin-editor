@@ -21,6 +21,7 @@ impl InspectionKey {
 pub struct InspectionCursor {
     key: InspectionKey,
     checked: usize,
+    progress: u64,
 }
 impl InspectionCursor {
     pub const fn key(self) -> InspectionKey {
@@ -57,9 +58,11 @@ pub enum InspectionReport {
 pub(super) struct InspectionCandidate {
     key: InspectionKey,
     checked: usize,
+    progress: u64,
     ready: bool,
     frame: FrameHeader,
-    skipped: [bool; MAX_CIRCLES],
+    pub(super) objects: Buffer<ObjectState>,
+    allocated: bool,
     appeared: usize,
     expired: usize,
     retired: usize,
@@ -110,6 +113,7 @@ impl SyntheticRun {
         self.inspection = Some(InspectionCandidate {
             key,
             checked: 0,
+            progress: 0,
             ready: false,
             frame: FrameHeader {
                 source: RunSource {
@@ -125,13 +129,20 @@ impl SyntheticRun {
                 publication: 1,
                 len: self.map.len,
             },
-            skipped: [false; MAX_CIRCLES],
+            objects: Buffer::new(
+                crate::storage::capacity(self.map.len).map_err(|_| RunError::CounterExhausted)?,
+            ),
+            allocated: false,
             appeared: 0,
             expired: 0,
             retired: 0,
         });
         self.next_inspection = id.checked_add(1);
-        Ok(InspectionCursor { key, checked: 0 })
+        Ok(InspectionCursor {
+            key,
+            checked: 0,
+            progress: 0,
+        })
     }
 
     /// Each unit inspects at most one circle and builds its projection. Empty
@@ -143,7 +154,10 @@ impl SyntheticRun {
     ) -> Result<InspectionReport, RunError> {
         self.check_inspection(cursor.key)?;
         let candidate = self.inspection.as_mut().expect("checked candidate");
-        if candidate.ready || candidate.checked != cursor.checked {
+        if candidate.ready
+            || candidate.checked != cursor.checked
+            || candidate.progress != cursor.progress
+        {
             return Err(RunError::StaleInspection);
         }
         if budget.get() > self.limits.max_work {
@@ -152,10 +166,46 @@ impl SyntheticRun {
         let target = candidate.key.target;
         let mut steps = 0;
         while steps < budget.get() && !candidate.ready {
-            if let Some(circle) = self.map.circle(candidate.checked) {
-                let index = candidate.checked;
+            let next_progress = candidate
+                .progress
+                .checked_add(1)
+                .ok_or(RunError::CounterExhausted)?;
+            if !candidate.allocated {
+                let mut stats = self.stats.get();
+                let allocation = candidate.objects.allocate(
+                    &mut stats,
+                    self.pool.as_ref(),
+                    crate::AllocationKind::InspectionStates,
+                    crate::ResourcePool::Runtime,
+                );
+                stats.merge(WorkCounts {
+                    management_steps: 1,
+                    ..WorkCounts::default()
+                });
+                self.stats.set(stats);
+                if let Err(error) = allocation {
+                    self.inspection = None;
+                    return Err(match error {
+                        crate::PreparationError::AllocationUnavailable(kind) => {
+                            RunError::AllocationUnavailable(kind)
+                        }
+                        _ => RunError::StorageLayout,
+                    });
+                }
+                candidate.allocated = true;
+            } else if let Some(circle) = self.map.circle(candidate.checked) {
                 let skipped = target > circle.close;
-                candidate.skipped[index] = skipped;
+                candidate.objects.push(ObjectState {
+                    judgement: None,
+                    inspection_skipped: skipped,
+                });
+                let mut stats = self.stats.get();
+                stats.merge(WorkCounts {
+                    inspection_objects: 1,
+                    state_initializations: 1,
+                    ..WorkCounts::default()
+                });
+                self.stats.set(stats);
                 candidate.appeared += usize::from(target >= circle.visible);
                 candidate.expired += usize::from(skipped);
                 candidate.retired += usize::from(target >= circle.retire);
@@ -163,6 +213,7 @@ impl SyntheticRun {
                 candidate.checked += 1;
             }
             steps += 1;
+            candidate.progress = next_progress;
             candidate.ready = candidate.checked == self.map.len;
         }
         Ok(if candidate.ready {
@@ -176,6 +227,7 @@ impl SyntheticRun {
                 cursor: InspectionCursor {
                     key: candidate.key,
                     checked: candidate.checked,
+                    progress: candidate.progress,
                 },
                 checked: candidate.checked,
                 total: self.map.len,
@@ -195,11 +247,15 @@ impl SyntheticRun {
         self.source = candidate.frame.source;
         self.start = key.target;
         self.statistics_origin = candidate.frame.statistics_origin;
-        self.inspection_skipped = candidate.skipped;
+        self.objects = candidate.objects;
+        self.count(WorkCounts {
+            publications: 1,
+            management_steps: 1,
+            ..WorkCounts::default()
+        });
         self.appeared = candidate.appeared;
         self.expired = candidate.expired;
         self.retired = candidate.retired;
-        self.judgements.fill(None);
         self.sealed = Some(key.target);
         self.automatic = AutomaticState::after_boundary(key.target);
         self.highest_input = 0;
@@ -261,6 +317,28 @@ impl SyntheticRun {
 mod tests {
     use super::*;
     use crate::{InputEpoch, MapRevision};
+
+    #[test]
+    fn exhausted_inspection_progress_keeps_old_frame_and_can_still_cancel() {
+        let mut run = frozen(1, 1);
+        let mut cursor = run
+            .request_inspection(run.source(), MapTime::from_micros(1))
+            .unwrap();
+        run.inspection.as_mut().unwrap().progress = u64::MAX;
+        cursor.progress = u64::MAX;
+        let before = run.observation();
+        assert_eq!(
+            run.step_inspection(cursor, WorkBudget::one()),
+            Err(RunError::CounterExhausted)
+        );
+        assert_eq!(run.observation(), before);
+        run.cancel_inspection(cursor.key()).unwrap();
+        assert_eq!(run.observation().ready_frame, before.ready_frame);
+        assert_eq!(
+            run.step_inspection(cursor, WorkBudget::one()),
+            Err(RunError::StaleInspection)
+        );
+    }
 
     fn frozen(transport: u64, input: u64) -> SyntheticRun {
         let source = RunSource {

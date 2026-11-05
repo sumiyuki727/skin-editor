@@ -590,3 +590,221 @@ fn replacement_pages_and_lower_object_limits_do_not_reuse_the_old_run() {
         SyntheticCoordinator::costs().source_bytes
     );
 }
+
+fn assert_old_pair(run: &SyntheticRun, old: FrameHeader, objects: [Option<CircleFrame>; 2]) {
+    let before = run.observation();
+    let view = run.ready_frame(run.source()).unwrap().unwrap();
+    assert_eq!(view.header(), old);
+    assert_eq!([view.object(0), view.object(1)], objects);
+    let mut output = [objects[0]; 3];
+    let page = view
+        .read_page(old.key().cursor(0), 64, &mut output)
+        .unwrap();
+    assert_eq!((page.written, page.end, page.next), (2, true, None));
+    assert_eq!(&output[..2], &objects);
+    assert_eq!(output[2], objects[0]);
+    assert_eq!(run.observation(), before);
+}
+
+#[test]
+fn same_time_hit_and_miss_never_leak_into_old_pages_even_when_the_prefix_fails() {
+    for fault in [false, true] {
+        let s = source(if fault { 100_016 } else { 100_015 });
+        let input = [
+            Circle::new(ObjectId::new(90), t(0), Point::new(0, 0).unwrap()).unwrap(),
+            Circle::new(ObjectId::new(3), t(200_001), Point::new(0, 0).unwrap()).unwrap(),
+        ];
+        let mut run = SyntheticRun::new(
+            s,
+            SyntheticMap::try_new(s.revision, &input).unwrap(),
+            t(-200_001),
+            Limits::tiny(),
+        )
+        .unwrap();
+        advance(&mut run, 100_000);
+        let old = run.observation().ready_frame.unwrap();
+        let view = run.ready_frame(s).unwrap().unwrap();
+        let objects = [view.object(0), view.object(1)];
+        assert!(objects.iter().all(|object| {
+            object.is_some_and(|object| {
+                object.phase == Phase::VisibleUnjudged && object.judgement.is_none()
+            })
+        }));
+        run.submit_inputs(
+            s,
+            &[InputEvent {
+                at: t(100_001),
+                ..press()
+            }],
+        )
+        .unwrap();
+        run.seal_through(s, t(100_001)).unwrap();
+        let mut report = run.advance(s, t(100_001), WorkBudget::one()).unwrap();
+        let mut blocked = None;
+        for _ in 0..32 {
+            assert_old_pair(&run, old, objects);
+            let AdvanceReport::Pending { cursor, reason, .. } = report else {
+                panic!("same-time miss needs a third event slot");
+            };
+            if reason == PendingReason::EventBackpressure {
+                blocked = Some(cursor);
+                break;
+            }
+            report = run.continue_advance(cursor, WorkBudget::one()).unwrap();
+        }
+        let blocked = blocked.expect("four-slot same-time backpressure bound");
+        assert_eq!(run.observation().committed_counts.hits, 1);
+        assert_eq!(run.observation().committed_counts.misses, 0);
+        assert_eq!(run.committed_judgement(s, 0), Ok(None));
+        assert_eq!(
+            run.committed_judgement(s, 1).unwrap().unwrap().result,
+            Judgement::Hit
+        );
+        assert_eq!(run.observation().pending_events, 2);
+        run.acknowledge(run.event_at(0).unwrap().key).unwrap();
+        assert_old_pair(&run, old, objects);
+        report = run.continue_advance(blocked, WorkBudget::one()).unwrap();
+        assert!(matches!(report, AdvanceReport::Pending { .. }));
+        assert_eq!(
+            run.observation().committed_counts,
+            FrameCounts {
+                hits: 1,
+                misses: 1,
+                inspection_skipped: 0,
+            }
+        );
+        assert_old_pair(&run, old, objects);
+        assert_eq!(
+            run.committed_judgement(s, 0).unwrap().unwrap().at,
+            t(100_001)
+        );
+        if fault {
+            assert_eq!(
+                run.submit_inputs(
+                    s,
+                    &[InputEvent {
+                        sequence: InputSequence::new(2).unwrap(),
+                        at: t(100_001),
+                        slot: PhysicalSlot::SecondaryOne,
+                        ..press()
+                    }]
+                ),
+                Err(RunError::LateInput)
+            );
+            assert!(matches!(run.observation().status, RunStatus::Failed(_)));
+            assert_old_pair(&run, old, objects);
+            assert_eq!(run.observation().pending_events, 2);
+        } else {
+            for _ in 0..16 {
+                match report {
+                    AdvanceReport::Complete { .. } => break,
+                    AdvanceReport::Pending { cursor, .. } => {
+                        assert_old_pair(&run, old, objects);
+                        report = run.continue_advance(cursor, WorkBudget::one()).unwrap();
+                    }
+                }
+            }
+            assert!(matches!(report, AdvanceReport::Complete { .. }));
+            let new = run.ready_frame(s).unwrap().unwrap();
+            assert_eq!(new.header().counts, run.observation().committed_counts);
+            for index in 0..2 {
+                assert_eq!(
+                    new.object(index).unwrap().judgement,
+                    run.committed_judgement(s, index).unwrap()
+                );
+            }
+            let mut output = objects;
+            assert_eq!(
+                run.read_frame_page(old.key().cursor(0), 2, &mut output),
+                Err(FrameReadError::StaleFrame)
+            );
+            assert_eq!(output, objects);
+        }
+        assert_eq!(run.event_at(0).unwrap().kind, EventKind::SoundIntent);
+        assert_eq!(
+            run.event_at(1).unwrap().kind,
+            EventKind::Judgement(Judgement::Miss)
+        );
+    }
+}
+
+#[test]
+fn every_tiny_return_point_reads_lifecycle_and_miss_facts_at_the_complete_time() {
+    let mut run = run(100_017, 4);
+    advance(&mut run, -1);
+    run.seal_through(run.source(), t(3_300_000)).unwrap();
+    let mut report = run
+        .advance(run.source(), t(3_300_000), WorkBudget::one())
+        .unwrap();
+    let mut previous: Option<FrameKey> = None;
+    for _ in 0..256 {
+        let before = run.observation();
+        let frame = run.ready_frame(run.source()).unwrap().unwrap();
+        let h = frame.header();
+        let mut expected = [None; 4];
+        let mut misses = 0;
+        for (i, slot) in expected.iter_mut().enumerate() {
+            let target = i as i64 * 1_000_000;
+            let missed = h.at >= t(target + 100_001);
+            misses += usize::from(missed);
+            *slot = Some(CircleFrame {
+                object: ObjectId::new([400, 7, 99, 42][i]),
+                phase: if h.at < t(target - 200_000) {
+                    Phase::Future
+                } else if h.at >= t(target + 300_000) {
+                    Phase::Retired
+                } else if missed {
+                    Phase::ResolvedVisual
+                } else {
+                    Phase::VisibleUnjudged
+                },
+                judgement: missed.then_some(JudgementRecord {
+                    object: ObjectId::new([400, 7, 99, 42][i]),
+                    at: t(target + 100_001),
+                    result: Judgement::Miss,
+                }),
+                unavailable: None,
+            });
+            assert_eq!(frame.object(i), *slot);
+        }
+        assert_eq!(
+            h.counts,
+            FrameCounts {
+                misses,
+                ..FrameCounts::default()
+            }
+        );
+        let mut out = [None; 5];
+        let first = frame.read_page(h.key().cursor(0), 2, &mut out).unwrap();
+        let last = frame
+            .read_page(first.next.unwrap(), 64, &mut out[2..])
+            .unwrap();
+        assert!(last.end);
+        assert_eq!(&out[..4], &expected);
+        assert_eq!(out[4], None);
+        if let Some(old) = previous.filter(|old| *old != h.key()) {
+            assert_eq!(
+                run.read_frame_page(old.cursor(0), 4, &mut out),
+                Err(FrameReadError::StaleFrame)
+            );
+            assert_eq!(&out[..4], &expected);
+        }
+        assert_eq!(run.observation(), before);
+        previous = Some(h.key());
+        match report {
+            AdvanceReport::Complete { .. } => {
+                assert_eq!(h.at, t(3_300_000));
+                assert_eq!(h.counts.misses, 4);
+                return;
+            }
+            AdvanceReport::Pending { cursor, reason, .. } => {
+                if reason == PendingReason::EventBackpressure {
+                    run.acknowledge(run.event_at(0).unwrap().key).unwrap();
+                    assert_eq!(run.observation().ready_frame, Some(h));
+                }
+                report = run.continue_advance(cursor, WorkBudget::one()).unwrap();
+            }
+        }
+    }
+    panic!("four-object complete-frame return-point bound");
+}

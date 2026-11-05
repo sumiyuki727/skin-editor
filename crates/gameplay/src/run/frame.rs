@@ -353,4 +353,45 @@ mod tests {
             FreezeReport::Frozen { .. }
         ));
     }
+
+    #[test]
+    fn failed_first_publication_keeps_no_frame_distinct_from_a_stale_source() {
+        let mut run = fixture();
+        run.next_publication = None;
+        let source = run.source();
+        let at = MapTime::from_micros(-200_000);
+        run.seal_through(source, at).unwrap();
+        let mut result = run.advance(source, at, WorkBudget::one());
+        for _ in 0..8 {
+            let Ok(AdvanceReport::Pending { cursor, .. }) = result else {
+                break;
+            };
+            result = run.continue_advance(cursor, WorkBudget::one());
+        }
+        assert_eq!(result, Err(RunError::CounterExhausted));
+        let before = run.observation();
+        assert!(matches!(before.status, RunStatus::Failed(_)));
+        assert_eq!(before.completed_through, None);
+        assert_eq!(before.ready_frame, None);
+        assert!(run.ready_frame(source).unwrap().is_none());
+        assert_eq!(run.committed_judgement(source, 0), Ok(None));
+        let key = FrameKey {
+            source,
+            at,
+            publication: 1,
+        };
+        assert_eq!(run.read_frame_page(key.cursor(0), 1, &mut []), Ok(None));
+        let stale = FrameKey {
+            source: RunSource {
+                input: InputEpoch::new(2).unwrap(),
+                ..source
+            },
+            ..key
+        };
+        assert_eq!(
+            run.read_frame_page(stale.cursor(usize::MAX), 0, &mut []),
+            Err(FrameReadError::StaleSource)
+        );
+        assert_eq!(run.observation(), before);
+    }
 }

@@ -140,6 +140,203 @@ fn controlled_allocation_rejections_keep_the_frozen_base_and_reservations_atomic
         assert_eq!(owner.current().unwrap().source(), next);
     }
 }
+
+fn four_frozen() -> SyntheticCoordinator {
+    use crate::{InputEdge, InputEvent, InputSequence, ObjectId, PhysicalSlot, Point};
+    let mut owner = empty();
+    let base = source(1, 1);
+    let input = core::array::from_fn::<_, 4, _>(|i| {
+        Circle::new(
+            ObjectId::new(i as u32),
+            MapTime::from_micros(i as i64 * 1_000_000),
+            Point::new(0, 0).unwrap(),
+        )
+        .unwrap()
+    });
+    let mut create = owner
+        .request_create(base, &input, MapTime::from_micros(-200_001))
+        .unwrap();
+    finish(&mut create);
+    owner.activate(create.key(), &mut create).unwrap();
+    drop(create);
+    owner
+        .submit_inputs(
+            base,
+            &[InputEvent {
+                sequence: InputSequence::new(1).unwrap(),
+                at: MapTime::from_micros(0),
+                slot: PhysicalSlot::PrimaryOne,
+                edge: InputEdge::Press(Point::new(0, 0).unwrap()),
+            }],
+        )
+        .unwrap();
+    owner.request_freeze(base, MapTime::from_micros(0)).unwrap();
+    owner.seal_through(base, MapTime::from_micros(0)).unwrap();
+    for _ in 0..64 {
+        if matches!(
+            owner.settle_freeze(base, WorkBudget::one()).unwrap(),
+            crate::FreezeReport::Frozen { .. }
+        ) {
+            assert_eq!(
+                owner.current().unwrap().observation().committed_counts.hits,
+                1
+            );
+            return owner;
+        }
+    }
+    panic!("four-slot frozen fixture bound");
+}
+
+#[test]
+fn actual_shared_payload_outlives_the_owner_at_every_inspection_return_point() {
+    let mut reached_ready = false;
+    for stop in 0..32 {
+        let mut owner = four_frozen();
+        let active = owner.active.as_ref().unwrap();
+        let map = Rc::downgrade(&active.content.map);
+        let content = Rc::downgrade(&active.content);
+        let pool = Rc::downgrade(&owner.pool);
+        let mut task = owner
+            .request_inspection(source(1, 1), MapTime::from_micros(1_000_000))
+            .unwrap();
+        for _ in 0..stop {
+            if matches!(
+                task.step(task.cursor(), WorkBudget::one()).unwrap(),
+                PreparationReport::Ready { .. }
+            ) {
+                reached_ready = true;
+                break;
+            }
+        }
+        if let Some(candidate) = &task.run {
+            assert!(
+                candidate
+                    .run
+                    .shares_map(&owner.active.as_ref().unwrap().content.map)
+            );
+            assert!(Rc::ptr_eq(
+                &candidate.content,
+                &owner.active.as_ref().unwrap().content
+            ));
+            if task.stage() == PreparationStage::Ready {
+                // The source is shared, while the old real Hit and the new
+                // inspection's skipped ledger belong to independent runs.
+                assert_eq!(candidate.run.observation().committed_counts.hits, 0);
+                assert_eq!(
+                    candidate
+                        .run
+                        .observation()
+                        .committed_counts
+                        .inspection_skipped,
+                    1
+                );
+                assert_eq!(
+                    candidate.run.committed_judgement(candidate.run.source(), 0),
+                    Ok(None)
+                );
+                assert_eq!(
+                    owner.current().unwrap().observation().committed_counts.hits,
+                    1
+                );
+            }
+        }
+        let costs = SyntheticCoordinator::costs();
+        assert_eq!(owner.resources().precompiled_bytes, costs.source_bytes);
+        assert_eq!(
+            owner.resources().runtime_bytes,
+            costs.pool_bytes + costs.coordinator_bytes + costs.task_bytes + 2 * costs.run_bytes
+        );
+        let cursor = task.cursor();
+        drop(owner);
+        assert!(map.upgrade().is_some());
+        assert!(content.upgrade().is_some());
+        let held = task.resources();
+        assert_eq!(held.precompiled_bytes, costs.source_bytes);
+        assert_eq!(
+            held.runtime_bytes,
+            costs.pool_bytes + costs.task_bytes + costs.run_bytes
+        );
+        assert_eq!(
+            task.step(cursor, WorkBudget::one()),
+            Err(PreparationError::StaleRequest)
+        );
+        assert_eq!(task.resources(), held);
+        drop(task);
+        assert!(map.upgrade().is_none());
+        assert!(content.upgrade().is_none());
+        assert!(pool.upgrade().is_none());
+        if reached_ready {
+            return;
+        }
+    }
+    panic!("all four-object inspection return points must reach Ready");
+}
+
+#[test]
+fn shared_inspection_allocation_failure_preserves_old_pages_and_real_hit_ledger() {
+    let mut owner = four_frozen();
+    let base = source(1, 1);
+    let before = owner.current().unwrap().observation();
+    let header = before.ready_frame.unwrap();
+    let frame = owner.current().unwrap().ready_frame(base).unwrap().unwrap();
+    let objects = core::array::from_fn::<_, 4, _>(|i| frame.object(i));
+    let baseline = owner.resources();
+    owner
+        .pool
+        .allocation_failure
+        .set(Some(AllocationKind::Runtime));
+    let mut task = owner
+        .request_inspection(base, MapTime::from_micros(1_000_000))
+        .unwrap();
+    let held = owner.resources();
+    assert_eq!(
+        task.step(task.cursor(), WorkBudget::one()),
+        Err(PreparationError::AllocationUnavailable(
+            AllocationKind::Runtime
+        ))
+    );
+    assert_eq!(task.stage(), PreparationStage::Failed);
+    assert_eq!(owner.candidate(), None);
+    assert_eq!(owner.resources(), held);
+    assert_eq!(owner.current().unwrap().observation(), before);
+    let mut output = [None; 4];
+    let page = owner
+        .current()
+        .unwrap()
+        .read_frame_page(header.key().cursor(0), 64, &mut output)
+        .unwrap()
+        .unwrap();
+    assert_eq!((page.written, page.end), (4, true));
+    assert_eq!(output, objects);
+    assert!(Rc::ptr_eq(
+        task.content.as_ref().unwrap(),
+        &owner.active.as_ref().unwrap().content
+    ));
+    assert_eq!(held.precompiled_bytes, baseline.precompiled_bytes);
+    let map = Rc::downgrade(&task.content.as_ref().unwrap().map);
+    drop(task);
+    assert!(map.upgrade().is_some());
+    assert_eq!(owner.resources(), baseline);
+    let mut retry = owner
+        .request_inspection(base, MapTime::from_micros(1_000_000))
+        .unwrap();
+    finish(&mut retry);
+    let new = owner.activate(retry.key(), &mut retry).unwrap();
+    assert!(map.upgrade().is_some());
+    assert_eq!(owner.current().unwrap().source(), new);
+    assert_eq!(
+        owner
+            .current()
+            .unwrap()
+            .read_frame_page(header.key().cursor(0), 64, &mut output),
+        Err(crate::FrameReadError::StaleSource)
+    );
+    assert_eq!(output, objects);
+    drop(retry);
+    drop(owner);
+    assert!(map.upgrade().is_none());
+}
+
 fn freeze_empty(owner: &mut SyntheticCoordinator, source: RunSource) {
     let mut job = owner
         .request_create(source, &[], MapTime::from_micros(0))

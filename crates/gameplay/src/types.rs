@@ -119,6 +119,9 @@ impl Point {
     }
 }
 
+/// The assembler must not reuse a RunId while its inputs, tasks, events or
+/// detached frame keys/cursors can still arrive. Equal revision tokens alone
+/// do not identify shared storage or an independent run.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct RunSource {
     pub run: RunId,

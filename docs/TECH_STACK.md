@@ -15,7 +15,7 @@
 | Rust文件存储（2026-11-02） | rusqlite =0.41.1（bundled／hooks／limits）、same-file =1.0.6 | 仅infrastructure，默认feature关闭；SQLite C源码随依赖编译，需已有C编译器，文件身份通过平台句柄核对；不启用动态扩展或新后台线程 |
 | 可选诊断 | profiling =1.0.18、tracing =0.1.44、winit =0.30.13 | host的framework-trace默认关闭；有界观察成本不得从产品CPU估算扣除 |
 
-当前九个本地包及依赖见[当前架构](ARCHITECTURE.md)；[架构审阅](review/README.md)是原八包快照，新增gameplay见[K1-1审阅](K1_1_SYNTHETIC_REVIEW.md)及[K1-2冻结／恢复](K1_2_FREEZE_REVIEW.md)。K1-2仍是固定数组纯Rust、无新依赖／线程／设备，两个锁文件不变；输入回执增加种类、四槽权限和冻结元数据仍受静态存储限额核对，不代表进程峰值验收。Windows ETW的C采集器是外部诊断工具，不是产品运行依赖。
+当前九个本地包及依赖见[当前架构](ARCHITECTURE.md)；[架构审阅](review/README.md)是原八包快照，新增gameplay见[K1-1审阅](K1_1_SYNTHETIC_REVIEW.md)、[K1-2冻结／恢复](K1_2_FREEZE_REVIEW.md)及[K1-3检查定位](K1_3_INSPECTION_REVIEW.md)。当前API3仍是固定数组纯Rust、无新依赖／线程／设备，两个锁文件不变；输入、冻结及唯一同谱面检查候选都受静态存储限额核对，不代表进程峰值或完整Reference验收。Windows ETW的C采集器是外部诊断工具，不是产品运行依赖。
 
 ## 平台和资源结论
 

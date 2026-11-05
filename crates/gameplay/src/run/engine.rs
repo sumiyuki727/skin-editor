@@ -321,7 +321,7 @@ impl SyntheticRun {
             let judgement = self.judgements[next];
             let phase = if at < circle.visible {
                 Phase::Future
-            } else if at >= circle.retire {
+            } else if at >= circle.retire || self.inspection_skipped[next] {
                 Phase::Retired
             } else if judgement.is_some() {
                 Phase::ResolvedVisual
@@ -332,11 +332,14 @@ impl SyntheticRun {
                 object: circle.id,
                 phase,
                 judgement,
+                unavailable: self.inspection_skipped[next]
+                    .then_some(UnavailableReason::InspectionSkipped),
             });
         }
         if next + 1 >= self.map.len {
             self.frames[buffer].at = at;
             self.frames[buffer].source = self.source;
+            self.frames[buffer].statistics_origin = self.statistics_origin;
             self.ready = Some(buffer);
             self.dirty = None;
             self.last_committed = Some(at);

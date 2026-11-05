@@ -18,7 +18,7 @@ P3-0工具原型审阅修订2见[最新结果](P3_0_LOAD_REVIEW.md)：独立地�
 | --- | --- | --- |
 | domain · crates/domain | 不可变项目值、树、引用和不变量；不访问I/O／UI／设备 | 无 |
 | application · crates/application | ProjectSession唯一活动写入者；Command、原子事务、草稿、历史、完整捕获／身份准入、查询及控制端口 | domain |
-| gameplay · crates/gameplay | SyntheticTest-v1、最多4圆圈的纯时间／输入／生命周期、有界事件及冻结／恢复／重新武装（API2），无窗口运行；不持有项目写权限 | 无 |
+| gameplay · crates/gameplay | SyntheticTest-v1、最多4圆圈的纯时间／输入／生命周期、有界事件、冻结／恢复／重新武装及同谱面检查定位（API3），无窗口运行；不持有项目写权限 | 无 |
 | audio · desktop/audio | SoundPlan、共享PCM配额、有界声音／混音与来源门控 | domain |
 | rendering · desktop/rendering | Plan、CPU/GPU合成、像素／上传所有权 | domain |
 | preview · desktop/preview | 当前仅占位PreviewState、场景与冻结／输入计数 | 无 |
@@ -58,7 +58,9 @@ flowchart TD
 
 2026-11-05的[K1-2](K1_2_FREEZE_REVIEW.md)增加纯控制Freezing→Frozen及原位恢复：关闭后保留已接纳前缀并有界取消未来输入，完整截面才Frozen；恢复换InputEpoch并按槽重新武装，时间／判定／事件键保留，旧声音意图保持不可交接。运行源／观察协议为gameplay API2，合成profile仍为1；没有接入桌面preview或音频。
 
-K1仍只部分完成；检查定位、驱动切换／自动驱动、候选协调及10000对象成本待实施，K2–K5未开始。现有回归只覆盖KT的适用纯核心条款，未将任何完整KT标为通过。两套检查继续约束实际依赖和源码；项目模型、application API和持久化格式不变。
+2026-11-05的[K1-3](K1_3_INSPECTION_REVIEW.md)增加已冻结同谱面的检查候选，按对象分步重建，取消保持旧运行，完整准备后显式激活新TransportEpoch及关闭的Q截面；跳过判定Unavailable／Inspection，不补Miss或声音。gameplay API3，统计来源随完整帧一起发布，未接桌面。
+
+K1仍只部分完成；驱动切换／自动驱动、统一构造／载入候选协调及10000对象成本待实施，K2–K5未开始。现有回归只覆盖KT的适用纯核心条款，未将任何完整KT标为通过。两套检查继续约束实际依赖和源码；项目模型、application API和持久化格式不变。
 
 ## 对象、状态与所有权
 

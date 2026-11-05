@@ -1,5 +1,7 @@
 # 独立 stable 兼容内核：架构与分阶段计划
 
+**2026-11-05最新实现状态：** [K1-3同谱面检查定位](K1_3_INSPECTION_REVIEW.md)增加已冻结运行的有界检查候选、取消／旧请求拒绝及新TransportEpoch完整激活；gameplay API3，四对象／profile1保持。跳过对象明确Unavailable／Inspection，无假Miss或补发声音；59项gameplay测试通过。统一准备／载入候选、自动驱动及规模计量仍待实施，不表示完整K1或任何完整KT通过。下方较早实现状态按各自时点保留。
+
 **2026-11-05后续实现状态：** [K1-2冻结／恢复与输入重新武装](K1_2_FREEZE_REVIEW.md)已在纯SyntheticTest中落地；gameplay API2，profile仍为1，最多4对象，不接GUI或设备。Freezing只在有效封口及完整前缀结算后成为Frozen，恢复保留时间／判定并换InputEpoch，旧声音意图不重发。K1的检查定位、自动驱动／候选协调及规模计量仍待实施；无完整KT或stable兼容通过声明。
 
 **2026-11-04实现状态更新：** 用户已明确授权按K0-A开始首个最小增量，[K1-1合成圆圈模型](K1_1_SYNTHETIC_REVIEW.md)已加入独立gameplay包。只支持最多4个不重叠接受区间的预编译SyntheticTest圆圈及纯核心回归，未接GUI／原生设备，也未开放兼容profile。K1剩余项、K2–K5及完整KT验收仍待完成；下方历次“本轮仅文档／全部待实施”是实现前的记录。

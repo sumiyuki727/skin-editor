@@ -7,7 +7,10 @@ use crate::{
 mod admission;
 mod control;
 mod engine;
+mod inspection;
 pub use control::{FreezeInfo, FreezeReport, RearmReport};
+use inspection::InspectionCandidate;
+pub use inspection::{InspectionCursor, InspectionInfo, InspectionKey, InspectionReport};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum RunError {
@@ -29,6 +32,8 @@ pub enum RunError {
     RearmRequired,
     NotFrozen,
     NotFreezing,
+    StaleInspection,
+    InspectionIncomplete,
 }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct Failure {
@@ -67,12 +72,24 @@ pub struct CircleFrame {
     pub object: ObjectId,
     pub phase: Phase,
     pub judgement: Option<JudgementRecord>,
+    pub unavailable: Option<UnavailableReason>,
+}
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum UnavailableReason {
+    InspectionSkipped,
+}
+/// Provenance of the ledger, not a calculated score/ACC or a HUD policy.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum StatisticsOrigin {
+    FromStart { start: MapTime },
+    Inspection { at: MapTime },
 }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct ReadyFrame {
     pub source: RunSource,
     pub at: MapTime,
     pub evidence: Evidence,
+    pub statistics_origin: StatisticsOrigin,
     objects: [Option<CircleFrame>; MAX_CIRCLES],
     len: usize,
 }
@@ -93,6 +110,7 @@ pub struct Observation {
     pub source: RunSource,
     pub evidence: Evidence,
     pub profile_version: u32,
+    pub statistics_origin: StatisticsOrigin,
     pub status: RunStatus,
     pub completed_through: Option<MapTime>,
     pub last_committed_time: Option<MapTime>,
@@ -106,6 +124,7 @@ pub struct Observation {
     pub sealed_through: Option<MapTime>,
     pub freeze: Option<FreezeInfo>,
     pub cancelled_sound_through: Option<EventSequence>,
+    pub inspection: Option<InspectionInfo>,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -321,6 +340,10 @@ pub struct SyntheticRun {
     source: RunSource,
     map: SyntheticMap,
     start: MapTime,
+    statistics_origin: StatisticsOrigin,
+    inspection_skipped: [bool; MAX_CIRCLES],
+    inspection: Option<InspectionCandidate>,
+    next_inspection: Option<u64>,
     limits: Limits,
     sealed: Option<MapTime>,
     highest_input: u64,
@@ -358,12 +381,13 @@ pub struct SyntheticRun {
     failure: Option<Failure>,
 }
 impl SyntheticRun {
-    /// Upper bound for the fixed owned storage plus bounded admission scratch.
+    /// Fixed owned storage plus bounded admission/candidate move scratch.
     /// This is not a process memory or native stack measurement.
     pub const fn static_storage_bytes() -> usize {
         core::mem::size_of::<Self>()
             + core::mem::size_of::<[Option<InputEvent>; MAX_INPUTS]>()
             + core::mem::size_of::<([bool; 4], [Option<MapTime>; 4])>()
+            + core::mem::size_of::<InspectionCandidate>()
     }
     pub fn new(
         source: RunSource,
@@ -382,6 +406,7 @@ impl SyntheticRun {
             source,
             at: start,
             evidence: Evidence::SyntheticTest,
+            statistics_origin: StatisticsOrigin::FromStart { start },
             objects: [None; MAX_CIRCLES],
             len: map.len,
         };
@@ -389,6 +414,10 @@ impl SyntheticRun {
             source,
             map,
             start,
+            statistics_origin: StatisticsOrigin::FromStart { start },
+            inspection_skipped: [false; MAX_CIRCLES],
+            inspection: None,
+            next_inspection: Some(1),
             limits,
             sealed: None,
             highest_input: 0,
@@ -448,6 +477,7 @@ impl SyntheticRun {
             source: self.source,
             evidence: Evidence::SyntheticTest,
             profile_version: SYNTHETIC_PROFILE_VERSION,
+            statistics_origin: self.statistics_origin,
             status,
             completed_through: self.completed(),
             last_committed_time: self.last_committed,
@@ -461,6 +491,7 @@ impl SyntheticRun {
             sealed_through: self.sealed,
             freeze: self.freeze_info,
             cancelled_sound_through: EventSequence::new(self.cancelled_sound_through).ok(),
+            inspection: self.inspection.as_ref().map(InspectionCandidate::info),
         }
     }
     pub fn event_at(&self, index: usize) -> Option<GameEvent> {
@@ -518,6 +549,7 @@ impl SyntheticRun {
             self.inputs.fill(None);
             self.input_len = 0;
             self.active = None;
+            self.inspection = None;
             self.work = Work::Select;
             self.armed.fill(false);
             self.armed_from.fill(None);

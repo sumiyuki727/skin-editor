@@ -130,6 +130,9 @@ impl SyntheticRun {
         if self.mode != ControlMode::Frozen {
             return Err(RunError::NotFrozen);
         }
+        if self.inspection.is_some() {
+            return Err(RunError::Busy);
+        }
         let input = self
             .source
             .input

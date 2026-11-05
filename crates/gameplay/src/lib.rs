@@ -2,8 +2,8 @@
 //!
 //! This first increment accepts at most four unambiguous precompiled circles.
 //! The caller supplies absolute content time and serializes input admission.
-//! Project editing, rendering, parsing, automatic drivers, inspection seek and
-//! native devices are outside this increment.
+//! Project editing, rendering, parsing, automatic drivers and native devices
+//! are outside this increment. Inspection seek is stepped from a frozen run.
 //! Freeze/resume is caller-stepped and rearms inputs in a fresh input epoch.
 //!
 //! Runtime state cannot be changed through a projection:
@@ -20,8 +20,10 @@ mod types;
 pub use map::{Circle, MapPreparation, PreparationProgress, SyntheticMap};
 pub use run::{
     Acknowledgement, Admission, AdvanceCursor, AdvanceReport, CircleFrame, EventKey, EventKind,
-    Failure, FreezeInfo, FreezeReport, GameEvent, Judgement, JudgementRecord, Limits, Observation,
-    PendingReason, Phase, ReadyFrame, RearmReport, RequestKey, RunError, RunStatus, SyntheticRun,
+    Failure, FreezeInfo, FreezeReport, GameEvent, InspectionCursor, InspectionInfo, InspectionKey,
+    InspectionReport, Judgement, JudgementRecord, Limits, Observation, PendingReason, Phase,
+    ReadyFrame, RearmReport, RequestKey, RunError, RunStatus, StatisticsOrigin, SyntheticRun,
+    UnavailableReason,
 };
 pub use types::{
     EventSequence, InputEdge, InputEpoch, InputEvent, InputSequence, MapRevision, MapTime,
@@ -29,7 +31,7 @@ pub use types::{
     ValueError, WorkBudget,
 };
 
-pub const GAMEPLAY_API_VERSION: u16 = 2;
+pub const GAMEPLAY_API_VERSION: u16 = 3;
 pub const SYNTHETIC_PROFILE_VERSION: u32 = 1;
 pub const MAX_CIRCLES: usize = 4;
 pub const MAX_INPUTS: usize = 64;

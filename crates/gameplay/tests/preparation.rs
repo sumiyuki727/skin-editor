@@ -838,3 +838,404 @@ fn empty_maps_support_all_three_operations_without_sentinel_time_arithmetic() {
     assert_eq!(state.status, RunStatus::Prepared);
     assert_eq!(state.completed_through, None);
 }
+
+fn operation_owner(
+    id: u128,
+    operation: PreparationOperation,
+    input: &[Circle],
+) -> SyntheticCoordinator {
+    let mut owner = limited(id, 3, 3, 2);
+    if !matches!(operation, PreparationOperation::Create { .. }) {
+        create(&mut owner, 40, input, -200_001, WorkBudget::one());
+        owner
+            .submit_inputs(current(&owner), &[press(1, 0)])
+            .unwrap();
+        freeze(&mut owner, 0, WorkBudget::one());
+        assert_eq!(owner.current().unwrap().observation().pending_events, 2);
+    }
+    owner
+}
+
+fn request_operation<'a>(
+    owner: &mut SyntheticCoordinator,
+    operation: PreparationOperation,
+    input: &'a [Circle],
+) -> PreparationTask<'a> {
+    match operation {
+        PreparationOperation::Create { start } => owner.request_create(source(41), input, start),
+        PreparationOperation::Load { start } => {
+            owner.request_load(current(owner), source(41), input, start)
+        }
+        PreparationOperation::Inspect { at } => owner.request_inspection(current(owner), at),
+    }
+    .unwrap()
+}
+
+fn operations() -> [PreparationOperation; 3] {
+    [
+        PreparationOperation::Create {
+            start: time(-200_001),
+        },
+        PreparationOperation::Load {
+            start: time(-200_001),
+        },
+        PreparationOperation::Inspect {
+            at: time(1_000_000),
+        },
+    ]
+}
+
+#[test]
+fn cancellation_at_every_preparation_return_point_isolates_late_work_after_replacement() {
+    let input = circles(&[0, 1_000_000, 2_000_000, 3_000_000]);
+    let cost = SyntheticCoordinator::costs();
+    for operation in operations() {
+        let mut reached_ready = false;
+        for cut in 0..128 {
+            let mut owner = operation_owner(71_001, operation, &input);
+            let before = owner.current().map(SyntheticRun::observation);
+            let events = owner
+                .current()
+                .map(|run| [run.event_at(0), run.event_at(1)]);
+            let mut old = request_operation(&mut owner, operation, &input);
+            for _ in 0..cut {
+                if old.stage() == PreparationStage::Ready {
+                    break;
+                }
+                old.step(old.cursor(), WorkBudget::one()).unwrap();
+            }
+            reached_ready = old.stage() == PreparationStage::Ready;
+            let cursor = old.cursor();
+            let held = owner.resources();
+            owner.cancel(old.key()).unwrap();
+            assert_eq!(owner.resources(), held);
+            assert_eq!(owner.current().map(SyntheticRun::observation), before);
+            assert_eq!(
+                owner
+                    .current()
+                    .map(|run| [run.event_at(0), run.event_at(1)]),
+                events
+            );
+            let mut new = request_operation(&mut owner, operation, &input);
+            assert_ne!(old.key(), new.key());
+            assert_eq!(old.key().target(), new.key().target());
+            complete(&mut new, WorkBudget::one());
+            assert_eq!(
+                old.step(cursor, WorkBudget::one()),
+                Err(PreparationError::StaleRequest)
+            );
+            assert_eq!(
+                owner.activate(old.key(), &mut old),
+                Err(PreparationError::StaleRequest)
+            );
+            assert_eq!(
+                owner.activate(new.key(), &mut old),
+                Err(PreparationError::StaleRequest)
+            );
+            assert_eq!(owner.candidate(), Some(new.key()));
+            assert_eq!(owner.current().map(SyntheticRun::observation), before);
+            owner.activate(new.key(), &mut new).unwrap();
+            let published = owner.current().unwrap().observation();
+            let occupied = owner.resources();
+            assert_eq!(
+                old.step(cursor, WorkBudget::one()),
+                Err(PreparationError::StaleRequest)
+            );
+            assert_eq!(
+                owner.activate(old.key(), &mut old),
+                Err(PreparationError::StaleRequest)
+            );
+            assert_eq!(
+                owner.activate(new.key(), &mut new),
+                Err(PreparationError::StaleRequest)
+            );
+            assert_eq!(owner.cancel(old.key()), Err(PreparationError::StaleRequest));
+            assert_eq!(owner.current().unwrap().observation(), published);
+            assert_eq!(owner.resources(), occupied);
+            drop(old);
+            assert_eq!(owner.candidate(), None);
+            assert_eq!(owner.current().unwrap().observation(), published);
+            assert_eq!(
+                owner.resources(),
+                ResourceUsage {
+                    precompiled_bytes: cost.source_bytes,
+                    runtime_bytes: cost.pool_bytes
+                        + cost.coordinator_bytes
+                        + cost.task_bytes
+                        + cost.run_bytes,
+                }
+            );
+            drop(new);
+            assert_eq!(
+                owner.resources().runtime_bytes,
+                cost.pool_bytes + cost.coordinator_bytes + cost.run_bytes
+            );
+            if reached_ready {
+                break;
+            }
+        }
+        assert!(
+            reached_ready,
+            "all return points through Ready must be covered"
+        );
+    }
+}
+
+#[test]
+fn owner_drop_at_every_preparation_return_point_keeps_only_live_task_reservations() {
+    let input = circles(&[0, 1_000_000, 2_000_000, 3_000_000]);
+    let cost = SyntheticCoordinator::costs();
+    for operation in operations() {
+        let mut reached_ready = false;
+        for cut in 0..128 {
+            let mut owner = operation_owner(71_002, operation, &input);
+            let mut task = request_operation(&mut owner, operation, &input);
+            for _ in 0..cut {
+                if task.stage() == PreparationStage::Ready {
+                    break;
+                }
+                task.step(task.cursor(), WorkBudget::one()).unwrap();
+            }
+            reached_ready = task.stage() == PreparationStage::Ready;
+            let cursor = task.cursor();
+            drop(owner);
+            assert_eq!(
+                task.step(cursor, WorkBudget::one()),
+                Err(PreparationError::StaleRequest)
+            );
+            assert_eq!(
+                task.resources(),
+                ResourceUsage {
+                    precompiled_bytes: cost.source_bytes,
+                    runtime_bytes: cost.pool_bytes + cost.task_bytes + cost.run_bytes,
+                }
+            );
+            if reached_ready {
+                break;
+            }
+        }
+        assert!(reached_ready);
+    }
+}
+
+#[test]
+fn failed_work_and_its_drop_cannot_cancel_a_new_ready_replacement() {
+    let input = circles(&[0, 1_000_000, 2_000_000, 3_000_000]);
+    let invalid = [input[0], input[1], input[2], input[0]];
+    let operation = PreparationOperation::Load {
+        start: time(-200_001),
+    };
+    let mut owner = operation_owner(71_003, operation, &input);
+    let before = owner.current().unwrap().observation();
+    let usage = owner.resources();
+    let mut failed = request_operation(&mut owner, operation, &invalid);
+    let held = owner.resources();
+    let mut error = None;
+    for _ in 0..128 {
+        match failed.step(failed.cursor(), WorkBudget::one()) {
+            Ok(PreparationReport::Pending { .. }) => {}
+            Ok(PreparationReport::Ready { .. }) => panic!("invalid last record accepted"),
+            Err(result) => {
+                error = Some(result);
+                break;
+            }
+        }
+    }
+    assert_eq!(
+        error,
+        Some(PreparationError::Invalid(ValueError::DuplicateObject))
+    );
+    assert_eq!(failed.stage(), PreparationStage::Failed);
+    assert_eq!(owner.candidate(), None);
+    assert_eq!(owner.resources(), held);
+    let mut new = request_operation(&mut owner, operation, &input);
+    complete(&mut new, WorkBudget::one());
+    assert_eq!(
+        failed.step(failed.cursor(), WorkBudget::one()),
+        Err(PreparationError::StaleRequest)
+    );
+    assert_eq!(
+        owner.cancel(failed.key()),
+        Err(PreparationError::StaleRequest)
+    );
+    drop(failed);
+    assert_eq!(owner.candidate(), Some(new.key()));
+    assert_eq!(owner.current().unwrap().observation(), before);
+    let cost = SyntheticCoordinator::costs();
+    assert_eq!(
+        owner.resources(),
+        ResourceUsage {
+            precompiled_bytes: usage.precompiled_bytes + cost.source_bytes,
+            runtime_bytes: usage.runtime_bytes + cost.task_bytes + cost.run_bytes,
+        }
+    );
+    owner.activate(new.key(), &mut new).unwrap();
+    drop(new);
+    assert_eq!(owner.resources(), usage);
+}
+
+#[test]
+fn cancellation_with_both_pools_and_old_event_queue_full_needs_no_spare_credit() {
+    let mut owner = limited(71_004, 2, 2, 1);
+    let input = circles(&[0]);
+    create(&mut owner, 40, &input, -200_001, WorkBudget::one());
+    owner
+        .submit_inputs(current(&owner), &[press(1, 0)])
+        .unwrap();
+    freeze(&mut owner, 0, WorkBudget::one());
+    let before = owner.current().unwrap().observation();
+    let events = [
+        owner.current().unwrap().event_at(0),
+        owner.current().unwrap().event_at(1),
+    ];
+    assert_eq!(before.pending_events, 2);
+    let usage = owner.resources();
+    let operation = PreparationOperation::Load {
+        start: time(-200_001),
+    };
+    let mut task = request_operation(&mut owner, operation, &input);
+    complete(&mut task, WorkBudget::one());
+    let full = owner.resources();
+    let c = SyntheticCoordinator::costs();
+    assert_eq!(
+        full,
+        ResourceUsage {
+            precompiled_bytes: 2 * c.source_bytes,
+            runtime_bytes: c.pool_bytes + c.coordinator_bytes + 2 * c.run_bytes + c.task_bytes,
+        }
+    );
+    owner.cancel(task.key()).unwrap();
+    assert_eq!(owner.resources(), full);
+    assert!(matches!(
+        owner.request_load(current(&owner), source(42), &input, time(-200_001)),
+        Err(PreparationError::Budget {
+            pool: ResourcePool::Precompiled,
+            ..
+        })
+    ));
+    assert_eq!(owner.candidate(), None);
+    assert_eq!(owner.resources(), full);
+    assert_eq!(owner.current().unwrap().observation(), before);
+    assert_eq!(
+        [
+            owner.current().unwrap().event_at(0),
+            owner.current().unwrap().event_at(1)
+        ],
+        events
+    );
+    drop(task);
+    assert_eq!(owner.resources(), usage);
+    let next = request_operation(&mut owner, operation, &input);
+    drop(next);
+    assert_eq!(owner.resources(), usage);
+    assert_eq!(owner.candidate(), None);
+}
+
+#[test]
+fn each_wrong_base_component_is_rejected_before_control_or_candidate_mutation() {
+    let input = circles(&[0]);
+    let operation = PreparationOperation::Inspect { at: time(0) };
+    let mut owner = operation_owner(71_005, operation, &input);
+    let base = current(&owner);
+    let mut task = request_operation(&mut owner, operation, &input);
+    complete(&mut task, WorkBudget::one());
+    let before = owner.current().unwrap().observation();
+    let usage = owner.resources();
+    let stale = Err(PreparationError::Runtime(RunError::StaleSource));
+    for wrong in [
+        RunSource {
+            run: RunId::new(99).unwrap(),
+            ..base
+        },
+        RunSource {
+            transport: TransportEpoch::new(2).unwrap(),
+            ..base
+        },
+        RunSource {
+            input: InputEpoch::new(2).unwrap(),
+            ..base
+        },
+        RunSource {
+            revision: MapRevision::new(99),
+            ..base
+        },
+    ] {
+        assert_eq!(owner.submit_inputs(wrong, &[press(1, -1)]), stale);
+        assert_eq!(
+            owner.observe_release(
+                wrong,
+                ReleaseObservation {
+                    sequence: InputSequence::new(1).unwrap(),
+                    slot: PhysicalSlot::PrimaryOne
+                }
+            ),
+            Err(PreparationError::Runtime(RunError::StaleSource))
+        );
+        assert_eq!(
+            owner.seal_through(wrong, time(0)),
+            Err(PreparationError::Runtime(RunError::StaleSource))
+        );
+        assert_eq!(
+            owner.advance(wrong, time(0), WorkBudget::one()),
+            Err(PreparationError::Runtime(RunError::StaleSource))
+        );
+        assert_eq!(
+            owner.request_freeze(wrong, time(0)),
+            Err(PreparationError::Runtime(RunError::StaleSource))
+        );
+        assert_eq!(
+            owner.settle_freeze(wrong, WorkBudget::one()),
+            Err(PreparationError::Runtime(RunError::StaleSource))
+        );
+        assert_eq!(
+            owner.resume(wrong),
+            Err(PreparationError::Runtime(RunError::StaleSource))
+        );
+        assert!(matches!(
+            owner.request_inspection(wrong, time(0)),
+            Err(PreparationError::Runtime(RunError::StaleSource))
+        ));
+        assert!(matches!(
+            owner.request_load(wrong, source(42), &input, time(-200_001)),
+            Err(PreparationError::Runtime(RunError::StaleSource))
+        ));
+        assert_eq!(owner.candidate(), Some(task.key()));
+        assert_eq!(owner.current().unwrap().observation(), before);
+        assert_eq!(owner.resources(), usage);
+    }
+    owner.activate(task.key(), &mut task).unwrap();
+}
+
+#[test]
+fn dropping_an_activated_task_releases_only_its_workspace_and_preserves_new_work() {
+    let input = circles(&[0]);
+    let mut owner = limited(71_006, 1, 2, 2);
+    let mut first = owner
+        .request_create(source(40), &input, time(-200_001))
+        .unwrap();
+    complete(&mut first, WorkBudget::one());
+    owner.activate(first.key(), &mut first).unwrap();
+    assert_eq!(first.stage(), PreparationStage::Activated);
+    freeze(&mut owner, -200_001, WorkBudget::one());
+    let mut next = owner.request_inspection(current(&owner), time(0)).unwrap();
+    complete(&mut next, WorkBudget::one());
+    let held = owner.resources();
+    assert_eq!(
+        first.step(first.cursor(), WorkBudget::one()),
+        Err(PreparationError::StaleRequest)
+    );
+    drop(first);
+    assert_eq!(owner.candidate(), Some(next.key()));
+    assert_eq!(
+        owner.resources(),
+        ResourceUsage {
+            runtime_bytes: held.runtime_bytes - SyntheticCoordinator::costs().task_bytes,
+            ..held
+        }
+    );
+    owner.activate(next.key(), &mut next).unwrap();
+    assert_eq!(
+        owner.current().unwrap().observation().completed_through,
+        Some(time(0))
+    );
+}

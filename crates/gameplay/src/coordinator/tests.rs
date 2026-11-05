@@ -116,28 +116,30 @@ fn epoch_exhaustion_and_wrong_operation_or_target_preserve_the_current_candidate
 
 #[test]
 fn budget_overflow_does_not_wrap_or_partially_reserve_the_other_pool() {
-    let mut owner = empty();
-    owner.next_request = Some(u64::MAX);
-    let initial = owner.resources();
-    owner.pool.usage.set(ResourceUsage {
-        runtime_bytes: usize::MAX,
-        ..initial
-    });
-    let held = owner.resources();
-    assert!(matches!(
-        owner.request_create(source(1, 1), &[], MapTime::from_micros(0)),
-        Err(PreparationError::Budget {
-            pool: ResourcePool::Runtime,
-            ..
-        })
-    ));
-    assert_eq!(owner.resources(), held);
-    assert_eq!(owner.candidate(), None);
-    // Restore the injected accounting before the real owner lease is dropped.
-    owner.pool.usage.set(initial);
-    let job = owner
-        .request_create(source(1, 1), &[], MapTime::from_micros(0))
-        .unwrap();
-    assert_eq!(job.key().generation, u64::MAX);
-    owner.cancel(job.key()).unwrap();
+    for kind in [ResourcePool::Precompiled, ResourcePool::Runtime] {
+        let mut owner = empty();
+        owner.next_request = Some(u64::MAX);
+        let initial = owner.resources();
+        let mut injected = initial;
+        match kind {
+            ResourcePool::Precompiled => injected.precompiled_bytes = usize::MAX,
+            ResourcePool::Runtime => injected.runtime_bytes = usize::MAX,
+        }
+        owner.pool.usage.set(injected);
+        assert!(matches!(
+            owner.request_create(source(1, 1), &[], MapTime::from_micros(0)),
+            Err(PreparationError::Budget { pool, .. }) if pool == kind
+        ));
+        assert_eq!(owner.resources(), injected);
+        assert_eq!(owner.candidate(), None);
+        // Restore injected accounting before any real lease is dropped.
+        owner.pool.usage.set(initial);
+        let job = owner
+            .request_create(source(1, 1), &[], MapTime::from_micros(0))
+            .unwrap();
+        assert_eq!(job.key().generation, u64::MAX);
+        owner.cancel(job.key()).unwrap();
+        drop(job);
+        assert_eq!(owner.resources(), initial);
+    }
 }

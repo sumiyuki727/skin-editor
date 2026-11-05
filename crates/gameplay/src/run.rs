@@ -8,6 +8,12 @@ mod admission;
 mod control;
 mod driver;
 mod engine;
+mod frame;
+use crate::MAX_FRAME_PAGE;
+pub use frame::{
+    FrameCounts, FrameCursor, FrameHeader, FrameKey, FramePage, FrameReadError, ReadyFrame,
+};
+use std::rc::Rc;
 mod inspection;
 pub use control::{FreezeInfo, FreezeReport, RearmReport};
 use driver::AutomaticState;
@@ -92,27 +98,6 @@ pub enum StatisticsOrigin {
     Inspection { at: MapTime },
 }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub struct ReadyFrame {
-    pub source: RunSource,
-    pub at: MapTime,
-    pub evidence: Evidence,
-    pub statistics_origin: StatisticsOrigin,
-    objects: [Option<CircleFrame>; MAX_CIRCLES],
-    len: usize,
-}
-impl ReadyFrame {
-    pub fn object(self, index: usize) -> Option<CircleFrame> {
-        self.objects.get(index).copied().flatten()
-    }
-    pub const fn len(self) -> usize {
-        self.len
-    }
-    pub const fn is_empty(self) -> bool {
-        self.len == 0
-    }
-}
-
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct Observation {
     pub source: RunSource,
     pub driver: InputDriver,
@@ -123,8 +108,9 @@ pub struct Observation {
     pub completed_through: Option<MapTime>,
     pub last_committed_time: Option<MapTime>,
     pub active_target: Option<MapTime>,
-    pub committed_judgements: [Option<JudgementRecord>; MAX_CIRCLES],
-    pub ready_frame: Option<ReadyFrame>,
+    pub committed_counts: FrameCounts,
+    pub object_count: usize,
+    pub ready_frame: Option<FrameHeader>,
     pub pending_inputs: usize,
     pub pending_events: usize,
     pub held_slots: [bool; 4],
@@ -223,6 +209,7 @@ pub enum AdvanceReport {
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct Limits {
+    objects: usize,
     inputs: usize,
     events: usize,
     replay: usize,
@@ -232,6 +219,7 @@ pub struct Limits {
 impl Limits {
     pub const fn tiny() -> Self {
         Self {
+            objects: MAX_CIRCLES,
             inputs: 4,
             events: 2,
             replay: 4,
@@ -241,6 +229,7 @@ impl Limits {
     }
     pub const fn reference() -> Self {
         Self {
+            objects: MAX_CIRCLES,
             inputs: 64,
             events: 64,
             replay: 64,
@@ -256,6 +245,7 @@ impl Limits {
         storage_bytes: usize,
     ) -> Result<Self, ValueError> {
         let limits = Self {
+            objects: MAX_CIRCLES,
             inputs,
             events,
             replay,
@@ -265,8 +255,18 @@ impl Limits {
         limits.validate()?;
         Ok(limits)
     }
+    pub fn with_object_capacity(mut self, objects: usize) -> Result<Self, ValueError> {
+        self.objects = objects;
+        self.validate()?;
+        Ok(self)
+    }
+    pub const fn object_capacity(self) -> usize {
+        self.objects
+    }
     pub(crate) fn validate(self) -> Result<(), ValueError> {
-        if self.inputs == 0
+        if self.objects == 0
+            || self.objects > MAX_CIRCLES
+            || self.inputs == 0
             || self.inputs > MAX_INPUTS
             || self.events < 2
             || self.events > MAX_EVENTS
@@ -304,11 +304,7 @@ enum Work {
     Select,
     Search(InputDraft),
     Commit(InputDraft),
-    Publish {
-        at: MapTime,
-        next: usize,
-        buffer: usize,
-    },
+    Publish { at: MapTime },
 }
 #[derive(Clone, Copy, Debug)]
 struct EventReservation {
@@ -343,12 +339,12 @@ enum PumpReport {
     Pending { reason: PendingReason, steps: u16 },
 }
 
-/// Owned preview state only; no project/session writer and no heap allocation.
+/// Fixed four-slot preview state with a shared immutable source; no project writer.
 pub struct SyntheticRun {
     source: RunSource,
     driver: InputDriver,
     automatic: AutomaticState,
-    map: SyntheticMap,
+    map: Rc<SyntheticMap>,
     start: MapTime,
     statistics_origin: StatisticsOrigin,
     inspection_skipped: [bool; MAX_CIRCLES],
@@ -380,8 +376,9 @@ pub struct SyntheticRun {
     next_event: Option<u64>,
     issued_through: u64,
     retired_through: u64,
-    frames: [ReadyFrame; 2],
-    ready: Option<usize>,
+    ready: Option<FrameHeader>,
+    next_publication: Option<u64>,
+    committed_counts: FrameCounts,
     dirty: Option<MapTime>,
     last_committed: Option<MapTime>,
     active: Option<Active>,
@@ -391,6 +388,10 @@ pub struct SyntheticRun {
     failure: Option<Failure>,
 }
 impl SyntheticRun {
+    #[cfg(test)]
+    pub(crate) fn shares_map(&self, map: &Rc<SyntheticMap>) -> bool {
+        Rc::ptr_eq(&self.map, map)
+    }
     /// Fixed owned storage plus bounded admission/candidate move scratch.
     /// This is not a process memory or native stack measurement.
     pub const fn static_storage_bytes() -> usize {
@@ -399,6 +400,8 @@ impl SyntheticRun {
             + core::mem::size_of::<([bool; 4], [Option<MapTime>; 4])>()
             + core::mem::size_of::<InspectionCandidate>()
             + core::mem::size_of::<[InputEvent; 2]>()
+            + core::mem::size_of::<ReadyFrame<'static>>()
+            + core::mem::size_of::<FramePage>()
     }
     pub fn new(
         source: RunSource,
@@ -415,6 +418,24 @@ impl SyntheticRun {
         limits: Limits,
         driver: InputDriver,
     ) -> Result<Self, ValueError> {
+        Self::validate_map(source, &map, start, limits, driver)?;
+        if limits.storage_bytes < Self::standalone_storage_bytes() {
+            return Err(ValueError::StorageLimit);
+        }
+        Self::new_shared(source, Rc::new(map), start, limits, driver)
+    }
+    /// Unpooled fixture source plus its known inline initializer are additional
+    /// to fixed runtime storage. Managed runs use the separate source pool.
+    pub const fn standalone_storage_bytes() -> usize {
+        Self::static_storage_bytes() + 2 * core::mem::size_of::<SyntheticMap>()
+    }
+    fn validate_map(
+        source: RunSource,
+        map: &SyntheticMap,
+        start: MapTime,
+        limits: Limits,
+        driver: InputDriver,
+    ) -> Result<(), ValueError> {
         limits.validate()?;
         if driver == InputDriver::Automatic && limits.inputs < 2 {
             return Err(ValueError::InvalidLimits);
@@ -422,17 +443,22 @@ impl SyntheticRun {
         if source.revision != map.revision {
             return Err(ValueError::RevisionMismatch);
         }
+        if map.len > limits.objects {
+            return Err(ValueError::ObjectLimit);
+        }
         if map.circle(0).is_some_and(|circle| start > circle.visible) {
             return Err(ValueError::InvalidStart);
         }
-        let frame = ReadyFrame {
-            source,
-            at: start,
-            evidence: Evidence::SyntheticTest,
-            statistics_origin: StatisticsOrigin::FromStart { start },
-            objects: [None; MAX_CIRCLES],
-            len: map.len,
-        };
+        Ok(())
+    }
+    pub(crate) fn new_shared(
+        source: RunSource,
+        map: Rc<SyntheticMap>,
+        start: MapTime,
+        limits: Limits,
+        driver: InputDriver,
+    ) -> Result<Self, ValueError> {
+        Self::validate_map(source, &map, start, limits, driver)?;
         Ok(Self {
             source,
             driver,
@@ -467,8 +493,9 @@ impl SyntheticRun {
             next_event: Some(1),
             issued_through: 0,
             retired_through: 0,
-            frames: [frame; 2],
             ready: None,
+            next_publication: Some(1),
+            committed_counts: FrameCounts::default(),
             dirty: None,
             last_committed: None,
             active: None,
@@ -482,7 +509,7 @@ impl SyntheticRun {
         self.source
     }
     fn completed(&self) -> Option<MapTime> {
-        self.ready.map(|index| self.frames[index].at)
+        self.ready.map(|header| header.at)
     }
     pub fn observation(&self) -> Observation {
         let status = if let Some(failure) = self.failure {
@@ -508,8 +535,9 @@ impl SyntheticRun {
             completed_through: self.completed(),
             last_committed_time: self.last_committed,
             active_target: self.active.map(|v| v.target),
-            committed_judgements: self.judgements,
-            ready_frame: self.ready.map(|i| self.frames[i]),
+            committed_counts: self.committed_counts,
+            object_count: self.map.len,
+            ready_frame: self.ready,
             pending_inputs: self.input_len,
             pending_events: self.event_len,
             held_slots: self.held,
@@ -608,6 +636,10 @@ impl SyntheticRun {
         }))
     }
     fn emit(&mut self, reservation: EventReservation, record: JudgementRecord) {
+        match record.result {
+            Judgement::Hit => self.committed_counts.hits += 1,
+            Judgement::Miss => self.committed_counts.misses += 1,
+        }
         for offset in 0..reservation.count {
             let sequence = reservation.first + u64::try_from(offset).expect("small event offset");
             let index = (self.event_head + self.event_len) % self.limits.events;
@@ -688,7 +720,7 @@ mod tests {
                 cancelled_inputs: 1
             })
         );
-        assert_eq!(result.committed_judgements, [None; MAX_CIRCLES]);
+        assert_eq!(run.judgements, [None; MAX_CIRCLES]);
         assert_eq!(result.held_slots, [false; 4]);
         assert_eq!(result.pending_events, 0);
         assert_eq!(run.event_at(0), None);

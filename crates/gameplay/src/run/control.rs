@@ -161,8 +161,8 @@ impl SyntheticRun {
         if let Some(sealed) = self.sealed {
             self.automatic.cover(sealed);
         }
-        if let Some(index) = self.ready {
-            self.frames[index].source = self.source;
+        if let Some(header) = &mut self.ready {
+            header.source = self.source;
         }
         Ok(self.source)
     }

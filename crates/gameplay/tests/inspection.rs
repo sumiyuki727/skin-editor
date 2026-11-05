@@ -1,3 +1,6 @@
+#[allow(dead_code)]
+mod common;
+use common::SnapshotExt;
 use skin_editor_gameplay::*;
 
 fn time(value: i64) -> MapTime {
@@ -131,7 +134,7 @@ fn inspection_boundaries_are_closed_without_fake_judgements_or_sounds() {
         assert_eq!(source.input.get(), old.input.get() + 1);
         assert_eq!(source.run, old.run);
         assert_eq!(source.revision, old.revision);
-        let state = run.observation();
+        let state = run.snapshot();
         assert_eq!(state.status, RunStatus::Frozen);
         assert_eq!(state.completed_through, Some(time(target)));
         assert_eq!(state.last_committed_time, Some(time(target)));
@@ -176,7 +179,7 @@ fn pending_and_ready_candidate_never_publish_a_partial_target() {
         Limits::tiny(),
     );
     freeze(&mut run, -200_001, WorkBudget::one());
-    let before = run.observation();
+    let before = run.snapshot();
     let mut cursor = run
         .request_inspection(run.source(), time(1_000_000))
         .unwrap();
@@ -190,7 +193,7 @@ fn pending_and_ready_candidate_never_publish_a_partial_target() {
     for checked in 1..=4 {
         let previous = cursor;
         let report = run.step_inspection(cursor, WorkBudget::one()).unwrap();
-        let state = run.observation();
+        let state = run.snapshot();
         assert_eq!(state.ready_frame, before.ready_frame);
         assert_eq!(state.completed_through, before.completed_through);
         assert_eq!(state.source, before.source);
@@ -221,7 +224,7 @@ fn pending_and_ready_candidate_never_publish_a_partial_target() {
         }
     }
     run.activate_inspection(key).unwrap();
-    let state = run.observation();
+    let state = run.snapshot();
     assert_eq!(state.inspection, None);
     assert_eq!(state.completed_through, Some(time(1_000_000)));
     let frame = state.ready_frame.unwrap();
@@ -239,7 +242,7 @@ fn cancelled_candidate_cannot_reappear_before_or_after_a_replacement() {
     let mut run = run(50_101, &[0, 1_000_000], Limits::tiny());
     run.submit_inputs(run.source(), &[press(1, 0)]).unwrap();
     freeze(&mut run, 0, WorkBudget::one());
-    let before = run.observation();
+    let before = run.snapshot();
     let event = run.event_at(0).unwrap();
     let a = run.request_inspection(run.source(), time(900_000)).unwrap();
     assert!(matches!(
@@ -247,7 +250,7 @@ fn cancelled_candidate_cannot_reappear_before_or_after_a_replacement() {
         InspectionReport::Pending { .. }
     ));
     run.cancel_inspection(a.key()).unwrap();
-    assert_eq!(run.observation(), before);
+    assert_eq!(run.snapshot(), before);
     assert_eq!(run.event_at(0), Some(event));
     let b = run
         .request_inspection(run.source(), time(1_000_000))
@@ -279,22 +282,22 @@ fn cancelled_candidate_cannot_reappear_before_or_after_a_replacement() {
         Err(RunError::StaleInspection)
     );
     run.activate_inspection(b.key()).unwrap();
-    let after = run.observation();
+    let after = run.snapshot();
     assert_eq!(after.committed_judgements, [None; MAX_CIRCLES]);
     assert_eq!(after.pending_events, 0);
     assert_eq!(run.activate_inspection(a.key()), Err(RunError::StaleSource));
     assert_eq!(run.cancel_inspection(b.key()), Err(RunError::StaleSource));
-    assert_eq!(run.observation(), after);
+    assert_eq!(run.snapshot(), after);
 }
 
 #[test]
 fn ready_candidate_can_be_cancelled_and_repeated_target_has_a_new_key() {
     let mut run = run(50_102, &[1_000_000], Limits::tiny());
     freeze(&mut run, 799_999, WorkBudget::one());
-    let before = run.observation();
+    let before = run.snapshot();
     let a = prepare(&mut run, 1_000_000, WorkBudget::one());
     run.cancel_inspection(a).unwrap();
-    assert_eq!(run.observation(), before);
+    assert_eq!(run.snapshot(), before);
     let b = prepare(&mut run, 1_000_000, WorkBudget::one());
     assert_ne!(a, b);
     assert_eq!(run.activate_inspection(a), Err(RunError::StaleInspection));
@@ -311,7 +314,7 @@ fn invalid_calls_do_not_advance_or_replace_the_candidate() {
     );
     freeze(&mut run, -200_001, WorkBudget::one());
     let cursor = run.request_inspection(source, time(0)).unwrap();
-    let before = run.observation();
+    let before = run.snapshot();
     assert_eq!(run.request_inspection(source, time(1)), Err(RunError::Busy));
     assert_eq!(run.resume(source), Err(RunError::Busy));
     assert_eq!(
@@ -330,7 +333,7 @@ fn invalid_calls_do_not_advance_or_replace_the_candidate() {
         run.request_inspection(other, time(0)),
         Err(RunError::StaleSource)
     );
-    assert_eq!(run.observation(), before);
+    assert_eq!(run.snapshot(), before);
     assert!(matches!(
         run.step_inspection(cursor, WorkBudget::one()).unwrap(),
         InspectionReport::Pending { .. }
@@ -346,7 +349,7 @@ fn inspection_resume_rearms_and_only_hits_after_the_closed_target() {
     let old_source = run.source();
     inspect(&mut run, 1_000_000, WorkBudget::one());
     let source = run.resume(run.source()).unwrap();
-    let before = run.observation();
+    let before = run.snapshot();
     assert_eq!(
         run.submit_inputs(old_source, &[press(2, 1_000_001)]),
         Err(RunError::StaleSource)
@@ -355,11 +358,11 @@ fn inspection_resume_rearms_and_only_hits_after_the_closed_target() {
         run.submit_inputs(source, &[press(2, 1_000_001)]),
         Err(RunError::RearmRequired)
     );
-    assert_eq!(run.observation(), before);
+    assert_eq!(run.snapshot(), before);
     rearm(&mut run);
     run.submit_inputs(source, &[press(2, 1_000_001)]).unwrap();
     advance(&mut run, 1_000_001, WorkBudget::one());
-    let state = run.observation();
+    let state = run.snapshot();
     assert_eq!(
         state.committed_judgements[0],
         Some(JudgementRecord {
@@ -399,8 +402,8 @@ fn input_at_or_before_inspection_target_does_not_reopen_the_seal() {
             run.submit_inputs(run.source(), &[press(2, target)]),
             Err(RunError::LateInput)
         );
-        assert!(matches!(run.observation().status, RunStatus::Failed(_)));
-        assert_eq!(run.observation().committed_judgements, [None; MAX_CIRCLES]);
+        assert!(matches!(run.snapshot().status, RunStatus::Failed(_)));
+        assert_eq!(run.snapshot().committed_judgements, [None; MAX_CIRCLES]);
         assert_eq!(run.event_at(0), None);
     }
 }
@@ -412,7 +415,7 @@ fn skipped_objects_remain_unavailable_while_only_future_objects_can_miss() {
     inspect(&mut run, 100_001, WorkBudget::full());
     run.resume(run.source()).unwrap();
     advance(&mut run, 1_300_000, WorkBudget::full());
-    let state = run.observation();
+    let state = run.snapshot();
     assert_eq!(state.committed_judgements[0], None);
     assert_eq!(
         state.committed_judgements[1].unwrap().result,
@@ -451,7 +454,7 @@ fn old_input_events_acknowledgements_and_cursors_cannot_touch_new_transport() {
     run.submit_inputs(run.source(), &[press(2, 1_000_001)])
         .unwrap();
     advance(&mut run, 1_000_001, WorkBudget::one());
-    let before = run.observation();
+    let before = run.snapshot();
     let new_event = run.event_at(0).unwrap();
     assert_eq!(old_event.key.sequence(), new_event.key.sequence());
     assert_ne!(old_event.key, new_event.key);
@@ -472,7 +475,7 @@ fn old_input_events_acknowledgements_and_cursors_cannot_touch_new_transport() {
         run.submit_inputs(old_source, &[press(1, 1_000_000)]),
         Err(RunError::StaleSource)
     );
-    assert_eq!(run.observation(), before);
+    assert_eq!(run.snapshot(), before);
     assert_eq!(run.event_at(0), Some(new_event));
 }
 
@@ -482,7 +485,7 @@ fn forward_then_backward_inspection_rebuilds_instead_of_copying_old_outcomes() {
     freeze(&mut run, 799_999, WorkBudget::full());
     let first = inspect(&mut run, 1_300_000, WorkBudget::full());
     assert_eq!(
-        run.observation()
+        run.snapshot()
             .ready_frame
             .unwrap()
             .object(0)
@@ -492,7 +495,7 @@ fn forward_then_backward_inspection_rebuilds_instead_of_copying_old_outcomes() {
     );
     let second = inspect(&mut run, -1, WorkBudget::full());
     assert_eq!(second.transport.get(), first.transport.get() + 1);
-    let frame = run.observation().ready_frame.unwrap();
+    let frame = run.snapshot().ready_frame.unwrap();
     assert_eq!(frame.object(0).unwrap().phase, Phase::Future);
     assert_eq!(frame.object(0).unwrap().unavailable, None);
     run.resume(second).unwrap();
@@ -501,7 +504,7 @@ fn forward_then_backward_inspection_rebuilds_instead_of_copying_old_outcomes() {
         .unwrap();
     advance(&mut run, 1_000_000, WorkBudget::full());
     assert_eq!(
-        run.observation().committed_judgements[0].unwrap().result,
+        run.snapshot().committed_judgements[0].unwrap().result,
         Judgement::Hit
     );
 }
@@ -513,7 +516,7 @@ fn empty_map_still_requires_evaluation_before_activation() {
     let cursor = run
         .request_inspection(run.source(), time(i64::MIN))
         .unwrap();
-    assert!(!run.observation().inspection.unwrap().ready);
+    assert!(!run.snapshot().inspection.unwrap().ready);
     assert_eq!(
         run.activate_inspection(cursor.key()),
         Err(RunError::InspectionIncomplete)
@@ -527,7 +530,7 @@ fn empty_map_still_requires_evaluation_before_activation() {
         })
     );
     run.activate_inspection(cursor.key()).unwrap();
-    let frame = run.observation().ready_frame.unwrap();
+    let frame = run.snapshot().ready_frame.unwrap();
     assert!(frame.is_empty());
     assert_eq!(frame.at, time(i64::MIN));
     run.resume(run.source()).unwrap();
@@ -542,7 +545,7 @@ fn a_base_fault_invalidates_pending_inspection_without_publishing_it() {
         .unwrap();
     freeze(&mut run, 1_000_000, WorkBudget::one());
     let key = prepare(&mut run, -1, WorkBudget::one());
-    let old_frame = run.observation().ready_frame;
+    let old_frame = run.snapshot().ready_frame;
     let conflict = InputEvent {
         edge: InputEdge::Release,
         ..press(1, 1_000_000)
@@ -551,10 +554,10 @@ fn a_base_fault_invalidates_pending_inspection_without_publishing_it() {
         run.submit_inputs(run.source(), &[conflict]),
         Err(RunError::InputConflict)
     );
-    assert_eq!(run.observation().inspection, None);
+    assert_eq!(run.snapshot().inspection, None);
     assert_eq!(run.activate_inspection(key), Err(RunError::StaleInspection));
-    assert_eq!(run.observation().ready_frame, old_frame);
-    assert!(matches!(run.observation().status, RunStatus::Failed(_)));
+    assert_eq!(run.snapshot().ready_frame, old_frame);
+    assert!(matches!(run.snapshot().status, RunStatus::Failed(_)));
 }
 
 #[test]
@@ -581,7 +584,7 @@ fn single_step_and_full_budget_produce_identical_inspection_and_later_events() {
             .unwrap();
         advance(run, 1_000_001, budget);
     }
-    assert_eq!(tiny.observation(), reference.observation());
+    assert_eq!(tiny.snapshot(), reference.snapshot());
     for index in 0..=2 {
         assert_eq!(tiny.event_at(index), reference.event_at(index));
     }
@@ -591,12 +594,12 @@ fn single_step_and_full_budget_produce_identical_inspection_and_later_events() {
 fn inspection_requires_a_completed_nonfaulted_freeze() {
     let mut run = run(50_130, &[1_000_000], Limits::tiny());
     let source = run.source();
-    let before = run.observation();
+    let before = run.snapshot();
     assert_eq!(
         run.request_inspection(source, time(1_000_000)),
         Err(RunError::NotFrozen)
     );
-    assert_eq!(run.observation(), before);
+    assert_eq!(run.snapshot(), before);
     run.submit_inputs(source, &[press(1, 1_000_000)]).unwrap();
     run.request_freeze(source, time(1_000_000)).unwrap();
     run.seal_through(source, time(1_000_000)).unwrap();
@@ -604,14 +607,14 @@ fn inspection_requires_a_completed_nonfaulted_freeze() {
         run.settle_freeze(source, WorkBudget::one()).unwrap(),
         FreezeReport::Pending { .. }
     ));
-    let before = run.observation();
+    let before = run.snapshot();
     assert_eq!(before.status, RunStatus::Freezing);
     assert_eq!(before.ready_frame, None);
     assert_eq!(
         run.request_inspection(source, time(1_000_000)),
         Err(RunError::NotFrozen)
     );
-    assert_eq!(run.observation(), before);
+    assert_eq!(run.snapshot(), before);
     freeze(&mut run, 1_000_000, WorkBudget::one());
     let conflict = InputEvent {
         edge: InputEdge::Release,
@@ -621,13 +624,13 @@ fn inspection_requires_a_completed_nonfaulted_freeze() {
         run.submit_inputs(source, &[conflict]),
         Err(RunError::InputConflict)
     );
-    let before = run.observation();
+    let before = run.snapshot();
     assert!(matches!(before.status, RunStatus::Failed(_)));
     assert_eq!(
         run.request_inspection(source, time(1_000_001)),
         Err(RunError::Faulted)
     );
-    assert_eq!(run.observation(), before);
+    assert_eq!(run.snapshot(), before);
 }
 
 #[test]
@@ -635,14 +638,14 @@ fn inspecting_at_window_close_misses_only_after_resuming_past_it() {
     let mut run = run(50_131, &[1_000_000], Limits::tiny());
     freeze(&mut run, 799_999, WorkBudget::one());
     inspect(&mut run, 1_100_000, WorkBudget::one());
-    let circle = run.observation().ready_frame.unwrap().object(0).unwrap();
+    let circle = run.snapshot().ready_frame.unwrap().object(0).unwrap();
     assert_eq!(circle.phase, Phase::VisibleUnjudged);
     assert_eq!(circle.judgement, None);
     assert_eq!(circle.unavailable, None);
     assert_eq!(run.event_at(0), None);
     run.resume(run.source()).unwrap();
     advance(&mut run, 1_100_000, WorkBudget::one());
-    assert_eq!(run.observation().committed_judgements[0], None);
+    assert_eq!(run.snapshot().committed_judgements[0], None);
     assert_eq!(run.event_at(0), None);
     advance(&mut run, 1_100_001, WorkBudget::one());
     let record = JudgementRecord {
@@ -650,7 +653,7 @@ fn inspecting_at_window_close_misses_only_after_resuming_past_it() {
         at: time(1_100_001),
         result: Judgement::Miss,
     };
-    assert_eq!(run.observation().committed_judgements[0], Some(record));
+    assert_eq!(run.snapshot().committed_judgements[0], Some(record));
     let event = run.event_at(0).unwrap();
     assert_eq!(event.kind, EventKind::Judgement(Judgement::Miss));
     assert_eq!(event.at, record.at);
@@ -659,7 +662,7 @@ fn inspecting_at_window_close_misses_only_after_resuming_past_it() {
     advance(&mut run, 1_300_000, WorkBudget::one());
     assert_eq!(run.event_at(0), Some(event));
     assert_eq!(run.event_at(1), None);
-    let frame = run.observation().ready_frame.unwrap();
+    let frame = run.snapshot().ready_frame.unwrap();
     assert_eq!(frame.object(0).unwrap().judgement, Some(record));
     assert_eq!(frame.object(0).unwrap().unavailable, None);
     assert_eq!(
@@ -686,10 +689,10 @@ fn cancelling_a_candidate_keeps_acknowledgements_and_does_not_rearm_old_sound() 
         run.acknowledge(judgement.key).unwrap(),
         Acknowledgement::Acknowledged { removed: 1, .. }
     ));
-    let mut expected = run.observation();
+    let mut expected = run.snapshot();
     expected.inspection = None;
     run.cancel_inspection(cursor.key()).unwrap();
-    assert_eq!(run.observation(), expected);
+    assert_eq!(run.snapshot(), expected);
     assert_eq!(run.event_at(0), Some(sound));
     assert_eq!(run.event_at(1), None);
     assert_eq!(
@@ -714,7 +717,7 @@ fn overlapping_visibility_does_not_replay_skipped_deadlines() {
     run.submit_inputs(run.source(), &[press(2, 100_002)])
         .unwrap();
     advance(&mut run, 100_002, WorkBudget::one());
-    let state = run.observation();
+    let state = run.snapshot();
     assert_eq!(state.committed_judgements[0], None);
     assert_eq!(
         state.committed_judgements[1],
@@ -741,10 +744,10 @@ fn overlapping_visibility_does_not_replay_skipped_deadlines() {
     advance(&mut run, 500_001, WorkBudget::one());
     assert_eq!(run.event_at(0), None);
     assert_eq!(
-        run.observation().committed_judgements,
+        run.snapshot().committed_judgements,
         state.committed_judgements
     );
-    let frame = run.observation().ready_frame.unwrap();
+    let frame = run.snapshot().ready_frame.unwrap();
     assert_eq!(frame.object(0).unwrap().phase, Phase::Retired);
     assert_eq!(frame.object(1).unwrap().phase, Phase::Retired);
 }
@@ -761,15 +764,15 @@ fn repeated_inspection_after_a_real_hit_rebuilds_ledger_and_freeze_state() {
     advance(&mut run, 1_000_001, WorkBudget::one());
     let old_event = run.event_at(0).unwrap();
     freeze(&mut run, 1_000_001, WorkBudget::one());
-    let before = run.observation();
+    let before = run.snapshot();
     let cancelled = prepare(&mut run, 1_000_002, WorkBudget::one());
     run.cancel_inspection(cancelled).unwrap();
-    assert_eq!(run.observation(), before);
+    assert_eq!(run.snapshot(), before);
     let source = inspect(&mut run, 1_000_002, WorkBudget::one());
     assert_eq!(source.transport.get(), old_event.key.transport().get() + 1);
-    assert_eq!(run.observation().committed_judgements, [None; MAX_CIRCLES]);
+    assert_eq!(run.snapshot().committed_judgements, [None; MAX_CIRCLES]);
     assert_eq!(run.event_at(0), None);
-    let before = run.observation();
+    let before = run.snapshot();
     run.request_freeze(source, time(1_000_002)).unwrap();
     assert_eq!(
         run.settle_freeze(source, WorkBudget::one()),
@@ -779,13 +782,13 @@ fn repeated_inspection_after_a_real_hit_rebuilds_ledger_and_freeze_state() {
             cancelled_inputs: 0,
         })
     );
-    assert_eq!(run.observation(), before);
+    assert_eq!(run.snapshot(), before);
     run.resume(source).unwrap();
     rearm(&mut run);
     run.submit_inputs(run.source(), &[press(2, 1_000_003)])
         .unwrap();
     advance(&mut run, 1_000_003, WorkBudget::one());
-    let current = run.observation();
+    let current = run.snapshot();
     assert_eq!(
         current.statistics_origin,
         StatisticsOrigin::Inspection {
@@ -795,7 +798,7 @@ fn repeated_inspection_after_a_real_hit_rebuilds_ledger_and_freeze_state() {
     assert_eq!(current.committed_judgements[0].unwrap().at, time(1_000_003));
     assert_eq!(run.event_at(0).unwrap().key.sequence().get(), 1);
     assert_eq!(run.acknowledge(old_event.key), Err(RunError::StaleSource));
-    assert_eq!(run.observation(), current);
+    assert_eq!(run.snapshot(), current);
     assert!(
         run.sound_intent_allowed(run.event_at(1).unwrap().key)
             .unwrap()

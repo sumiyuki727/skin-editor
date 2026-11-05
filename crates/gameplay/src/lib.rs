@@ -21,17 +21,18 @@ mod run;
 mod types;
 
 pub use coordinator::{
-    PreparationCosts, PreparationCursor, PreparationError, PreparationKey, PreparationLimits,
-    PreparationOperation, PreparationReport, PreparationStage, PreparationTask, ResourcePool,
-    ResourceUsage, SyntheticCoordinator,
+    AllocationKind, PreparationCosts, PreparationCursor, PreparationError, PreparationKey,
+    PreparationLimits, PreparationOperation, PreparationReport, PreparationStage, PreparationTask,
+    ResourcePool, ResourceUsage, SyntheticCoordinator,
 };
 pub use map::{Circle, MapPreparation, PreparationProgress, SyntheticMap};
 pub use run::{
     Acknowledgement, Admission, AdvanceCursor, AdvanceReport, AutomaticPendingReason,
-    AutomaticReport, CircleFrame, EventKey, EventKind, Failure, FreezeInfo, FreezeReport,
-    GameEvent, InspectionCursor, InspectionInfo, InspectionKey, InspectionReport, Judgement,
-    JudgementRecord, Limits, Observation, PendingReason, Phase, ReadyFrame, RearmReport,
-    RequestKey, RunError, RunStatus, StatisticsOrigin, SyntheticRun, UnavailableReason,
+    AutomaticReport, CircleFrame, EventKey, EventKind, Failure, FrameCounts, FrameCursor,
+    FrameHeader, FrameKey, FramePage, FrameReadError, FreezeInfo, FreezeReport, GameEvent,
+    InspectionCursor, InspectionInfo, InspectionKey, InspectionReport, Judgement, JudgementRecord,
+    Limits, Observation, PendingReason, Phase, ReadyFrame, RearmReport, RequestKey, RunError,
+    RunStatus, StatisticsOrigin, SyntheticRun, UnavailableReason,
 };
 pub use types::{
     CoordinatorId, EventSequence, InputDriver, InputEdge, InputEpoch, InputEvent, InputSequence,
@@ -39,11 +40,12 @@ pub use types::{
     TransportEpoch, ValueError, WorkBudget,
 };
 
-pub const GAMEPLAY_API_VERSION: u16 = 5;
+pub const GAMEPLAY_API_VERSION: u16 = 6;
 pub const SYNTHETIC_PROFILE_VERSION: u32 = 1;
 pub const MAX_CIRCLES: usize = 4;
 pub const MAX_INPUTS: usize = 64;
 pub const MAX_EVENTS: usize = 64;
+pub const MAX_FRAME_PAGE: usize = 64;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Evidence {

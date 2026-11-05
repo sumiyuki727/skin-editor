@@ -1,3 +1,6 @@
+#[allow(dead_code)]
+mod common;
+use common::SnapshotExt;
 use skin_editor_gameplay::*;
 
 fn time(value: i64) -> MapTime {
@@ -72,11 +75,7 @@ fn complete_sealed(run: &mut SyntheticRun, at: i64, budget: WorkBudget) {
     panic!("bounded fixture did not complete");
 }
 fn frame(run: &SyntheticRun, index: usize) -> CircleFrame {
-    run.observation()
-        .ready_frame
-        .unwrap()
-        .object(index)
-        .unwrap()
+    run.snapshot().ready_frame.unwrap().object(index).unwrap()
 }
 fn collect_events(run: &mut SyntheticRun, output: &mut Vec<GameEvent>) {
     while let Some(event) = run.event_at(0) {
@@ -88,7 +87,7 @@ fn collect_events(run: &mut SyntheticRun, output: &mut Vec<GameEvent>) {
 #[test]
 fn lifecycle_and_hit_have_exact_source_time_and_no_read_side_effects() {
     let mut run = single(1, Limits::tiny());
-    let initial = run.observation();
+    let initial = run.snapshot();
     assert_eq!(initial.status, RunStatus::Prepared);
     assert_eq!(initial.completed_through, None);
     assert_eq!(initial.ready_frame, None);
@@ -106,7 +105,7 @@ fn lifecycle_and_hit_have_exact_source_time_and_no_read_side_effects() {
     );
     complete(&mut run, 1_000_000, WorkBudget::one());
     assert_eq!(frame(&run, 0).phase, Phase::ResolvedVisual);
-    let record = run.observation().committed_judgements[0].unwrap();
+    let record = run.snapshot().committed_judgements[0].unwrap();
     assert_eq!(
         record,
         JudgementRecord {
@@ -127,9 +126,9 @@ fn lifecycle_and_hit_have_exact_source_time_and_no_read_side_effects() {
     assert_eq!(first.at, time(1_000_000));
     assert_eq!(first.evidence, Evidence::SyntheticTest);
     assert_eq!(first.profile_version, SYNTHETIC_PROFILE_VERSION);
-    let before = run.observation();
+    let before = run.snapshot();
     for _ in 0..10 {
-        assert_eq!(run.observation(), before);
+        assert_eq!(run.snapshot(), before);
         assert_eq!(run.event_at(0), Some(first));
     }
     complete(&mut run, 1_000_000, WorkBudget::one());
@@ -139,18 +138,18 @@ fn lifecycle_and_hit_have_exact_source_time_and_no_read_side_effects() {
     assert_eq!(frame(&run, 0).phase, Phase::Retired);
     assert_eq!(run.event_at(0), Some(first));
     assert_eq!(run.event_at(1), Some(second));
-    assert_eq!(run.observation().committed_judgements[0], Some(record));
+    assert_eq!(run.snapshot().committed_judgements[0], Some(record));
 }
 
 #[test]
 fn closed_acceptance_window_expires_one_microsecond_later_without_sound() {
     let mut run = single(2, Limits::reference());
     complete(&mut run, 1_100_000, WorkBudget::full());
-    assert_eq!(run.observation().committed_judgements[0], None);
+    assert_eq!(run.snapshot().committed_judgements[0], None);
     assert_eq!(run.event_at(0), None);
     complete(&mut run, 1_100_001, WorkBudget::full());
     assert_eq!(
-        run.observation().committed_judgements[0].unwrap().result,
+        run.snapshot().committed_judgements[0].unwrap().result,
         Judgement::Miss
     );
     assert_eq!(run.event_at(0).unwrap().at, time(1_100_001));
@@ -161,7 +160,7 @@ fn closed_acceptance_window_expires_one_microsecond_later_without_sound() {
     assert_eq!(run.event_at(1), None);
     complete(&mut run, 2_000_000, WorkBudget::full());
     assert_eq!(frame(&run, 0).phase, Phase::Retired);
-    assert_eq!(run.observation().pending_events, 1);
+    assert_eq!(run.snapshot().pending_events, 1);
 }
 
 #[test]
@@ -185,12 +184,12 @@ fn time_and_spatial_edges_use_the_explicit_synthetic_rule() {
             .unwrap();
         complete(&mut run, 1_300_000, WorkBudget::full());
         assert_eq!(
-            run.observation().committed_judgements[0].unwrap().result,
+            run.snapshot().committed_judgements[0].unwrap().result,
             expected,
             "{at}/{x}"
         );
         assert_eq!(
-            run.observation().pending_events,
+            run.snapshot().pending_events,
             if expected == Judgement::Hit { 2 } else { 1 }
         );
     }
@@ -240,7 +239,7 @@ fn preparation_is_complete_or_cancelled_and_preserves_original_identities() {
 #[test]
 fn invalid_candidates_never_yield_partial_maps_or_change_an_existing_run() {
     let existing = single(4, Limits::tiny());
-    let before = existing.observation();
+    let before = existing.snapshot();
     let data = [circle(1, 0), circle(2, 1_000_000), circle(1, 2_000_000)];
     let mut preparing = MapPreparation::new(MapRevision::new(8), &data).unwrap();
     preparing.step(WorkBudget::new(3).unwrap()).unwrap();
@@ -256,7 +255,7 @@ fn invalid_candidates_never_yield_partial_maps_or_change_an_existing_run() {
         Err(ValueError::DuplicateObject)
     );
     assert_eq!(preparing.finish(), Err(ValueError::DuplicateObject));
-    assert_eq!(existing.observation(), before);
+    assert_eq!(existing.snapshot(), before);
     assert_eq!(
         SyntheticMap::try_new(MapRevision::new(7), &[circle(0, 0), circle(1, 0)]),
         Err(ValueError::UnsupportedOverlap)
@@ -301,9 +300,9 @@ fn signed_time_extremes_empty_maps_and_storage_limits_are_explicit() {
     assert!(SyntheticRun::static_storage_bytes() <= 64 * 1024);
     let mut empty = make_run(5, &[], i64::MIN, Limits::tiny());
     complete(&mut empty, i64::MIN, WorkBudget::one());
-    assert!(empty.observation().ready_frame.unwrap().is_empty());
+    assert!(empty.snapshot().ready_frame.unwrap().is_empty());
     complete(&mut empty, i64::MAX, WorkBudget::one());
-    assert_eq!(empty.observation().pending_events, 0);
+    assert_eq!(empty.snapshot().pending_events, 0);
     let mut negative = make_run(6, &[circle(0, 0)], i64::MIN, Limits::reference());
     complete(&mut negative, i64::MIN, WorkBudget::full());
     assert_eq!(frame(&negative, 0).phase, Phase::Future);
@@ -338,7 +337,7 @@ fn stale_sources_are_rejected_before_capacity_and_do_not_disturb_continuation() 
             ..valid
         },
     ];
-    let before = run.observation();
+    let before = run.snapshot();
     for stale in wrong {
         assert_eq!(
             run.submit_inputs(stale, &[press(1, 0, PhysicalSlot::PrimaryOne, 0); 5]),
@@ -349,7 +348,7 @@ fn stale_sources_are_rejected_before_capacity_and_do_not_disturb_continuation() 
             run.advance(stale, time(0), WorkBudget::full()),
             Err(RunError::StaleSource)
         );
-        assert_eq!(run.observation(), before);
+        assert_eq!(run.snapshot(), before);
     }
     assert!(run.continue_advance(cursor, WorkBudget::one()).is_ok());
 }
@@ -360,7 +359,7 @@ fn seal_is_inclusive_but_identical_replay_still_succeeds() {
     let input = press(1, 1_000_000, PhysicalSlot::PrimaryOne, 0);
     run.submit_inputs(run.source(), &[input]).unwrap();
     complete(&mut run, 1_000_000, WorkBudget::one());
-    let before = run.observation();
+    let before = run.snapshot();
     assert_eq!(
         run.submit_inputs(run.source(), &[input]).unwrap(),
         Admission {
@@ -368,7 +367,7 @@ fn seal_is_inclusive_but_identical_replay_still_succeeds() {
             repeated: 1
         }
     );
-    assert_eq!(run.observation(), before);
+    assert_eq!(run.snapshot(), before);
     let event = run.event_at(0);
     assert_eq!(
         run.submit_inputs(
@@ -377,7 +376,7 @@ fn seal_is_inclusive_but_identical_replay_still_succeeds() {
         ),
         Err(RunError::LateInput)
     );
-    let after = run.observation();
+    let after = run.snapshot();
     assert_eq!(
         after.status,
         RunStatus::Failed(Failure {
@@ -402,12 +401,12 @@ fn seal_is_inclusive_but_identical_replay_still_succeeds() {
         Err(RunError::InputBeforeStart)
     );
     let mut unsealed = single(13, Limits::tiny());
-    let before = unsealed.observation();
+    let before = unsealed.snapshot();
     assert_eq!(
         unsealed.advance(unsealed.source(), time(900_000), WorkBudget::one()),
         Err(RunError::BeyondSeal)
     );
-    assert_eq!(unsealed.observation(), before);
+    assert_eq!(unsealed.snapshot(), before);
     complete(&mut unsealed, 900_000, WorkBudget::one());
 }
 
@@ -422,7 +421,7 @@ fn admission_is_atomic_across_duplicates_conflicts_and_capacity_failure() {
         run.submit_inputs(run.source(), &[original, new, changed]),
         Err(RunError::InputConflict)
     );
-    let failed = run.observation();
+    let failed = run.snapshot();
     assert_eq!(
         failed.status,
         RunStatus::Failed(Failure {
@@ -452,7 +451,7 @@ fn admission_is_atomic_across_duplicates_conflicts_and_capacity_failure() {
             repeated: 1
         }
     );
-    assert_eq!(run.observation().pending_inputs, 1);
+    assert_eq!(run.snapshot().pending_inputs, 1);
     let batch = [
         release(2, 900_001, PhysicalSlot::PrimaryOne),
         press(3, 900_002, PhysicalSlot::PrimaryOne, 99),
@@ -464,7 +463,7 @@ fn admission_is_atomic_across_duplicates_conflicts_and_capacity_failure() {
         Err(RunError::InputCapacity)
     );
     assert_eq!(
-        run.observation().status,
+        run.snapshot().status,
         RunStatus::Failed(Failure {
             cause: RunError::InputCapacity,
             cancelled_inputs: 1
@@ -475,7 +474,7 @@ fn admission_is_atomic_across_duplicates_conflicts_and_capacity_failure() {
         duplicate.submit_inputs(duplicate.source(), &[original, changed]),
         Err(RunError::InputConflict)
     );
-    assert_eq!(duplicate.observation().pending_inputs, 0);
+    assert_eq!(duplicate.snapshot().pending_inputs, 0);
 }
 
 #[test]
@@ -498,12 +497,12 @@ fn replay_window_expires_without_refresh_and_sequence_holes_are_not_new() {
         run.submit_inputs(run.source(), &[input]).unwrap();
         complete(&mut run, at, WorkBudget::one());
     }
-    let before = run.observation();
+    let before = run.snapshot();
     assert_eq!(
         run.submit_inputs(run.source(), &[first]),
         Err(RunError::OldInputSequence)
     );
-    assert_eq!(run.observation(), before);
+    assert_eq!(run.snapshot(), before);
     let mut holes = single(18, Limits::tiny());
     holes
         .submit_inputs(
@@ -511,7 +510,7 @@ fn replay_window_expires_without_refresh_and_sequence_holes_are_not_new() {
             &[press(3, 900_000, PhysicalSlot::PrimaryOne, 99)],
         )
         .unwrap();
-    let before = holes.observation();
+    let before = holes.snapshot();
     assert_eq!(
         holes.submit_inputs(
             holes.source(),
@@ -519,7 +518,7 @@ fn replay_window_expires_without_refresh_and_sequence_holes_are_not_new() {
         ),
         Err(RunError::OldInputSequence)
     );
-    assert_eq!(holes.observation(), before);
+    assert_eq!(holes.snapshot(), before);
 }
 
 #[test]
@@ -538,16 +537,16 @@ fn two_physical_slots_share_one_logical_press_and_release_independently() {
     )
     .unwrap();
     complete(&mut run, 1_000_001, WorkBudget::full());
-    assert_eq!(run.observation().held_slots, [false, true, false, false]);
-    assert_eq!(run.observation().committed_judgements[0], None);
+    assert_eq!(run.snapshot().held_slots, [false, true, false, false]);
+    assert_eq!(run.snapshot().committed_judgements[0], None);
     complete(&mut run, 1_000_002, WorkBudget::full());
-    assert_eq!(run.observation().held_slots, [false; 4]);
+    assert_eq!(run.snapshot().held_slots, [false; 4]);
     complete(&mut run, 1_000_003, WorkBudget::full());
     assert_eq!(
-        run.observation().committed_judgements[0].unwrap().at,
+        run.snapshot().committed_judgements[0].unwrap().at,
         time(1_000_003)
     );
-    assert_eq!(run.observation().pending_events, 2);
+    assert_eq!(run.snapshot().pending_events, 2);
 }
 
 #[test]
@@ -582,7 +581,7 @@ fn event_backpressure_preserves_whole_hit_and_out_of_order_ack_returns_credit_on
             _ => panic!("hit requires two event slots"),
         }
     };
-    let before = run.observation();
+    let before = run.snapshot();
     assert_eq!(before.committed_judgements[1], None);
     assert_eq!(before.pending_inputs, 1);
     assert_eq!(before.pending_events, 1);
@@ -596,7 +595,7 @@ fn event_backpressure_preserves_whole_hit_and_out_of_order_ack_returns_credit_on
             ..
         }
     ));
-    assert_eq!(run.observation(), before);
+    assert_eq!(run.snapshot(), before);
     run.acknowledge(miss.key).unwrap();
     let mut report = run.continue_advance(blocked, WorkBudget::one()).unwrap();
     loop {
@@ -608,7 +607,7 @@ fn event_backpressure_preserves_whole_hit_and_out_of_order_ack_returns_credit_on
         }
     }
     assert_eq!(
-        run.observation().committed_judgements[1].unwrap().result,
+        run.snapshot().committed_judgements[1].unwrap().result,
         Judgement::Hit
     );
     let hit = run.event_at(0).unwrap();
@@ -624,7 +623,7 @@ fn event_backpressure_preserves_whole_hit_and_out_of_order_ack_returns_credit_on
             removed: 0
         }
     );
-    assert_eq!(run.observation().pending_events, 2);
+    assert_eq!(run.snapshot().pending_events, 2);
     assert_eq!(
         run.acknowledge(hit.key).unwrap(),
         Acknowledgement::Acknowledged {
@@ -636,7 +635,7 @@ fn event_backpressure_preserves_whole_hit_and_out_of_order_ack_returns_credit_on
         run.acknowledge(sound.key).unwrap(),
         Acknowledgement::AlreadyRetired
     );
-    let before = run.observation();
+    let before = run.snapshot();
     assert_eq!(
         run.acknowledge(EventKey::new(
             run.source().run,
@@ -653,14 +652,14 @@ fn event_backpressure_preserves_whole_hit_and_out_of_order_ack_returns_credit_on
         )),
         Err(RunError::StaleSource)
     );
-    assert_eq!(run.observation(), before);
+    assert_eq!(run.snapshot(), before);
 }
 
 #[test]
 fn cancelling_a_partially_committed_timestamp_keeps_prefix_and_old_ready_frame() {
     let mut run = single(21, Limits::tiny());
     complete(&mut run, 900_000, WorkBudget::one());
-    let old = run.observation().ready_frame;
+    let old = run.snapshot().ready_frame;
     run.submit_inputs(
         run.source(),
         &[
@@ -679,7 +678,7 @@ fn cancelling_a_partially_committed_timestamp_keeps_prefix_and_old_ready_frame()
         panic!()
     };
     let mut cursor = original;
-    while run.observation().committed_judgements[0].is_none() {
+    while run.snapshot().committed_judgements[0].is_none() {
         let AdvanceReport::Pending { cursor: next, .. } =
             run.continue_advance(cursor, WorkBudget::one()).unwrap()
         else {
@@ -687,7 +686,7 @@ fn cancelling_a_partially_committed_timestamp_keeps_prefix_and_old_ready_frame()
         };
         cursor = next;
     }
-    let partial = run.observation();
+    let partial = run.snapshot();
     assert_eq!(partial.status, RunStatus::Pending);
     assert_eq!(partial.pending_inputs, 1);
     assert_eq!(partial.completed_through, Some(time(900_000)));
@@ -696,7 +695,7 @@ fn cancelling_a_partially_committed_timestamp_keeps_prefix_and_old_ready_frame()
         run.continue_advance(original, WorkBudget::one()),
         Err(RunError::StaleCursor)
     );
-    assert_eq!(run.observation(), partial);
+    assert_eq!(run.snapshot(), partial);
     run.cancel_request(original.request()).unwrap(); // Operation identity survives step advancement.
     assert_eq!(
         run.continue_advance(cursor, WorkBudget::one()),
@@ -707,8 +706,8 @@ fn cancelling_a_partially_committed_timestamp_keeps_prefix_and_old_ready_frame()
         Err(RunError::InvalidTarget)
     );
     complete(&mut run, 1_000_000, WorkBudget::one());
-    assert_eq!(run.observation().pending_inputs, 0);
-    assert_eq!(run.observation().pending_events, 2);
+    assert_eq!(run.snapshot().pending_inputs, 0);
+    assert_eq!(run.snapshot().pending_events, 2);
     assert_eq!(frame(&run, 0).judgement, partial.committed_judgements[0]);
     assert_eq!(
         run.cancel_request(original.request()),
@@ -742,7 +741,7 @@ fn adjacent_acceptance_windows_process_input_before_same_time_miss() {
     );
 }
 
-fn cadence(hz: i64, budget: WorkBudget, irregular: bool) -> (Observation, Vec<GameEvent>) {
+fn cadence(hz: i64, budget: WorkBudget, irregular: bool) -> (common::Snapshot, Vec<GameEvent>) {
     let mut run = make_run(
         30,
         &[circle(0, 1_000_000), circle(1, 2_000_000)],
@@ -770,8 +769,8 @@ fn cadence(hz: i64, budget: WorkBudget, irregular: bool) -> (Observation, Vec<Ga
         let mut report = run.advance(run.source(), time(at), budget).unwrap();
         loop {
             // Querying and consuming at different host cadences cannot affect gameplay.
-            let before = run.observation();
-            assert_eq!(run.observation(), before);
+            let before = run.snapshot();
+            assert_eq!(run.snapshot(), before);
             collect_events(&mut run, &mut events);
             match report {
                 AdvanceReport::Complete { steps, .. } => {
@@ -785,7 +784,7 @@ fn cadence(hz: i64, budget: WorkBudget, irregular: bool) -> (Observation, Vec<Ga
             }
         }
     }
-    (run.observation(), events)
+    (run.snapshot(), events)
 }
 
 #[test]
@@ -814,7 +813,7 @@ fn cancelling_search_and_uncommitted_publication_allows_a_smaller_target() {
         Limits::tiny(),
     );
     complete(&mut run, 900_000, WorkBudget::one());
-    let old = run.observation().ready_frame;
+    let old = run.snapshot().ready_frame;
     run.seal_through(run.source(), time(950_000)).unwrap();
     let AdvanceReport::Pending { cursor, .. } = run
         .advance(run.source(), time(950_000), WorkBudget::one())
@@ -822,10 +821,10 @@ fn cancelling_search_and_uncommitted_publication_allows_a_smaller_target() {
     else {
         panic!("two-object publication must yield")
     };
-    assert_eq!(run.observation().ready_frame, old);
+    assert_eq!(run.snapshot().ready_frame, old);
     run.cancel_request(cursor.request()).unwrap();
     complete_sealed(&mut run, 925_000, WorkBudget::one());
-    assert_eq!(run.observation().completed_through, Some(time(925_000)));
+    assert_eq!(run.snapshot().completed_through, Some(time(925_000)));
     run.submit_inputs(
         run.source(),
         &[press(1, 1_000_000, PhysicalSlot::PrimaryOne, 0)],
@@ -838,12 +837,12 @@ fn cancelling_search_and_uncommitted_publication_allows_a_smaller_target() {
     else {
         panic!()
     };
-    assert_eq!(run.observation().held_slots, [false; 4]);
+    assert_eq!(run.snapshot().held_slots, [false; 4]);
     run.cancel_request(cursor.request()).unwrap();
     complete_sealed(&mut run, 975_000, WorkBudget::one());
-    assert_eq!(run.observation().pending_inputs, 1);
+    assert_eq!(run.snapshot().pending_inputs, 1);
     complete(&mut run, 1_000_000, WorkBudget::one());
-    assert_eq!(run.observation().pending_events, 2);
+    assert_eq!(run.snapshot().pending_events, 2);
 }
 
 #[test]
@@ -879,8 +878,8 @@ fn full_event_queue_cannot_prevent_cancellation() {
                     run.continue_advance(cursor, WorkBudget::one()),
                     Err(RunError::StaleCursor)
                 );
-                assert_eq!(run.observation().pending_events, 2);
-                assert_eq!(run.observation().committed_judgements[1], None);
+                assert_eq!(run.snapshot().pending_events, 2);
+                assert_eq!(run.snapshot().committed_judgements[1], None);
                 break;
             }
             AdvanceReport::Pending { cursor, .. } => {
@@ -960,9 +959,9 @@ fn mixed_retry_is_checked_against_the_pre_batch_window_before_eviction() {
         Err(RunError::OldInputSequence)
     );
     complete(&mut run, 900_007, WorkBudget::one());
-    assert_eq!(run.observation().committed_judgements, [None; MAX_CIRCLES]);
-    assert_eq!(run.observation().held_slots, [false; 4]);
-    assert_eq!(run.observation().pending_events, 0);
+    assert_eq!(run.snapshot().committed_judgements, [None; MAX_CIRCLES]);
+    assert_eq!(run.snapshot().held_slots, [false; 4]);
+    assert_eq!(run.snapshot().pending_events, 0);
 }
 
 #[test]
@@ -977,11 +976,11 @@ fn same_time_edges_follow_sequence_not_batch_position() {
     run.submit_inputs(run.source(), &batch).unwrap();
     complete(&mut run, 1_000_000, WorkBudget::one());
     assert_eq!(
-        run.observation().committed_judgements[0].unwrap().result,
+        run.snapshot().committed_judgements[0].unwrap().result,
         Judgement::Hit
     );
-    assert_eq!(run.observation().held_slots, [false; 4]);
-    assert_eq!(run.observation().pending_events, 2);
+    assert_eq!(run.snapshot().held_slots, [false; 4]);
+    assert_eq!(run.snapshot().pending_events, 2);
 }
 
 type CanonicalEvent = (u64, ObjectId, MapTime, EventKind);
@@ -1042,7 +1041,7 @@ fn four_circle_trace(
             }
         }
         let Some(cursor) = cursor else {
-            let observation = run.observation();
+            let observation = run.snapshot();
             assert_eq!(observation.status, RunStatus::Ready);
             assert_eq!(observation.completed_through, Some(time(1_300_000)));
             assert_eq!(observation.pending_inputs, 0);
@@ -1075,12 +1074,12 @@ fn four_circle_trace(
         };
         if cancel_at == Some(call) {
             run.cancel_request(cursor.request()).unwrap();
-            let before = run.observation();
+            let before = run.snapshot();
             assert_eq!(
                 run.continue_advance(cursor, budget),
                 Err(RunError::StaleCursor)
             );
-            assert_eq!(run.observation(), before);
+            assert_eq!(run.snapshot(), before);
             report = run.advance(run.source(), time(1_300_000), budget).unwrap();
         } else {
             report = run.continue_advance(cursor, budget).unwrap();
@@ -1164,7 +1163,7 @@ fn radius_uses_both_axes_relative_to_center_and_valid_time_endpoints_survive() {
         run.submit_inputs(run.source(), &[input]).unwrap();
         complete(&mut run, 1_300_000, WorkBudget::full());
         assert_eq!(
-            run.observation().committed_judgements[0].unwrap().result,
+            run.snapshot().committed_judgements[0].unwrap().result,
             expected
         );
     }
@@ -1179,7 +1178,7 @@ fn radius_uses_both_axes_relative_to_center_and_valid_time_endpoints_survive() {
         .unwrap();
         complete(&mut run, target + 300_000, WorkBudget::full());
         assert_eq!(
-            run.observation().committed_judgements[0].unwrap().result,
+            run.snapshot().committed_judgements[0].unwrap().result,
             Judgement::Hit
         );
         assert_eq!(frame(&run, 0).phase, Phase::Retired);
@@ -1199,12 +1198,12 @@ fn radius_uses_both_axes_relative_to_center_and_valid_time_endpoints_survive() {
 #[test]
 fn call_errors_and_foreign_tokens_leave_the_active_continuation_usable() {
     let mut first = single(80, Limits::tiny());
-    let before = first.observation();
+    let before = first.snapshot();
     assert_eq!(
         first.advance(first.source(), time(799_998), WorkBudget::one()),
         Err(RunError::InvalidTarget)
     );
-    assert_eq!(first.observation(), before);
+    assert_eq!(first.snapshot(), before);
     first.seal_through(first.source(), time(1_000_000)).unwrap();
     let AdvanceReport::Pending {
         cursor: foreign, ..
@@ -1224,7 +1223,7 @@ fn call_errors_and_foreign_tokens_leave_the_active_continuation_usable() {
     else {
         panic!()
     };
-    let before = second.observation();
+    let before = second.snapshot();
     assert_eq!(
         second.continue_advance(foreign, WorkBudget::full()),
         Err(RunError::StaleSource)
@@ -1245,7 +1244,7 @@ fn call_errors_and_foreign_tokens_leave_the_active_continuation_usable() {
         second.seal_through(second.source(), time(999_999)),
         Err(RunError::InvalidTarget)
     );
-    assert_eq!(second.observation(), before);
+    assert_eq!(second.snapshot(), before);
     assert!(second.continue_advance(cursor, WorkBudget::one()).is_ok());
     second.cancel_request(cursor.request()).unwrap();
     first.cancel_request(foreign.request()).unwrap();

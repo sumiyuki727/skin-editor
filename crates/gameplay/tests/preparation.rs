@@ -1,3 +1,6 @@
+#[allow(dead_code)]
+mod common;
+use common::SnapshotExt;
 use skin_editor_gameplay::*;
 
 fn time(value: i64) -> MapTime {
@@ -145,7 +148,7 @@ fn create_only_activates_complete_validated_runtime_and_initial_section_stays_un
     complete(&mut task, WorkBudget::one());
     assert!(owner.current().is_none());
     assert_eq!(owner.activate(key, &mut task), Ok(source(1)));
-    let state = owner.current().unwrap().observation();
+    let state = owner.current().unwrap().snapshot();
     assert_eq!(state.status, RunStatus::Prepared);
     assert_eq!(state.ready_frame, None);
     assert_eq!(state.completed_through, None);
@@ -167,7 +170,7 @@ fn create_only_activates_complete_validated_runtime_and_initial_section_stays_un
         .unwrap();
     advance(&mut owner, -200_001, WorkBudget::one());
     assert_eq!(
-        owner.current().unwrap().observation().completed_through,
+        owner.current().unwrap().snapshot().completed_through,
         Some(time(-200_001))
     );
 }
@@ -179,7 +182,7 @@ fn one_eligible_slot_covers_load_and_inspection_without_publishing_early() {
     let replacement = circles(&[2_000_000]);
     create(&mut owner, 2, &input, -200_001, WorkBudget::one());
     freeze(&mut owner, -200_001, WorkBudget::one());
-    let before = owner.current().unwrap().observation();
+    let before = owner.current().unwrap().snapshot();
     let mut load = owner
         .request_load(current(&owner), source(3), &replacement, time(1_799_999))
         .unwrap();
@@ -188,7 +191,7 @@ fn one_eligible_slot_covers_load_and_inspection_without_publishing_early() {
         Err(PreparationError::Busy)
     ));
     complete(&mut load, WorkBudget::one());
-    assert_eq!(owner.current().unwrap().observation(), before);
+    assert_eq!(owner.current().unwrap().snapshot(), before);
     owner.cancel(load.key()).unwrap();
     let mut inspection = owner.request_inspection(current(&owner), time(0)).unwrap();
     assert!(matches!(
@@ -204,12 +207,12 @@ fn one_eligible_slot_covers_load_and_inspection_without_publishing_early() {
         owner.activate(load.key(), &mut load),
         Err(PreparationError::StaleRequest)
     );
-    assert_eq!(owner.current().unwrap().observation(), before);
+    assert_eq!(owner.current().unwrap().snapshot(), before);
     let source = owner.activate(inspection.key(), &mut inspection).unwrap();
     assert_eq!(source.transport.get(), 2);
     assert_eq!(source.input.get(), 2);
     assert_eq!(
-        owner.current().unwrap().observation().completed_through,
+        owner.current().unwrap().snapshot().completed_through,
         Some(time(0))
     );
     assert_eq!(
@@ -358,7 +361,7 @@ fn invalid_map_or_start_cannot_replace_current_run_and_retained_failure_stays_ch
         let mut owner = owner(70_010 + index as u128);
         create(&mut owner, 10, &input, -200_001, WorkBudget::one());
         freeze(&mut owner, -200_001, WorkBudget::one());
-        let before = owner.current().unwrap().observation();
+        let before = owner.current().unwrap().snapshot();
         let usage = owner.resources();
         let mut task = owner
             .request_load(current(&owner), source(11), candidate, time(start))
@@ -383,7 +386,7 @@ fn invalid_map_or_start_cannot_replace_current_run_and_retained_failure_stays_ch
             owner.activate(task.key(), &mut task),
             Err(PreparationError::StaleRequest)
         );
-        assert_eq!(owner.current().unwrap().observation(), before);
+        assert_eq!(owner.current().unwrap().snapshot(), before);
         drop(task);
         assert_eq!(owner.resources(), usage);
     }
@@ -533,7 +536,7 @@ fn inspection_boundaries_and_resume_keep_the_declared_semantics() {
         freeze(&mut owner, 799_999, WorkBudget::one());
         let old = current(&owner);
         inspect(&mut owner, at, WorkBudget::one());
-        let state = owner.current().unwrap().observation();
+        let state = owner.current().unwrap().snapshot();
         assert_eq!(state.status, RunStatus::Frozen);
         assert_eq!(state.completed_through, Some(time(at)));
         assert_eq!(state.sealed_through, Some(time(at)));
@@ -570,7 +573,7 @@ fn inspection_boundaries_and_resume_keep_the_declared_semantics() {
             owner.submit_inputs(source, &[press(2, 1_000_001)]).unwrap();
             advance(&mut owner, 1_000_001, WorkBudget::one());
             assert_eq!(
-                owner.current().unwrap().observation().committed_judgements[0]
+                owner.current().unwrap().snapshot().committed_judgements[0]
                     .unwrap()
                     .result,
                 Judgement::Hit
@@ -598,9 +601,9 @@ fn resume_and_input_epoch_changes_do_not_revive_a_cancelled_inspection() {
     freeze(&mut owner, -200_001, WorkBudget::one());
     let mut a = owner.request_inspection(current(&owner), time(0)).unwrap();
     complete(&mut a, WorkBudget::one());
-    let before = owner.current().unwrap().observation();
+    let before = owner.current().unwrap().snapshot();
     assert_eq!(owner.resume(current(&owner)), Err(PreparationError::Busy));
-    assert_eq!(owner.current().unwrap().observation(), before);
+    assert_eq!(owner.current().unwrap().snapshot(), before);
     owner.cancel(a.key()).unwrap();
     owner.resume(current(&owner)).unwrap();
     freeze(&mut owner, -200_001, WorkBudget::one());
@@ -647,7 +650,7 @@ fn base_fault_invalidates_inspection_then_explicit_load_can_recover() {
     complete(&mut load, WorkBudget::one());
     owner.activate(load.key(), &mut load).unwrap();
     assert_eq!(
-        owner.current().unwrap().observation().status,
+        owner.current().unwrap().snapshot().status,
         RunStatus::Prepared
     );
     assert_eq!(current(&owner), source(23));
@@ -711,8 +714,8 @@ fn preparation_work_one_and_full_produce_the_same_run_and_events() {
         advance(owner, 1_000_001, budget);
     }
     assert_eq!(
-        a.current().unwrap().observation(),
-        b.current().unwrap().observation()
+        a.current().unwrap().snapshot(),
+        b.current().unwrap().snapshot()
     );
     assert_eq!(
         a.current().unwrap().event_at(0),
@@ -740,7 +743,7 @@ fn load_publishes_a_fresh_prepared_run_and_rejects_old_inputs_events_and_cursors
     };
     freeze(&mut owner, 0, WorkBudget::one());
     let event = owner.current().unwrap().event_at(0).unwrap();
-    let before = owner.current().unwrap().observation();
+    let before = owner.current().unwrap().snapshot();
     let usage = owner.resources();
     assert!(matches!(
         owner.request_load(old, old, &replacement, time(799_999)),
@@ -751,9 +754,9 @@ fn load_publishes_a_fresh_prepared_run_and_rejects_old_inputs_events_and_cursors
         .request_load(old, source(31), &replacement, time(799_999))
         .unwrap();
     complete(&mut task, WorkBudget::one());
-    assert_eq!(owner.current().unwrap().observation(), before);
+    assert_eq!(owner.current().unwrap().snapshot(), before);
     owner.activate(task.key(), &mut task).unwrap();
-    let fresh = owner.current().unwrap().observation();
+    let fresh = owner.current().unwrap().snapshot();
     assert_eq!(fresh.status, RunStatus::Prepared);
     assert_eq!(fresh.ready_frame, None);
     assert_eq!(fresh.committed_judgements, [None; MAX_CIRCLES]);
@@ -774,7 +777,7 @@ fn load_publishes_a_fresh_prepared_run_and_rejects_old_inputs_events_and_cursors
         owner.submit_inputs(old, &[press(1, 0)]),
         Err(PreparationError::Runtime(RunError::StaleSource))
     );
-    assert_eq!(owner.current().unwrap().observation(), fresh);
+    assert_eq!(owner.current().unwrap().snapshot(), fresh);
     owner
         .submit_inputs(source(31), &[press(1, 1_000_000)])
         .unwrap();
@@ -799,9 +802,9 @@ fn event_acknowledgements_survive_preparation_cancellation_without_replaying_sou
     task.step(task.cursor(), WorkBudget::one()).unwrap();
     owner.acknowledge(judgement.key).unwrap();
     assert_eq!(owner.candidate(), Some(task.key()));
-    let before = owner.current().unwrap().observation();
+    let before = owner.current().unwrap().snapshot();
     owner.cancel(task.key()).unwrap();
-    assert_eq!(owner.current().unwrap().observation(), before);
+    assert_eq!(owner.current().unwrap().snapshot(), before);
     assert_eq!(
         owner.acknowledge(judgement.key),
         Ok(Acknowledgement::AlreadyRetired)
@@ -822,10 +825,10 @@ fn event_acknowledgements_survive_preparation_cancellation_without_replaying_sou
 fn empty_maps_support_all_three_operations_without_sentinel_time_arithmetic() {
     let mut owner = owner(70_052);
     create(&mut owner, 33, &[], i64::MIN, WorkBudget::one());
-    assert_eq!(owner.current().unwrap().observation().ready_frame, None);
+    assert_eq!(owner.current().unwrap().snapshot().ready_frame, None);
     freeze(&mut owner, i64::MIN, WorkBudget::one());
     inspect(&mut owner, i64::MAX, WorkBudget::one());
-    let state = owner.current().unwrap().observation();
+    let state = owner.current().unwrap().snapshot();
     assert_eq!(state.completed_through, Some(time(i64::MAX)));
     assert!(state.ready_frame.unwrap().is_empty());
     assert_eq!(state.pending_events, 0);
@@ -834,7 +837,7 @@ fn empty_maps_support_all_three_operations_without_sentinel_time_arithmetic() {
         .unwrap();
     complete(&mut load, WorkBudget::one());
     owner.activate(load.key(), &mut load).unwrap();
-    let state = owner.current().unwrap().observation();
+    let state = owner.current().unwrap().snapshot();
     assert_eq!(state.status, RunStatus::Prepared);
     assert_eq!(state.completed_through, None);
 }
@@ -851,7 +854,7 @@ fn operation_owner(
             .submit_inputs(current(&owner), &[press(1, 0)])
             .unwrap();
         freeze(&mut owner, 0, WorkBudget::one());
-        assert_eq!(owner.current().unwrap().observation().pending_events, 2);
+        assert_eq!(owner.current().unwrap().snapshot().pending_events, 2);
     }
     owner
 }
@@ -893,7 +896,7 @@ fn cancellation_at_every_preparation_return_point_isolates_late_work_after_repla
         let mut reached_ready = false;
         for cut in 0..128 {
             let mut owner = operation_owner(71_001, operation, &input);
-            let before = owner.current().map(SyntheticRun::observation);
+            let before = owner.current().map(SnapshotExt::snapshot);
             let events = owner
                 .current()
                 .map(|run| [run.event_at(0), run.event_at(1)]);
@@ -909,7 +912,7 @@ fn cancellation_at_every_preparation_return_point_isolates_late_work_after_repla
             let held = owner.resources();
             owner.cancel(old.key()).unwrap();
             assert_eq!(owner.resources(), held);
-            assert_eq!(owner.current().map(SyntheticRun::observation), before);
+            assert_eq!(owner.current().map(SnapshotExt::snapshot), before);
             assert_eq!(
                 owner
                     .current()
@@ -933,9 +936,9 @@ fn cancellation_at_every_preparation_return_point_isolates_late_work_after_repla
                 Err(PreparationError::StaleRequest)
             );
             assert_eq!(owner.candidate(), Some(new.key()));
-            assert_eq!(owner.current().map(SyntheticRun::observation), before);
+            assert_eq!(owner.current().map(SnapshotExt::snapshot), before);
             owner.activate(new.key(), &mut new).unwrap();
-            let published = owner.current().unwrap().observation();
+            let published = owner.current().unwrap().snapshot();
             let occupied = owner.resources();
             assert_eq!(
                 old.step(cursor, WorkBudget::one()),
@@ -950,11 +953,11 @@ fn cancellation_at_every_preparation_return_point_isolates_late_work_after_repla
                 Err(PreparationError::StaleRequest)
             );
             assert_eq!(owner.cancel(old.key()), Err(PreparationError::StaleRequest));
-            assert_eq!(owner.current().unwrap().observation(), published);
+            assert_eq!(owner.current().unwrap().snapshot(), published);
             assert_eq!(owner.resources(), occupied);
             drop(old);
             assert_eq!(owner.candidate(), None);
-            assert_eq!(owner.current().unwrap().observation(), published);
+            assert_eq!(owner.current().unwrap().snapshot(), published);
             assert_eq!(
                 owner.resources(),
                 ResourceUsage {
@@ -1026,7 +1029,7 @@ fn failed_work_and_its_drop_cannot_cancel_a_new_ready_replacement() {
         start: time(-200_001),
     };
     let mut owner = operation_owner(71_003, operation, &input);
-    let before = owner.current().unwrap().observation();
+    let before = owner.current().unwrap().snapshot();
     let usage = owner.resources();
     let mut failed = request_operation(&mut owner, operation, &invalid);
     let held = owner.resources();
@@ -1060,7 +1063,7 @@ fn failed_work_and_its_drop_cannot_cancel_a_new_ready_replacement() {
     );
     drop(failed);
     assert_eq!(owner.candidate(), Some(new.key()));
-    assert_eq!(owner.current().unwrap().observation(), before);
+    assert_eq!(owner.current().unwrap().snapshot(), before);
     let cost = SyntheticCoordinator::costs();
     assert_eq!(
         owner.resources(),
@@ -1083,7 +1086,7 @@ fn cancellation_with_both_pools_and_old_event_queue_full_needs_no_spare_credit()
         .submit_inputs(current(&owner), &[press(1, 0)])
         .unwrap();
     freeze(&mut owner, 0, WorkBudget::one());
-    let before = owner.current().unwrap().observation();
+    let before = owner.current().unwrap().snapshot();
     let events = [
         owner.current().unwrap().event_at(0),
         owner.current().unwrap().event_at(1),
@@ -1115,7 +1118,7 @@ fn cancellation_with_both_pools_and_old_event_queue_full_needs_no_spare_credit()
     ));
     assert_eq!(owner.candidate(), None);
     assert_eq!(owner.resources(), full);
-    assert_eq!(owner.current().unwrap().observation(), before);
+    assert_eq!(owner.current().unwrap().snapshot(), before);
     assert_eq!(
         [
             owner.current().unwrap().event_at(0),
@@ -1139,7 +1142,7 @@ fn each_wrong_base_component_is_rejected_before_control_or_candidate_mutation() 
     let base = current(&owner);
     let mut task = request_operation(&mut owner, operation, &input);
     complete(&mut task, WorkBudget::one());
-    let before = owner.current().unwrap().observation();
+    let before = owner.current().unwrap().snapshot();
     let usage = owner.resources();
     let stale = Err(PreparationError::Runtime(RunError::StaleSource));
     for wrong in [
@@ -1200,7 +1203,7 @@ fn each_wrong_base_component_is_rejected_before_control_or_candidate_mutation() 
             Err(PreparationError::Runtime(RunError::StaleSource))
         ));
         assert_eq!(owner.candidate(), Some(task.key()));
-        assert_eq!(owner.current().unwrap().observation(), before);
+        assert_eq!(owner.current().unwrap().snapshot(), before);
         assert_eq!(owner.resources(), usage);
     }
     owner.activate(task.key(), &mut task).unwrap();
@@ -1235,7 +1238,7 @@ fn dropping_an_activated_task_releases_only_its_workspace_and_preserves_new_work
     );
     owner.activate(next.key(), &mut next).unwrap();
     assert_eq!(
-        owner.current().unwrap().observation().completed_through,
+        owner.current().unwrap().snapshot().completed_through,
         Some(time(0))
     );
 }

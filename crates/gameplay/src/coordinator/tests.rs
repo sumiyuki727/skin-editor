@@ -17,6 +17,129 @@ fn empty() -> SyntheticCoordinator {
     )
     .unwrap()
 }
+
+fn finish(job: &mut PreparationTask<'_>) {
+    for _ in 0..128 {
+        if matches!(
+            job.step(job.cursor(), WorkBudget::one()).unwrap(),
+            PreparationReport::Ready { .. }
+        ) {
+            return;
+        }
+    }
+    panic!("four-slot task bound");
+}
+
+#[test]
+fn managed_source_payload_is_shared_and_released_only_after_the_last_old_task() {
+    let mut owner = empty();
+    let base = source(1, 1);
+    freeze_empty(&mut owner, base);
+    let old_map = Rc::downgrade(&owner.active.as_ref().unwrap().content.map);
+    let old_source = Rc::downgrade(&owner.active.as_ref().unwrap().content);
+    assert!(
+        owner
+            .current()
+            .unwrap()
+            .shares_map(&owner.active.as_ref().unwrap().content.map)
+    );
+    let mut inspection = owner
+        .request_inspection(base, MapTime::from_micros(-1))
+        .unwrap();
+    finish(&mut inspection);
+    let candidate = inspection.run.as_ref().unwrap();
+    assert!(Rc::ptr_eq(
+        &candidate.content.map,
+        &owner.active.as_ref().unwrap().content.map
+    ));
+    assert!(candidate.run.shares_map(&candidate.content.map));
+    owner.cancel(inspection.key()).unwrap();
+    let next = RunSource {
+        run: RunId::new(80_002).unwrap(),
+        ..base
+    };
+    let mut load = owner
+        .request_load(base, next, &[], MapTime::from_micros(0))
+        .unwrap();
+    finish(&mut load);
+    assert!(!Rc::ptr_eq(
+        &load.run.as_ref().unwrap().content.map,
+        &owner.active.as_ref().unwrap().content.map
+    ));
+    let costs = SyntheticCoordinator::costs();
+    assert_eq!(owner.resources().precompiled_bytes, 2 * costs.source_bytes);
+    owner.activate(load.key(), &mut load).unwrap();
+    drop(load);
+    assert!(old_map.upgrade().is_some());
+    assert!(old_source.upgrade().is_some());
+    drop(inspection);
+    assert!(old_map.upgrade().is_none());
+    assert!(old_source.upgrade().is_none());
+    assert_eq!(owner.resources().precompiled_bytes, costs.source_bytes);
+    let current_map = Rc::downgrade(&owner.active.as_ref().unwrap().content.map);
+    drop(owner);
+    assert!(current_map.upgrade().is_none());
+}
+
+#[test]
+fn controlled_allocation_rejections_keep_the_frozen_base_and_reservations_atomic() {
+    for kind in [
+        AllocationKind::SourceMap,
+        AllocationKind::SourceOwner,
+        AllocationKind::Runtime,
+    ] {
+        let mut owner = empty();
+        let base = source(1, 1);
+        freeze_empty(&mut owner, base);
+        let before = owner.current().unwrap().observation();
+        let baseline = owner.resources();
+        owner.pool.allocation_failure.set(Some(kind));
+        let next = RunSource {
+            run: RunId::new(80_003).unwrap(),
+            ..base
+        };
+        let mut job = owner
+            .request_load(base, next, &[], MapTime::from_micros(0))
+            .unwrap();
+        let reserved = owner.resources();
+        let mut failed = false;
+        for _ in 0..16 {
+            match job.step(job.cursor(), WorkBudget::one()) {
+                Err(PreparationError::AllocationUnavailable(point)) => {
+                    assert_eq!(point, kind);
+                    failed = true;
+                    break;
+                }
+                Ok(PreparationReport::Pending { .. }) => {}
+                result => panic!("unexpected allocation result: {result:?}"),
+            }
+        }
+        assert!(failed);
+        assert_eq!(job.stage(), PreparationStage::Failed);
+        assert_eq!(owner.candidate(), None);
+        assert_eq!(owner.resources(), reserved);
+        assert_eq!(owner.current().unwrap().observation(), before);
+        assert_eq!(
+            owner.activate(job.key(), &mut job),
+            Err(PreparationError::StaleRequest)
+        );
+        let payload = job
+            .content
+            .as_ref()
+            .map(|content| Rc::downgrade(&content.map));
+        drop(job);
+        if let Some(payload) = payload {
+            assert!(payload.upgrade().is_none());
+        }
+        assert_eq!(owner.resources(), baseline);
+        let mut retry = owner
+            .request_load(base, next, &[], MapTime::from_micros(0))
+            .unwrap();
+        finish(&mut retry);
+        owner.activate(retry.key(), &mut retry).unwrap();
+        assert_eq!(owner.current().unwrap().source(), next);
+    }
+}
 fn freeze_empty(owner: &mut SyntheticCoordinator, source: RunSource) {
     let mut job = owner
         .request_create(source, &[], MapTime::from_micros(0))

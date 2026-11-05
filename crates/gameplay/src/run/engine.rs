@@ -139,8 +139,7 @@ impl SyntheticRun {
         }
     }
     // Four chronological heads, independent of the number of accepted inputs.
-    // Candidate lookup and frame publication below still process one object at
-    // a time and are resumable under a one-unit work budget.
+    // Candidate lookup is resumable; complete publication commits one fixed header.
     fn next_action(&self) -> Option<Scheduled> {
         let candidates = [
             self.inputs[0].map(|input| Scheduled {
@@ -186,10 +185,10 @@ impl SyntheticRun {
                 if let Some(at) = self.dirty
                     && next.is_none_or(|next| next.at > at)
                 {
-                    return Ok(self.begin_publication(at));
+                    return self.begin_publication(at);
                 }
                 let Some(next) = next.filter(|next| next.at <= target) else {
-                    return Ok(self.begin_publication(target));
+                    return self.begin_publication(target);
                 };
                 match next.action {
                     Action::Input => {
@@ -304,7 +303,7 @@ impl SyntheticRun {
                 self.commit_time(draft.input.at);
                 Ok(StepResult::Worked)
             }
-            Work::Publish { at, next, buffer } => Ok(self.publish_one(at, next, buffer)),
+            Work::Publish { at } => self.publish_section(at),
         }
     }
     fn commit_time(&mut self, at: MapTime) {
@@ -312,45 +311,32 @@ impl SyntheticRun {
         self.last_committed = Some(at);
         self.dirty = Some(at);
     }
-    fn begin_publication(&mut self, at: MapTime) -> StepResult {
-        let buffer = self.ready.map_or(0, |old| 1 - old);
-        self.publish_one(at, 0, buffer)
+    fn begin_publication(&mut self, at: MapTime) -> Result<StepResult, RunError> {
+        if self.map.is_empty() {
+            return self.publish_section(at);
+        }
+        // Separately resumable preparation of the fixed header. No object scan.
+        self.work = Work::Publish { at };
+        Ok(StepResult::Worked)
     }
-    fn publish_one(&mut self, at: MapTime, next: usize, buffer: usize) -> StepResult {
-        if let Some(circle) = self.map.circle(next) {
-            let judgement = self.judgements[next];
-            let phase = if at < circle.visible {
-                Phase::Future
-            } else if at >= circle.retire || self.inspection_skipped[next] {
-                Phase::Retired
-            } else if judgement.is_some() {
-                Phase::ResolvedVisual
-            } else {
-                Phase::VisibleUnjudged
-            };
-            self.frames[buffer].objects[next] = Some(CircleFrame {
-                object: circle.id,
-                phase,
-                judgement,
-                unavailable: self.inspection_skipped[next]
-                    .then_some(UnavailableReason::InspectionSkipped),
-            });
-        }
-        if next + 1 >= self.map.len {
-            self.frames[buffer].at = at;
-            self.frames[buffer].source = self.source;
-            self.frames[buffer].statistics_origin = self.statistics_origin;
-            self.ready = Some(buffer);
-            self.dirty = None;
-            self.last_committed = Some(at);
-            self.work = Work::Select;
-        } else {
-            self.work = Work::Publish {
+    fn publish_section(&mut self, at: MapTime) -> Result<StepResult, RunError> {
+        if self.ready.is_none_or(|old| old.at != at) {
+            let publication = self.next_publication.ok_or(RunError::CounterExhausted)?;
+            self.ready = Some(FrameHeader {
+                source: self.source,
                 at,
-                next: next + 1,
-                buffer,
-            };
+                evidence: Evidence::SyntheticTest,
+                profile_version: SYNTHETIC_PROFILE_VERSION,
+                statistics_origin: self.statistics_origin,
+                counts: self.committed_counts,
+                publication,
+                len: self.map.len,
+            });
+            self.next_publication = publication.checked_add(1);
         }
-        StepResult::Worked
+        self.dirty = None;
+        self.last_committed = Some(at);
+        self.work = Work::Select;
+        Ok(StepResult::Worked)
     }
 }

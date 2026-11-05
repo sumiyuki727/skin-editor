@@ -1,5 +1,13 @@
 use super::*;
 
+/// Managed allocation boundary. A diagnostic failure is not an OS OOM recovery guarantee.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum AllocationKind {
+    SourceMap,
+    SourceOwner,
+    Runtime,
+}
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum ResourcePool {
     Precompiled,
@@ -21,6 +29,8 @@ pub struct PreparationCosts {
     pub task_bytes: usize,
     pub run_bytes: usize,
     pub source_bytes: usize,
+    pub source_map_bytes: usize,
+    pub source_owner_bytes: usize,
 }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct PreparationLimits {
@@ -76,6 +86,8 @@ pub(super) struct PoolState {
     pub(super) live: Cell<Option<PreparationKey>>,
     pub(super) base: Cell<Option<(RunSource, RunStatus)>>,
     pub(super) alive: Cell<bool>,
+    #[cfg(test)]
+    pub(super) allocation_failure: Cell<Option<AllocationKind>>,
 }
 pub(super) struct Reservation {
     pool: Rc<PoolState>,
@@ -83,6 +95,16 @@ pub(super) struct Reservation {
     bytes: usize,
 }
 impl PoolState {
+    pub(super) fn check_allocation(&self, kind: AllocationKind) -> Result<(), PreparationError> {
+        #[cfg(test)]
+        if self.allocation_failure.get() == Some(kind) {
+            self.allocation_failure.set(None);
+            return Err(PreparationError::AllocationUnavailable(kind));
+        }
+        let _ = kind;
+        Ok(())
+    }
+
     pub(super) fn reserve_owner(pool: &Rc<Self>) -> Reservation {
         let bytes = SyntheticCoordinator::costs().coordinator_bytes;
         let mut usage = pool.usage.get();

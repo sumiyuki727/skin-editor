@@ -5,7 +5,7 @@ import subprocess
 import tempfile
 import unittest
 
-from check_core_architecture import PACKAGES, source_issues, validate_metadata
+from check_core_architecture import PACKAGES, source_issues, validate_metadata, validate_sources
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,6 +24,23 @@ def metadata_fixture():
 
 
 class ArchitectureChecks(unittest.TestCase):
+    def test_nested_gameplay_frame_module_uses_the_same_source_boundary_checks(self):
+        parent = ROOT / "artifacts/p1"
+        parent.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="frame-source-canary-", dir=parent) as directory:
+            base = Path(directory)
+            for relative, _ in PACKAGES.values():
+                entry = base / relative / "src/lib.rs"
+                entry.parent.mkdir(parents=True)
+                entry.write_text("#![forbid(unsafe_code)]\n", encoding="utf-8")
+            frame = base / "crates/gameplay/src/run/frame.rs"
+            frame.parent.mkdir()
+            for source in ("use std::time::Instant;", "use skin_editor_application::ProjectSession;"):
+                frame.write_text(source, encoding="utf-8")
+                self.assertTrue(any("crates/gameplay/src/run/frame.rs" in error for error in validate_sources(base)))
+            frame.write_text("use std::rc::Rc; use core::num::NonZeroU64;", encoding="utf-8")
+            self.assertEqual(validate_sources(base), [])
+
     def test_pure_core_rejects_standard_io_platform_and_opaque_clock_imports(self):
         for source in ["use std::io;", "std::io::stdin();", "use std::os::windows::fs::MetadataExt;",
                        "use std::time as clock;", "use std::time;", "use std::time::{Instant as Clock};",

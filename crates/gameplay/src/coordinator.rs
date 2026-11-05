@@ -1,7 +1,7 @@
 //! Caller-stepped, bounded coordination; no project writer or native adapter.
 use crate::{
-    Circle, CoordinatorId, InputDriver, Limits, MAX_CIRCLES, MapPreparation, MapTime, RunError,
-    RunSource, RunStatus, SyntheticMap, SyntheticRun, ValueError,
+    Circle, CoordinatorId, InputDriver, Limits, MapPreparation, MapTime, RunError, RunSource,
+    RunStatus, SyntheticMap, SyntheticRun, ValueError,
 };
 use core::cell::Cell;
 use std::rc::Rc;
@@ -11,8 +11,10 @@ mod control;
 mod task;
 #[cfg(test)]
 mod tests;
+pub use budget::{
+    AllocationKind, PreparationCosts, PreparationLimits, ResourcePool, ResourceUsage,
+};
 use budget::{PoolState, Reservation};
-pub use budget::{PreparationCosts, PreparationLimits, ResourcePool, ResourceUsage};
 pub use task::{PreparationCursor, PreparationReport, PreparationStage, PreparationTask};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -66,6 +68,7 @@ pub enum PreparationError {
     RunIdReuse,
     CounterExhausted,
     BudgetLimit,
+    AllocationUnavailable(AllocationKind),
     Budget {
         pool: ResourcePool,
         requested: usize,
@@ -85,7 +88,7 @@ impl From<RunError> for PreparationError {
 }
 
 struct CompiledSource {
-    map: SyntheticMap,
+    map: Rc<SyntheticMap>,
     // The last shared content owner releases this reservation.
     _credit: Reservation,
 }
@@ -129,6 +132,8 @@ impl SyntheticCoordinator {
             live: Cell::new(None),
             base: Cell::new(None),
             alive: Cell::new(true),
+            #[cfg(test)]
+            allocation_failure: Cell::new(None),
         });
         let credit = PoolState::reserve_owner(&pool);
         Ok(Self {
@@ -147,9 +152,14 @@ impl SyntheticCoordinator {
             // The inline initializer coexists briefly with its boxed runtime.
             // Keep this known scratch reserved until the task owner is dropped.
             task_bytes: core::mem::size_of::<PreparationTask<'static>>()
-                + core::mem::size_of::<SyntheticRun>(),
+                + core::mem::size_of::<SyntheticRun>()
+                + core::mem::size_of::<SyntheticMap>()
+                + core::mem::size_of::<CompiledSource>(),
             run_bytes: SyntheticRun::static_storage_bytes(),
-            source_bytes: core::mem::size_of::<CompiledSource>(),
+            source_bytes: core::mem::size_of::<CompiledSource>()
+                + core::mem::size_of::<SyntheticMap>(),
+            source_map_bytes: core::mem::size_of::<SyntheticMap>(),
+            source_owner_bytes: core::mem::size_of::<CompiledSource>(),
         }
     }
     pub fn current(&self) -> Option<&SyntheticRun> {
@@ -198,7 +208,7 @@ impl SyntheticCoordinator {
         input: &'a [Circle],
         operation: PreparationOperation,
     ) -> Result<PreparationTask<'a>, PreparationError> {
-        if input.len() > MAX_CIRCLES {
+        if input.len() > self.run_limits.object_capacity() {
             return Err(ValueError::ObjectLimit.into());
         }
         let key = self.next_key(operation, source)?;

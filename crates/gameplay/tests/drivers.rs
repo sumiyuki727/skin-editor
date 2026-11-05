@@ -1,3 +1,6 @@
+#[allow(dead_code)]
+mod common;
+use common::SnapshotExt;
 use skin_editor_gameplay::*;
 
 fn time(at: i64) -> MapTime {
@@ -146,7 +149,7 @@ fn three_drivers_are_exclusive_and_all_valid_hits_use_the_same_judgement_path() 
     ] {
         let mut run = selected(&[0], Limits::tiny(), driver);
         let source = run.source();
-        let before = run.observation();
+        let before = run.snapshot();
         let oversized = vec![input(1, -1, InputEdge::Release); 65];
         for other in [
             InputDriver::Manual,
@@ -168,7 +171,7 @@ fn three_drivers_are_exclusive_and_all_valid_hits_use_the_same_judgement_path() 
                 run.observe_driver_release(source, other, fact(1)),
                 Err(expected)
             );
-            assert_eq!(run.observation(), before);
+            assert_eq!(run.snapshot(), before);
         }
         let mut events = Vec::new();
         if driver == InputDriver::Automatic {
@@ -202,7 +205,7 @@ fn three_drivers_are_exclusive_and_all_valid_hits_use_the_same_judgement_path() 
 fn automatic_preparation_cannot_seal_early_or_publish_a_gameplay_frame() {
     let mut run = selected(&[0], Limits::tiny(), InputDriver::Automatic);
     let source = run.source();
-    let before = run.observation();
+    let before = run.snapshot();
     assert_eq!(
         run.seal_through(source, time(0)),
         Err(RunError::AutomaticInputsPending)
@@ -211,7 +214,7 @@ fn automatic_preparation_cannot_seal_early_or_publish_a_gameplay_frame() {
         run.prepare_automatic_inputs(source, time(0), WorkBudget::full()),
         Err(RunError::BudgetLimit)
     );
-    assert_eq!(run.observation(), before);
+    assert_eq!(run.snapshot(), before);
     for _ in 0..2 {
         assert!(matches!(
             run.prepare_automatic_inputs(source, time(0), WorkBudget::one()),
@@ -235,7 +238,7 @@ fn automatic_preparation_cannot_seal_early_or_publish_a_gameplay_frame() {
             ..
         })
     ));
-    let prepared = run.observation();
+    let prepared = run.snapshot();
     assert_eq!(prepared.ready_frame, before.ready_frame);
     assert_eq!(prepared.committed_judgements, before.committed_judgements);
     assert_eq!(prepared.pending_inputs, 2);
@@ -250,7 +253,7 @@ fn automatic_preparation_cannot_seal_early_or_publish_a_gameplay_frame() {
         })
     ));
     for _ in 0..10 {
-        assert_eq!(run.observation(), prepared);
+        assert_eq!(run.snapshot(), prepared);
     }
     let mut events = Vec::new();
     advance(&mut run, 0, WorkBudget::one(), &mut events);
@@ -273,7 +276,7 @@ fn four_object_automatic_results_match_across_tiny_backpressure_and_full_budget(
     let mut eb = Vec::new();
     drive(&mut a, 3_300_000, WorkBudget::one(), &mut ea);
     drive(&mut b, 3_300_000, WorkBudget::full(), &mut eb);
-    assert_eq!(a.observation(), b.observation());
+    assert_eq!(a.snapshot(), b.snapshot());
     assert_eq!(ea, eb);
     assert_eq!(ea.len(), 8);
     for (index, event) in ea.iter().enumerate() {
@@ -305,7 +308,7 @@ fn a_smaller_preparation_horizon_keeps_the_uncommitted_future_pulse() {
             ..
         })
     ));
-    assert_eq!(run.observation().pending_inputs, 0);
+    assert_eq!(run.snapshot().pending_inputs, 0);
     let mut events = Vec::new();
     advance(&mut run, -1, WorkBudget::one(), &mut events);
     assert!(events.is_empty());
@@ -323,7 +326,7 @@ fn an_unadmitted_plan_can_be_prepared_afresh_only_if_its_target_remains_future()
             .unwrap();
     }
     freeze(&mut run, -1, WorkBudget::one());
-    assert_eq!(run.observation().freeze.unwrap().cancelled_inputs, 0);
+    assert_eq!(run.snapshot().freeze.unwrap().cancelled_inputs, 0);
     run.resume(old).unwrap();
     assert_eq!(
         run.prepare_automatic_inputs(old, time(0), WorkBudget::one()),
@@ -362,7 +365,7 @@ fn input_backpressure_keeps_the_whole_pulse_pending_without_faulting_or_replayin
     assert!(
         matches!(report, AutomaticReport::Pending { ready_through: Some(at), admitted: 0, .. } if at == time(1_000_001))
     );
-    let before = run.observation();
+    let before = run.snapshot();
     assert_eq!(before.pending_inputs, 4);
     for _ in 0..3 {
         assert!(matches!(
@@ -374,7 +377,7 @@ fn input_backpressure_keeps_the_whole_pulse_pending_without_faulting_or_replayin
                 ..
             })
         ));
-        assert_eq!(run.observation(), before);
+        assert_eq!(run.snapshot(), before);
     }
     let mut events = Vec::new();
     advance(&mut run, 1_000_001, WorkBudget::one(), &mut events);
@@ -392,19 +395,16 @@ fn freezing_at_each_automatic_step_preserves_admitted_input_but_cancels_uncommit
                 .unwrap();
         }
         run.request_freeze(old, time(0)).unwrap();
-        let closed = run.observation();
+        let closed = run.snapshot();
         assert_eq!(
             run.prepare_automatic_inputs(old, time(i64::MAX), WorkBudget::one()),
             Err(RunError::GateClosed)
         );
-        assert_eq!(run.observation(), closed);
+        assert_eq!(run.snapshot(), closed);
         freeze(&mut run, 0, WorkBudget::one());
-        assert_eq!(
-            run.observation().committed_judgements[0].is_some(),
-            cut == 3
-        );
+        assert_eq!(run.snapshot().committed_judgements[0].is_some(), cut == 3);
         let new = run.resume(old).unwrap();
-        let before = run.observation();
+        let before = run.snapshot();
         assert_eq!(
             run.prepare_automatic_inputs(old, time(1), WorkBudget::one()),
             Err(RunError::StaleSource)
@@ -413,14 +413,14 @@ fn freezing_at_each_automatic_step_preserves_admitted_input_but_cancels_uncommit
             run.observe_driver_release(old, InputDriver::Automatic, fact(1)),
             Err(RunError::StaleSource)
         );
-        assert_eq!(run.observation(), before);
+        assert_eq!(run.snapshot(), before);
         assert_ne!(new.input, old.input);
         prepare(&mut run, 1, WorkBudget::one());
-        assert_eq!(run.observation().pending_inputs, 0);
+        assert_eq!(run.snapshot().pending_inputs, 0);
         let mut events = Vec::new();
         drive(&mut run, 100_001, WorkBudget::one(), &mut events);
         assert_eq!(
-            run.observation().committed_judgements[0].unwrap().result,
+            run.snapshot().committed_judgements[0].unwrap().result,
             if cut == 3 {
                 Judgement::Hit
             } else {
@@ -446,14 +446,14 @@ fn future_automatic_inputs_cancelled_by_freeze_are_never_backfilled_after_resume
     );
     prepare(&mut run, 1_000_001, WorkBudget::one());
     freeze(&mut run, 0, WorkBudget::one());
-    assert_eq!(run.observation().freeze.unwrap().cancelled_inputs, 3);
+    assert_eq!(run.snapshot().freeze.unwrap().cancelled_inputs, 3);
     let sound = run.event_at(1).unwrap();
     assert!(!run.sound_intent_allowed(sound.key).unwrap());
     run.resume(run.source()).unwrap();
     assert!(!run.sound_intent_allowed(sound.key).unwrap());
     let mut events = Vec::new();
     drive(&mut run, 2_300_000, WorkBudget::one(), &mut events);
-    let state = run.observation();
+    let state = run.snapshot();
     assert_eq!(
         state.committed_judgements[0].unwrap().result,
         Judgement::Hit
@@ -495,13 +495,13 @@ fn switching_driver_requires_frozen_boundary_and_current_source_release_to_rearm
         Err(RunError::NotFrozen)
     );
     freeze(&mut run, 0, WorkBudget::one());
-    let before = run.observation();
+    let before = run.snapshot();
     let changed = run.select_driver(initial, InputDriver::Regression).unwrap();
     assert_eq!(changed.input.get(), initial.input.get() + 1);
     assert_eq!(changed.transport, initial.transport);
-    assert_eq!(run.observation().status, RunStatus::Frozen);
+    assert_eq!(run.snapshot().status, RunStatus::Frozen);
     assert_eq!(
-        run.observation().committed_judgements,
+        run.snapshot().committed_judgements,
         before.committed_judgements
     );
     assert_eq!(
@@ -522,7 +522,7 @@ fn switching_driver_requires_frozen_boundary_and_current_source_release_to_rearm
         run.observe_release(active, fact(1)),
         Err(RunError::DriverMismatch)
     );
-    assert_eq!(run.observation().armed_slots, [false; 4]);
+    assert_eq!(run.snapshot().armed_slots, [false; 4]);
     run.observe_driver_release(active, InputDriver::Regression, fact(1))
         .unwrap();
     run.submit_driver_inputs(
@@ -537,7 +537,7 @@ fn switching_driver_requires_frozen_boundary_and_current_source_release_to_rearm
     let mut events = Vec::new();
     advance(&mut run, 1_000_000, WorkBudget::one(), &mut events);
     assert_eq!(
-        run.observation().committed_judgements[1].unwrap().result,
+        run.snapshot().committed_judgements[1].unwrap().result,
         Judgement::Hit
     );
 }
@@ -564,11 +564,11 @@ fn switching_away_and_back_cannot_retag_cancelled_future_auto_input_as_new() {
     run.resume(source).unwrap();
     drive(&mut run, 2_300_000, WorkBudget::one(), &mut events);
     assert_eq!(
-        run.observation().committed_judgements[1].unwrap().result,
+        run.snapshot().committed_judgements[1].unwrap().result,
         Judgement::Miss
     );
     assert_eq!(
-        run.observation().committed_judgements[2].unwrap().result,
+        run.snapshot().committed_judgements[2].unwrap().result,
         Judgement::Hit
     );
 }
@@ -594,7 +594,7 @@ fn automatic_inspection_keeps_driver_but_only_generates_strictly_after_closed_ta
             }
         }
         assert_eq!(run.driver(), InputDriver::Automatic);
-        assert_eq!(run.observation().status, RunStatus::Frozen);
+        assert_eq!(run.snapshot().status, RunStatus::Frozen);
         run.resume(run.source()).unwrap();
         assert_eq!(
             run.prepare_automatic_inputs(old, time(1_000_002), WorkBudget::one()),
@@ -603,12 +603,12 @@ fn automatic_inspection_keeps_driver_but_only_generates_strictly_after_closed_ta
         let mut events = Vec::new();
         drive(&mut run, 1_000_002, WorkBudget::one(), &mut events);
         assert_eq!(
-            run.observation().committed_judgements[1].is_some(),
+            run.snapshot().committed_judgements[1].is_some(),
             at < 1_000_000
         );
         assert_eq!(events.len(), if at < 1_000_000 { 2 } else { 0 });
         assert_eq!(
-            run.observation().statistics_origin,
+            run.snapshot().statistics_origin,
             StatisticsOrigin::Inspection { at: time(at) }
         );
     }
@@ -618,7 +618,7 @@ fn automatic_inspection_keeps_driver_but_only_generates_strictly_after_closed_ta
 fn wrong_source_components_are_checked_before_driver_time_capacity_and_rearming() {
     let mut run = selected(&[0], Limits::tiny(), InputDriver::Automatic);
     let base = run.source();
-    let before = run.observation();
+    let before = run.snapshot();
     for wrong in [
         RunSource {
             run: RunId::new(99).unwrap(),
@@ -657,7 +657,7 @@ fn wrong_source_components_are_checked_before_driver_time_capacity_and_rearming(
             run.select_driver(wrong, InputDriver::Regression),
             Err(RunError::StaleSource)
         );
-        assert_eq!(run.observation(), before);
+        assert_eq!(run.snapshot(), before);
     }
 }
 
@@ -669,12 +669,12 @@ fn unsupported_pulse_capacity_and_epoch_exhaustion_reject_switch_atomically() {
         Limits::try_new(1, 2, 1, 1, 64 * 1024).unwrap(),
     );
     freeze(&mut run, -200_001, WorkBudget::one());
-    let before = run.observation();
+    let before = run.snapshot();
     assert_eq!(
         run.select_driver(run.source(), InputDriver::Automatic),
         Err(RunError::AutomaticCapacity)
     );
-    assert_eq!(run.observation(), before);
+    assert_eq!(run.snapshot(), before);
     let source = RunSource {
         input: InputEpoch::new(u64::MAX).unwrap(),
         ..source(90_002)
@@ -682,12 +682,12 @@ fn unsupported_pulse_capacity_and_epoch_exhaustion_reject_switch_atomically() {
     let map = SyntheticMap::try_new(source.revision, &[]).unwrap();
     let mut run = SyntheticRun::new(source, map, time(0), Limits::tiny()).unwrap();
     freeze(&mut run, 0, WorkBudget::one());
-    let before = run.observation();
+    let before = run.snapshot();
     assert_eq!(
         run.select_driver(source, InputDriver::Automatic),
         Err(RunError::CounterExhausted)
     );
-    assert_eq!(run.observation(), before);
+    assert_eq!(run.snapshot(), before);
     assert_eq!(run.select_driver(source, InputDriver::Manual), Ok(source));
 }
 
@@ -707,7 +707,7 @@ fn empty_maps_and_signed_time_endpoints_do_not_need_sentinels_or_wrapping() {
         let mut events = Vec::new();
         drive(&mut run, through, WorkBudget::one(), &mut events);
         assert_eq!(events.len(), targets.len() * 2);
-        assert_eq!(run.observation().completed_through, Some(time(through)));
+        assert_eq!(run.snapshot().completed_through, Some(time(through)));
     }
 }
 
@@ -763,7 +763,7 @@ fn coordinated_inspection_inherits_driver_load_defaults_manual_and_both_reject_o
         }
     }
     assert_eq!(owner.resources(), usage);
-    assert_eq!(owner.current().unwrap().observation().pending_inputs, 2);
+    assert_eq!(owner.current().unwrap().snapshot().pending_inputs, 2);
     owner.request_freeze(source, time(0)).unwrap();
     owner.seal_through(source, time(0)).unwrap();
     for _ in 0..128 {
@@ -775,7 +775,7 @@ fn coordinated_inspection_inherits_driver_load_defaults_manual_and_both_reject_o
         }
     }
     assert_eq!(
-        owner.current().unwrap().observation().committed_judgements[0]
+        owner.current().unwrap().snapshot().committed_judgements[0]
             .unwrap()
             .result,
         Judgement::Hit
@@ -791,7 +791,7 @@ fn coordinated_inspection_inherits_driver_load_defaults_manual_and_both_reject_o
     drop(task);
     assert_eq!(owner.current().unwrap().driver(), InputDriver::Automatic);
     assert_eq!(
-        owner.current().unwrap().observation().status,
+        owner.current().unwrap().snapshot().status,
         RunStatus::Frozen
     );
     assert_eq!(
@@ -813,7 +813,7 @@ fn coordinated_inspection_inherits_driver_load_defaults_manual_and_both_reject_o
     drop(task);
     assert_eq!(owner.current().unwrap().driver(), InputDriver::Manual);
     assert_eq!(
-        owner.current().unwrap().observation().status,
+        owner.current().unwrap().snapshot().status,
         RunStatus::Prepared
     );
     assert_eq!(
@@ -833,7 +833,7 @@ fn freeze_with_retained_seal(run: &mut SyntheticRun, at: i64, budget: WorkBudget
     let source = run.source();
     run.request_freeze(source, time(at)).unwrap();
     if run
-        .observation()
+        .snapshot()
         .sealed_through
         .is_none_or(|old| old < time(at))
     {
@@ -862,7 +862,7 @@ fn fill_with_pending_plan(run: &mut SyntheticRun) {
             .unwrap()
         {
             assert_eq!(ready_through, Some(time(1_000_001)));
-            assert_eq!(run.observation().pending_inputs, 4);
+            assert_eq!(run.snapshot().pending_inputs, 4);
             return;
         }
     }
@@ -897,7 +897,7 @@ fn freezing_at_each_advance_yield_keeps_the_auto_prefix_and_invalidates_old_cont
             cursor = Some(next);
         }
         if run
-            .observation()
+            .snapshot()
             .last_committed_time
             .is_some_and(|at| at > time(0))
         {
@@ -906,7 +906,7 @@ fn freezing_at_each_advance_yield_keeps_the_auto_prefix_and_invalidates_old_cont
         }
         checked += 1;
         run.request_freeze(old, time(0)).unwrap();
-        let closed = run.observation();
+        let closed = run.snapshot();
         assert_eq!(
             run.prepare_automatic_inputs(old, time(3_000_001), WorkBudget::one()),
             Err(RunError::GateClosed)
@@ -921,9 +921,9 @@ fn freezing_at_each_advance_yield_keeps_the_auto_prefix_and_invalidates_old_cont
                 Err(RunError::StaleCursor)
             );
         }
-        assert_eq!(run.observation(), closed);
+        assert_eq!(run.snapshot(), closed);
         freeze_with_retained_seal(&mut run, 0, WorkBudget::one());
-        let frozen = run.observation();
+        let frozen = run.snapshot();
         assert_eq!(frozen.completed_through, Some(time(0)));
         assert_eq!(frozen.sealed_through, Some(time(1_000_001)));
         assert_eq!(frozen.freeze.unwrap().cancelled_inputs, 3);
@@ -932,7 +932,7 @@ fn freezing_at_each_advance_yield_keeps_the_auto_prefix_and_invalidates_old_cont
             Judgement::Hit
         );
         run.resume(old).unwrap();
-        let resumed = run.observation();
+        let resumed = run.snapshot();
         assert_eq!(
             run.prepare_automatic_inputs(old, time(3_300_000), WorkBudget::one()),
             Err(RunError::StaleSource)
@@ -947,11 +947,11 @@ fn freezing_at_each_advance_yield_keeps_the_auto_prefix_and_invalidates_old_cont
                 Err(RunError::StaleSource)
             );
         }
-        assert_eq!(run.observation(), resumed);
+        assert_eq!(run.snapshot(), resumed);
         let mut events = Vec::new();
         drive(&mut run, 3_300_000, WorkBudget::one(), &mut events);
         let results: Vec<_> = run
-            .observation()
+            .snapshot()
             .committed_judgements
             .iter()
             .flatten()
@@ -1019,8 +1019,8 @@ fn event_backpressure_cannot_turn_an_automatic_freeze_into_half_a_hit_or_replay(
         }
     }
     assert!(pending);
-    assert_eq!(run.observation().status, RunStatus::Freezing);
-    assert_eq!(run.observation().committed_judgements[1], None);
+    assert_eq!(run.snapshot().status, RunStatus::Freezing);
+    assert_eq!(run.snapshot().committed_judgements[1], None);
     assert!(!run.sound_intent_allowed(sound.key).unwrap());
     run.acknowledge(judgement.key).unwrap();
     assert!(matches!(
@@ -1030,12 +1030,12 @@ fn event_backpressure_cannot_turn_an_automatic_freeze_into_half_a_hit_or_replay(
             ..
         }
     ));
-    assert_eq!(run.observation().committed_judgements[1], None);
+    assert_eq!(run.snapshot().committed_judgements[1], None);
     run.acknowledge(sound.key).unwrap();
     freeze_with_retained_seal(&mut run, 1_000_000, WorkBudget::one());
-    assert_eq!(run.observation().freeze.unwrap().cancelled_inputs, 1);
+    assert_eq!(run.snapshot().freeze.unwrap().cancelled_inputs, 1);
     assert_eq!(
-        run.observation().committed_judgements[1].unwrap().result,
+        run.snapshot().committed_judgements[1].unwrap().result,
         Judgement::Hit
     );
     run.resume(old).unwrap();
@@ -1047,7 +1047,7 @@ fn event_backpressure_cannot_turn_an_automatic_freeze_into_half_a_hit_or_replay(
     drive(&mut run, 3_300_000, WorkBudget::one(), &mut events);
     assert_eq!(events.len(), 8);
     assert!(
-        run.observation()
+        run.snapshot()
             .committed_judgements
             .iter()
             .flatten()
@@ -1092,7 +1092,7 @@ fn every_external_slot_rearms_only_from_current_driver_release_and_preserves_tim
             let intermediate = run.select_driver(old, other).unwrap();
             let switched = run.select_driver(intermediate, driver).unwrap();
             let active = run.resume(switched).unwrap();
-            let before = run.observation();
+            let before = run.snapshot();
             let press = InputEvent {
                 slot,
                 ..input(2, 1_000_000, InputEdge::Press(Point::new(0, 0).unwrap()))
@@ -1127,7 +1127,7 @@ fn every_external_slot_rearms_only_from_current_driver_release_and_preserves_tim
                 run.submit_driver_inputs(active, driver, &[future_release, press]),
                 Err(RunError::RearmRequired)
             );
-            assert_eq!(run.observation(), before);
+            assert_eq!(run.snapshot(), before);
             run.submit_driver_inputs(
                 active,
                 driver,
@@ -1142,7 +1142,7 @@ fn every_external_slot_rearms_only_from_current_driver_release_and_preserves_tim
             .unwrap();
             let mut armed = [false; 4];
             armed[index] = true;
-            assert_eq!(run.observation().armed_slots, armed);
+            assert_eq!(run.snapshot().armed_slots, armed);
             let mut events = Vec::new();
             advance(&mut run, 1_000_000, WorkBudget::one(), &mut events);
             assert_eq!(events.len(), 2);
@@ -1161,16 +1161,16 @@ fn identical_admitted_auto_sets_keep_the_same_frozen_and_resumed_results_across_
             InputDriver::Automatic,
         );
         prepare(&mut run, 3_000_001, budget);
-        assert_eq!(run.observation().pending_inputs, 8);
+        assert_eq!(run.snapshot().pending_inputs, 8);
         freeze_with_retained_seal(&mut run, 1_000_000, budget);
-        assert_eq!(run.observation().freeze.unwrap().cancelled_inputs, 5);
-        let frozen = run.observation();
+        assert_eq!(run.snapshot().freeze.unwrap().cancelled_inputs, 5);
+        let frozen = run.snapshot();
         run.resume(run.source()).unwrap();
         let mut events = Vec::new();
         drive(&mut run, 3_300_000, budget, &mut events);
         assert_eq!(events.len(), 6);
         let results: Vec<_> = run
-            .observation()
+            .snapshot()
             .committed_judgements
             .iter()
             .flatten()
@@ -1185,7 +1185,7 @@ fn identical_admitted_auto_sets_keep_the_same_frozen_and_resumed_results_across_
                 Judgement::Miss
             ]
         );
-        runs.push((frozen, run.observation(), events));
+        runs.push((frozen, run.snapshot(), events));
     }
     assert_eq!(runs[0], runs[1]);
 }
@@ -1196,7 +1196,7 @@ fn freeze_owner(owner: &mut SyntheticCoordinator, at: i64) {
     if owner
         .current()
         .unwrap()
-        .observation()
+        .snapshot()
         .sealed_through
         .is_none_or(|old| old < time(at))
     {
@@ -1256,7 +1256,7 @@ fn cancelled_automatic_candidates_cannot_cross_a_driver_switch_even_with_same_ne
         assert_eq!(a.key().driver(), InputDriver::Automatic);
         assert_eq!(b.key().driver(), InputDriver::Regression);
         complete(&mut b);
-        let before = owner.current().unwrap().observation();
+        let before = owner.current().unwrap().snapshot();
         assert_eq!(
             a.step(cursor, WorkBudget::one()),
             Err(PreparationError::StaleRequest)
@@ -1269,7 +1269,7 @@ fn cancelled_automatic_candidates_cannot_cross_a_driver_switch_even_with_same_ne
             owner.activate(b.key(), &mut a),
             Err(PreparationError::StaleRequest)
         );
-        assert_eq!(owner.current().unwrap().observation(), before);
+        assert_eq!(owner.current().unwrap().snapshot(), before);
         let held = owner.resources();
         drop(a);
         assert_eq!(owner.candidate(), Some(b.key()));
@@ -1290,10 +1290,7 @@ fn cancelled_automatic_candidates_cannot_cross_a_driver_switch_even_with_same_ne
             owner.observe_driver_release(old, InputDriver::Automatic, fact(1)),
             Err(PreparationError::Runtime(RunError::StaleSource))
         );
-        assert_eq!(
-            owner.current().unwrap().observation().armed_slots,
-            [false; 4]
-        );
+        assert_eq!(owner.current().unwrap().snapshot().armed_slots, [false; 4]);
         owner
             .observe_driver_release(active, InputDriver::Regression, fact(1))
             .unwrap();
@@ -1322,11 +1319,11 @@ fn cancelled_automatic_candidates_cannot_cross_a_driver_switch_even_with_same_ne
             }
         }
         assert_eq!(
-            owner.current().unwrap().observation().completed_through,
+            owner.current().unwrap().snapshot().completed_through,
             Some(time(1_000_001))
         );
         assert_eq!(
-            owner.current().unwrap().observation().committed_judgements[1]
+            owner.current().unwrap().snapshot().committed_judgements[1]
                 .unwrap()
                 .result,
             Judgement::Hit

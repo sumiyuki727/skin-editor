@@ -18,7 +18,7 @@ P3-0工具原型审阅修订2见[最新结果](P3_0_LOAD_REVIEW.md)：独立地�
 | --- | --- | --- |
 | domain · crates/domain | 不可变项目值、树、引用和不变量；不访问I/O／UI／设备 | 无 |
 | application · crates/application | ProjectSession唯一活动写入者；Command、原子事务、草稿、历史、完整捕获／身份准入、查询及控制端口 | domain |
-| gameplay · crates/gameplay | SyntheticTest-v1、最多4圆圈的纯时间／输入／生命周期、有界事件、冻结／恢复／检查、统一候选／预算及自动输入／驱动互斥（API5），无窗口运行；不持有项目写权限 | 无 |
+| gameplay · crates/gameplay | SyntheticTest-v1、最多4圆圈的纯时间／输入／生命周期、有界事件、冻结／恢复／检查、统一候选／预算及三驱动；API6共享来源、实时单项账本及只读完整帧／分页，无窗口；不持有项目写权限 | 无 |
 | audio · desktop/audio | SoundPlan、共享PCM配额、有界声音／混音与来源门控 | domain |
 | rendering · desktop/rendering | Plan、CPU/GPU合成、像素／上传所有权 | domain |
 | preview · desktop/preview | 当前仅占位PreviewState、场景与冻结／输入计数 | 无 |
@@ -64,7 +64,9 @@ flowchart TD
 
 2026-11-05的[K1-5](K1_5_DRIVER_REVIEW.md)增加显式驱动选择及有界自动输入准备。Manual／Automatic／Regression互斥，冻结截面切换InputEpoch；自动脉冲经共同输入／判定路径，恢复不补旧输入。同谱面检查候选捕获并继承所选驱动，创建／替换载入仍默认Manual。API5、profile1，固定进度及两输入计划纳入既有运行预留，无新依赖／线程／堆分配入口，未接产品。
 
-K1仍只部分完成；10000对象及实际资源成本计量待实施，K2–K5未开始。纯驱动不代表原生捕获／失焦／工具门控或产品自动预览已接通。现有协调只覆盖四对象及量化托管预留，未将完整K1／KT或进程预算标为通过。两套检查继续约束实际依赖和源码；项目模型、application API和持久化格式不变。
+2026-11-06的[K1-6A](K1_6A_STORAGE_REVIEW.md)保持固定四槽编译值，运行／检查共享Rc地图payload和来源额度；独立运行另核对自有来源容量。Observation改为固定摘要及FrameHeader，实时单项判定与借用式T处完整帧分开，有界分页核对完整来源／发布身份并原子写调用者缓冲。发布不再重建双份全谱对象帧，Pending／Failed保留旧完整截面，来源换代拒绝旧页。gameplay API6／profile1；未新增依赖或设备接线。
+
+K1仍只部分完成；变长布局证明、原始工作计量、10000对象及实际成本待实施，K2–K5未开始。纯驱动不代表原生捕获／失焦／工具门控或产品自动预览已接通。协调仍只覆盖四对象及已知payload／临时值预留，未将完整K1／KT或进程预算标为通过。两套检查继续约束实际依赖和源码；项目模型、application API和持久化格式不变。
 
 ## 对象、状态与所有权
 

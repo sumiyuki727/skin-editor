@@ -54,7 +54,7 @@ enum Work {
 pub struct PreparationTask<'a> {
     preparation: Option<MapPreparation<'a>>,
     pub(super) run: Option<ManagedRun>,
-    content: Option<Rc<CompiledSource>>,
+    pub(super) content: Option<Rc<CompiledSource>>,
     source_credit: Option<Reservation>,
     run_credit: Option<Reservation>,
     _workspace: Reservation,
@@ -192,6 +192,9 @@ impl<'a> PreparationTask<'a> {
                     PreparationProgress::Complete { .. }
                 ) {
                     let map = self.preparation.take().expect("complete map").finish()?;
+                    self.pool.check_allocation(AllocationKind::SourceMap)?;
+                    let map = Rc::new(map);
+                    self.pool.check_allocation(AllocationKind::SourceOwner)?;
                     self.content = Some(Rc::new(CompiledSource {
                         map,
                         _credit: self.source_credit.take().expect("reserved source"),
@@ -212,9 +215,10 @@ impl<'a> PreparationTask<'a> {
                             .map_or(MapTime::from_micros(0), |v| v.visible_from()),
                     ),
                 };
-                let mut run = SyntheticRun::new_driven(
+                self.pool.check_allocation(AllocationKind::Runtime)?;
+                let mut run = SyntheticRun::new_shared(
                     source,
-                    content.map,
+                    Rc::clone(&content.map),
                     start,
                     self.limits,
                     self.key.driver,

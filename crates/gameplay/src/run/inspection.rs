@@ -58,7 +58,7 @@ pub(super) struct InspectionCandidate {
     key: InspectionKey,
     checked: usize,
     ready: bool,
-    frame: ReadyFrame,
+    frame: FrameHeader,
     skipped: [bool; MAX_CIRCLES],
     appeared: usize,
     expired: usize,
@@ -111,7 +111,7 @@ impl SyntheticRun {
             key,
             checked: 0,
             ready: false,
-            frame: ReadyFrame {
+            frame: FrameHeader {
                 source: RunSource {
                     transport,
                     input,
@@ -120,7 +120,9 @@ impl SyntheticRun {
                 at: target,
                 evidence: Evidence::SyntheticTest,
                 statistics_origin: StatisticsOrigin::Inspection { at: target },
-                objects: [None; MAX_CIRCLES],
+                profile_version: SYNTHETIC_PROFILE_VERSION,
+                counts: FrameCounts::default(),
+                publication: 1,
                 len: self.map.len,
             },
             skipped: [false; MAX_CIRCLES],
@@ -157,20 +159,7 @@ impl SyntheticRun {
                 candidate.appeared += usize::from(target >= circle.visible);
                 candidate.expired += usize::from(skipped);
                 candidate.retired += usize::from(target >= circle.retire);
-                // This slice omits inspection visuals for expired objects.
-                // None is accompanied by an explicit unavailable reason.
-                candidate.frame.objects[index] = Some(CircleFrame {
-                    object: circle.id,
-                    phase: if skipped {
-                        Phase::Retired
-                    } else if target < circle.visible {
-                        Phase::Future
-                    } else {
-                        Phase::VisibleUnjudged
-                    },
-                    judgement: None,
-                    unavailable: skipped.then_some(UnavailableReason::InspectionSkipped),
-                });
+                candidate.frame.counts.inspection_skipped += usize::from(skipped);
                 candidate.checked += 1;
             }
             steps += 1;
@@ -234,8 +223,9 @@ impl SyntheticRun {
         self.next_event = Some(1);
         self.issued_through = 0;
         self.retired_through = 0;
-        self.frames[0] = candidate.frame;
-        self.ready = Some(0);
+        self.ready = Some(candidate.frame);
+        self.next_publication = Some(2);
+        self.committed_counts = candidate.frame.counts;
         self.dirty = None;
         self.last_committed = Some(key.target);
         self.active = None;

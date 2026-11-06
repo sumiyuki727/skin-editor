@@ -4,9 +4,10 @@
 
 ## 当前阅读入口
 
+- [K1-6C万对象固定输入／实际Automatic及规模控制回归](K1_6C_SCALE_REVIEW.md)（B一致性备份bf3fff51；167项gameplay通过，API7／profile1、Reference10000／Tiny4保持；C增量待独立审阅，D成本未开始）
 - [K1-6B变长存储／容量证明／分步工作及一致性审阅](K1_6B_STORAGE_PROOF.md#2026-11-06一致性审阅记录)（API7／profile1，Tiny4／Reference10000；备份747222c8，三项计数边界已修，156项gameplay通过；G0及所有权／旧页复核完成，完整输入规模和实际成本仍待C／D）
 - [独立stable兼容内核架构／K计划](STABLE_KERNEL_PLAN.md) · [专用新对话交接](HANDOFF_STABLE_KERNEL.md) · [K1-1合成圆圈模型](K1_1_SYNTHETIC_REVIEW.md) · [K1-2冻结／恢复／重新武装](K1_2_FREEZE_REVIEW.md) · [K1-3同谱面检查定位](K1_3_INSPECTION_REVIEW.md) · [K1-4统一候选准备／激活](K1_4_PREPARATION_REVIEW.md) · [K1-5自动输入／驱动互斥](K1_5_DRIVER_REVIEW.md) · [K1-6A固定四槽／只读截面及一致性审阅](K1_6A_STORAGE_REVIEW.md)（API6、4对象无窗口，137项gameplay通过，K1部分完成；未接GUI／设备，不宣称stable兼容）
-- [K1-6规模／资源成本开工规格及文档审阅](K1_6_SCALE_SPEC.md)（A、B及适用复核完成；本次B修订待下轮检查备份，C完整输入规模轨迹与D成本工具仍待实施）
+- [K1-6规模／资源成本开工规格及文档审阅](K1_6_SCALE_SPEC.md)（A、B及适用复核完成，C规模增量已实现待独立审阅；D成本工具仍待实施）
 - [编辑器新对话交接](HANDOFF_EDITOR_CONTINUATION.md) · [素材制作／未来编辑器操作skill交接](HANDOFF_SKIN_ASSET_SKILL.md)（2026-11-03快照，含可粘贴开场提示）
 - [动画来源／原始帧时长／stable重采样](ANIMATION_ASSETS.md)（设计已记录；模型、版本和功能未改；AN01–AN16全部待实施）
 - [P3-1C 热日志／进程中断恢复补充](P3_1_RECOVERY_REVIEW.md) · [独立证据](P3_1_RECOVERY_PROOF.json)

@@ -249,6 +249,149 @@ mod tests {
     use crate::{Circle, InputEpoch, MapRevision, Point};
 
     #[test]
+    fn ten_thousand_generated_pulses_keep_exact_source_local_input_sequences() {
+        const N: usize = 10_000;
+        let at = |index: usize| MapTime::from_micros(index as i64 * 1_000_000);
+        for budget in [WorkBudget::one(), WorkBudget::full()] {
+            let source = RunSource {
+                run: RunId::new(309_001).unwrap(),
+                transport: TransportEpoch::new(1).unwrap(),
+                input: InputEpoch::new(1).unwrap(),
+                revision: MapRevision::new(720),
+            };
+            // Known ordered, unique test records. Public stepped compilation is
+            // separately exercised by every scale integration fixture.
+            let mut circles = Buffer::new(N);
+            circles
+                .allocate(
+                    &mut WorkCounts::default(),
+                    None,
+                    crate::AllocationKind::Circles,
+                    crate::ResourcePool::Precompiled,
+                )
+                .unwrap();
+            for i in 0..N {
+                circles.push(
+                    Circle::new(ObjectId::new(i as u32), at(i), Point::new(0, 0).unwrap()).unwrap(),
+                );
+            }
+            let map = SyntheticMap {
+                revision: source.revision,
+                circles,
+                len: N,
+                payload: None,
+            };
+            let mut preparation = crate::RunPreparation::new_driven(
+                source,
+                map,
+                MapTime::from_micros(-200_001),
+                Limits::reference(),
+                InputDriver::Automatic,
+            )
+            .unwrap();
+            let mut ready = false;
+            for _ in 0..N + 2 {
+                if preparation.step(budget).unwrap() == crate::RunPreparationProgress::Complete {
+                    ready = true;
+                    break;
+                }
+            }
+            assert!(ready);
+            let mut run = preparation.finish().unwrap();
+            let start = MapTime::from_micros(-200_001);
+            run.request_freeze(source, start).unwrap();
+            run.seal_through(source, start).unwrap();
+            let mut frozen = false;
+            for _ in 0..16 {
+                if matches!(
+                    run.settle_freeze(source, budget).unwrap(),
+                    FreezeReport::Frozen { .. }
+                ) {
+                    frozen = true;
+                    break;
+                }
+            }
+            assert!(frozen);
+            let source = run.resume(source).unwrap();
+            assert!(matches!(
+                run.prepare_automatic_inputs(source, at(0), WorkBudget::one())
+                    .unwrap(),
+                AutomaticReport::Pending {
+                    steps: 1,
+                    admitted: 0,
+                    ..
+                }
+            ));
+            assert_eq!(run.highest_input, 1);
+            assert_eq!(run.input_len, 0);
+            assert!(run.replay.iter().flatten().any(|record|matches!(record,InputRecord::Release(fact) if fact.sequence.get()==1 && fact.slot==PhysicalSlot::PrimaryOne)));
+            for first in (0..N).step_by(32) {
+                let count = (N - first).min(32);
+                let through = at(first + count - 1).checked_offset(1).unwrap();
+                let mut complete = false;
+                for _ in 0..128 {
+                    if matches!(
+                        run.prepare_automatic_inputs(source, through, budget)
+                            .unwrap(),
+                        AutomaticReport::Complete { .. }
+                    ) {
+                        complete = true;
+                        break;
+                    }
+                }
+                assert!(complete);
+                assert_eq!(run.highest_input, 2 * (first + count) as u64 + 1);
+                assert_eq!(run.input_len, 2 * count);
+                for offset in 0..count {
+                    let i = first + offset;
+                    let sequence = 2 * i as u64 + 2;
+                    assert_eq!(
+                        run.inputs[2 * offset],
+                        Some(InputEvent {
+                            sequence: InputSequence::new(sequence).unwrap(),
+                            at: at(i),
+                            slot: PhysicalSlot::PrimaryOne,
+                            edge: InputEdge::Press(Point::new(0, 0).unwrap())
+                        })
+                    );
+                    assert_eq!(
+                        run.inputs[2 * offset + 1],
+                        Some(InputEvent {
+                            sequence: InputSequence::new(sequence + 1).unwrap(),
+                            at: at(i).checked_offset(1).unwrap(),
+                            slot: PhysicalSlot::PrimaryOne,
+                            edge: InputEdge::Release
+                        })
+                    );
+                }
+                run.seal_through(source, through).unwrap();
+                let mut report = run.advance(source, through, budget).unwrap();
+                let mut complete = false;
+                for _ in 0..4096 {
+                    for _ in 0..64 {
+                        let Some(event) = run.event_at(0) else {
+                            break;
+                        };
+                        run.acknowledge(event.key).unwrap();
+                    }
+                    match report {
+                        AdvanceReport::Complete { .. } => {
+                            complete = true;
+                            break;
+                        }
+                        AdvanceReport::Pending { cursor, .. } => {
+                            report = run.continue_advance(cursor, budget).unwrap()
+                        }
+                    }
+                }
+                assert!(complete);
+            }
+            assert_eq!(run.highest_input, 20_001);
+            assert_eq!(run.observation().committed_counts.hits, N);
+        }
+    }
+
+    #[test]
     fn exhausted_pulse_sequences_never_half_admit_or_prevent_freezing() {
         let source = RunSource {
             run: RunId::new(91_001).unwrap(),

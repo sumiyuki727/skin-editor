@@ -1,5 +1,7 @@
 # K1-6B：分配请求容量证明与实施记录
 
+**2026-11-07后续入口：** 本页B一致性修订已通过正常完整hook备份推送为`bf3fff51cac5e7a9c1fa618efda3e07c11e86cac`，远端SHA一致；随后完成[K1-6C规模回归增量](K1_6C_SCALE_REVIEW.md)，当前共167项gameplay通过，运行时及本页容量布局保持。C新增量未提交、待独立审阅，D实际成本未开始。下方B记录保留原时点。
+
 **2026-11-06一致性审阅更新：** B初版32文件已通过正常完整hook备份推送为`747222c8c69e39ff39a84e933a73883bcfedb80c`，PRIVATE origin及远端SHA一致。本次修复三处原始工作计数边界，新增7项公开回归，正式核心通过425项Python及156项gameplay；Reference10000／Tiny4、API7／profile1和存储布局保持。详见[一致性审阅记录](#2026-11-06一致性审阅记录)。本次修订未提交，C／D仍未开始，下方初版记录保留其当时时点。
 
 2026-11-06。先将K1-6A一致性测试／审阅11文件通过正常完整hook备份推送为b3c5f088932666c97ae8576b468b0c7b177bc7d5，PRIVATE origin和远端SHA均已核对。备份基线137项gameplay，本轮B新增实现另行验证。来源仍为SyntheticTest profile1，不接GUI／设备，不测实际成本或宣称stable兼容。

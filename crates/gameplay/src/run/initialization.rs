@@ -45,14 +45,24 @@ impl RunPreparation {
         if limits.storage_bytes < SyntheticRun::standalone_bytes_for_objects(map.len)? {
             return Err(ValueError::StorageLimit);
         }
+        let mut allocation_counts = WorkCounts::default();
+        allocation_counts.allocation(core::mem::size_of::<SyntheticMap>());
         let map = Rc::new(map);
-        let mut result = Self::managed(source, map, start, limits, driver, None)
-            .map_err(crate::map::preparation::value_error)?;
-        result.run.as_mut().expect("new run").count(WorkCounts {
-            allocation_attempts: 1,
-            allocation_bytes: core::mem::size_of::<SyntheticMap>() as u64,
-            ..WorkCounts::default()
-        });
+        let mut result = Self::managed(
+            source,
+            map,
+            start,
+            limits,
+            driver,
+            None,
+            &mut allocation_counts,
+        )
+        .map_err(crate::map::preparation::value_error)?;
+        result
+            .run
+            .as_mut()
+            .expect("new run")
+            .count(allocation_counts);
         Ok(result)
     }
     pub(crate) fn managed(
@@ -62,6 +72,7 @@ impl RunPreparation {
         limits: Limits,
         driver: InputDriver,
         pool: Option<Rc<PoolState>>,
+        allocation_counts: &mut WorkCounts,
     ) -> Result<Self, crate::PreparationError> {
         let mut run = SyntheticRun::uninitialized_shared(source, map, start, limits, driver)?;
         run.pool = pool.clone();
@@ -69,13 +80,9 @@ impl RunPreparation {
             management_steps: 1,
             ..WorkCounts::default()
         });
-        if pool.is_none() {
-            run.count(WorkCounts {
-                allocation_attempts: 1,
-                allocation_bytes: core::mem::size_of::<SyntheticRun>() as u64,
-                ..WorkCounts::default()
-            });
-        }
+        // Validation above can fail before any allocation boundary is reached.
+        // The owner retains this attempted-allocation receipt even on rejection.
+        allocation_counts.allocation(core::mem::size_of::<SyntheticRun>());
         if let Some(pool) = &pool {
             pool.check_allocation(AllocationKind::Runtime)?;
         }

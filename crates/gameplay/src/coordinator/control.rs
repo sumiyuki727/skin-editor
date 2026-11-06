@@ -52,7 +52,7 @@ impl SyntheticCoordinator {
                 .run,
         )
         .map_err(PreparationError::Runtime);
-        let base = self.current().map(|v| (v.source(), v.observation().status));
+        let base = self.current().map(|v| (v.source(), v.status()));
         self.pool.base.set(base);
         if self.pool.live.get().is_some_and(|key| key.base != base) {
             self.pool.live.set(None);

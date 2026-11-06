@@ -147,7 +147,8 @@ impl<'a> PreparationTask<'a> {
             _ => PreparationStage::Rebuilding,
         }
     }
-    pub(super) fn activated(&mut self) {
+    pub(super) fn activated(&mut self, runtime_counts: crate::WorkCounts) {
+        self.stats.merge(runtime_counts);
         self.work = Work::Activated;
     }
     pub(super) fn check_live(&self) -> Result<(), PreparationError> {
@@ -263,7 +264,6 @@ impl<'a> PreparationTask<'a> {
                     ),
                 };
                 if self.initialization.is_none() {
-                    self.stats.allocation(core::mem::size_of::<SyntheticRun>());
                     self.initialization = Some(crate::RunPreparation::managed(
                         source,
                         Rc::clone(&content.map),
@@ -271,6 +271,7 @@ impl<'a> PreparationTask<'a> {
                         self.limits,
                         self.key.driver,
                         Some(Rc::clone(&self.pool)),
+                        &mut self.stats,
                     )?);
                     return Ok(());
                 }

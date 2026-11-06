@@ -232,7 +232,7 @@ impl SyntheticCoordinator {
         start: MapTime,
     ) -> Result<PreparationTask<'a>, PreparationError> {
         self.check_base(base)?;
-        match self.current().expect("checked base").observation().status {
+        match self.current().expect("checked base").status() {
             RunStatus::Frozen | RunStatus::Failed(_) => {}
             _ => return Err(RunError::NotFrozen.into()),
         }
@@ -279,7 +279,7 @@ impl SyntheticCoordinator {
         at: MapTime,
     ) -> Result<PreparationTask<'static>, PreparationError> {
         self.check_base(base)?;
-        match self.current().expect("checked base").observation().status {
+        match self.current().expect("checked base").status() {
             RunStatus::Frozen => {}
             RunStatus::Failed(_) => return Err(RunError::Faulted.into()),
             _ => return Err(RunError::NotFrozen.into()),
@@ -296,8 +296,7 @@ impl SyntheticCoordinator {
             ..base
         };
         let key = self.next_key(PreparationOperation::Inspect { at }, target)?;
-        let costs =
-            Self::costs_for_objects(self.current().expect("base").observation().object_count)?;
+        let costs = Self::costs_for_objects(self.current().expect("base").object_count())?;
         let credits = PoolState::reserve_task(&self.pool, false, costs)?;
         let content = Rc::clone(&self.active.as_ref().expect("checked base").content);
         let task = PreparationTask::new(
@@ -376,13 +375,14 @@ impl SyntheticCoordinator {
             return Err(PreparationError::NotReady);
         }
         let ready = task.run.take().expect("complete runtime");
+        let runtime_counts = ready.run.work_counts();
         debug_assert_eq!(ready.run.source(), key.target);
         let old = self.active.replace(ready);
         self.pool
             .base
-            .set(self.current().map(|v| (v.source(), v.observation().status)));
+            .set(self.current().map(|v| (v.source(), v.status())));
         self.pool.live.set(None);
-        task.activated();
+        task.activated(runtime_counts);
         drop(old);
         Ok(key.target)
     }

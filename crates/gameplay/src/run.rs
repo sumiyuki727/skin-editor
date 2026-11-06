@@ -584,12 +584,8 @@ impl SyntheticRun {
     pub fn source_capacity(&self) -> usize {
         self.map.capacity()
     }
-    pub fn observation(&self) -> Observation {
-        self.count(WorkCounts {
-            summaries: 1,
-            ..WorkCounts::default()
-        });
-        let status = if let Some(failure) = self.failure {
+    pub(crate) fn status(&self) -> RunStatus {
+        if let Some(failure) = self.failure {
             RunStatus::Failed(failure)
         } else if self.mode == ControlMode::Freezing {
             RunStatus::Freezing
@@ -601,7 +597,17 @@ impl SyntheticRun {
             RunStatus::Ready
         } else {
             RunStatus::Prepared
-        };
+        }
+    }
+    pub(crate) fn object_count(&self) -> usize {
+        self.map.len
+    }
+    pub fn observation(&self) -> Observation {
+        self.count(WorkCounts {
+            summaries: 1,
+            ..WorkCounts::default()
+        });
+        let status = self.status();
         Observation {
             source: self.source,
             driver: self.driver,

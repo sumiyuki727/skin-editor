@@ -2,9 +2,28 @@ mod scale_support;
 use scale_support::*;
 use skin_editor_gameplay::*;
 
+fn assert_golden_fixture(data: &[Circle]) {
+    assert_eq!((N, START, END), (10_000, -200_001, 9_999_300_000));
+    assert_eq!(data.len(), 10_000);
+    // Independent literals keep the named track pinned even if shared helpers change.
+    for (i, circle) in data.iter().enumerate() {
+        let at = i64::try_from(i).unwrap().checked_mul(1_000_000).unwrap();
+        assert_eq!(
+            (circle.id(), circle.target(), circle.center()),
+            (
+                ObjectId::new(i as u32),
+                MapTime::from_micros(at),
+                Point::new(0, 0).unwrap()
+            )
+        );
+    }
+    assert_eq!(data[9999].retires_at(), MapTime::from_micros(9_999_300_000));
+}
+
 #[test]
 fn g1_fixed_external_script_hits_ten_thousand_with_exact_streamed_golden_records() {
     let data = circles();
+    assert_golden_fixture(&data);
     let mut receipts = [None; 2];
     for (case, budget) in [WorkBudget::one(), WorkBudget::full()]
         .into_iter()
@@ -30,6 +49,7 @@ fn g1_fixed_external_script_hits_ten_thousand_with_exact_streamed_golden_records
 #[test]
 fn a1_actual_automatic_generator_matches_the_golden_semantics_under_both_work_budgets() {
     let data = circles();
+    assert_golden_fixture(&data);
     let mut receipts = [None; 2];
     for (case, budget) in [WorkBudget::one(), WorkBudget::full()]
         .into_iter()

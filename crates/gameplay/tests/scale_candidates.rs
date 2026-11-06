@@ -7,6 +7,7 @@ enum Cut {
     Phase(PreparationPhase),
     Record(u64),
     State(u64),
+    RebuildStart,
     Inspect(u64),
     Ready,
 }
@@ -21,8 +22,10 @@ fn at_cut(task: &PreparationTask<'_>, cut: Cut) -> bool {
             task.stage() == PreparationStage::Initializing
                 && task.work_counts().state_initializations >= n
         }
+        Cut::RebuildStart => task.stage() == PreparationStage::Rebuilding,
         Cut::Inspect(n) => {
             task.stage() == PreparationStage::Rebuilding
+                && task.work_counts().allocation_attempts >= 3
                 && task.work_counts().inspection_objects >= n
         }
         Cut::Ready => task.stage() == PreparationStage::Ready,
@@ -98,6 +101,7 @@ fn cancelled_scale_candidates_keep_real_owners_but_cannot_affect_the_next_reques
                     Cut::State(32),
                     Cut::State(4999),
                     Cut::State(9999),
+                    Cut::RebuildStart,
                     Cut::Inspect(0),
                     Cut::Inspect(1),
                     Cut::Inspect(31),
@@ -121,6 +125,20 @@ fn cancelled_scale_candidates_keep_real_owners_but_cannot_affect_the_next_reques
                     old.step(old.cursor(), WorkBudget::one()).unwrap();
                 }
                 assert!(reached, "{operation}/{cut:?}");
+                if matches!(cut, Cut::Inspect(0)) {
+                    assert_eq!(
+                        old.work_counts().allocation_attempts,
+                        3,
+                        "inspection zero checkpoint must own its private buffer"
+                    );
+                    assert_eq!(old.work_counts().state_initializations, N as u64);
+                    assert_eq!(
+                        owner.allocations().runtime_bytes,
+                        cost.pool_bytes
+                            + 2 * core::mem::size_of::<SyntheticRun>()
+                            + 3 * cost.state_bytes
+                    );
+                }
                 assert_eq!(owner.current().map(SyntheticRun::observation), before);
                 if old.stage() != PreparationStage::Ready {
                     assert_eq!(
@@ -281,6 +299,73 @@ fn failed_large_create_and_load_keep_the_old_run_and_payload_until_real_cleanup(
                     .unwrap()
                     .source_bytes
             );
+        }
+    }
+}
+
+#[test]
+fn cancelled_large_inspection_survives_coordinator_drop_with_only_its_real_owners_charged() {
+    let data = circles();
+    let cost = SyntheticCoordinator::costs_for_objects(N).unwrap();
+    for budget in [WorkBudget::one(), WorkBudget::full()] {
+        for cut in [
+            Cut::State(0),
+            Cut::State(4999),
+            Cut::Inspect(0),
+            Cut::Inspect(4999),
+            Cut::Ready,
+        ] {
+            let mut owner = base(&data, 2, budget);
+            let mut task = request(&mut owner, &data, 2, 307_001);
+            let mut reached = false;
+            for _ in 0..BOUND {
+                if at_cut(&task, cut) {
+                    reached = true;
+                    break;
+                }
+                task.step(task.cursor(), WorkBudget::one()).unwrap();
+            }
+            assert!(reached, "close checkpoint {cut:?}");
+            let key = task.key();
+            let cursor = task.cursor();
+            let counts = task.work_counts();
+            let resources = owner.resources();
+            let payload = owner.allocations();
+            owner.cancel(key).unwrap();
+            assert_eq!(owner.resources(), resources);
+            assert_eq!(owner.allocations(), payload);
+            drop(owner);
+            assert_eq!(
+                task.resources(),
+                ResourceUsage {
+                    precompiled_bytes: cost.source_bytes,
+                    runtime_bytes: cost.pool_bytes + cost.task_bytes + cost.run_bytes
+                }
+            );
+            let retained = task.allocations();
+            assert_eq!(retained.precompiled_bytes, cost.source_bytes);
+            assert_eq!(retained.precompiled_allocations, 3);
+            assert_eq!(
+                retained.runtime_bytes,
+                payload.runtime_bytes - core::mem::size_of::<SyntheticRun>() - cost.state_bytes
+            );
+            assert_eq!(
+                retained.runtime_allocations,
+                payload.runtime_allocations - 2
+            );
+            assert_eq!(
+                task.step(cursor, budget),
+                Err(PreparationError::StaleRequest)
+            );
+            assert_eq!(task.work_counts(), counts);
+            assert_eq!(task.allocations(), retained);
+            assert_eq!(
+                task.resources().runtime_bytes,
+                resources.runtime_bytes - cost.coordinator_bytes - cost.run_bytes
+            );
+            // No observer holds a source lease. The existing Rc::Weak unit
+            // regression observes actual last-owner destruction after this Drop.
+            drop(task);
         }
     }
 }

@@ -311,7 +311,8 @@ fn full_event_queue_and_one_free_slot_cannot_half_commit_a_hit_or_block_freezing
         let run = play.owner.current().unwrap();
         assert_eq!(run.committed_judgement(old, 32), Ok(None));
         assert_eq!(run.observation().committed_counts.hits, 32);
-        let old_sound = run.event_at(1).unwrap().key;
+        let old_sound = run.event_at(63).unwrap().key;
+        assert!(run.sound_intent_allowed(old_sound).unwrap());
         play.owner.request_freeze(old, t(target(32))).unwrap();
         assert_eq!(
             play.owner.continue_advance(blocked, budget),
@@ -378,6 +379,12 @@ fn full_event_queue_and_one_free_slot_cannot_half_commit_a_hit_or_block_freezing
                 .unwrap()
         );
         play.owner.resume(old).unwrap();
+        assert!(
+            (0..64)
+                .filter_map(|i| play.owner.current().unwrap().event_at(i))
+                .any(|event| event.key == old_sound),
+            "eligibility must be tested on a retained, unacknowledged sound"
+        );
         assert!(
             !play
                 .owner
@@ -642,6 +649,94 @@ fn inspection_targets_keep_exact_skip_provenance_and_resume_only_new_input_at_sc
                     assert_eq!(result.1, 9999);
                 }
             }
+        }
+    }
+}
+
+#[test]
+fn trusted_current_release_cannot_reopen_the_inspection_target_or_leak_queued_input_on_failure() {
+    let data = circles();
+    for budget in [WorkBudget::one(), WorkBudget::full()] {
+        for at in [-1, 0, 5_000_000_000, 9_999_100_001, i64::MIN] {
+            let mut play = Playback::new(&data, 308_001, budget);
+            play.freeze(START);
+            let mut task = play.owner.request_inspection(play.source(), t(at)).unwrap();
+            finish(&mut task, budget);
+            let prepared = play.owner.activate(task.key(), &mut task).unwrap();
+            drop(task);
+            let current = play.owner.resume(prepared).unwrap();
+            let header = play
+                .owner
+                .current()
+                .unwrap()
+                .observation()
+                .ready_frame
+                .unwrap();
+            play.owner
+                .observe_release(current, fact(1, PhysicalSlot::PrimaryOne))
+                .unwrap();
+            let after = at.checked_add(1).unwrap();
+            play.owner
+                .submit_inputs(
+                    current,
+                    &[
+                        press(2, after),
+                        edge(
+                            3,
+                            after.checked_add(1).unwrap(),
+                            PhysicalSlot::PrimaryOne,
+                            InputEdge::Release,
+                        ),
+                    ],
+                )
+                .unwrap();
+            assert_eq!(
+                play.owner.current().unwrap().observation().pending_inputs,
+                2
+            );
+            let r = play.owner.resources();
+            let a = play.owner.allocations();
+            assert_eq!(
+                play.owner.submit_inputs(current, &[press(4, at)]),
+                Err(PreparationError::Runtime(RunError::LateInput))
+            );
+            let failed = play.owner.current().unwrap().observation();
+            assert_eq!(
+                failed.status,
+                RunStatus::Failed(Failure {
+                    cause: RunError::LateInput,
+                    cancelled_inputs: 2
+                })
+            );
+            assert_eq!((failed.pending_inputs, failed.pending_events), (0, 0));
+            assert_eq!(failed.armed_slots, [false; 4]);
+            assert_eq!(failed.ready_frame, Some(header));
+            assert_eq!(failed.committed_counts, header.counts);
+            assert_eq!(failed.sealed_through, Some(t(at)));
+            assert_eq!(play.owner.resources(), r);
+            assert_eq!(play.owner.allocations(), a);
+            let counts = play.owner.current().unwrap().work_counts();
+            assert_eq!(
+                play.owner.advance(current, t(after), budget),
+                Err(PreparationError::Runtime(RunError::Faulted))
+            );
+            assert_eq!(
+                play.owner.resume(current),
+                Err(PreparationError::Runtime(RunError::Faulted))
+            );
+            assert_eq!(
+                play.owner.select_driver(current, InputDriver::Automatic),
+                Err(PreparationError::Runtime(RunError::Faulted))
+            );
+            assert_eq!(play.owner.current().unwrap().work_counts(), counts);
+            let run = play.owner.current().unwrap();
+            let mut page = [None; 1];
+            run.read_frame_page(header.key().cursor(0), 1, &mut page)
+                .unwrap()
+                .unwrap();
+            assert_eq!(page[0].unwrap().judgement, None);
+            assert_eq!(run.committed_judgement(current, 0), Ok(None));
+            assert_eq!(run.observation(), failed);
         }
     }
 }

@@ -388,6 +388,51 @@ mod tests {
             }
             assert_eq!(run.highest_input, 20_001);
             assert_eq!(run.observation().committed_counts.hits, N);
+            let old_frame = run.observation().ready_frame;
+            run.next_request = None;
+            let through = at(N - 1).checked_offset(1).unwrap();
+            assert_eq!(
+                run.advance(source, through, budget),
+                Err(RunError::CounterExhausted)
+            );
+            let failed = run.observation();
+            assert_eq!(
+                failed.status,
+                RunStatus::Failed(Failure {
+                    cause: RunError::CounterExhausted,
+                    cancelled_inputs: 0
+                })
+            );
+            assert_eq!(failed.ready_frame, old_frame);
+            let counts = run.work_counts();
+            let retained = (
+                run.automatic.next,
+                run.automatic.pending,
+                run.automatic.ready,
+                run.automatic.rearm,
+                run.highest_input,
+            );
+            assert_eq!(
+                run.prepare_automatic_inputs(source, MapTime::from_micros(9_999_300_000), budget),
+                Err(RunError::Faulted)
+            );
+            assert_eq!(
+                run.select_driver(source, InputDriver::Manual),
+                Err(RunError::Faulted)
+            );
+            assert_eq!(run.resume(source), Err(RunError::Faulted));
+            assert_eq!(run.work_counts(), counts);
+            assert_eq!(
+                (
+                    run.automatic.next,
+                    run.automatic.pending,
+                    run.automatic.ready,
+                    run.automatic.rearm,
+                    run.highest_input
+                ),
+                retained
+            );
+            assert_eq!(run.observation(), failed);
         }
     }
 

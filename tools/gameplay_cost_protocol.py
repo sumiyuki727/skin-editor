@@ -2,7 +2,7 @@
 from pathlib import Path
 import re
 
-SCHEMA = 1
+SCHEMA = 2
 PHASES = ('ready', 'calibrated', 'prepared', 'played', 'queried', 'inspected', 'cancelled', 'task_dropped', 'released')
 METRICS = ('empty', 'fixture', 'create_request', 'prepare_step', 'activate', 'automatic_prepare', 'submit', 'seal',
            'advance', 'acknowledge', 'summary', 'page', 'ledger', 'query_batch', 'freeze', 'inspection_request',
@@ -49,9 +49,11 @@ def validate_cancel_checkpoint(candidate,n):
 
 
 def validate_row(row, phase, trace, budget, n=10000):
+    if not isinstance(row,dict):
+        raise ValueError('Protocol row must be an object')
     for field in ('schema_version', 'budget', 'objects', 'api_version', 'profile_version', 'pointer_bits'):
         natural(row.get(field), field)
-    if row['pointer_bits'] not in (32,64) or not isinstance(row.get('target_arch'),str) or not isinstance(row.get('target_os'),str):
+    if row['pointer_bits'] not in (32,64) or not isinstance(row.get('target_arch'),str) or not row['target_arch'] or not isinstance(row.get('target_os'),str) or not row['target_os']:
         raise ValueError('Missing child target identity')
     if (row.get('schema_version'), row.get('phase'), row.get('trace'), row.get('budget'), row.get('objects'),
         row.get('api_version'), row.get('profile_version')) != (SCHEMA, phase, trace, budget, n, 7, 1):
@@ -61,10 +63,12 @@ def validate_row(row, phase, trace, budget, n=10000):
     for name in ('elapsed_ns', 'previous_emit_ns', 'previous_gate_ns', 'sample_storage_bytes', 'fixture_bytes', 'events_checked'):
         natural(row.get(name), name)
     metrics = row.get('metrics')
-    if not isinstance(metrics, list) or [m.get('name') for m in metrics] != list(METRICS):
+    if not isinstance(metrics, list) or not all(isinstance(m,dict) for m in metrics) or [m.get('name') for m in metrics] != list(METRICS):
         raise ValueError('Missing/duplicated/reordered metrics')
     limits = metric_limits(n)
     for metric in metrics:
+        if set(metric)!={'name','capacity','calls','sum_ns','p50_ns','p95_ns','p99_ns','max_ns','raw_ns'}:
+            raise ValueError('Changed raw metric fields')
         name = metric['name']
         natural(metric.get('capacity'),'capacity')
         natural(metric.get('calls'),'calls')
@@ -107,10 +111,14 @@ def validate_row(row, phase, trace, budget, n=10000):
         if managed is not None or row.get('work_counts') is not None:
             raise ValueError('Cannot observe a dropped coordinator as a live zero ledger')
     else:
-        if not isinstance(managed, dict):
+        managed_keys={'source_reserved','runtime_reserved','source_payload','runtime_payload','source_allocations','runtime_allocations',
+                      'hits','misses','skipped','pending_inputs','pending_events','run','transport','input','revision','source_capacity'}
+        if not isinstance(managed, dict) or set(managed)!=managed_keys:
             raise ValueError('Missing managed resource snapshot')
         for key, value in managed.items():
             natural(value, key, 2**128-1)
+        if any(managed[key]==0 for key in ('run','transport','input')):
+            raise ValueError('Invalid active source identity')
         for prefix in ('source', 'runtime'):
             if not managed[prefix+'_payload'] <= managed[prefix+'_reserved'] <= 8*1024*1024:
                 raise ValueError('Managed budget exceeded')
@@ -128,7 +136,7 @@ def validate_row(row, phase, trace, budget, n=10000):
         if (managed['hits'], managed['misses'], managed['skipped']) != expected:
             raise ValueError('Golden ledger changed')
         validate_work(row.get('work_counts'))
-    if phase in ('played', 'queried', 'inspected', 'cancelled', 'task_dropped'):
+    if phase in ('played', 'queried', 'inspected', 'cancelled', 'task_dropped','released'):
         if row['events_checked'] != n*(1 if trace == 'g0' else 2):
             raise ValueError('Incomplete golden event stream')
     if phase == 'prepared' and row['work_counts']['state_initializations'] != n:
@@ -144,7 +152,77 @@ def validate_row(row, phase, trace, budget, n=10000):
             raise ValueError('Query workload changed')
     if phase == 'calibrated':
         validate_calibration(row)
+    validate_operations(row,phase,trace)
+    if (phase in ('ready','calibrated','released')) != (row['fixture_bytes']==0):
+        raise ValueError('Caller fixture lifetime changed')
     return row
+
+
+def validate_operations(row,phase,trace):
+    calls={m['name']:m['calls'] for m in row['metrics']}
+    required={
+        'ready':{},'calibrated':{'empty':20000},
+        'prepared':{'fixture':1,'create_request':1,'prepare_step':None,'activate':1,'task_drop':1},
+        'played':{'seal':None,'advance':None,'acknowledge':row['objects']*(1 if trace=='g0' else 2)},
+        'queried':{'summary':256,'page':(row['objects']+63)//64,'ledger':row['objects'],'query_batch':1},
+        'inspected':{'freeze':None,'inspection_request':1,'inspection_step':None,'inspection_activate':1,'task_drop':1},
+        'cancelled':{'inspection_request':1,'cancel_candidate_step':None,'cancel':1},
+        'task_dropped':{'task_drop':1,'request_cancel_drop_batch':1},
+        'released':{'owner_drop':1,'fixture_drop':1},
+    }[phase].copy()
+    if phase=='played' and trace=='g1':required['submit']=None
+    if phase=='played' and trace=='a1':required.update(automatic_prepare=None,freeze=None)
+    for name,count in calls.items():
+        expected=required.get(name,0)
+        if (expected is None and count==0) or (expected is not None and count!=expected):
+            raise ValueError('Missing/changed stage operation: '+name)
+
+
+def validate_end(row):
+    if not isinstance(row,dict) or set(row)!={'schema_version','phase','status','previous_emit_ns','previous_gate_ns'}:
+        raise ValueError('Missing/changed end receipt fields')
+    for name in ('schema_version','previous_emit_ns','previous_gate_ns'):natural(row[name],name)
+    if row['schema_version']!=SCHEMA or row['phase']!='end' or row['status']!='Valid':
+        raise ValueError('Invalid versioned end receipt')
+    return row
+
+
+def validate_process_point(point,previous):
+    keys={'user_ns','kernel_ns','working_set_bytes','private_commit_bytes','os_peak_working_set_bytes','os_peak_commit_bytes'}
+    if not isinstance(point,dict) or set(point)!=keys:
+        raise ValueError('Missing/changed process counter fields')
+    for name,value in point.items():natural(value,name)
+    for current,peak in (('working_set_bytes','os_peak_working_set_bytes'),('private_commit_bytes','os_peak_commit_bytes')):
+        if not 0<point[current]<=point[peak]:
+            raise ValueError('Missing/inconsistent process memory counters')
+    for name in ('user_ns','kernel_ns','os_peak_working_set_bytes','os_peak_commit_bytes'):
+        if previous is not None and point[name]<previous[name]:
+            raise ValueError('Process counter regressed: '+name)
+    return point
+
+
+def validate_lifecycle(phases):
+    if [p['phase'] for p in phases]!=list(PHASES):
+        raise ValueError('Incomplete phase set')
+    first=phases[0]
+    for phase in phases:
+        if any(phase[key]!=first[key] for key in ('target_arch','target_os','pointer_bits','sample_storage_bytes')):
+            raise ValueError('Child target/sample identity changed between phases')
+    for before,after in zip(phases,phases[1:]):
+        if 'peaks' in before and 'peaks' in after and any(after['peaks'][key]<value for key,value in before['peaks'].items()):
+            raise ValueError('Cumulative managed/queue observations regressed')
+    inspected,cancelled,dropped=(phases[i]['managed'] for i in (5,6,7))
+    resource_keys=('source_reserved','runtime_reserved','source_payload','runtime_payload','source_allocations','runtime_allocations')
+    if any(inspected[key]!=dropped[key] for key in resource_keys):
+        raise ValueError('Cancelled task did not return to the active inspection baseline')
+    for key in ('source_reserved','source_payload','source_allocations','run','transport','input','revision'):
+        if cancelled[key]!=inspected[key] or dropped[key]!=inspected[key]:
+            raise ValueError('Cancellation changed the active source')
+    if (cancelled['runtime_reserved']<=inspected['runtime_reserved'] or cancelled['runtime_payload']<=inspected['runtime_payload']
+            or cancelled['runtime_allocations']!=inspected['runtime_allocations']+3):
+        raise ValueError('Cancelled task lost its held allocations before Drop')
+    if any(p['fixture_bytes']!=phases[2]['fixture_bytes'] for p in phases[2:8]):
+        raise ValueError('Caller fixture changed before explicit Drop')
 
 
 def validate_calibration(row):
@@ -154,20 +232,24 @@ def validate_calibration(row):
     for key in ('observed_resolution_ns', 'empty_span_ns', 'small_reference_ns', 'large_reference_ns',
                 'small_work', 'large_work', 'cpu_reference_ns', 'cpu_reference_cycles', 'cpu_reference_objects'):
         natural(c.get(key), key)
-    if not (c['observed_resolution_ns'] > 0 and c['small_reference_ns'] > 100*c['observed_resolution_ns']
-            and c['large_reference_ns'] > 100*c['observed_resolution_ns'] and c['large_work'] > c['small_work'] > 0
+    empty = row['metrics'][0]
+    proxy=max(c['observed_resolution_ns'],empty['p95_ns'] or 0,1)
+    if not (c['observed_resolution_ns'] > 0 and c['small_reference_ns'] > 100*proxy
+            and c['large_reference_ns'] > 100*proxy and c['large_work'] > c['small_work'] > 0
             and c['cpu_reference_ns'] >= 2_000_000_000 and 0 < c['cpu_reference_cycles'] <= 100000
             and c['cpu_reference_objects'] == 256):
         raise ValueError('Representative calibration/reference not exercised')
-    empty = row['metrics'][0]
     if empty['calls'] != 20000 or c['empty_span_ns'] < empty['sum_ns']:
         raise ValueError('Missing bounded empty-call reference')
+    if sum(c[k] for k in ('empty_span_ns','small_reference_ns','large_reference_ns','cpu_reference_ns'))>row['elapsed_ns']:
+        raise ValueError('Reference times exceed the enclosing calibration stage')
 
 
 def summarize(row, uncertainty):
     """Keep raw quantiles, explicitly distinguish unresolved calls and batches."""
     result = {k: v for k, v in row.items() if k != 'metrics'}
     result['stage_timing_status'] = 'Valid' if row['elapsed_ns'] >= 100*uncertainty else 'Unknown'
+    result['timing_status_scope']='empirical duration resolution only; not statistical or product acceptance'
     result['metrics'] = []
     for metric in row['metrics']:
         copy = {k: v for k, v in metric.items() if k != 'raw_ns'}

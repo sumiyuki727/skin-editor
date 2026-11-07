@@ -122,6 +122,9 @@ impl Meter {
         }
     }
     pub fn reset(&mut self) {
+        if self.invalid.is_some() {
+            return;
+        }
         for b in &mut self.buckets {
             b.raw.clear();
             b.total = 0;
@@ -152,8 +155,15 @@ impl Meter {
         self.room(op)
             .expect("sample capacity exhausted before invoking operation");
         let begin = Instant::now();
-        let result = call();
-        let elapsed = u64::try_from(begin.elapsed().as_nanos()).expect("finite call time");
+        // The barrier is part of diagnostic cost, never subtracted from results.
+        let result = std::hint::black_box(call());
+        let elapsed = u64::try_from(
+            Instant::now()
+                .checked_duration_since(begin)
+                .expect("monotonic call clock")
+                .as_nanos(),
+        )
+        .expect("finite call time");
         self.record(op, elapsed).expect("invalid timing receipt");
         result
     }
@@ -228,6 +238,7 @@ mod tests {
         assert_eq!(m.buckets[Op::Advance as usize].raw, [7]);
         m.reset();
         assert!(m.record(Op::Advance, 1).is_err());
+        assert_eq!(m.buckets[Op::Advance as usize].raw, [7]);
     }
     #[test]
     fn total_overflow_invalidates_without_wrapping_or_replacing_old_samples() {

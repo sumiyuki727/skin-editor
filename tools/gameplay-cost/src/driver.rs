@@ -394,7 +394,8 @@ impl Driver {
         assert_eq!(header.at, t(end(self.n)));
         for _ in 0..256 {
             assert_eq!(
-                m.timed(Op::Summary, || run.observation()).ready_frame,
+                m.timed(Op::Summary, || black_box(run).observation())
+                    .ready_frame,
                 Some(header)
             );
         }
@@ -403,7 +404,9 @@ impl Driver {
         let mut checked = 0;
         for _ in 0..self.n.div_ceil(64) {
             let page = m
-                .timed(Op::Page, || run.read_frame_page(cursor, 64, &mut out))
+                .timed(Op::Page, || {
+                    black_box(run).read_frame_page(black_box(cursor), 64, &mut out)
+                })
                 .unwrap()
                 .unwrap();
             for value in out.iter().take(page.written) {
@@ -426,7 +429,8 @@ impl Driver {
                     })
                 );
                 assert_eq!(
-                    m.timed(Op::Ledger, || run.committed_judgement(s, checked))
+                    m.timed(Op::Ledger, || black_box(run)
+                        .committed_judgement(black_box(s), black_box(checked)))
                         .unwrap(),
                     Some(record)
                 );
@@ -442,8 +446,8 @@ impl Driver {
         assert_eq!(checked, self.n);
         m.timed(Op::QueryBatch, || {
             for _ in 0..QUERY_BATCH {
-                let page = run
-                    .read_frame_page(header.key().cursor(0), 64, &mut out)
+                let page = black_box(run)
+                    .read_frame_page(black_box(header.key().cursor(0)), 64, &mut out)
                     .unwrap()
                     .unwrap();
                 assert_eq!(page.written, self.n.min(64));

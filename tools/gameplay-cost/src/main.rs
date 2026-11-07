@@ -8,7 +8,7 @@ use skin_editor_gameplay::*;
 use std::io::{self, BufRead, Read, Write};
 use std::time::Instant;
 
-const SCHEMA: u32 = 1;
+const SCHEMA: u32 = 2;
 struct Context {
     trace: Trace,
     budget: WorkBudget,
@@ -324,7 +324,7 @@ fn run(context: &mut Context, m: &mut Meter) {
         .unwrap();
     let output = io::stdout();
     let mut out = output.lock();
-    writeln!(out,"{{\"schema_version\":{SCHEMA},\"phase\":\"end\",\"previous_emit_ns\":{},\"previous_gate_ns\":{}}}",context.previous_emit,context.previous_gate).unwrap();
+    writeln!(out,"{{\"schema_version\":{SCHEMA},\"phase\":\"end\",\"status\":\"Valid\",\"previous_emit_ns\":{},\"previous_gate_ns\":{}}}",context.previous_emit,context.previous_gate).unwrap();
     out.flush().unwrap();
 }
 fn parse(args: &[String]) -> Result<(Trace, WorkBudget, usize), &'static str> {

@@ -17,7 +17,8 @@ import time
 
 from check_core import ROOT, linker_arguments, tool_environment
 from gameplay_cost_platform import OwnedProcess
-from gameplay_cost_protocol import PHASES, SCHEMA, summarize, tool_graph_errors, tool_source_errors, validate_row
+from gameplay_cost_protocol import (PHASES, SCHEMA, summarize, tool_graph_errors, tool_source_errors,
+                                    validate_end, validate_lifecycle, validate_process_point, validate_row)
 
 MAX_LINE = 32*1024*1024
 SAMPLE_LIMIT = 120000
@@ -41,6 +42,7 @@ def built_executable(output):
 
 
 def check_tool(directory=None):
+    frozen=identity()
     cargo, env = tool_environment(directory)
     validate_build_environment(env)
     manifest = ROOT/'tools/gameplay-cost/Cargo.toml'
@@ -58,7 +60,9 @@ def check_tool(directory=None):
     output = subprocess.check_output([cargo, *linker, 'build', *common, '--release', '--message-format=json'], cwd=ROOT, env=env, text=True)
     executable = built_executable(output)
     compiler = subprocess.check_output([env['RUSTC'], '-vV'], env=env, text=True)
-    return executable, compiler
+    if identity()!=frozen:
+        raise ValueError('Source changed while checking/building the diagnostic; do not measure this binary')
+    return executable, compiler, frozen, hashlib.sha256(executable.read_bytes()).hexdigest()
 
 
 def validate_build_environment(environment):
@@ -81,6 +85,35 @@ def identity():
 def cpu_reference_valid(user_ns, kernel_ns, action_ns, quantum):
     return (action_ns >= 2_000_000_000 and quantum is not None and quantum > 0
             and 0.75 <= (user_ns+kernel_ns)/action_ns <= 1.25)
+
+
+def decode_line(line):
+    if len(line)>MAX_LINE or not line.endswith(b'\n'):
+        raise ValueError('Unbounded/incomplete child line')
+    def unique(pairs):
+        result={}
+        for key,value in pairs:
+            if key in result:raise ValueError('Duplicate JSON field: '+key)
+            result[key]=value
+        return result
+    def invalid_constant(value):
+        raise ValueError('Non-finite JSON constant: '+value)
+    row=json.loads(line,object_pairs_hook=unique,parse_constant=invalid_constant)
+    if not isinstance(row,dict):raise ValueError('Protocol row must be an object')
+    return row
+
+
+def process_summary(point,peaks,samples,gap,interval,quantum,reference_valid,previous=None):
+    user=None if previous is None else point['user_ns']-previous['user_ns']
+    kernel=None if previous is None else point['kernel_ns']-previous['kernel_ns']
+    reliable=(reference_valid and user is not None and quantum is not None and user+kernel>=20*quantum
+              and interval is not None and interval>0)
+    return dict(boundary=point,samples=samples,sampled_peaks=peaks,max_sample_gap_ns=gap,parent_interval_ns=interval,
+                user_delta_ns=user,kernel_delta_ns=kernel,cpu_status='Valid' if reliable else 'Unknown',
+                one_core_percent=100*(user+kernel)/interval if reliable else None,
+                memory_boundary_status='Valid',sampled_peak_scope='maximum of recorded samples only',
+                stage_peak_status='Unknown',stage_peak_reason='finite sampling may miss transients; no stage peak counter',
+                os_peak_scope='process_lifetime',sampling_target_met=gap<=1_000_000)
 
 
 def run_probe(executable, trace, budget, repetition, output):
@@ -133,13 +166,13 @@ def run_probe(executable, trace, budget, repetition, output):
                 deadline = time.monotonic()+PHASE_TIMEOUT
                 count = 0
                 max_gap = 0
-                last_clock = None
+                last_clock = previous_boundary_clock
                 maxima = {key: 0 for key in keys[2:]}
-                previous_sample = None
+                previous_sample = previous
                 min_positive = None
                 while True:
                     clock = time.perf_counter_ns()
-                    point = monitor.sample()
+                    point = validate_process_point(monitor.sample(),previous_sample)
                     writer.writerow((phase, clock, *(point[key] for key in keys)))
                     count += 1
                     if count > SAMPLE_LIMIT or time.monotonic() > deadline:
@@ -164,13 +197,15 @@ def run_probe(executable, trace, budget, repetition, output):
                         raise ValueError('Child exited before completing '+phase)
                     raw.write(line)
                     raw.flush()
-                    if len(line) > MAX_LINE or not line.endswith(b'\n'):
-                        raise ValueError('Unbounded/malformed child line')
-                    row = validate_row(json.loads(line), phase, trace, budget)
+                    row = validate_row(decode_line(line), phase, trace, budget)
                     clock = time.perf_counter_ns()
-                    point = monitor.sample()
+                    point = validate_process_point(monitor.sample(),previous_sample)
+                    delta=point['user_ns']+point['kernel_ns']-previous_sample['user_ns']-previous_sample['kernel_ns']
+                    if delta>0:min_positive=delta if min_positive is None else min(min_positive,delta)
                     if last_clock is not None:
                         max_gap=max(max_gap,clock-last_clock)
+                    if time.monotonic()>deadline:
+                        raise ValueError('Protocol validation exceeded the phase observation deadline')
                     writer.writerow((phase, clock, *(point[key] for key in keys)))
                     for key in maxima:
                         maxima[key] = max(maxima[key], point[key])
@@ -187,13 +222,7 @@ def run_probe(executable, trace, budget, repetition, output):
                         if not reference_valid:
                             raise ValueError('Owned continuous representative CPU reference failed')
                     result = summarize(row, uncertainty)
-                    reliable_cpu = (reference_valid and delta_user is not None and cpu_quantum is not None
-                                    and delta_user+delta_kernel >= 20*cpu_quantum and interval > 0)
-                    result['process'] = dict(boundary=point, samples=count+1, sampled_peaks=maxima,
-                                             max_sample_gap_ns=max_gap, parent_interval_ns=interval,
-                                             user_delta_ns=delta_user, kernel_delta_ns=delta_kernel,
-                                             cpu_status='Valid' if reliable_cpu else 'Unknown',
-                                             one_core_percent=None if not reliable_cpu else 100*(delta_user+delta_kernel)/interval)
+                    result['process'] = process_summary(point,maxima,count+1,max_gap,interval,cpu_quantum,reference_valid,previous)
                     if phase == 'calibrated':
                         result['cpu_reference_valid'] = reference_valid
                         result['observed_min_cpu_increment_ns'] = cpu_quantum
@@ -211,9 +240,8 @@ def run_probe(executable, trace, budget, repetition, output):
             if line is None or len(line) > MAX_LINE:
                 raise ValueError('Missing bounded end receipt')
             raw.write(line)
-            end = json.loads(line)
-            if type(end.get('schema_version')) is not int or end.get('schema_version') != SCHEMA or end.get('phase') != 'end':
-                raise ValueError('Missing versioned end receipt')
+            raw.flush()
+            end = validate_end(decode_line(line))
             record['phases'][-1]['emit_ns'] = end['previous_emit_ns']
             record['phases'][-1]['gate_wait_ns'] = end['previous_gate_ns']
             process.stdin.close()
@@ -221,30 +249,35 @@ def run_probe(executable, trace, budget, repetition, output):
                 raise ValueError('Child reported failure')
             if messages.get(timeout=5) is not None:
                 raise ValueError('Unexpected trailing protocol output')
-            inspected = record['phases'][5]['managed']
-            dropped = record['phases'][7]['managed']
-            if any(inspected[key] != dropped[key] for key in ('source_reserved', 'runtime_reserved', 'source_payload', 'runtime_payload', 'source_allocations', 'runtime_allocations')):
-                raise ValueError('Cancelled task did not return to the active inspection baseline')
+            validate_lifecycle(record['phases'])
             record['status'] = 'Valid'
-        except (OSError, ValueError, KeyError, TypeError, queue.Empty, json.JSONDecodeError) as error:
+        except (OSError, ValueError, KeyError, TypeError, queue.Empty, subprocess.SubprocessError) as error:
             record['reason'] = str(error)
         finally:
             stop_reader.set()
-            if process.poll() is None:
-                process.terminate()
+            cleanup=[]
+            try:
+                if process.poll() is None:
+                    process.terminate()
+                    try:
+                        process.wait(timeout=3)
+                    except subprocess.TimeoutExpired:
+                        process.kill()
+                        process.wait(timeout=3)
+            except (OSError,subprocess.SubprocessError) as error:
+                cleanup.append('Child cleanup: '+str(error))
+            for pipe in (process.stdout,process.stdin):
                 try:
-                    process.wait(timeout=3)
-                except subprocess.TimeoutExpired:
-                    process.kill()
-                    process.wait(timeout=3)
-            process.stdout.close()
-            if not process.stdin.closed:
-                process.stdin.close()
+                    if not pipe.closed:pipe.close()
+                except OSError as error:cleanup.append('Pipe cleanup: '+str(error))
             if monitor:
-                monitor.close()
+                try:monitor.close()
+                except OSError as error:cleanup.append('Monitor cleanup: '+str(error))
             reader.join(timeout=3)
             if reader.is_alive():
-                record.update(status='Invalid',reason='Observer reader failed to stop')
+                cleanup.append('Observer reader failed to stop')
+            if cleanup:
+                record.update(status='Invalid',reason='; '.join(([record['reason']] if 'reason' in record else [])+cleanup))
     record['observer_cpu_ns_excluded_from_child'] = time.process_time_ns()-observer_begin
     record['raw_file'] = name+'.child.jsonl'
     record['raw_sha256'] = hashlib.sha256((output/record['raw_file']).read_bytes()).hexdigest()
@@ -252,9 +285,7 @@ def run_probe(executable, trace, budget, repetition, output):
     return record
 
 
-def measure(executable, compiler, output, repetitions):
-    frozen = identity()
-    binary_hash = hashlib.sha256(executable.read_bytes()).hexdigest()
+def measure(executable, compiler, output, repetitions, frozen, binary_hash):
     clock = time.get_clock_info('perf_counter')
     report = dict(schema_version=SCHEMA, status='NotRun', product_status='NotEvaluated', api_version=7, profile_version=1,
                   status_semantics='Valid validates frozen protocol/workload/references/receipts; timing and CPU confidence remain per metric',
@@ -265,6 +296,10 @@ def measure(executable, compiler, output, repetitions):
                   logical_cpus=os.cpu_count(), pointer_bits=64 if sys.maxsize > 2**32 else 32,
                   parent_clock=dict(implementation=clock.implementation, resolution_seconds=clock.resolution, monotonic=clock.monotonic),
                   child_clock='std::time::Instant; observed resolution and empty-call reference; no overhead subtraction',
+                  build_snapshot='source checked before/after check and build; executable hash captured at build completion',
+                  diagnostics=dict(raw_call_timers=True,always_on_work_counts=True,black_box_results=True,
+                                   black_box_query_inputs=True,diagnostic_sample_pages_touched_before_ready=True,
+                                   output_sorting_outside_action_wall=True,parent_observer_separate=True),
                   protocol=dict(objects=10000, traces=['g0', 'g1', 'a1'], budgets=[1, 256], repetitions=repetitions,
                                 phases=PHASES, input_batch_objects=32, query_batch_pages=4096, cancel_probe_budget=1,
                                 control_batch_cycles=256, sampling_target_ms=1, phase_timeout_seconds=PHASE_TIMEOUT,
@@ -277,7 +312,9 @@ def measure(executable, compiler, output, repetitions):
                                'CPU intervals include protocol emission/waits; short intervals are Unknown, never zero-cost passes',
                                'continuous busy reference is not validation for periodic real-time playback or product CPU limits',
                                'observed minimum CPU increment is not a worst-case quantization bound',
-                               'sampled memory may miss transients; OS peaks are cumulative; allocator/control-header/full-stack costs not isolated',
+                               'stage_peak_status is Unknown even with Valid protocol; sampled maxima and OS lifetime peaks are distinct',
+                               'sampled memory may miss transients; gaps include inter-phase observer work; allocator/control-header/full-stack costs not isolated',
+                               'only page/control batches are separately timed; other unresolved call series remain Unknown',
                                'released has no core observer: managed/work fields null; explicit Drop and OS boundary are separate evidence'], runs=[])
     output.mkdir(parents=True, exist_ok=False)
     with (output/'identity.json').open('x', encoding='utf-8') as file:
@@ -329,11 +366,11 @@ def main():
         parser.error('--measure requires a new --output below artifacts/')
     if args.check and args.output:
         parser.error('--output requires --measure')
-    executable, compiler = check_tool(args.toolchain_dir)
+    executable, compiler, frozen, binary_hash = check_tool(args.toolchain_dir)
     if args.check:
         print('PASS: independent gameplay cost tool format/Clippy/tests/release and dependency/source rules')
         return
-    report = measure(executable, compiler, output, args.repetitions)
+    report = measure(executable, compiler, output, args.repetitions, frozen, binary_hash)
     print('Measurement protocol status:', report['status'], '; product verdict: NotEvaluated;', output/'report.json')
     if report['status'] != 'Valid':
         raise RuntimeError('Incomplete/invalid/unknown measurement; original evidence retained')

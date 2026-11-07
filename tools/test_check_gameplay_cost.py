@@ -15,7 +15,7 @@ ROOT=Path(__file__).resolve().parents[1]
 
 
 def row(phase='ready'):
-    return dict(schema_version=1,phase=phase,trace='g0',budget=1,objects=10000,api_version=7,profile_version=1,
+    return dict(schema_version=protocol.SCHEMA,phase=phase,trace='g0',budget=1,objects=10000,api_version=7,profile_version=1,
                 pointer_bits=64,target_arch='x86_64',target_os='windows',status='Valid',elapsed_ns=0,
                 previous_emit_ns=0,previous_gate_ns=0,sample_storage_bytes=sum(protocol.metric_limits(10000).values())*8,
                 fixture_bytes=0,owner_alive=False,events_checked=0,managed=None,work_counts=None,candidate_work=None,
@@ -36,6 +36,117 @@ def graph():
 
 
 class GameplayCostChecks(unittest.TestCase):
+    def test_non_object_rows_and_metric_members_are_rejected_as_protocol_errors(self):
+        for value in ([],None,True):
+            with self.assertRaises(ValueError):protocol.validate_row(value,'ready','g0',1)
+        sample=row();sample['metrics'][0]=None
+        with self.assertRaises(ValueError):protocol.validate_row(sample,'ready','g0',1)
+
+    def test_end_receipt_requires_complete_typed_fields_and_unique_json_keys(self):
+        end=dict(schema_version=protocol.SCHEMA,phase='end',status='Valid',previous_emit_ns=1,previous_gate_ns=2)
+        protocol.validate_end(end)
+        for field,value in [('schema_version',True),('previous_emit_ns',True),('previous_gate_ns',-1),('status','Invalid')]:
+            changed=dict(end);changed[field]=value
+            with self.assertRaises(ValueError):protocol.validate_end(changed)
+        for value in ([],dict(schema_version=protocol.SCHEMA,phase='end'),dict(end,extra=1)):
+            with self.assertRaises(ValueError):protocol.validate_end(value)
+        for value in (b'[]\n',b'{"phase":"end","phase":"ready"}\n',b'{"bad":NaN}\n',b'{}'):
+            with self.assertRaises(ValueError):cost.decode_line(value)
+
+    def test_release_requires_drop_samples_and_preserves_the_checked_event_total(self):
+        sample=row('released')
+        with self.assertRaises(ValueError):protocol.validate_row(sample,'released','g0',1)
+        sample.update(events_checked=10000,elapsed_ns=2)
+        for name in ('owner_drop','fixture_drop'):
+            m=next(m for m in sample['metrics'] if m['name']==name)
+            m.update(calls=1,raw_ns=[1],sum_ns=1,p50_ns=1,p95_ns=1,p99_ns=1,max_ns=1)
+        protocol.validate_row(sample,'released','g0',1)
+        for field,value in [('events_checked',0),('fixture_bytes',1)]:
+            changed=copy.deepcopy(sample);changed[field]=value
+            with self.assertRaises(ValueError):protocol.validate_row(changed,'released','g0',1)
+        changed=copy.deepcopy(sample);changed['metrics'][-3].update(calls=0,raw_ns=[],sum_ns=0,p50_ns=None,p95_ns=None,p99_ns=None,max_ns=None)
+        with self.assertRaises(ValueError):protocol.validate_row(changed,'released','g0',1)
+
+    def test_cancellation_must_hold_owners_until_drop_and_keep_phase_identity(self):
+        phases=[dict(phase=name,target_arch='x86_64',target_os='windows',pointer_bits=64,sample_storage_bytes=1,
+                     fixture_bytes=1 if 2<=i<=7 else 0) for i,name in enumerate(protocol.PHASES)]
+        base=dict(source_reserved=100,source_payload=80,source_allocations=3,runtime_reserved=200,runtime_payload=100,
+                  runtime_allocations=3,run=1,transport=2,input=3,revision=4)
+        phases[5]['managed']=dict(base);phases[6]['managed']=dict(base,runtime_reserved=500,runtime_payload=300,runtime_allocations=6)
+        phases[7]['managed']=dict(base)
+        protocol.validate_lifecycle(phases)
+        for index,field,value in [(6,'runtime_reserved',200),(6,'runtime_allocations',3),(7,'runtime_payload',101),(6,'input',2)]:
+            changed=copy.deepcopy(phases);changed[index]['managed'][field]=value
+            with self.assertRaises(ValueError):protocol.validate_lifecycle(changed)
+        for field,value in [('pointer_bits',32),('fixture_bytes',0)]:
+            changed=copy.deepcopy(phases);changed[6][field]=value
+            with self.assertRaises(ValueError):protocol.validate_lifecycle(changed)
+
+    def test_calibration_must_resolve_the_representative_work_against_empty_call_cost(self):
+        sample=row('calibrated');sample['elapsed_ns']=2_100_000_000
+        raw=[1000]*20000
+        sample['metrics'][0].update(calls=len(raw),raw_ns=raw,sum_ns=sum(raw),p50_ns=1000,p95_ns=1000,p99_ns=1000,max_ns=1000)
+        sample['calibration']=dict(valid=True,observed_resolution_ns=1,empty_span_ns=20_000_000,
+            small_reference_ns=1000,large_reference_ns=2000,small_work=1,large_work=2,
+            cpu_reference_ns=2_000_000_000,cpu_reference_cycles=1,cpu_reference_objects=256)
+        with self.assertRaises(ValueError):protocol.validate_calibration(sample)
+
+    def test_native_counters_cannot_be_missing_zero_filled_or_regress_individually(self):
+        point=dict(user_ns=10,kernel_ns=20,working_set_bytes=1,private_commit_bytes=1,os_peak_working_set_bytes=1,os_peak_commit_bytes=1)
+        protocol.validate_process_point(point,None)
+        for value in ({},dict(point,working_set_bytes=0),dict(point,user_ns=True),dict(point,user_ns=11,kernel_ns=19),dict(point,os_peak_commit_bytes=0)):
+            with self.assertRaises(ValueError):protocol.validate_process_point(value,point)
+
+    def test_build_snapshot_is_frozen_before_compiling_and_detects_drift(self):
+        with tempfile.TemporaryDirectory() as directory:
+            binary=Path(directory)/'probe.exe';binary.write_bytes(b'build')
+            artifact=json.dumps(dict(reason='compiler-artifact',target=dict(name='skin-editor-gameplay-cost'),executable=str(binary)))
+            with patch.object(cost,'tool_environment',return_value=('cargo',{'RUSTC':'rustc'})),patch.object(cost,'linker_arguments',return_value=[]),\
+                 patch.object(cost,'tool_graph_errors',return_value=[]),patch.object(cost,'tool_source_errors',return_value=[]),\
+                 patch.object(cost.subprocess,'run'),patch.object(cost.subprocess,'check_output',side_effect=['{}',artifact,'rustc identity']),\
+                 patch.object(cost,'identity',side_effect=[{'source':'before'},{'source':'after'}]):
+                with self.assertRaises(ValueError):cost.check_tool()
+
+    def test_measurement_uses_the_build_snapshot_instead_of_refreezing_modified_sources(self):
+        with tempfile.TemporaryDirectory() as directory:
+            binary=Path(directory)/'probe.exe';binary.write_bytes(b'build')
+            output=Path(directory)/'new'
+            with patch.object(cost,'identity',return_value={'source':'changed'}),patch.object(cost.os,'name','nt'),\
+                 patch.object(cost.subprocess,'check_output',return_value='head'),patch.object(cost,'run_probe') as probe:
+                report=cost.measure(binary,'compiler',output,2,{'source':'compiled'},cost.hashlib.sha256(b'build').hexdigest())
+            self.assertEqual(report['status'],'Invalid');self.assertEqual(report['product_status'],'NotEvaluated')
+            self.assertEqual(report['source_sha256'],{'source':'compiled'});probe.assert_not_called()
+            self.assertTrue((output/'report.json').is_file())
+
+    def test_native_peak_scope_does_not_inherit_protocol_valid(self):
+        point=dict(user_ns=0,kernel_ns=0,working_set_bytes=1,private_commit_bytes=1,os_peak_working_set_bytes=1,os_peak_commit_bytes=1)
+        result=cost.process_summary(point,point,2,2_000_000,1_000_000,None,False)
+        self.assertEqual(result['stage_peak_status'],'Unknown')
+        self.assertEqual(result['memory_boundary_status'],'Valid')
+        self.assertEqual(result['os_peak_scope'],'process_lifetime')
+        self.assertFalse(result['sampling_target_met'])
+        self.assertEqual(result['cpu_status'],'Unknown')
+        self.assertIsNone(result['one_core_percent'])
+
+    def test_wait_timeout_and_handle_close_failure_keep_completed_phases_and_raw_evidence(self):
+        class Process:
+            pid=123
+            def __init__(self):
+                end=dict(schema_version=protocol.SCHEMA,phase='end',status='Valid',previous_emit_ns=0,previous_gate_ns=0)
+                self.stdout=io.BytesIO((json.dumps(row())+'\n'+json.dumps(end)+'\n').encode());self.stdin=io.BytesIO()
+            def poll(self):return 0
+            def wait(self,timeout):raise cost.subprocess.TimeoutExpired('owned',timeout)
+        class Monitor:
+            def __init__(self,pid):pass
+            def sample(self):return dict(user_ns=0,kernel_ns=0,working_set_bytes=1,private_commit_bytes=1,os_peak_working_set_bytes=1,os_peak_commit_bytes=1)
+            def close(self):raise OSError('owned handle close failed')
+        with tempfile.TemporaryDirectory() as directory,patch.object(cost.subprocess,'Popen',return_value=Process()),\
+             patch.object(cost,'OwnedProcess',Monitor),patch.object(cost,'PHASES',('ready',)):
+            result=cost.run_probe(Path('owned.exe'),'g0',1,1,Path(directory))
+            self.assertEqual(result['status'],'Invalid');self.assertEqual(len(result['phases']),1)
+            self.assertIn('handle close failed',result['reason'])
+            self.assertTrue((Path(directory)/result['raw_file']).read_bytes())
+
     def test_unrecorded_build_overrides_cannot_change_the_cost_binary_profile(self):
         cost.validate_build_environment({'CARGO_HOME':'owned-cache'})
         for key in ('CARGO_PROFILE_RELEASE_OPT_LEVEL','CARGO_BUILD_TARGET','CARGO_INCREMENTAL','RUSTC_BOOTSTRAP','CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_RUSTFLAGS'):
@@ -49,7 +160,7 @@ class GameplayCostChecks(unittest.TestCase):
             with self.assertRaises(ValueError):protocol.validate_cancel_checkpoint(changed,10000)
     def test_versions_identity_and_booleans_cannot_impersonate_integer_fields(self):
         protocol.validate_row(row(),'ready','g0',1)
-        for field,value in [('schema_version',2),('schema_version',True),('budget',True),('phase','played'),('profile_version',0),('objects',9999),('pointer_bits',16)]:
+        for field,value in [('schema_version',protocol.SCHEMA+1),('schema_version',True),('budget',True),('phase','played'),('profile_version',0),('objects',9999),('pointer_bits',16)]:
             sample=row();sample[field]=value
             with self.assertRaises(ValueError):protocol.validate_row(sample,'ready','g0',1)
 

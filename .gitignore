@@ -1,6 +1,7 @@
 /experiments/**/target/
 /target/
 /tools/core-cost/target/
+/tools/gameplay-cost/target/
 /desktop/target/
 /artifacts/
 /.p0-tools/

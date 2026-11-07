@@ -45,6 +45,8 @@ python tools/run_desktop.py
 
 核心检查包括格式、Clippy、无窗口测试、实际 Cargo 图与源码边界；桌面检查包含默认／全部 feature，不默认打开窗口、GPU或声卡。`--architecture-only` 只检查边界。远程 Windows／Linux CI 已配置但未在本机替代实测。
 
+正式核心检查也包含独立的 SyntheticTest 成本工具检查。可单独运行 `python -B tools/check_gameplay_cost.py --check`；Windows 上显式运行 `python -B tools/check_gameplay_cost.py --measure --output artifacts/gameplay-cost-new`，生成两个进程重复的三轨迹／两预算诊断。输出目录须不存在；工具不打开窗口或设备。输出区分协议有效、短窗口／调用未分辨及未评估的产品结论，说明见[成本记录](docs/K1_6D_COST_REVIEW.md)。
+
 私有远端、检查后提交／同步和缓存整理规则见[Git 管理](docs/GIT_WORKFLOW.md)。
 
 启动后拖入 PNG，或填写路径导入，再“加入当前元素”。编辑工具下选择图片，拖动／角点缩放／圆柄旋转；Shift锁定比例，拖动中Esc取消，松手一次提交。多选形成临时共同框；切交互工具清空视觉选择。音效编辑窗口支持 WAV 路径导入、组件绑定及显式试听；同源增益可作用于当前试听，Esc恢复本次增益。

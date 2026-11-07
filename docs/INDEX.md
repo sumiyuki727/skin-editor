@@ -4,10 +4,11 @@
 
 ## 当前阅读入口
 
-- [K1-6C规模回归及一致性审阅](K1_6C_SCALE_REVIEW.md#2026-11-07一致性审阅记录)（C初版备份09075738；169项gameplay通过，API7／profile1、Reference10000／Tiny4保持；C适用复核完成，D成本未开始）
-- [K1-6B变长存储／容量证明／分步工作及一致性审阅](K1_6B_STORAGE_PROOF.md#2026-11-06一致性审阅记录)（API7／profile1，Tiny4／Reference10000；B阶段156项回归与容量证明，C规模及复核见上，D成本仍待实施）
+- [K1-6D独立成本工具与首轮基线](K1_6D_COST_REVIEW.md)（复用回退13fb466；12进程协议Valid，短调用／CPU窗口Unknown与产品NotEvaluated分开；443项Python／169项gameplay／6项工具Rust通过，D待独立审阅）
+- [K1-6C规模回归及一致性审阅](K1_6C_SCALE_REVIEW.md#2026-11-07一致性审阅记录)（C初版备份09075738、一致性修订备份13fb466；169项gameplay通过，API7／profile1、Reference10000／Tiny4保持；后续D工具及基线见上）
+- [K1-6B变长存储／容量证明／分步工作及一致性审阅](K1_6B_STORAGE_PROOF.md#2026-11-06一致性审阅记录)（API7／profile1，Tiny4／Reference10000；B阶段156项回归与容量证明，后续C规模复核及D工具基线见上）
 - [独立stable兼容内核架构／K计划](STABLE_KERNEL_PLAN.md) · [专用新对话交接](HANDOFF_STABLE_KERNEL.md) · [K1-1合成圆圈模型](K1_1_SYNTHETIC_REVIEW.md) · [K1-2冻结／恢复／重新武装](K1_2_FREEZE_REVIEW.md) · [K1-3同谱面检查定位](K1_3_INSPECTION_REVIEW.md) · [K1-4统一候选准备／激活](K1_4_PREPARATION_REVIEW.md) · [K1-5自动输入／驱动互斥](K1_5_DRIVER_REVIEW.md) · [K1-6A固定四槽／只读截面及一致性审阅](K1_6A_STORAGE_REVIEW.md)（API6、4对象无窗口，137项gameplay通过，K1部分完成；未接GUI／设备，不宣称stable兼容）
-- [K1-6规模／资源成本开工规格及文档审阅](K1_6_SCALE_SPEC.md)（A、B、C及适用复核完成；本次C修订待下轮检查备份，D成本工具仍待实施）
+- [K1-6规模／资源成本开工规格及文档审阅](K1_6_SCALE_SPEC.md)（A、B、C及适用复核完成；D初版及本机基线已实施待独立审阅，随后仍需K1总验收）
 - [编辑器新对话交接](HANDOFF_EDITOR_CONTINUATION.md) · [素材制作／未来编辑器操作skill交接](HANDOFF_SKIN_ASSET_SKILL.md)（2026-11-03快照，含可粘贴开场提示）
 - [动画来源／原始帧时长／stable重采样](ANIMATION_ASSETS.md)（设计已记录；模型、版本和功能未改；AN01–AN16全部待实施）
 - [P3-1C 热日志／进程中断恢复补充](P3_1_RECOVERY_REVIEW.md) · [独立证据](P3_1_RECOVERY_PROOF.json)

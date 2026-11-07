@@ -98,6 +98,7 @@ def main():
         [cargo, *linker, "clippy", *common, "--workspace", "--all-targets", "--all-features", "--", "-D", "warnings"],
         [cargo, *linker, "test", *common, "--workspace", "--all-features"],
         [cargo, *linker, "build", *common, "--workspace", "--release"],
+        [sys.executable, "-B", "tools/check_gameplay_cost.py", "--check", "--toolchain-dir", str(Path(cargo).parent)],
     ]
     for arguments in steps:
         subprocess.run(arguments, cwd=ROOT, env=environment, check=True)

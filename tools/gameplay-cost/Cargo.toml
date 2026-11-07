@@ -1,0 +1,18 @@
+[package]
+name = "skin-editor-gameplay-cost"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95"
+publish = false
+
+# Independent diagnostic; never a product runtime dependency.
+[workspace]
+
+[dependencies]
+skin-editor-gameplay = { path = "../../crates/gameplay" }
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+all = "warn"

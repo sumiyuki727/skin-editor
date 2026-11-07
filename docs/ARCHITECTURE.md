@@ -18,7 +18,7 @@ P3-0工具原型审阅修订2见[最新结果](P3_0_LOAD_REVIEW.md)：独立地�
 | --- | --- | --- |
 | domain · crates/domain | 不可变项目值、树、引用和不变量；不访问I/O／UI／设备 | 无 |
 | application · crates/application | ProjectSession唯一活动写入者；Command、原子事务、草稿、历史、完整捕获／身份准入、查询及控制端口 | domain |
-| gameplay · crates/gameplay | SyntheticTest-v1纯时间／输入／生命周期、事件、冻结／检查、候选／预算及三驱动；API7变长存储／分步校验与初始化／工作计数，Tiny4／Reference10000（G0已测），只读帧／分页，无窗口及项目写权限 | 无 |
+| gameplay · crates/gameplay | SyntheticTest-v1纯时间／输入／生命周期、事件、冻结／检查、候选／预算及三驱动；API7变长存储／分步校验与初始化／工作计数，Tiny4／Reference10000（G0／G1／A1及有限控制交错已测），只读帧／分页，无窗口及项目写权限 | 无 |
 | audio · desktop/audio | SoundPlan、共享PCM配额、有界声音／混音与来源门控 | domain |
 | rendering · desktop/rendering | Plan、CPU/GPU合成、像素／上传所有权 | domain |
 | preview · desktop/preview | 当前仅占位PreviewState、场景与冻结／输入计数 | 无 |
@@ -68,7 +68,7 @@ flowchart TD
 
 2026-11-06的[K1-6B](K1_6B_STORAGE_PROOF.md)在固定Rust1.95分配请求证明下采用私有有界缓冲，按N预留来源／运行／索引容量后再申请；归并比较／搬移及状态初始化均可分步。API7取消Copy地图，独立RunPreparation与统一候选共享同一玩法实现；局部工作计数和当前已请求payload另列，不充当进程成本。Reference开放10000，Tiny4；已测G0无输入及大图检查初始化，原四对象业务回归保持，无新依赖／线程或设备。
 
-K1仍部分完成；C的完整输入／实际自动规模轨迹及控制交错、D的实际成本待实施，K2–K5未开始。纯驱动不代表原生捕获／失焦／工具门控或产品自动预览已接通。既有调用者注入身份及不复用约束保持，未将完整K1／KT或进程预算标为通过。两套检查继续约束实际依赖和源码；项目模型、application API和持久化格式不变。
+K1仍未整体验收；A／B／C及适用复核已完成，[D独立成本工具及本机基线](K1_6D_COST_REVIEW.md)已实施待审阅。tools/gameplay-cost是独立诊断工作区，仅单向依赖gameplay和标准库；时钟／stdin/stdout在该工具内，进程观察在Python父进程内，产品包不得导入工具。check_core同时检查其独立图、源码、格式／Clippy／测试／release及负向canary，不把工具时钟或OS访问引入核心。K2–K5未开始；原生捕获／失焦／产品自动预览及完整K1／KT、产品预算仍未验收。项目模型、application API和持久化格式不变。
 
 ## 对象、状态与所有权
 

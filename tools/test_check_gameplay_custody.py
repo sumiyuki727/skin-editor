@@ -336,14 +336,21 @@ class CustodyChecks(unittest.TestCase):
             real_stat=Path.stat
             # No symlink privilege or real outside-root file is required by the test.
             resolved=path.resolve()
+            class LinkedStat:
+                st_nlink=2
+                def __init__(self,info):self.info=info
+                def __getattr__(self,name):return getattr(self.info,name)
             def linked(p,*args,**kwargs):
                 info=real_stat(p,*args,**kwargs)
-                if p==resolved:
-                    values=list(info);values[3]=2
-                    return type(info)(values)
-                return info
+                # Reconstructing stat_result from its tuple loses Windows-only
+                # attributes. Override only nlink and retain all native fields.
+                return LinkedStat(info) if p==resolved else info
             with patch.object(Path,'stat',linked):
                 with self.assertRaises(ValueError):c.relative(Path(tmp),'file')
+                # Exercise newer pathlib's lstat -> stat delegation on older
+                # Python too, without requiring a real link or privileges.
+                with patch.object(Path,'lstat',lambda p:linked(p)):
+                    with self.assertRaises(ValueError):c.relative(Path(tmp),'file')
 
     def test_process_csv_is_streamed_with_global_limit_monotonicity_and_required_boundaries(self):
         with tempfile.TemporaryDirectory() as tmp:

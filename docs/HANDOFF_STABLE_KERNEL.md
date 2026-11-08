@@ -1,5 +1,7 @@
 # 独立 stable 兼容内核：新对话交接
 
+2026-11-09 CI故障确认：[019a296的Actions 42523539838](https://github.com/sumiyuki727/skin-editor/actions/runs/42523539838)中Linux核心和Windows桌面通过，Windows核心在Python 3.12.10的test_reparse_points_are_refused_without_following_target失败。硬链接测试以tuple重建stat_result，丢失Windows专用st_file_attributes；新pathlib的lstat委托stat后取得None，触发None与0x400位运算异常。本机Python 3.9.6用同一委托路径成功复现。修正仅用转发替身覆盖st_nlink，保留全部原生属性，并显式覆盖委托路径；生产安全检查、workflow及产品行为均不变。上一轮17文件修订已通过正常完整hook备份推送856cabd5ae34af686bc10f933d6d8aeec63590ea，远端SHA一致；该备份尚不包含本次CI修正，不能声明远端已恢复。本次测试修正与此记录未提交，修正后62项成本工具Python回归及仓库候选／git diff --check通过；直接Python 3.12复验尚缺，日志见本机artifacts/github-query-ci-review/，后续需提交后由远端重新验证。
+
 2026-11-09查询增量一致性审阅：轮前实现已通过正常完整hook备份推送`019a296f3198446aa1d2ee267dc9fda4f3378e0d`，私有origin及远端SHA一致。本轮修复冻结清单／原始证据／最终报告的发布截面、索引复核、输入代次校验和失败收尾边界，并补真实Rust查询输出到Python的无计时贯通回归，详见[审阅记录](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量一致性审阅)。计划仍为schema3／CostClosure-Query-v1，读取器修订为reader-v2；Reference10000／Tiny4、API7／profile1不变。PC三批次和正式成本测量未开展，coverage NeedsEvidence、产品NotEvaluated、KT23／K1及stable兼容结论保持。本轮修订未提交；后续先备份，再依明确任务推进。下方历史记录保留各自时点。
 
 2026-11-09查询最小增量：轮前8份规格审阅文档已通过正常完整hook备份推送`d8f2ad99e8bb6035470619c6136701388540d180`，私有origin及远端SHA一致。本轮实现schema3／`CostClosure-Query-v1`的受测副本冻结、限根只读复核、摘要／账本／分页各16固定批次及真实Tiny canary；细节和验证见[实现记录](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量实现记录)。核心API7／profile1、Reference10000／Tiny4保持。PC三批次及正式新成本测量未开展，coverage固定NeedsEvidence、产品NotEvaluated，KT23／K1和stable兼容结论不升级。新增量未提交；下一步先备份并审阅本轮实现，下方旧记录保留各自时点。

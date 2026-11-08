@@ -1,5 +1,7 @@
 # Git 与私有远端管理
 
+2026-11-09 CI故障确认：[019a296的Actions 42523539838](https://github.com/sumiyuki727/skin-editor/actions/runs/42523539838)中Linux核心和Windows桌面通过，Windows核心在Python 3.12.10的test_reparse_points_are_refused_without_following_target失败。硬链接测试以tuple重建stat_result，丢失Windows专用st_file_attributes；新pathlib的lstat委托stat后取得None，触发None与0x400位运算异常。本机Python 3.9.6用同一委托路径成功复现。修正仅用转发替身覆盖st_nlink，保留全部原生属性，并显式覆盖委托路径；生产安全检查、workflow及产品行为均不变。上一轮17文件修订已通过正常完整hook备份推送856cabd5ae34af686bc10f933d6d8aeec63590ea，远端SHA一致；该备份尚不包含本次CI修正，不能声明远端已恢复。本次测试修正与此记录未提交，修正后62项成本工具Python回归及仓库候选／git diff --check通过；直接Python 3.12复验尚缺，日志见本机artifacts/github-query-ci-review/，后续需提交后由远端重新验证。
+
 2026-11-02。远端为 [sumiyuki727/skin-editor](https://github.com/sumiyuki727/skin-editor)，创建时核对为 PRIVATE；当前默认分支沿用 `codex/p1-bootstrap`，不重写已有历史。GitHub 是远端备份与检查入口，本地 Git 仍提供工作区和回退能力。
 
 每轮先读状态、最近提交与暂存差异。已有可审查增量通过仓库 hook 后提交，核对实际提交和目标私有仓库，再正常推送 origin；无变更不造空提交。新增工作在检查前保持未提交，不用绕过 hook、强推、amend 或历史重写换取备份。用户明确要求暂不提交／推送时遵照该轮要求。凭据仅由系统凭据管理器／GitHub CLI 获取，不写入 URL、脚本、文档或环境样例。

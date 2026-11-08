@@ -1,5 +1,7 @@
 # 独立 stable 兼容内核：新对话交接
 
+2026-11-09成本收口规格：K1整体退出审阅9文件已通过正常完整hook备份推送`921547f8462d93e4cfef7531c11b756f1932406b`，私有origin及远端SHA一致。[成本补证开工规格](K1_COST_CLOSURE_SPEC.md)已细化6类固定批次、32份实际准备后取消样本的单池／64MiB聚合准入、Unknown边界和受测二进制独立冻结。schema3／CostClosure-v1仍是待一致性审阅的拟实施契约，现有工具仍schema2；本轮只改文档，不开发／重测。Reference10000／Tiny4、API7／profile1和产品预算保持，KT23／K1仍未签收。本轮规格未提交，下一步先备份并审阅规格，再按明确任务实施最小增量；不接GUI／原生设备，不宣称产品性能或stable兼容达标。下方旧记录保留原时点。
+
 2026-11-08最新K1整体退出审阅：K1-6D v2修订已通过正常完整hook备份推送`2c387f2f57641e893d8dd12c3c363a75d4799995`，私有origin及远端SHA一致。[整体退出核对](K1_EXIT_REVIEW.md)已完成：已声明功能与有界受管资源的适用纯核心项已有通过证据；KT23仍缺未分辨短调用的固定批次补证与对应关系，K1暂不整体签收。独立新轮12进程协议Valid，受测二进制已单独冻结；Unknown和产品NotEvaluated保持，不与旧轮混合。本轮只改文档、复验证据，API7／profile1、Reference10000／Tiny4及运行逻辑保持；文档未提交。下一步先备份本轮审阅，再细化成本收口补证规格，不自动开始K2／GUI／原生设备或声明性能／stable兼容达标。下方旧记录保留各自时点。
 
 2026-11-08最新D一致性审阅：初版20文件已通过正常完整hook备份推送`4994d2e73989b76ae727cb83dbc08ec943502e6e`，私有origin及远端SHA核对一致。[本轮修订](K1_6D_COST_REVIEW.md#2026-11-08一致性审阅记录)补10项Python回归，修复构建冻结、结束／阶段协议、异常记录保留、计量及资源边界，成本输出升为v2；453项Python／169项gameplay／6项工具Rust、正式核心和桌面架构检查通过。v2新测12进程协议Valid，209个调用序列、96个CPU窗口和全部108个阶段真实峰值仍Unknown，产品NotEvaluated。Reference10000／Tiny4、API7／profile1及运行逻辑保持。本轮修订未提交，下一步先备份，再核对K1整体退出条件及Unknown的影响；不自动进入K2／GUI／原生设备，不宣称性能或stable兼容达标。下方旧记录保留各自时点。
@@ -24,7 +26,7 @@
 
 “独立”是纯Rust、可无窗口测试的模块；产品保持单进程模块化单体。不能裁剪、复制、翻译移植无授权旧stable源码，不能因为lazer有实现就当stable规则已验证。
 
-已实现SyntheticTest预编译圆圈、确定性时间／输入／生命周期、有界取消、冻结／恢复／重新武装、检查、统一候选／预算及三驱动互斥；API7／profile1、Tiny4／Reference10000。K1整体退出已审阅：功能及受管资源的适用纯核心证据已有通过记录，KT23短调用固定批次补证尚未闭合，暂不整体签收。D v2修订已备份推送2c387f2，本轮文档未提交；运行时未接GUI／音乐／设备，不自动开始K2或P3保存UI、素材skill及原生接线。
+已实现SyntheticTest圆圈生命周期、输入、冻结／恢复／重新武装、检查、候选／预算及三驱动互斥；API7／profile1、Tiny4／Reference10000。整体退出审阅已备份921547f，KT23成本补证未闭合。2026-11-09成本收口规格已拟定待一致性审阅，现有成本schema2；拟议schema3未实现，本轮文档未提交，不开发／重测或进入K2／GUI／原生设备。
 
 ## 2. Git、代码基线和并行修改
 
@@ -50,6 +52,7 @@
 - K1-6A一致性修订11文件已保存为b3c5f088932666c97ae8576b468b0c7b177bc7d5，正常完整hook包含137项gameplay及桌面默认／全feature，推送PRIVATE origin并核对远端SHA；本轮B的149项新增状态另经正式核心检查，源码／测试／文档未提交，不能沿用备份或远端CI结论。
 - K1-6B初版32文件已保存为747222c8c69e39ff39a84e933a73883bcfedb80c，正常完整hook包含149项gameplay及桌面默认／全feature，推送PRIVATE origin并核对远端SHA。本次B一致性审阅修复三项计数边界，补7项回归，共156项gameplay另经正式核心检查，源码／测试／说明未提交；旧条目的“本轮未提交”保留其原时点。
 - 最新默认流程：先看status／log／实际暂存差异，将上一轮来源明确、可审查的工作通过检查及hook提交成回退点，默认同步核对过的私有origin；用户明确说不提交／推送时除外。新增量轮末不自动一起提交。
+- 2026-11-09 K1整体退出审阅9文件已保存为921547f8462d93e4cfef7531c11b756f1932406b，正常完整hook含453项Python／169项gameplay／6项工具Rust及桌面默认／全feature检查／构建，正常推送PRIVATE origin并核对远端SHA。随后本轮只补成本收口规格和交接，未开始功能开发或成本重测；文档新增量未提交，旧本机冻结证据继续保留，不沿用远端CI为草案背书。
 - 2026-11-08 D v2一致性修订15文件已保存为2c387f2f57641e893d8dd12c3c363a75d4799995，正常完整hook含453项Python／169项gameplay／6项工具Rust及桌面默认／全feature检查／构建，推送PRIVATE origin并核对远端SHA。本轮K1整体退出审阅及新原始诊断只追加文档／本机证据，文档尚未提交；不沿用远端CI为未上传文档或新测量背书。
 - 2026-11-08 K1-6D初版20文件已保存为4994d2e73989b76ae727cb83dbc08ec943502e6e，正常完整hook含443项Python／169项gameplay／6项工具Rust、桌面默认／全feature检查与构建，推送PRIVATE origin并核对远端SHA。随后本轮D一致性修订为未提交工作，成本协议v2、453项Python及新12进程证据单列，不沿用备份或远端CI结论。
 - C一致性修订11文件已保存为13fb4667840b6371d4830d92d308ad436fe5eb49，正常完整hook含169项gameplay及桌面默认／全feature，前轮已推送PRIVATE origin并核对远端SHA。本轮启动无新可审查差异、复用HEAD未造空提交；随后D工具／基线说明为本轮未提交新增量，测量源码身份以D报告的文件摘要为准，不冒用HEAD。
@@ -119,7 +122,7 @@
 
 ## 6. 下一增量、检查和证据
 
-当前[K1整体退出审阅](K1_EXIT_REVIEW.md)已完成，K1暂不整体签收。D v2一致性修订2c387f2已备份推送，453项Python／169项gameplay／6项工具Rust及正常完整hook通过；本轮只改文档并复验证据。功能及有界受管资源的适用纯核心证据已有通过记录，KT23还缺未分辨短调用的固定批次补证与对应关系。新独立12进程轮协议Valid、206个短调用序列／96个CPU窗口／108个阶段真实峰值Unknown、产品NotEvaluated，二进制已在本机忽略目录独立冻结，不混用v2-01的209序列。本轮文档未提交，下一步先备份，再细化成本收口规格；不自动实现补证或进入K2／GUI／原生设备。
+当前[成本收口开工规格](K1_COST_CLOSURE_SPEC.md)已拟定待一致性审阅。退出审阅921547f已通过完整hook备份推送，453项Python／169项gameplay／6项工具Rust及桌面默认／全feature检查通过；本轮只改文档。新规格规定3类查询＋PC准备／成功取消／实际Drop共6批次、各16样本，32个独立已准备诊断样本额外受64MiB聚合预留上限约束，每个Reference8MiB双池／Tiny64KiB双池不变；不是产品多会话功能。现有成本schema2，拟议schema3／CostClosure-v1未实现；新单调用不因批次而升级、必需批次Unknown仍NeedsEvidence，受测二进制须执行独立冻结副本并可只读复核。下一步先备份规格并独立审阅，再按明确任务实施；KT23／K1、产品性能和stable兼容未通过。
 
 规格审阅已备份为f1c8dbf，正常完整hook验证旧API5／116项及桌面默认／全feature无窗口基线；随后实现[K1-6A](K1_6A_STORAGE_REVIEW.md)，API6／profile1、4对象。新增实现经正式check_core通过424项Python检查回归、格式、Clippy、三个核心包测试及release构建，gameplay共132项；桌面architecture-only通过。没有成本测量／窗口／设备接线，日志在本机忽略目录artifacts/k1-6a/。过程中一次夹具目标错误及换行整理误清空本轮源码均已修复，恢复／黄金内容核对和最终正式检查通过，历史日志保留。
 
@@ -167,9 +170,9 @@ K1-1至K1-5已运行适用纯核心回归，完整KT仍待验收，具体检查�
 ```text
 请在 E:\skin-editor 接手独立stable兼容内核规划。先读AGENTS.md、docs/HANDOFF_STABLE_KERNEL.md、docs/STABLE_KERNEL_PLAN.md及当前Git状态／HEAD／暂存差异，按最新规则保护上一轮已审查工作，核对私有origin并保留其他对话修改，不并发Git写入。
 
-首批仅osu!standard／No Mod／纯圆圈受测子集。产品仍为模块化单体；gameplay API7／profile1、Tiny4／Reference10000，G0／G1／A1及有限交错已测。成本工具独立于产品、只依赖gameplay与std，协议v2；时钟／输出／进程观察不进入核心。先读docs/K1_EXIT_REVIEW.md的条款表、Unknown边界和短调用批次待办，再读D／C／B／A、K1-6、K0-A及C1／C2／C3。compatibility未实现，不用SyntheticTest、旧源码或lazer补未知stable规则。
+首批仅osu!standard／No Mod／纯圆圈受测子集。gameplay API7／profile1、Tiny4／Reference10000，G0／G1／A1及有限交错已测；成本工具独立std＋gameplay，时钟／I/O不进入核心。先读docs/K1_COST_CLOSURE_SPEC.md的6批次、32样本容量、候选键公开接口限制、Unknown及冻结保管，再读K1_EXIT_REVIEW.md和D／C／B／A、K1-6、K0-A及C1／C2／C3。现有成本schema2，schema3是拟议协议；compatibility未实现，不用合成数值或旧源码补未知stable规则。
 
-按我本轮明确任务执行；交接本身不授权展开后续开发、P3保存UI、私人谱面或窗口／设备。2026-11-08最新停靠点为K1整体退出审阅完成、暂不签收：D v2修订已通过正常完整hook备份推送2c387f2并核对PRIVATE origin／SHA，本轮审阅文档未提交。适用纯核心功能／有界资源已有通过证据，KT23短调用固定批次补证与对应关系尚缺。下一轮先备份，再细化成本收口规格，未获明确任务不直接开发或进入K2。新独立12进程复验协议Valid、206个短调用序列／96个CPU窗口／108个阶段真实峰值Unknown、产品NotEvaluated；已单独冻结受测二进制，保持新旧构建／轮次及版本分开。不得追认旧报告、扣诊断扰动或据低数值宣布K1／KT23／产品性能／stable兼容通过。K0-B和GUI／原生输入／背景音频／设备消费仍按各自门槛验收。
+按我本轮明确任务执行；交接不授权后续开发、私人谱面、P3保存UI或窗口／设备。2026-11-09停靠点为成本收口规格已拟定待审阅：退出审阅9文件已通过正常完整hook备份推送921547f并核对私有origin／SHA，本轮规格文档未提交。下一轮先备份，再审阅docs/K1_COST_CLOSURE_SPEC.md的一致性，不自动实现。保持Reference10000／Tiny4、API7／profile1及现有成本schema2；6类批次、32独立准备样本的64MiB聚合准入、schema3及冻结副本执行／只读复核均未实现。本轮未重测，旧Valid／Unknown和原始散列不变；必需批次仍Unknown时须NeedsEvidence，不能据规格完备宣布KT23／K1／产品性能／stable兼容通过。
 
 保持完整历史不删不覆盖、图片与音效独立、皮肤热替换不重置音乐／对象、冻结恢复不补跑及旧代次清理。零欠载、提交p95≤20ms、内存／GPU／实际释放门槛保持，播放CPU≤15%为优化目标。新原生路径和兼容性须另验，合成小模型测试不能替代这些证据。
 ```

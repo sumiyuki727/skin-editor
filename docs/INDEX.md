@@ -1,10 +1,11 @@
 # 文档索引
 
-当前实现以[架构](ARCHITECTURE.md)、[技术栈](TECH_STACK.md)、[README](../README.md)为准；代码基线见[代码与决策包](review/README.md)，后续新增对象见[P3-1A状态codec审阅](P3_1_STATE_REVIEW.md)。P3-0工具原型和P3-1A不等于已接入正式保存。历史测量中的旧待办不覆盖当前[阶段结论](P2_FINAL_ACCEPTANCE.md)。
+当前总体进度、路线建议和检查结果先读[2026-11-09全面检查](PROJECT_REVIEW_20261109.md)，再按[架构](ARCHITECTURE.md)、[技术栈](TECH_STACK.md)和[README](../README.md)查对应实现。[代码与决策包](review/README.md)是2026-10-30审查快照，后续已有P3状态／捕获／文件恢复及K1增量，不能将原清单当当前全量代码。独立存储基础仍不等于普通保存闭环，历史测量也不覆盖当前版本的新路径。
 
 ## 当前阅读入口
 
-- [K1成本补证／Query-v1一致性审阅](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量一致性审阅)（查询增量已备份019a296；本轮修复保管、复核与查询协议边界，补真实Rust无计时贯通；PC和正式成本未开展，结论不升级，修订未提交）
+- [2026-11-09项目全面检查](PROJECT_REVIEW_20261109.md)
+- [K1成本补证／Query-v1一致性审阅](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量一致性审阅)（实现019a296、一致性修订856cabd已保存；CI测试修正于6ac5fda备份。PC和正式完整成本仍未开展，K1不签收）
 - [K1整体退出审阅／成本补证待办](K1_EXIT_REVIEW.md)（D v2修订备份2c387f2；功能及有界资源的适用证据已有记录，KT23短调用批次补证未闭合，K1暂不签收；新轮12进程及独立冻结二进制，不代表产品预算通过）
 - [K1-6D工具一致性审阅及v2重测](K1_6D_COST_REVIEW.md#2026-11-08一致性审阅记录)（初版4994d2e、一致性修订2c387f2已备份；453项Python／169项gameplay／6项工具Rust通过；历史v2-01协议Valid／指标Unknown／产品NotEvaluated，整体退出结论及新轮证据见上）
 - [K1-6C规模回归及一致性审阅](K1_6C_SCALE_REVIEW.md#2026-11-07一致性审阅记录)（C初版备份09075738、一致性修订备份13fb466；169项gameplay通过，API7／profile1、Reference10000／Tiny4保持；后续D工具及基线见上）

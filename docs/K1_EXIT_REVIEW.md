@@ -1,5 +1,7 @@
 # K1整体退出审阅：纯核心证据与成本补证
 
+2026-11-09当前状态以[项目全面检查](PROJECT_REVIEW_20261109.md)为统一入口：Query-v1实现及一致性修订已完成；轮前CI测试修正已通过完整hook备份推送`6ac5fda`。K1仍缺PC三批次／完整新轮及独立退出决定，P3普通保存闭环未接入。建议有限收口K1后优先审阅P3接线，尚未授权开发。本轮只修正文档；下方带日期的增量记录保留各自时点，其“本轮／下一步／未提交”不覆盖当前快照。
+
 2026-11-09查询增量一致性审阅：轮前实现已通过正常完整hook备份推送`019a296f3198446aa1d2ee267dc9fda4f3378e0d`，私有origin及远端SHA一致。本轮修复冻结清单／原始证据／最终报告的发布截面、索引复核、输入代次校验和失败收尾边界，并补真实Rust查询输出到Python的无计时贯通回归，详见[审阅记录](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量一致性审阅)。计划仍为schema3／CostClosure-Query-v1，读取器修订为reader-v2；Reference10000／Tiny4、API7／profile1不变。PC三批次和正式成本测量未开展，coverage NeedsEvidence、产品NotEvaluated、KT23／K1及stable兼容结论保持。本轮修订未提交；后续先备份，再依明确任务推进。下方历史记录保留各自时点。
 
 2026-11-09查询最小增量：轮前8份规格审阅文档已通过正常完整hook备份推送`d8f2ad99e8bb6035470619c6136701388540d180`，私有origin及远端SHA一致。本轮实现schema3／`CostClosure-Query-v1`的受测副本冻结、限根只读复核、摘要／账本／分页各16固定批次及真实Tiny canary；细节和验证见[实现记录](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量实现记录)。核心API7／profile1、Reference10000／Tiny4保持。PC三批次及正式新成本测量未开展，coverage固定NeedsEvidence、产品NotEvaluated，KT23／K1和stable兼容结论不升级。新增量未提交；下一步先备份并审阅本轮实现，下方旧记录保留各自时点。

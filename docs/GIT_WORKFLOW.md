@@ -1,5 +1,7 @@
 # Git 与私有远端管理
 
+2026-11-09后续全面检查：上一轮CI测试替身修正与两份说明已通过正常完整hook保存为`6ac5fda1efc342ae72001f60058c4205def4c5b2`，推送PRIVATE origin并核对远端SHA。本轮新文档与GitHub实际复验结果统一见[全面检查](PROJECT_REVIEW_20261109.md#本轮验证与证据身份)。下面故障记录按当时状态保留，不能将其“未提交”理解为修正仍未保存。
+
 2026-11-09 CI故障确认：[019a296的Actions 42523539838](https://github.com/sumiyuki727/skin-editor/actions/runs/42523539838)中Linux核心和Windows桌面通过，Windows核心在Python 3.12.10的test_reparse_points_are_refused_without_following_target失败。硬链接测试以tuple重建stat_result，丢失Windows专用st_file_attributes；新pathlib的lstat委托stat后取得None，触发None与0x400位运算异常。本机Python 3.9.6用同一委托路径成功复现。修正仅用转发替身覆盖st_nlink，保留全部原生属性，并显式覆盖委托路径；生产安全检查、workflow及产品行为均不变。上一轮17文件修订已通过正常完整hook备份推送856cabd5ae34af686bc10f933d6d8aeec63590ea，远端SHA一致；该备份尚不包含本次CI修正，不能声明远端已恢复。本次测试修正与此记录未提交，修正后62项成本工具Python回归及仓库候选／git diff --check通过；直接Python 3.12复验尚缺，日志见本机artifacts/github-query-ci-review/，后续需提交后由远端重新验证。
 
 2026-11-02。远端为 [sumiyuki727/skin-editor](https://github.com/sumiyuki727/skin-editor)，创建时核对为 PRIVATE；当前默认分支沿用 `codex/p1-bootstrap`，不重写已有历史。GitHub 是远端备份与检查入口，本地 Git 仍提供工作区和回退能力。

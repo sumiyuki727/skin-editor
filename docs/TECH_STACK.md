@@ -1,10 +1,10 @@
 # 技术栈：当前基线与未验证范围
 
-2026-10-30，以下来自实际manifest／锁文件和当前P2证据，区别于已[归档的历次选型记录](archive/2026-10-30-pre-review/README.md)。不重新排名未做同负载对照的框架，不把平台声明视为本项目实测。
+2026-11-09复核：以下当前选择来自实际manifest／锁文件；原生范围仍采用2026-10-30的P2证据，区别于已[归档的历次选型记录](archive/2026-10-30-pre-review/README.md)。总体进度与后续建议见[全面检查](PROJECT_REVIEW_20261109.md)。不重新排名未做同负载对照的框架，不把平台声明视为本项目实测。
 
 | 部分 | 当前实际选择 | 范围／限制 |
 | --- | --- | --- |
-| 核心 | Rust 1.95.0／2024 edition，domain＋application＋gameplay | 无第三方依赖、禁止unsafe；gameplay仅4对象SyntheticTest、未接产品，本机Windows无窗口检查通过，Linux实测延期 |
+| 核心 | Rust 1.95.0／2024 edition，domain＋application＋gameplay | 无第三方依赖、禁止unsafe；gameplay为Tiny4／Reference10000的SyntheticTest、未接产品；本机Windows及远端无窗口核心结果见[本轮检查](PROJECT_REVIEW_20261109.md#本轮验证与证据身份)，与Linux原生延期分开 |
 | UI／宿主 | egui／eframe =0.37.0 | 可折叠普通面板及独立音效窗口，无复杂停靠；实际布局不是最终产品设计 |
 | GPU | wgpu =30.0.1；Windows普通配置MemoryUsage | 本机Vulkan验证；DX12／UMA及其他设备不继承数据 |
 | 图像 | image =0.25.10，仅PNG feature | 资源准备与CPU/GPU共享合成语义；不宣称完整stable图片格式支持 |
@@ -15,11 +15,11 @@
 | Rust文件存储（2026-11-02） | rusqlite =0.41.1（bundled／hooks／limits）、same-file =1.0.6 | 仅infrastructure，默认feature关闭；SQLite C源码随依赖编译，需已有C编译器，文件身份通过平台句柄核对；不启用动态扩展或新后台线程 |
 | 可选诊断 | profiling =1.0.18、tracing =0.1.44、winit =0.30.13 | host的framework-trace默认关闭；有界观察成本不得从产品CPU估算扣除 |
 
-当前九个本地包及依赖见[当前架构](ARCHITECTURE.md)；[架构审阅](review/README.md)是原八包快照，gameplay各步见[K1-1](K1_1_SYNTHETIC_REVIEW.md)至[K1-6A](K1_6A_STORAGE_REVIEW.md)及[K1-6B容量证明](K1_6B_STORAGE_PROOF.md)。当前API7／profile1采用标准库私有有界缓冲、Box、Rc和局部Cell，Tiny4／Reference10000，G0无输入及分步初始化已测；完整输入规模轨迹待验。分配请求证明限定固定Rust1.95的空Vec单次预留路径，包装不复制N条；来源共享，账本独立，额度预留与当前已请求payload／工作计数分开。摘要／借用完整帧／分页不复制全图，Pending／Failed保留旧帧。无新依赖／feature／线程／设备，两个锁文件不变；Rc控制头、分配器和完整栈仍未知，不代表进程峰值或产品预算通过。Windows ETW的C采集器继续只是外部诊断工具。
+当前九个本地包及依赖见[当前架构](ARCHITECTURE.md)；[架构审阅](review/README.md)是原八包快照，gameplay各步见[K1-1](K1_1_SYNTHETIC_REVIEW.md)至[K1-6A](K1_6A_STORAGE_REVIEW.md)及[K1-6B容量证明](K1_6B_STORAGE_PROOF.md)。当前API7／profile1采用标准库私有有界缓冲、Box、Rc和局部Cell，Tiny4／Reference10000，G0无输入、G1固定输入、A1实际Automatic及有限控制交错已由[K1-6C](K1_6C_SCALE_REVIEW.md)覆盖；分步初始化和只读完整帧／分页已有回归，成本补证仍待收口。分配请求证明限定固定Rust1.95的空Vec单次预留路径，包装不复制N条；来源共享，账本独立，额度预留与当前已请求payload／工作计数分开。摘要／借用完整帧／分页不复制全图，Pending／Failed保留旧帧。无新依赖／feature／线程／设备，两个锁文件不变；Rc控制头、分配器和完整栈仍未知，不代表进程峰值或产品预算通过。Windows ETW的C采集器继续只是外部诊断工具。
 
 ## 平台和资源结论
 
-当前原生证据范围为Windows 10 build19045／Ryzen 7 4800H／RTX2060、NVIDIA560.94、Vulkan参考环境，不是最低配置或全平台保证。Linux实测暂缓，macOS待设备；Linux音频依赖系统ALSA开发库／pkg-config。CI已配置，不等于远程已执行或Linux已通过。
+当前原生证据范围为Windows 10 build19045／Ryzen 7 4800H／RTX2060、NVIDIA560.94、Vulkan参考环境，不是最低配置或全平台保证。Linux原生实测暂缓，macOS待设备；Linux音频依赖系统ALSA开发库／pkg-config。远端CI已经运行，覆盖Windows／Linux核心和Windows无窗口桌面；逐提交结果见[本轮复核](PROJECT_REVIEW_20261109.md#本轮验证与证据身份)，不能据此宣称Linux原生／设备通过。
 
 资源门槛仍按[预算v2](RESOURCE_BUDGET.md)：稳定CPU≤2%、零欠载、提交p95≤20 ms、内存／GPU和实际回收保持硬项；播放CPU≤15%只是未达成的优化目标。P2当前产品配置与两轮300秒／有限20轮的结果见[最终验收](P2_FINAL_ACCEPTANCE.md)，不追认旧失败或跨构建数据。
 

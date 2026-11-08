@@ -1,5 +1,7 @@
 # 独立 stable 兼容内核：新对话交接
 
+2026-11-09当前状态以[项目全面检查](PROJECT_REVIEW_20261109.md)为统一入口：Query-v1实现及一致性修订已完成；轮前CI测试修正已通过完整hook备份推送`6ac5fda`。K1仍缺PC三批次／完整新轮及独立退出决定，P3普通保存闭环未接入。建议有限收口K1后优先审阅P3接线，尚未授权开发。本轮只修正文档；下方带日期的增量记录保留各自时点，其“本轮／下一步／未提交”不覆盖当前快照。
+
 2026-11-09 CI故障确认：[019a296的Actions 42523539838](https://github.com/sumiyuki727/skin-editor/actions/runs/42523539838)中Linux核心和Windows桌面通过，Windows核心在Python 3.12.10的test_reparse_points_are_refused_without_following_target失败。硬链接测试以tuple重建stat_result，丢失Windows专用st_file_attributes；新pathlib的lstat委托stat后取得None，触发None与0x400位运算异常。本机Python 3.9.6用同一委托路径成功复现。修正仅用转发替身覆盖st_nlink，保留全部原生属性，并显式覆盖委托路径；生产安全检查、workflow及产品行为均不变。上一轮17文件修订已通过正常完整hook备份推送856cabd5ae34af686bc10f933d6d8aeec63590ea，远端SHA一致；该备份尚不包含本次CI修正，不能声明远端已恢复。本次测试修正与此记录未提交，修正后62项成本工具Python回归及仓库候选／git diff --check通过；直接Python 3.12复验尚缺，日志见本机artifacts/github-query-ci-review/，后续需提交后由远端重新验证。
 
 2026-11-09查询增量一致性审阅：轮前实现已通过正常完整hook备份推送`019a296f3198446aa1d2ee267dc9fda4f3378e0d`，私有origin及远端SHA一致。本轮修复冻结清单／原始证据／最终报告的发布截面、索引复核、输入代次校验和失败收尾边界，并补真实Rust查询输出到Python的无计时贯通回归，详见[审阅记录](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量一致性审阅)。计划仍为schema3／CostClosure-Query-v1，读取器修订为reader-v2；Reference10000／Tiny4、API7／profile1不变。PC三批次和正式成本测量未开展，coverage NeedsEvidence、产品NotEvaluated、KT23／K1及stable兼容结论保持。本轮修订未提交；后续先备份，再依明确任务推进。下方历史记录保留各自时点。
@@ -30,16 +32,16 @@
 
 ## 1. 当前任务与停靠点
 
-用户希望独立实现一个适合皮肤编辑／离线测试的stable兼容内核。首批限定 **osu!standard／No Mod／圆圈子集**。当前主文档为[架构与分阶段计划](STABLE_KERNEL_PLAN.md)，K1-1合成模型、K1-2纯冻结、K1-3受限检查、K1-4统一候选及K1-5纯驱动增量已实现；K1剩余项、K2–K5和完整KT仍待完成。K0-B是可执行兼容profile准入，规则证据准备仍未完成，不因合成模型通过而开放。
+用户希望独立实现一个适合皮肤编辑／离线测试的stable兼容内核。首批限定 **osu!standard／No Mod／圆圈子集**。主文档为[架构与分阶段计划](STABLE_KERNEL_PLAN.md)，本轮综合结论见[全面检查](PROJECT_REVIEW_20261109.md)。K1-1至K1-5、K1-6 A–D及Query-v1已有适用实现／复核，剩余成本补证未闭合；K2–K5与完整KT仍待完成。K0-B是可执行兼容profile准入，规则证据仍未完成，不因合成模型通过而开放。
 
 “独立”是纯Rust、可无窗口测试的模块；产品保持单进程模块化单体。不能裁剪、复制、翻译移植无授权旧stable源码，不能因为lazer有实现就当stable规则已验证。
 
-已实现SyntheticTest圆圈生命周期、输入、冻结／恢复／重新武装、检查、候选／预算及三驱动互斥；API7／profile1、Tiny4／Reference10000。本轮成本工具已实现schema3／CostClosure-Query-v1、冻结保管、只读复核与三类查询固定批次，核心保持不变。PC三批次／完整CostClosure-v1仍未实现，未运行正式新成本轮；KT23／K1、产品性能及stable兼容结论不升级。本轮新增量未提交。
+已实现SyntheticTest圆圈生命周期、输入、冻结／恢复／重新武装、检查、候选／预算及三驱动互斥；API7／profile1、Tiny4／Reference10000，G0／G1／A1及有限控制交错已有回归。成本工具schema3／CostClosure-Query-v1、reader-v2已实现并审阅冻结保管、只读复核与三类查询批次。PC三批次／完整CostClosure-v1未实现，未运行正式新轮；KT23／K1、产品性能及stable兼容结论不升级。本轮只审阅项目和同步当前文档。
 
 ## 2. Git、代码基线和并行修改
 
-- 本轮修订验证：正式check_core通过487项Python／169项gameplay／12项工具Rust和六组合无计时贯通，桌面architecture-only、仓库候选及文档检查通过；详情见本页开头的Query-v1审阅记录，旧冻结副本／报告散列未变。
-- 本轮回退点019a296f3198446aa1d2ee267dc9fda4f3378e0d已通过正常完整hook并推送已核对PRIVATE的origin，保存上一轮20文件Query-v1实现。后续本轮一致性修订留在工作区；暂存区应为空，既有schema.rs规范化空差异标记保留。
+- 本轮正式核心及桌面默认／全feature无窗口检查、GitHub复验和文档检查结果统一见[全面检查](PROJECT_REVIEW_20261109.md#本轮验证与证据身份)；旧冻结副本／报告散列不变。
+- 本轮回退点6ac5fda1efc342ae72001f60058c4205def4c5b2已通过正常完整hook并同步PRIVATE origin，包含上一轮CI测试替身修正和两份说明；Query一致性修订此前已保存856cabd。本轮全面检查文档为新未提交增量，既有schema.rs规范化空差异标记保留。
 - 工作区为 E:\skin-editor，分支codex/p1-bootstrap；远端[sumiyuki727/skin-editor](https://github.com/sumiyuki727/skin-editor)须再次核对PRIVATE。
 - 历史恢复代码基线为2719d0f；先前交接文档保存于6e26e9d。动画设计回退点为d3f4b2b34b2c088932acf1641163c72915163e41，经过正常仓库hook并同步私有origin；它没有增加动画功能。
 - 独立内核方案初版及关联交接已保存于881b6613625e4821036bd7fd2cb8a8cd710f96e5，完整本地hook通过并推送私有origin；后续契约文档回退点见下一条。该初版文档提交没有增加内核功能，不证明KT或规则已验证。
@@ -133,9 +135,9 @@
 
 ## 6. 下一增量、检查和证据
 
-当前停靠点是[CostClosure-Query-v1实现](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量实现记录)。上一轮8文档已正常备份推送d8f2ad9。本轮采用独立16记录协议：baseline9、查询建立／3批次／释放5、summary和end；三类各16样本、外层参考各16，共96个新时间槽。查询组无单调用计时，1MiB实际容器准入，复用64项页缓冲；每样本核对完整结果、FrameKey、WorkCounts差值和资源不变。失败可输出有界原始残留，不等待正常ACK或新样本位。Reference10000两预算／三轨迹及真实Tiny4三轨迹均有无窗口功能回归。
+当前停靠点是[项目全面检查](PROJECT_REVIEW_20261109.md)，Query-v1实现与一致性审阅已完成，分别保存于019a296／856cabd；本轮轮前备份为6ac5fda。现有计划是独立16记录的QueryOnly协议：baseline9、查询建立／3批次／释放5、summary和end；三类各16样本、外层参考各16，共96个新时间槽。查询组无单调用计时，1MiB实际容器准入，复用64项页缓冲；每样本核对完整结果、FrameKey、WorkCounts差值和资源不变。Reference10000两预算／三轨迹及真实Tiny4三轨迹已有无窗口功能回归，正式成本尚未运行。
 
-冻结入口先复制Cargo真实产物到新目录frozen/probe.exe，再独占发布freeze.json；未来每子进程前后核对源码／副本，最终report.json和evidence-index.json依序非覆盖发布。只读--verify按已知角色检查路径、字节数和SHA，从JSONL／CSV重算协议、计数／资源、校准和统计，与report逐项比对；不构建、执行、采样或读取当前工作区源码。Python临时假证据只作回归，不是正式成本。PC三批次、真实12进程新测量及其独立审阅仍待后续明确任务；本轮coverage固定NeedsEvidence，不能宣称ReadyForReview。验证结果见实现记录；新增量未提交，原schema.rs空差异标记保留。
+冻结入口复制Cargo真实产物到新目录frozen/probe.exe，关闭并核对后独占发布freeze.json；正式测量时逐子进程核对源码／副本，全部收尾后依序非覆盖发布report.json与evidence-index.json。只读--verify核对角色、路径、字节数、SHA及逐条重算结果，不构建、执行、采样或读取当前源码。Python临时假证据只作回归。剩余为PC三批次／完整读取器与回归审阅、正式完整12进程新轮、独立退出决定；Query-only正式测量不是必须另跑的前置，旧Query结果不得拼接。当前coverage保持NeedsEvidence，既定合法Unknown保留；实现／审阅事实见[Query修订记录](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量一致性审阅)。
 
 规格审阅已备份为f1c8dbf，正常完整hook验证旧API5／116项及桌面默认／全feature无窗口基线；随后实现[K1-6A](K1_6A_STORAGE_REVIEW.md)，API6／profile1、4对象。新增实现经正式check_core通过424项Python检查回归、格式、Clippy、三个核心包测试及release构建，gameplay共132项；桌面architecture-only通过。没有成本测量／窗口／设备接线，日志在本机忽略目录artifacts/k1-6a/。过程中一次夹具目标错误及换行整理误清空本轮源码均已修复，恢复／黄金内容核对和最终正式检查通过，历史日志保留。
 
@@ -162,7 +164,7 @@ S01工程数值和Hit／Miss预期以主方案为准，不是stable窗口／半�
 4. 补冻结／恢复／检查定位、旧代次及资源所有权，覆盖KT10／KT11，记录10000圆圈成本基线。
 5. K1审阅后再加K2纯解析器／profile，可执行兼容范围须满足K0-B；K3先fake验证C3提交／部分接纳／回执去重、迟到／未知／换代及停止路径，再做编辑器／WAV／材料接线，之后K4手动圆圈对照和K5原生稳定性；不跨阶段宣称完成。
 
-以上是分步路线：K1-1至K1-5已经实现适用四对象功能，K1-6A／B放大存储及有界工作，C补万对象轨迹与控制，D建立独立成本基线并完成工具一致性修订。整体退出审阅暂未签收K1，只留下成本批次补证工作组；先定收口规格，再按明确任务实现／回归／重测并独立审阅。真实谱面解析仍须K0-B，原生接线仍须C3提交／回执与时钟能力。K3风险保持：eframe布局前输入捕获／封口、背景复制锚点与真实消费位置差异、静态元素到多圆圈绘制；不把GUI帧时间当硬件时间或即时trigger当精确排程。
+以上是分步路线：K1-1至K1-5已经实现适用四对象功能，K1-6A／B放大存储及有界工作，C补万对象轨迹与控制，D建立独立成本基线并完成工具一致性修订。整体退出审阅暂未签收K1，只留下成本批次补证工作组；收口规格和Query部分均已审阅，后续按明确任务完成PC／完整计划、正式新轮与独立退出决定。真实谱面解析仍须K0-B，原生接线仍须C3提交／回执与时钟能力。K3风险保持：eframe布局前输入捕获／封口、背景复制锚点与真实消费位置差异、静态元素到多圆圈绘制；不把GUI帧时间当硬件时间或即时trigger当精确排程。
 
 现有检查入口：
 
@@ -185,7 +187,7 @@ K1-1至K1-5已运行适用纯核心回归，完整KT仍待验收，具体检查�
 
 首批仅osu!standard／No Mod／纯圆圈受测子集。gameplay API7／profile1、Tiny4／Reference10000，G0／G1／A1及有限交错已测；成本工具独立std＋gameplay，时钟／I/O不进入核心。先读docs/K1_COST_CLOSURE_SPEC.md的6批次、32样本容量、候选键公开接口限制、Unknown及冻结保管，再读K1_EXIT_REVIEW.md和D／C／B／A、K1-6、K0-A及C1／C2／C3。当前成本工具为schema3／CostClosure-Query-v1；完整CostClosure-v1仍待PC三批次，历史v1／v2保留原样；compatibility未实现，不用合成数值或旧源码补未知stable规则。
 
-按我本轮明确任务执行；交接不授权后续开发、私人谱面、P3保存UI或窗口／设备。2026-11-09停靠点是CostClosure-Query-v1实现：轮前规格审阅已备份d8f2ad9，本轮新增量未提交。下一轮先备份，再审阅冻结保管／只读复核和固定查询批次的一致性；先读docs/K1_COST_CLOSURE_SPEC.md的查询增量实现记录。保持Reference10000／Tiny4及API7／profile1；当前只实现16记录的QueryOnly计划，PC三批次与正式新成本测量未开展。coverage仍NeedsEvidence，旧证据散列保留，不签收KT23／K1、产品性能或stable兼容。
+按我本轮明确任务执行；交接不授权后续开发、私人谱面、P3保存UI或窗口／设备。2026-11-09已完成项目全面检查，先读docs/PROJECT_REVIEW_20261109.md；轮前CI修正已备份6ac5fda，本轮审阅文档未提交。下一轮照既定Git流程备份，再执行明确任务。Query-v1实现与一致性修订均已完成，不重复首次规格／实现审阅；保持Reference10000／Tiny4、API7／profile1。PC三批次／完整CostClosure-v1与正式新成本测量未开展，建议有限收口K1后优先审阅P3保存闭环；只是建议，不自动开工。coverage仍NeedsEvidence，旧证据保留，不签收KT23／K1、产品性能或stable兼容。
 
 保持完整历史不删不覆盖、图片与音效独立、皮肤热替换不重置音乐／对象、冻结恢复不补跑及旧代次清理。零欠载、提交p95≤20ms、内存／GPU／实际释放门槛保持，播放CPU≤15%为优化目标。新原生路径和兼容性须另验，合成小模型测试不能替代这些证据。
 ```

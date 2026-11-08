@@ -1,5 +1,7 @@
 """Synthetic parser fixtures, not measured evidence or performance results."""
 import copy
+import json
+import sys
 import unittest
 
 import gameplay_cost_query as q
@@ -42,7 +44,7 @@ def rows(trace='g0',budget=1,repetition=1):
         if i in range(2,8) or i in range(9,13):
             m=dict(managed); row.update(owner_alive=True,fixture_bytes=320000,managed=m,work_counts=q.work(record_reads=n,state_initializations=n))
             if i in (3,4) or i in range(9,13): m.update(hits=0 if trace=='g0' else n,misses=n if trace=='g0' else 0,input=3 if trace=='a1' else 1)
-            if i in (5,6,7): m.update(skipped=n//2,transport=2,input=5 if trace=='a1' else 3)
+            if i in (5,6,7): m.update(skipped=n//2,transport=2,input=4 if trace=='a1' else 2)
             if i==6:
                 m.update(runtime_reserved=2000000,runtime_payload=1000000,runtime_allocations=6)
                 row['candidate_work']=q.work(allocation_attempts=3,state_initializations=15000,inspection_objects=5000)
@@ -87,6 +89,40 @@ def end(trace='g0',budget=1,repetition=1):
 
 
 class QueryProtocolChecks(unittest.TestCase):
+    def test_wire_canary_has_all_six_cases_without_becoming_measurement_evidence(self):
+        values=[]
+        for trace in ('g0','g1','a1'):
+            for budget in (1,256):
+                for row in rows(trace,budget)[9:]:
+                    row.update(target_os={'win32':'windows','darwin':'macos'}.get(sys.platform,'linux'),
+                               elapsed_ns=0,previous_emit_ns=0,previous_gate_ns=0)
+                    batch=row['query']
+                    if batch['kind']=='batch':
+                        batch.update(timing=times(0),reference=times(0))
+                        for sample in batch['samples']:sample['ns']=0
+                    if batch['kind']=='summary':
+                        for item in batch['batches']:item.update(timing=times(0),reference=times(0))
+                    values.append(row)
+        def wire(items):return '\n'.join('QUERY_CANARY\t'+json.dumps(row) for row in items)
+        self.assertEqual(q.validate_canary(wire(values),json.loads),6)
+        for change in ('missing','extra','duplicate','reorder','clock','work'):
+            changed=copy.deepcopy(values)
+            if change=='missing':changed.pop()
+            if change=='extra':changed.append(changed[0])
+            if change=='duplicate':changed[6:12]=changed[:6]
+            if change=='reorder':changed[1],changed[2]=changed[2],changed[1]
+            if change=='clock':changed[0]['elapsed_ns']=1
+            if change=='work':changed[1]['query']['samples'][0]['delta']['summaries']-=1
+            with self.assertRaises(ValueError,msg=change):q.validate_canary(wire(changed),json.loads)
+        with self.assertRaises(ValueError):q.validate_lifecycle(values[:6])
+
+    def test_baseline_source_recipe_cannot_silently_change_between_roles(self):
+        for index in (2,3,4,5,6,7):
+            for key in ('transport','input','revision'):
+                with self.subTest(index=index,key=key):
+                    row=rows()[index];row['managed'][key]+=1
+                    with self.assertRaises(ValueError):q.validate_row(row,row['phase'],'g0',1)
+
     def test_all_fixed_cases_are_distinct_complete_and_query_only(self):
         identities=set()
         for trace in ('g0','g1','a1'):
@@ -104,7 +140,7 @@ class QueryProtocolChecks(unittest.TestCase):
         self.assertEqual(len(identities),12)
 
     def test_unknown_schema_plan_case_role_types_and_new_fields_are_rejected(self):
-        for key,value in [('schema_version',2),('schema_version',True),('plan_id','CostClosure-v1'),('case_ordinal',1),('objects',4),('query_storage_bytes',1048577),('target_arch','unreviewed'),('target_os','unknown'),('future',1)]:
+        for key,value in [('schema_version',2),('schema_version',True),('plan_id','CostClosure-v1'),('case_ordinal',1),('objects',4),('query_storage_bytes',1048577),('target_arch','unreviewed'),('target_os','unknown'),('pointer_bits',32),('future',1)]:
             row=rows()[10];row[key]=value
             with self.assertRaises(ValueError): q.validate_row(row,'query_summary','g0',1)
         for repetition in (0,3,True):

@@ -127,7 +127,8 @@ class GameplayCostChecks(unittest.TestCase):
             artifact=json.dumps(dict(reason='compiler-artifact',target=dict(name='skin-editor-gameplay-cost'),executable=str(binary)))
             with patch.object(cost,'tool_environment',return_value=('cargo',{'RUSTC':'rustc'})),patch.object(cost,'linker_arguments',return_value=[]),\
                  patch.object(cost,'tool_graph_errors',return_value=[]),patch.object(cost,'tool_source_errors',return_value=[]),\
-                 patch.object(cost.subprocess,'run'),patch.object(cost.subprocess,'check_output',side_effect=['{}',artifact,'rustc identity']),\
+                 patch.object(cost.subprocess,'run'),patch.object(cost,'validate_canary',return_value=6),\
+                 patch.object(cost.subprocess,'check_output',side_effect=['{}','canary',artifact,'rustc identity']),\
                  patch.object(cost,'identity',side_effect=[{'source':'before'},{'source':'after'}]):
                 with self.assertRaises(ValueError):cost.check_tool()
 
@@ -170,6 +171,38 @@ class GameplayCostChecks(unittest.TestCase):
             self.assertEqual(result['status'],'Invalid');self.assertEqual(len(result['phases']),1)
             self.assertIn('handle close failed',result['reason'])
             self.assertTrue((Path(directory)/result['raw_file']).read_bytes())
+
+    def test_completion_waits_share_the_remaining_whole_child_deadline(self):
+        for now,want in ((0,5),(299_000_000_000,1)):
+            with patch.object(cost.time,'monotonic_ns',return_value=now):
+                self.assertEqual(cost.completion_timeout(0),want)
+        with patch.object(cost.time,'monotonic_ns',return_value=300_000_000_000):
+            with self.assertRaises(ValueError):cost.completion_timeout(0)
+
+    def test_failed_termination_never_closes_a_pipe_held_by_the_reader(self):
+        class HeldPipe:
+            closed=False
+            def close(self):raise AssertionError('would block on buffered reader lock')
+        class Process:
+            pid=123
+            stdout=HeldPipe()
+            stdin=io.BytesIO()
+            def poll(self):return None
+            def terminate(self):pass
+            def kill(self):pass
+            def wait(self,timeout):raise cost.subprocess.TimeoutExpired('owned',timeout)
+        class Reader:
+            ident=123
+            def __init__(self,**kwargs):pass
+            def start(self):pass
+            def join(self,timeout):self.joined=True
+            def is_alive(self):return True
+        with tempfile.TemporaryDirectory() as directory,patch.object(cost.subprocess,'Popen',return_value=Process()),\
+             patch.object(cost.threading,'Thread',Reader),patch.object(cost,'OwnedProcess',side_effect=OSError('observer failed')):
+            result=cost.run_probe(Path('owned.exe'),'g0',1,1,Path(directory))
+        self.assertEqual(result['status'],'Invalid')
+        self.assertFalse(result['completion']['cleanup_complete'])
+        self.assertIn('stdout close deferred',result['reason'])
 
     def test_unrecorded_build_overrides_cannot_change_the_cost_binary_profile(self):
         cost.validate_build_environment({'CARGO_HOME':'owned-cache'})

@@ -1,12 +1,13 @@
 """Strict schema 3 CostClosure-Query-v1 reader; never upgrades legacy evidence."""
 import copy
+import sys
 
 import gameplay_cost_protocol as legacy
 from gameplay_cost_protocol import WORK, METRICS, natural, nearest, validate_work
 
 SCHEMA = 3
 PLAN = 'CostClosure-Query-v1'
-VALIDATOR = 'CostClosure-Query-reader-v1'
+VALIDATOR = 'CostClosure-Query-reader-v2'
 BATCHES = ('Q-SUMMARY-4096', 'Q-LEDGER-N', 'Q-PAGE-4096')
 QUERY_PHASES = ('query_summary', 'query_ledger', 'query_page')
 PHASES = legacy.PHASES + ('query_group_ready', *QUERY_PHASES, 'query_group_released', 'batch_summary')
@@ -88,10 +89,16 @@ def expected_delta(kind):
 
 
 def validate_row(row, phase, trace, budget, repetition=1):
+    return _validate_row(row,phase,trace,budget,repetition,'windows')
+
+
+def _validate_row(row, phase, trace, budget, repetition, target_os):
     fields(row, ROW_FIELDS, 'query protocol')
     base = identity(row, trace, budget, repetition)
-    if row['target_arch'] not in ('x86_64','x86','aarch64') or row['target_os']!='windows':
+    if row['target_arch'] not in ('x86_64','x86','aarch64') or row['target_os']!=target_os:
         raise ValueError('Unknown bounded observation target')
+    if row['pointer_bits']!=(32 if row['target_arch']=='x86' else 64):
+        raise ValueError('Pointer width does not match target')
     if phase not in PHASES or row['phase'] != phase:
         raise ValueError('Changed phase order')
     if not 0 < natural(row['query_storage_bytes'], 'query storage') <= 1048576:
@@ -104,8 +111,13 @@ def validate_row(row, phase, trace, budget, repetition=1):
         if phase=='calibrated':
             fields(row['calibration'],('valid','observed_resolution_ns','empty_span_ns','small_reference_ns','large_reference_ns',
                                       'small_work','large_work','cpu_reference_ns','cpu_reference_cycles','cpu_reference_objects'),'calibration')
-        if row['managed'] is not None and row['managed']['run'] != base+1:
-            raise ValueError('Baseline run identity changed')
+        if row['managed'] is not None:
+            inspected=phase in ('inspected','cancelled','task_dropped')
+            automatic=trace=='a1' and phase!='prepared'
+            source=dict(run=base+1,transport=2 if inspected else 1,
+                        input=1+inspected+2*automatic,revision=730)
+            if any(row['managed'][key]!=want for key,want in source.items()):
+                raise ValueError('Baseline source recipe changed')
         return row
     alive = phase in ('query_group_ready', *QUERY_PHASES)
     alias = 'played' if alive else 'released'
@@ -190,19 +202,58 @@ def validate_lifecycle(rows):
     if setup['fixture_bytes'] != rows[2]['fixture_bytes']: raise ValueError('Query fixture capacity drift')
     for k in ('source_reserved','runtime_reserved','source_payload','runtime_payload','source_allocations','runtime_allocations'):
         if setup['managed'][k] != rows[3]['managed'][k]: raise ValueError('Query resource baseline drift')
-    for i,r in enumerate(rows[10:13]):
+    validate_query_lifecycle(rows[9:])
+
+
+def validate_query_lifecycle(rows):
+    if [r['phase'] for r in rows]!=list(PHASES[9:]): raise ValueError('Incomplete query group')
+    setup=rows[0]
+    for r in rows:
+        if any(r[k]!=setup[k] for k in ('target_arch','target_os','pointer_bits','sample_storage_bytes','query_storage_bytes','case_ordinal')):
+            raise ValueError('Changing query target/storage/case')
+    for a,b in zip(rows,rows[1:]):
+        if any(b['peaks'][k]<v for k,v in a['peaks'].items()): raise ValueError('Query peak regression')
+    for i,r in enumerate(rows[1:4]):
         q=r['query']
         if r['managed'] != setup['managed'] or r['fixture_bytes']!=setup['fixture_bytes'] or q['frame'] != setup['query']['frame']:
             raise ValueError('Query frame/resources changed')
-        prior=rows[9+i]['work_counts']
+        prior=rows[i]['work_counts']
         if delta(prior,q['samples'][0]['before']) != work(summaries=1) or delta(q['samples'][-1]['after'],r['work_counts']) != work(summaries=3):
             raise ValueError('Unaccounted query diagnostic work')
         expected={k:q[k] for k in ('id','timing','reference')}
-        if rows[14]['query']['batches'][i] != expected: raise ValueError('Summary/raw batch mismatch')
+        if rows[5]['query']['batches'][i] != expected: raise ValueError('Summary/raw batch mismatch')
+
+
+def validate_canary(output, decoder):
+    """--check unit-test stdout only, never accepted as measurement/custody data."""
+    if len(output)>8*1024*1024: raise ValueError('Canary output capacity')
+    values=[decoder(line[len('QUERY_CANARY\t'):]) for line in output.splitlines() if line.startswith('QUERY_CANARY\t')]
+    if len(values)!=36: raise ValueError('Exactly six complete functional canary cases required')
+    target_os={'win32':'windows','linux':'linux','darwin':'macos'}.get(sys.platform)
+    if target_os is None: raise ValueError('Unknown canary host')
+    for index,(trace,budget) in enumerate((t,b) for t in ('g0','g1','a1') for b in (1,256)):
+        rows=values[index*6:(index+1)*6]
+        for row,phase in zip(rows,PHASES[9:]):
+            _validate_row(row,phase,trace,budget,1,target_os)
+            if any(row[k]!=0 for k in ('elapsed_ns','previous_emit_ns','previous_gate_ns')):
+                raise ValueError('Functional canary must not collect timings')
+        validate_query_lifecycle(rows)
+        for row in rows[1:4]:
+            if summarize(row,1)['query']['timing_status']!='Unknown':
+                raise ValueError('Functional canary cannot produce timing evidence')
+    return 6
 
 
 def work(**values):
     return dict(dict.fromkeys(WORK,0), valid=True, **values)
+
+
+def validate_durations(rows, lifetime):
+    # These child segments are disjoint. A previous emit/gate can overlap a
+    # parent's phase boundary, so only the whole-child comparison is valid.
+    total=sum(natural(row[key],key) for row in rows for key in ('elapsed_ns','emit_ns','gate_wait_ns'))
+    if total>natural(lifetime,'child lifetime',300000000000):
+        raise ValueError('Child action/diagnostic segments exceed owned lifetime')
 
 
 def summarize(row, uncertainty):

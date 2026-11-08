@@ -288,16 +288,19 @@ impl Storage {
         self.series[kind].len += 1;
     }
     pub fn measure(&mut self, kind: usize, d: &Driver) {
+        self.collect(kind, d, true);
+    }
+    pub(crate) fn collect(&mut self, kind: usize, d: &Driver, timed: bool) {
         for _ in 0..REPEATS {
-            self.sample(kind, d, true);
+            self.sample(kind, d, timed);
         }
         let expected = d.owner.current().unwrap().observation();
         let before = d.owner.current().unwrap().work_counts();
         let series = &mut self.series[kind];
         for ns in &mut series.references {
-            let begin = Instant::now();
+            let begin = timed.then(Instant::now);
             empty_body(kind, d, expected, &mut self.output);
-            *ns = u64::try_from(begin.elapsed().as_nanos()).unwrap();
+            *ns = begin.map_or(0, |b| u64::try_from(b.elapsed().as_nanos()).unwrap());
             series.reference_len += 1;
         }
         assert_eq!(before, d.owner.current().unwrap().work_counts());
@@ -509,9 +512,7 @@ mod tests {
         let calls = *m.calls();
         let before = d.owner.resources();
         for kind in 0..3 {
-            for _ in 0..REPEATS {
-                storage.sample(kind, &d, false);
-            }
+            storage.collect(kind, &d, false);
             let work = d.owner.current().unwrap().work_counts();
             assert!(
                 std::panic::catch_unwind(std::panic::AssertUnwindSafe(
@@ -521,6 +522,8 @@ mod tests {
             );
             assert_eq!(d.owner.current().unwrap().work_counts(), work);
             assert_eq!(storage.series[kind].len, 16);
+            assert_eq!(storage.series[kind].reference_len, 16);
+            assert_eq!(storage.series[kind].references, [0; 16]);
             assert!(
                 storage.series[kind]
                     .samples
@@ -537,7 +540,11 @@ mod tests {
         assert!(retained.len() < 256 * 1024);
         let text = String::from_utf8(retained).unwrap();
         assert_eq!(text.matches("\"ordinal\":15").count(), 3);
-        assert_eq!(text.matches("\"reference_ns\":[]").count(), 3);
+        assert_eq!(
+            text.matches("\"reference_ns\":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]")
+                .count(),
+            3
+        );
     }
     #[test]
     fn wrong_golden_and_changed_nonquery_work_cannot_be_accepted() {

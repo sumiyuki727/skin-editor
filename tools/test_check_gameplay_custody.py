@@ -60,6 +60,115 @@ def reindex(output):
 
 
 class CustodyChecks(unittest.TestCase):
+    def test_final_report_cannot_change_between_writing_and_indexing(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            output,manifest,_,_=setup(Path(tmp))
+            for case in c.names():run_files(output,manifest,*case)
+            original=c.write_json
+            def replace_report(path,value):
+                original(path,value)
+                if path.name=='report.json':path.write_bytes(b'{}\n')
+            with patch.object(c,'write_json',side_effect=replace_report):
+                with self.assertRaises(ValueError):c.publish(output,manifest)
+            self.assertFalse((output/'evidence-index.json').exists())
+
+    def test_changed_freeze_after_child_preserves_failure_receipt_and_stops_matrix(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);binary=root/'built.exe';binary.write_bytes(b'fake')
+            source=cost.identity();output=root/'new'
+            def probe(executable,trace,budget,repetition,directory):
+                manifest=c.read_json(directory/'freeze.json',1048576)
+                name=f'{trace}-b{budget}-r{repetition}'
+                run_files(directory,manifest,name,trace,budget,repetition)
+                result=c.derive_run(directory,manifest,name,trace,budget,repetition)
+                (directory/(name+'.process.json')).unlink()
+                with (directory/'freeze.json').open('ab') as stream:stream.write(b'\n')
+                return result
+            with patch.object(cost,'supports_observation',return_value=True),patch.object(cost,'run_probe',side_effect=probe) as child:
+                result=cost.measure(binary,COMPILER,output,2,source,c.hash_file(binary,c.MAX_BINARY)['sha256'],BUILD)
+            self.assertEqual(result['status'],'Invalid');self.assertEqual(child.call_count,1)
+            receipt=c.read_json(output/'g0-b1-r1.process.json',65536)
+            self.assertIn('manifest changed',receipt['failure'])
+            self.assertTrue((output/'g0-b1-r1.child.jsonl').exists())
+            self.assertFalse((output/'evidence-index.json').exists())
+
+    def test_publication_binds_the_on_disk_freeze_before_deriving(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            output,manifest,_,_=setup(Path(tmp))
+            for case in c.names():run_files(output,manifest,*case)
+            changed=copy.deepcopy(manifest);changed['host_observer']['processor']='changed after freeze'
+            replace_json(output/'freeze.json',changed)
+            with self.assertRaises(ValueError):c.publish(output,manifest)
+            self.assertFalse((output/'evidence-index.json').exists())
+
+    def test_publication_cannot_index_raw_bytes_that_changed_after_derivation(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            output,manifest,_,_=setup(Path(tmp))
+            for case in c.names():run_files(output,manifest,*case)
+            original=c.derive_report
+            def change_after_read(root,manifest):
+                report=original(root,manifest)
+                path=root/'g0-b1-r1.child.jsonl';path.write_bytes(path.read_bytes()+b'{}\n')
+                return report
+            with patch.object(c,'derive_report',side_effect=change_after_read):
+                with self.assertRaises(ValueError):c.publish(output,manifest)
+            self.assertFalse((output/'evidence-index.json').exists())
+
+    def test_readonly_verification_also_rechecks_the_index_itself(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            output,_,_,_=complete(Path(tmp));original=c.derive_report
+            def change_index(root,manifest):
+                result=original(root,manifest)
+                replace_json(root/'evidence-index.json',dict(schema_version=3,files=[]))
+                return result
+            with patch.object(c,'derive_report',side_effect=change_index):
+                with self.assertRaises(ValueError):c.verify(output)
+
+    def test_freeze_does_not_alias_the_reader_plan_or_callers_source_map(self):
+        original=copy.deepcopy(q.PARAMETERS)
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                _,manifest,_,_=setup(Path(tmp))
+                manifest['parameters']['traces'].append('unreviewed')
+                self.assertEqual(q.PARAMETERS,original)
+        finally:
+            q.PARAMETERS.clear();q.PARAMETERS.update(original)
+        with tempfile.TemporaryDirectory() as tmp:
+            source=cost.identity();build=list(BUILD);root=Path(tmp)
+            binary=root/'built.exe';binary.write_bytes(b'fake')
+            manifest,_=c.freeze(binary,COMPILER,source,c.hash_file(binary,c.MAX_BINARY)['sha256'],root/'new',build,lambda:source)
+            source.clear();build.clear()
+            c.validate_freeze(manifest)
+
+    def test_csv_lines_and_json_numbers_are_bounded_before_materialization(self):
+        for data in (b'{"number":1e400}',b'{"number":'+b'9'*40+b'}'):
+            with self.assertRaises(ValueError):c.decode(data)
+            with self.assertRaises(ValueError):cost.decode_line(data+b'\n')
+        with self.assertRaises(ValueError):c.canonical(dict(number=float('inf')))
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp)/'samples.csv'
+            header=(','.join(('phase','parent_monotonic_ns',*c.COUNTERS))+'\n').encode()
+            for line in (b'"'+b'x'*512+b'"\n',b'"ready\n',b'ready,1,2,3,4,5,6,7'):
+                path.write_bytes(header+line)
+                with self.assertRaises(ValueError):c.process_points(path)
+
+    def test_ready_observation_and_child_diagnostic_durations_are_bounded(self):
+        for mode in ('ready','diagnostic'):
+            with self.subTest(mode=mode),tempfile.TemporaryDirectory() as tmp:
+                output,manifest,_,_=setup(Path(tmp));case=next(c.names());run_files(output,manifest,*case)
+                if mode=='ready':
+                    path=output/(case[0]+'.samples.csv')
+                    with path.open(newline='') as stream: cells=list(csv.reader(stream))
+                    for line in cells[2:]:line[1]=str(int(line[1])+61_000_000_000)
+                    with path.open('w',newline='') as stream:csv.writer(stream).writerows(cells)
+                    path=output/(case[0]+'.process.json');receipt=c.read_json(path,65536)
+                    receipt['elapsed_parent_ns']=70_000_000_000;replace_json(path,receipt)
+                else:
+                    path=output/(case[0]+'.child.jsonl');lines=path.read_bytes().splitlines()
+                    last=c.decode(lines[-1]);last['previous_emit_ns']=4_000_000_000;lines[-1]=c.canonical(last)
+                    path.write_bytes(b'\n'.join(lines)+b'\n')
+                with self.assertRaises(ValueError):c.derive_run(output,manifest,*case)
+
     def test_unsupported_observer_is_not_run_unknown_without_fake_freeze_or_child(self):
         with tempfile.TemporaryDirectory() as tmp:
             output=Path(tmp)/'new';source=cost.identity()

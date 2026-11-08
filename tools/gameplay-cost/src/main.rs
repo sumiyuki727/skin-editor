@@ -95,10 +95,26 @@ impl Context {
     ) -> io::Result<()> {
         let begin = Instant::now();
         let output = io::stdout();
+        let mut out = io::BufWriter::new(output.lock());
+        self.write_row(&mut out, (phase, elapsed), m, state, (calibration, query))?;
+        out.flush()?;
+        self.previous_emit = begin.elapsed().as_nanos() as u64;
+        Ok(())
+    }
+    fn write_row(
+        &mut self,
+        mut out: impl Write,
+        (phase, elapsed): (&str, u64),
+        m: &Meter,
+        state: Option<&Driver>,
+        (calibration, query): (
+            Option<&Calibration>,
+            Option<(&query::Storage, query::Receipt<'_>)>,
+        ),
+    ) -> io::Result<()> {
         if let Some(s) = state {
             self.events_checked = s.events;
         }
-        let mut out = io::BufWriter::new(output.lock());
         write!(
             out,
             "{{\"schema_version\":{SCHEMA},\"phase\":\"{phase}\",\"trace\":\"{}\",\"budget\":{},\"objects\":{},\"api_version\":{},\"profile_version\":{},\"status\":\"{}\",\"elapsed_ns\":{elapsed},\"previous_emit_ns\":{},\"previous_gate_ns\":{},\"sample_storage_bytes\":{},\"fixture_bytes\":{},\"owner_alive\":{},\"events_checked\":{},\"managed\":",
@@ -207,10 +223,7 @@ impl Context {
         }
         write!(out, ",\"metrics\":")?;
         m.json(&mut out)?;
-        writeln!(out, "}}")?;
-        out.flush()?;
-        self.previous_emit = begin.elapsed().as_nanos() as u64;
-        Ok(())
+        writeln!(out, "}}")
     }
 }
 fn run(context: &mut Context, m: &mut Meter, storage: &mut query::Storage) {
@@ -545,12 +558,24 @@ mod tests {
                 let data = fixture(4);
                 let mut m = Meter::new(4);
                 let mut d = Driver::create(4, trace, budget, &data, &mut m);
+                assert_eq!(d.source().transport.get(), 1);
+                assert_eq!(d.source().input.get(), 1);
+                assert_eq!(d.source().revision.get(), 730);
                 m.reset();
                 d.play(&mut m);
+                assert_eq!(
+                    d.source().input.get(),
+                    if trace == Trace::A1 { 3 } else { 1 }
+                );
                 m.reset();
                 d.query(&mut m, &mut [None; 64]);
                 m.reset();
                 d.inspect(&mut m);
+                assert_eq!(d.source().transport.get(), 2);
+                assert_eq!(
+                    d.source().input.get(),
+                    if trace == Trace::A1 { 4 } else { 2 }
+                );
                 assert_eq!(
                     d.owner
                         .current()
@@ -560,6 +585,96 @@ mod tests {
                         .inspection_skipped,
                     2
                 );
+            }
+        }
+    }
+
+    /// Actual query rows through the production writer, with no clock, ACK,
+    /// calibration or native observer. Python --check consumes these six cases.
+    #[test]
+    fn query_wire_canary_without_clocks() {
+        for (index, trace) in [Trace::G0, Trace::G1, Trace::A1].into_iter().enumerate() {
+            for (b, budget) in [WorkBudget::one(), WorkBudget::full()]
+                .into_iter()
+                .enumerate()
+            {
+                let ordinal = index * 4 + b * 2;
+                let data = fixture(10000);
+                let mut setup = Meter::unmeasured();
+                let d = query::establish(
+                    10000,
+                    trace,
+                    budget,
+                    &data,
+                    driver::Setup {
+                        id: query::base_id(ordinal) + 2,
+                        tiny: false,
+                    },
+                    &mut setup,
+                );
+                let mut storage = query::Storage::new();
+                storage.bind(&d);
+                let m = Meter::new(10000);
+                let mut context = Context {
+                    case_ordinal: ordinal,
+                    trace,
+                    budget,
+                    n: 10000,
+                    previous_emit: 0,
+                    previous_gate: 0,
+                    fixture_bytes: data.capacity() * std::mem::size_of::<Circle>(),
+                    peaks: d.peaks,
+                    candidate: None,
+                    events_checked: 0,
+                };
+                let mut rows = Vec::new();
+                context
+                    .write_row(
+                        &mut rows,
+                        ("query_group_ready", 0),
+                        &m,
+                        Some(&d),
+                        (None, Some((&storage, query::Receipt::Setup(&setup)))),
+                    )
+                    .unwrap();
+                for (kind, phase) in ["query_summary", "query_ledger", "query_page"]
+                    .into_iter()
+                    .enumerate()
+                {
+                    storage.collect(kind, &d, false);
+                    context
+                        .write_row(
+                            &mut rows,
+                            (phase, 0),
+                            &m,
+                            Some(&d),
+                            (None, Some((&storage, query::Receipt::Batch(kind)))),
+                        )
+                        .unwrap();
+                }
+                drop(d);
+                drop(data);
+                context.fixture_bytes = 0;
+                for (phase, receipt) in [
+                    ("query_group_released", query::Receipt::Released),
+                    ("batch_summary", query::Receipt::Summary),
+                ] {
+                    context
+                        .write_row(
+                            &mut rows,
+                            (phase, 0),
+                            &m,
+                            None,
+                            (None, Some((&storage, receipt))),
+                        )
+                        .unwrap();
+                }
+                let text = String::from_utf8(rows).unwrap();
+                assert_eq!(text.lines().count(), 6);
+                assert!(text.len() < 1024 * 1024);
+                for row in text.lines() {
+                    println!("\nQUERY_CANARY\t{row}");
+                }
             }
         }
     }

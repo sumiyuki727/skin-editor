@@ -1,5 +1,7 @@
 # 独立 stable 兼容内核：新对话交接
 
+2026-11-09查询增量一致性审阅：轮前实现已通过正常完整hook备份推送`019a296f3198446aa1d2ee267dc9fda4f3378e0d`，私有origin及远端SHA一致。本轮修复冻结清单／原始证据／最终报告的发布截面、索引复核、输入代次校验和失败收尾边界，并补真实Rust查询输出到Python的无计时贯通回归，详见[审阅记录](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量一致性审阅)。计划仍为schema3／CostClosure-Query-v1，读取器修订为reader-v2；Reference10000／Tiny4、API7／profile1不变。PC三批次和正式成本测量未开展，coverage NeedsEvidence、产品NotEvaluated、KT23／K1及stable兼容结论保持。本轮修订未提交；后续先备份，再依明确任务推进。下方历史记录保留各自时点。
+
 2026-11-09查询最小增量：轮前8份规格审阅文档已通过正常完整hook备份推送`d8f2ad99e8bb6035470619c6136701388540d180`，私有origin及远端SHA一致。本轮实现schema3／`CostClosure-Query-v1`的受测副本冻结、限根只读复核、摘要／账本／分页各16固定批次及真实Tiny canary；细节和验证见[实现记录](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量实现记录)。核心API7／profile1、Reference10000／Tiny4保持。PC三批次及正式新成本测量未开展，coverage固定NeedsEvidence、产品NotEvaluated，KT23／K1和stable兼容结论不升级。新增量未提交；下一步先备份并审阅本轮实现，下方旧记录保留各自时点。
 
 2026-11-09成本收口规格一致性审阅：上一轮8份文档已通过正常完整hook备份推送`bc6075737be8893735f896a5ef57aa5eec2f0e8a`，PRIVATE origin及远端SHA一致。[本轮文档修正](K1_COST_CLOSURE_SPEC.md#2026-11-09一致性审阅记录)补齐真实Tiny 4／2／4容量与专用调度、24类操作的阶段映射、补证建立的采样容量、逐样本回执、失败清理及冻结证据只读复核。32份准备样本的64MiB静态公式保持，1MiB容器准入和实际分辨能力待实现验证。本轮仅审阅／文档修正，无schema3实现、无新成本轮；Reference10000／Tiny4、API7／profile1和现有schema2保持，KT23／K1、产品性能及stable兼容结论均不升级。修订未提交；下一步先备份，再按用户明确任务推进，不自动进入功能开发。下方旧记录保留原时点。
@@ -34,6 +36,8 @@
 
 ## 2. Git、代码基线和并行修改
 
+- 本轮修订验证：正式check_core通过487项Python／169项gameplay／12项工具Rust和六组合无计时贯通，桌面architecture-only、仓库候选及文档检查通过；详情见本页开头的Query-v1审阅记录，旧冻结副本／报告散列未变。
+- 本轮回退点019a296f3198446aa1d2ee267dc9fda4f3378e0d已通过正常完整hook并推送已核对PRIVATE的origin，保存上一轮20文件Query-v1实现。后续本轮一致性修订留在工作区；暂存区应为空，既有schema.rs规范化空差异标记保留。
 - 工作区为 E:\skin-editor，分支codex/p1-bootstrap；远端[sumiyuki727/skin-editor](https://github.com/sumiyuki727/skin-editor)须再次核对PRIVATE。
 - 历史恢复代码基线为2719d0f；先前交接文档保存于6e26e9d。动画设计回退点为d3f4b2b34b2c088932acf1641163c72915163e41，经过正常仓库hook并同步私有origin；它没有增加动画功能。
 - 独立内核方案初版及关联交接已保存于881b6613625e4821036bd7fd2cb8a8cd710f96e5，完整本地hook通过并推送私有origin；后续契约文档回退点见下一条。该初版文档提交没有增加内核功能，不证明KT或规则已验证。

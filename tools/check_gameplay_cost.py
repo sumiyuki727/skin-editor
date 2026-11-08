@@ -18,7 +18,7 @@ from check_core import ROOT, linker_arguments, tool_environment
 from gameplay_cost_platform import OwnedProcess
 from gameplay_cost_protocol import tool_graph_errors, tool_source_errors, validate_process_point
 from gameplay_cost_query import (PHASES, SCHEMA, PLAN, PARAMETERS, case_ordinal, summarize,
-                                 validate_end, validate_lifecycle, validate_row)
+                                 validate_end, validate_lifecycle, validate_row, validate_durations, validate_canary)
 import gameplay_cost_custody as custody
 
 MAX_LINE = 32*1024*1024
@@ -58,6 +58,10 @@ def check_tool(directory=None):
                 [cargo, *linker, 'test', *common, '--all-features']]
     for command in commands:
         subprocess.run(command, cwd=ROOT, env=env, check=True)
+    canary = subprocess.check_output([cargo, *linker, 'test', *common, '--all-features',
+        'tests::query_wire_canary_without_clocks', '--', '--exact', '--nocapture'], cwd=ROOT, env=env, text=True)
+    cases=validate_canary(canary,custody.decode)
+    print(f'Query wire canary: {cases} real Rust cases, no timing/native observation',flush=True)
     build_arguments = [cargo, *linker, 'build', *common, '--release', '--message-format=json']
     output = subprocess.check_output(build_arguments, cwd=ROOT, env=env, text=True)
     executable = built_executable(output)
@@ -95,17 +99,15 @@ def cpu_reference_valid(user_ns, kernel_ns, action_ns, quantum):
 def decode_line(line):
     if len(line)>MAX_LINE or not line.endswith(b'\n'):
         raise ValueError('Unbounded/incomplete child line')
-    def unique(pairs):
-        result={}
-        for key,value in pairs:
-            if key in result:raise ValueError('Duplicate JSON field: '+key)
-            result[key]=value
-        return result
-    def invalid_constant(value):
-        raise ValueError('Non-finite JSON constant: '+value)
-    row=json.loads(line,object_pairs_hook=unique,parse_constant=invalid_constant)
+    row=custody.decode(line)
     if not isinstance(row,dict):raise ValueError('Protocol row must be an object')
     return row
+
+
+def completion_timeout(child_begin):
+    remaining=300-(time.monotonic_ns()-child_begin)/1e9
+    if remaining<=0: raise ValueError('Total child watchdog exceeded before completion')
+    return min(5,remaining)
 
 
 def process_summary(point,peaks,samples,gap,interval,quantum,reference_valid,previous=None):
@@ -251,7 +253,7 @@ def run_probe(executable, trace, budget, repetition, output):
                     process.stdin.flush()
                     print(name, phase, 'work_ms=%.3f' % (row['elapsed_ns']/1e6), flush=True)
                     break
-            line = messages.get(timeout=5)
+            line = messages.get(timeout=completion_timeout(child_begin))
             if line is None or len(line) > MAX_LINE:
                 raise ValueError('Missing bounded end receipt')
             raw.write(line)
@@ -260,10 +262,10 @@ def run_probe(executable, trace, budget, repetition, output):
             record['phases'][-1]['emit_ns'] = end['previous_emit_ns']
             record['phases'][-1]['gate_wait_ns'] = end['previous_gate_ns']
             process.stdin.close()
-            exit_code = process.wait(timeout=5)
+            exit_code = process.wait(timeout=completion_timeout(child_begin))
             if exit_code != 0:
                 raise ValueError('Child reported failure')
-            trailing = messages.get(timeout=5)
+            trailing = messages.get(timeout=completion_timeout(child_begin))
             if trailing is not None:
                 raw.write(trailing); raw.flush()
                 raise ValueError('Unexpected trailing protocol output')
@@ -285,23 +287,29 @@ def run_probe(executable, trace, budget, repetition, output):
                         process.wait(timeout=3)
             except (OSError,subprocess.SubprocessError) as error:
                 cleanup.append('Child cleanup: '+str(error))
-            for pipe in (process.stdout,process.stdin):
+            if reader.ident is not None:
+                reader.join(timeout=3)
+            reader_alive=reader.is_alive()
+            if reader_alive:
+                cleanup.append('Observer reader failed to stop; stdout close deferred')
+            # Buffered stdout.close can wait on a reader's lock forever when
+            # termination failed. Do not enter it until that reader has exited.
+            for pipe in ((process.stdin,) if reader_alive else (process.stdout,process.stdin)):
                 try:
                     if not pipe.closed:pipe.close()
                 except OSError as error:cleanup.append('Pipe cleanup: '+str(error))
             if monitor:
                 try:monitor.close()
                 except OSError as error:cleanup.append('Monitor cleanup: '+str(error))
-            if reader.ident is not None:
-                reader.join(timeout=3)
-            if reader.is_alive():
-                cleanup.append('Observer reader failed to stop')
             if cleanup:
                 record.update(status='Invalid',reason='; '.join(([record['reason']] if 'reason' in record else [])+cleanup))
     record['observer_cpu_ns_excluded_from_child'] = time.process_time_ns()-observer_begin
     elapsed_parent = time.monotonic_ns()-child_begin
     if elapsed_parent > 300_000_000_000:
         record.update(status='Invalid',reason='Total child watchdog exceeded')
+    if record['status']=='Valid':
+        try: validate_durations(record['phases'],elapsed_parent)
+        except ValueError as error: record.update(status='Invalid',reason=str(error))
     record['completion'] = dict(schema_version=SCHEMA,plan_id=PLAN,case_ordinal=case_ordinal(trace,budget,repetition),pid=process.pid,
                                 exit_code=exit_code,eof=eof,cleanup_complete=not cleanup,
                                 observer_cpu_ns_excluded_from_child=record['observer_cpu_ns_excluded_from_child'],elapsed_parent_ns=elapsed_parent)
@@ -332,14 +340,17 @@ def measure(executable, compiler, output, repetitions, frozen, binary_hash, buil
             partial(output,report)
             return report
         manifest, executable = custody.freeze(executable,compiler,frozen,binary_hash,output,build_arguments,identity)
+        freeze_hash=custody.hash_file(output/'freeze.json',1048576)
         for name,trace,budget,repetition in custody.names():
             before_source=custody.digest(identity())
             before_binary=custody.hash_file(executable,custody.MAX_BINARY)['sha256']
-            if before_source!=manifest['source_map_sha256'] or before_binary!=binary_hash:
-                raise ValueError('Frozen source or binary changed before child')
+            if before_source!=manifest['source_map_sha256'] or before_binary!=binary_hash or custody.hash_file(output/'freeze.json',1048576)!=freeze_hash:
+                raise ValueError('Frozen source, binary or manifest changed before child')
             run=run_probe(executable,trace,budget,repetition,output)
             after_source=custody.digest(identity())
             after_binary=custody.hash_file(executable,custody.MAX_BINARY)['sha256']
+            freeze_changed=custody.hash_file(output/'freeze.json',1048576)!=freeze_hash
+            if freeze_changed: run.update(status='Invalid',reason='Freeze manifest changed during child')
             receipt=dict(run['completion'],source_before=before_source,source_after=after_source,
                          binary_before=before_binary,binary_after=after_binary)
             if run['status']!='Valid': receipt.update(failure=run.get('reason','Invalid child'))
@@ -348,7 +359,8 @@ def measure(executable, compiler, output, repetitions, frozen, binary_hash, buil
             partial(output,report)
             if run['status']!='Valid' or after_source!=before_source or after_binary!=before_binary:
                 raise ValueError('Child failed or source/frozen copy changed after child')
-        if identity()!=frozen or custody.hash_file(executable,custody.MAX_BINARY)['sha256']!=binary_hash:
+        if (identity()!=frozen or custody.hash_file(executable,custody.MAX_BINARY)['sha256']!=binary_hash
+                or custody.hash_file(output/'freeze.json',1048576)!=freeze_hash):
             raise ValueError('Frozen evidence changed at final boundary')
         return custody.publish(output,manifest)
     except (OSError,ValueError,KeyError,TypeError,csv.Error,subprocess.SubprocessError) as error:

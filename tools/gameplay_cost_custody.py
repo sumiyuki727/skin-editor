@@ -3,6 +3,7 @@
 This module neither builds nor launches a binary. Hashes bind bytes, not authenticity.
 """
 import csv
+import copy
 import hashlib
 import json
 import math
@@ -23,7 +24,7 @@ COUNTERS = ('user_ns','kernel_ns','working_set_bytes','private_commit_bytes','os
 
 
 def canonical(value):
-    return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=True).encode('ascii')
+    return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=True, allow_nan=False).encode('ascii')
 
 
 def digest(value):
@@ -38,8 +39,15 @@ def decode(data):
             result[key]=value
         return result
     def bad(value): raise ValueError('Non-finite JSON: '+value)
+    def integer(value):
+        if len(value.lstrip('-'))>39: raise ValueError('JSON integer exceeds u128 width')
+        return int(value)
+    def decimal(value):
+        result=float(value)
+        if not math.isfinite(result): bad(value)
+        return result
     try:
-        return json.loads(data,object_pairs_hook=unique,parse_constant=bad)
+        return json.loads(data,object_pairs_hook=unique,parse_constant=bad,parse_int=integer,parse_float=decimal)
     except (UnicodeError, json.JSONDecodeError, RecursionError) as error:
         raise ValueError('Invalid bounded JSON') from error
 
@@ -189,10 +197,10 @@ def freeze(executable, compiler, source, expected_hash, output, build_arguments,
         raise ValueError('Copy/source changed during freeze')
     target_name=next((s[6:] for s in compiler.splitlines() if s.startswith('host: ')), '')
     clock=time.get_clock_info('perf_counter')
-    manifest=dict(schema_version=3,plan_id=query.PLAN,validator=query.VALIDATOR,parameters=query.PARAMETERS,
-                  scope='QueryOnly',product_verdict='NotEvaluated',source_sha256=source,source_map_sha256=digest(source),
+    manifest=dict(schema_version=3,plan_id=query.PLAN,validator=query.VALIDATOR,parameters=copy.deepcopy(query.PARAMETERS),
+                  scope='QueryOnly',product_verdict='NotEvaluated',source_sha256=dict(source),source_map_sha256=digest(source),
                   spec_sha256=source.get(SPEC),binary=dict(path='frozen/probe.exe',**original),compiler=compiler,
-                  build_arguments=build_arguments,target=target_name,pointer_bits=32 if target_name.startswith('i686') else 64,
+                  build_arguments=list(build_arguments),target=target_name,pointer_bits=32 if target_name.startswith('i686') else 64,
                   host_observer=dict(platform=platform.platform(),processor=platform.processor() or 'Unknown',logical_cpus=os.cpu_count(),
                                      parent_clock=dict(implementation=clock.implementation,resolution_seconds=clock.resolution,
                                                        monotonic=clock.monotonic,adjustable=clock.adjustable),
@@ -222,8 +230,17 @@ def process_points(path):
     """Stream/reduce at most 120000 CSV samples, including cross-ACK gaps."""
     hash_file(path,64*1024*1024)
     phases=[]; current=None; previous=None; previous_clock=None; total=0
-    with path.open('r',encoding='utf-8',newline='') as stream:
-        reader=csv.reader(stream)
+    def records(stream):
+        # Eight scalar fields fit in 512 bytes; reject before CSV materialization.
+        for _ in range(120002):
+            line=stream.readline(513)
+            if not line: return
+            if len(line)>512 or not line.endswith(b'\n'): raise ValueError('Unbounded CSV record')
+            try: yield next(csv.reader([line.decode('ascii')],strict=True))
+            except (UnicodeError,csv.Error) as error: raise ValueError('Invalid CSV record') from error
+        raise ValueError('Process sample capacity')
+    with path.open('rb') as stream:
+        reader=records(stream)
         if next(reader,None)!=['phase','parent_monotonic_ns',*COUNTERS]: raise ValueError('CSV header')
         for cells in reader:
             if total>=120000: raise ValueError('Process sample capacity')
@@ -246,7 +263,7 @@ def process_points(path):
             current['point']=point;current['clock']=clock
             previous,previous_clock=point,clock
     if len(phases)!=15 or any(p['samples']<2 for p in phases): raise ValueError('Missing process boundaries')
-    if phases[-1]['clock']-phases[0]['clock']>300000000000: raise ValueError('Child total watchdog')
+    if phases[-1]['clock']-phases[0]['first_clock']>300000000000: raise ValueError('Child total watchdog')
     return phases
 
 
@@ -271,7 +288,8 @@ def derive_run(root, manifest, name, trace, budget, repetition):
             row=query.validate_row(decode(line),phase,trace,budget,repetition)
             obs=observed[i]; previous=obs['previous']; point=obs['point']
             interval=None if obs['previous_clock'] is None else obs['clock']-obs['previous_clock']
-            if interval is not None and interval>60000000000: raise ValueError('Phase watchdog')
+            span=obs['clock']-(obs['first_clock'] if interval is None else obs['previous_clock'])
+            if span>60000000000: raise ValueError('Phase watchdog')
             if interval is not None and row['elapsed_ns']>interval: raise ValueError('Action exceeds observed parent interval')
             if phase=='calibrated':
                 epsilon=max(row['calibration']['observed_resolution_ns'],row['metrics'][0]['p95_ns'],1)
@@ -289,6 +307,7 @@ def derive_run(root, manifest, name, trace, budget, repetition):
         if stream.read(1): raise ValueError('Extra protocol output')
         phases[-1].update(emit_ns=end['previous_emit_ns'],gate_wait_ns=end['previous_gate_ns'])
     query.validate_lifecycle(phases)
+    query.validate_durations(phases,receipt['elapsed_parent_ns'])
     target={'x86_64':'x86_64-pc-windows-msvc','x86':'i686-pc-windows-msvc','aarch64':'aarch64-pc-windows-msvc'}
     if phases[0]['target_os']!='windows' or target.get(phases[0]['target_arch'])!=manifest['target'] or phases[0]['pointer_bits']!=manifest['pointer_bits']: raise ValueError('Child/frozen target mismatch')
     return dict(trace=trace,budget=budget,repetition=repetition,objects=10000,status='Valid',phases=phases,
@@ -298,6 +317,7 @@ def derive_run(root, manifest, name, trace, budget, repetition):
 
 def derive_report(root, manifest):
     validate_freeze(manifest)
+    bind_freeze(root,manifest)
     binary=hash_file(relative(root,'frozen/probe.exe'),MAX_BINARY)
     if binary!={k:manifest['binary'][k] for k in ('bytes','sha256')}: raise ValueError('Frozen copy mismatch')
     runs=[derive_run(root,manifest,*case) for case in names()]
@@ -308,24 +328,41 @@ def derive_report(root, manifest):
                 metric_semantics='empirical resolution only; batch p95/p99=max of 16; CPU/true peaks remain independently Unknown',runs=runs)
 
 
-def inventory(root):
-    return [dict(path=name,role=role,**hash_file(relative(root,name),limit)) for name,(role,limit) in sorted(roles().items())]
+def bind_freeze(root, manifest):
+    if canonical(read_json(relative(root,'freeze.json'),1048576))!=canonical(manifest):
+        raise ValueError('Persisted freeze differs from the checked manifest')
+
+
+def inventory(root, *, inputs_only=False):
+    return [dict(path=name,role=role,**hash_file(relative(root,name),limit)) for name,(role,limit) in sorted(roles().items())
+            if not inputs_only or role!='report']
 
 
 def publish(root, manifest):
+    before=inventory(root,inputs_only=True)
     report=derive_report(root,manifest)
+    if inventory(root,inputs_only=True)!=before: raise ValueError('Evidence changed during report derivation')
     write_json(relative(root,'report.json'),report)
     files=inventory(root)
+    if [entry for entry in files if entry['role']!='report']!=before:
+        raise ValueError('Evidence changed before final index publication')
+    written=canonical(report)+b'\n'
+    expected=dict(path='report.json',role='report',bytes=len(written),sha256=hashlib.sha256(written).hexdigest())
+    if next(entry for entry in files if entry['role']=='report')!=expected:
+        raise ValueError('Report changed before final index publication')
     index=dict(schema_version=3,plan_id=query.PLAN,validator=query.VALIDATOR,files=files)
     write_json(relative(root,'evidence-index.json'),index)
-    if inventory(root)!=files: raise ValueError('Evidence changed during final index publication')
+    if inventory(root)!=files or canonical(read_json(relative(root,'evidence-index.json'),65536))!=canonical(index):
+        raise ValueError('Evidence changed during final index publication')
     return report
 
 
 def verify(root):
     """No current workspace/source checks, no mutation, build, execution or sampling."""
     root=plain_path(root)
-    index=read_json(relative(root,'evidence-index.json'),65536)
+    index_path=relative(root,'evidence-index.json')
+    index_hash=hash_file(index_path,65536)
+    index=read_json(index_path,65536)
     query.fields(index,('schema_version','plan_id','validator','files'),'index')
     if type(index['schema_version']) is not int or index['schema_version']!=3 or index['plan_id']!=query.PLAN or index['validator']!=query.VALIDATOR: raise ValueError('Unknown custody protocol')
     files=index['files']; expected=roles()
@@ -344,6 +381,7 @@ def verify(root):
     recorded=read_json(relative(root,'report.json'),16*1024*1024)
     derived=derive_report(root,manifest)
     if canonical(recorded)!=canonical(derived): raise ValueError('Report differs from raw evidence derivation')
-    if inventory(root)!=actual: raise ValueError('Evidence changed during read-only verification')
+    if inventory(root)!=actual or hash_file(index_path,65536)!=index_hash:
+        raise ValueError('Evidence changed during read-only verification')
     return dict(custody_status='Valid',protocol_status='Valid',coverage='NeedsEvidence',product_status='NotEvaluated',
                 plan_id=query.PLAN,verified_runs=12,current_workspace_source_checked=False)

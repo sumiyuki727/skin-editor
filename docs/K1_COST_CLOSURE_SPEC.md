@@ -1,5 +1,7 @@
 # K1成本收口补证开工规格
 
+2026-11-09查询增量一致性审阅：轮前实现已通过正常完整hook备份推送`019a296f3198446aa1d2ee267dc9fda4f3378e0d`，私有origin及远端SHA一致。本轮修复冻结清单／原始证据／最终报告的发布截面、索引复核、输入代次校验和失败收尾边界，并补真实Rust查询输出到Python的无计时贯通回归，详见[审阅记录](#2026-11-09查询增量一致性审阅)。计划仍为schema3／CostClosure-Query-v1，读取器修订为reader-v2；Reference10000／Tiny4、API7／profile1不变。PC三批次和正式成本测量未开展，coverage NeedsEvidence、产品NotEvaluated、KT23／K1及stable兼容结论保持。本轮修订未提交；后续先备份，再依明确任务推进。下方历史记录保留各自时点。
+
 2026-11-09后续实施：已按本页审阅规格实现schema3／`CostClosure-Query-v1`的冻结、只读复核和三种查询固定批次，见[查询增量实现记录](#2026-11-09查询增量实现记录)。本轮没有正式成本测量；PC三批次／完整计划仍未实现。下述开篇及历史审阅记录保留各自时点，不能把拟议完整计划当成本轮完成范围。
 
 2026-11-09，规格一致性审阅修订。上一轮本规格及相关8份文档已通过正常完整hook备份推送`bc6075737be8893735f896a5ef57aa5eec2f0e8a`，PRIVATE origin及远端SHA一致。本轮只审阅并修正文档，不实现下列行为、不采集新性能轮，也不签收K1。现有工具仍为输出schema2；下文schema3及CostClosure-v1是尚未实施的契约，审阅结论与剩余条件见[本轮记录](#2026-11-09一致性审阅记录)。
@@ -236,3 +238,27 @@ schema3独立于gameplay API／profile和工程格式；v1／v2报告原样保�
 新增回归覆盖真实Reference／Tiny查询、错误黄金／非查询计数、样本容量／失败原始值保留，严格schema／计划／角色／逐样本差值／来源／汇总、短最小样本Unknown，冻结复制／清单／索引失败、target重建、副本／原始数据／报告篡改、路径与JSON错误、只读无执行／构建／写入、冻结目标编排及跨阶段采样总上限。Python中的二进制和计数均为明确假数据，生成于临时目录，不作为成本证据；Rust Tiny与新增Reference固定查询canary不读取性能时钟或原生采样。
 
 正式check_core通过474项Python、169项gameplay、11项工具Rust及其他纯核心测试、格式、Clippy、release与依赖／源码边界；最后补齐平台未支持时NotRun／Unknown语义后，50项成本工具Python针对性复验全部通过（相对轮前共新增22项Python、5项Rust回归）。桌面architecture-only通过，未重复运行桌面窗口／设备路径。9份文档452处本地链接／锚点、UTF-8／行尾／围栏、git diff --check及812文件候选检查通过。既有冻结二进制及两份历史报告SHA保持，核心／桌面／清单／锁文件无实际差异；暂存区为空，原schema.rs空差异标记保留。新增日志留在`artifacts/k1-cost-query/`，不纳入Git。未实现PC三批次，未运行--measure或执行旧冻结程序，不接GUI／原生设备、不触碰参考客户端／旧源码。API7／profile1和Reference10000／Tiny4保持；KT23／K1暂不签收，产品NotEvaluated、stable兼容未知。下一轮应先备份并独立审阅这份实现，正式补证及后续范围仍依用户明确任务。
+
+## 2026-11-09查询增量一致性审阅
+
+轮前20文件查询增量已正常备份推送`019a296f3198446aa1d2ee267dc9fda4f3378e0d`，私有origin及远端完整SHA一致。正常完整hook通过475项Python、169项gameplay、11项独立工具Rust及其余核心／桌面默认和全feature检查、构建；日志留在忽略目录`artifacts/k1-cost-query-review/backup-hook.log`。既有schema.rs规范化空差异未暂存。以下修订属于此回退点后的未提交工作。
+
+| 已复现问题／覆盖缺口 | 修正及回归边界 |
+| --- | --- |
+| 发布时先派生再取清单，会把变化后的原始文件编入旧报告索引；内存freeze也可能与磁盘不同 | 派生前固定全部输入文件清单，核对磁盘freeze，派生后和index前复查；最终报告字节必须仍为刚派生的内容，index最后非覆盖发布后再核对 |
+| index自身不入册，复核末尾没有检查它是否变化 | 只读复核单独保存并重查index原始SHA；仍不递归扫描、不执行、不构建、不改写证据，不声称对抗真实性或ABA检测 |
+| freeze参数／来源／build参数共享调用者可变容器；子进程间未重查freeze原始字节 | 冻结清单持有独立参数副本；逐子进程前后及最终边界核对freeze原始散列，漂移保留失败回执／原始文件并停止后续组合 |
+| CSV记录长度、溢出JSON数值、首ready阶段及诊断总时长的检查不足 | CSV每行512字节在解析前拒绝；JSON整数最多39位、有限浮点及重复键严格检查；ready跨度也受60秒上限约束，互不重叠的动作／emit／gate总时长不得大于300秒内的自有子进程寿命 |
+| 收尾wait可能超出全子进程剩余时间，失败终止后stdout.close可能等待读取线程的锁 | end／退出／EOF共用剩余300秒窗口；清理先有界join，读取线程未退时不进入阻塞close，保留Invalid和cleanup_complete=false，不冒充释放完成 |
+| baseline仅核对run；人工夹具的检查后input代次不符合实际驱动 | 核对run／transport／input／revision配方，并用真实Rust驱动断言；初始input=1，A1播放后=3，检查激活后G0／G1=2、A1=4，transport=2、revision=730；不改变核心行为 |
+| 无计时查询测试未走外层参考和正常行编码，Python只验证手写数据 | 查询样本和外层参考共用可无计时路径；六种Reference组合的真实生产编码经过严格Python读取器校验，Tiny继续真实4／2／4配置，所有查询计时填0且判Unknown |
+
+上述修改不改变既定工作负载、96个新时间槽、三类各16样本／16参考、34次样本外摘要守卫、16条正常流或51角色清单。schema3／plan_id仍为CostClosure-Query-v1；读取器身份升至`CostClosure-Query-reader-v2`，未知或旧reader身份明确拒绝，不能用新规则给旧证据回填通过。历史schema1／2及其二进制保持原样；尚无本计划的正式测量结果可迁移或追认。
+
+贯通测试只在Rust cfg(test)中生成带QUERY_CANARY前缀的六条查询组记录／组合，覆盖G0／G1／A1×预算1／256。它调用实际查询、外层参考及生产编码器，不调用性能时钟、校准、ACK或原生观察；普通--check读取这些测试输出并拒绝缺项、重排、错误来源／工作数和非零时间。它没有baseline／进程CSV／end／冻结清单，不能作为正常16条测量流或保管证据。正常读取入口仍只接受已声明的Windows计量目标，测试接点按本机目标验证，不重标测量数据的平台。
+
+本轮先增加反例，确认冻结／发布／索引／来源校验的24个子用例失败，再修复。真实驱动断言另外揭示并纠正夹具的检查后input假设；没有改动gameplay核心以迁就夹具。针对性62项Python和12项工具Rust／六组合贯通已通过，正式核心及最终仓库检查结果见下文。所有Python文件、计数和二进制夹具均为临时假数据；没有运行--measure、旧冻结程序或原生进程采样。
+
+正式check_core全部通过：487项Python（相对备份新增12项）、169项gameplay及其余纯核心测试、12项工具Rust（新增1项）和六组合真实输出贯通；格式、Clippy、release与依赖／源码边界通过。桌面architecture-only通过，未运行窗口／GPU／音频设备验证。9份文档459处本地链接／锚点、UTF-8／LF／围栏、git diff --check及812文件仓库候选检查通过。日志保留于本机忽略目录artifacts/k1-cost-query-review/。三份既有证据SHA与轮前一致，未执行或重写；核心／桌面／清单／锁文件没有实际差异，原schema.rs空差异标记保留。暂存区为空，本轮17文件修订未提交，不沿用备份或远端CI为修订背书。
+
+当前停靠点是Query-v1一致性修订，不是成本补证完成。Reference10000／Tiny4和API7／profile1保持；PC-PREPARE-32／PC-CANCEL-32／PC-DROP-32未实现，完整CostClosure-v1／KT23／K1仍未签收，产品NotEvaluated、stable兼容未知。下一步先备份本轮修订，再按用户明确任务处理PC或正式测量；本轮不授权自动进入任一步。

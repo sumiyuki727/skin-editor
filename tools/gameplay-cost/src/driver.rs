@@ -44,8 +44,11 @@ pub fn bound(n: usize) -> usize {
     n * 64 + 256
 }
 pub fn source() -> RunSource {
+    source_with_run(800_001)
+}
+pub fn source_with_run(id: u64) -> RunSource {
     RunSource {
-        run: RunId::new(800_001).unwrap(),
+        run: RunId::new(id.into()).unwrap(),
         transport: TransportEpoch::new(1).unwrap(),
         input: InputEpoch::new(1).unwrap(),
         revision: MapRevision::new(730),
@@ -71,20 +74,28 @@ pub struct Peaks {
     pub runtime: usize,
     pub payload_source: usize,
     pub payload_runtime: usize,
+    pub tiny: bool,
 }
 impl Peaks {
     pub fn observe(&mut self, owner: &SyntheticCoordinator) {
         let r = owner.resources();
         let a = owner.allocations();
         assert!(a.precompiled_bytes <= r.precompiled_bytes && a.runtime_bytes <= r.runtime_bytes);
-        assert!(r.precompiled_bytes <= 8 * 1024 * 1024 && r.runtime_bytes <= 8 * 1024 * 1024);
+        let limit = if self.tiny {
+            64 * 1024
+        } else {
+            8 * 1024 * 1024
+        };
+        assert!(r.precompiled_bytes <= limit && r.runtime_bytes <= limit);
+        assert!(r.precompiled_bytes.checked_add(r.runtime_bytes).unwrap() <= 64 * 1024 * 1024);
         self.source = self.source.max(r.precompiled_bytes);
         self.runtime = self.runtime.max(r.runtime_bytes);
         self.payload_source = self.payload_source.max(a.precompiled_bytes);
         self.payload_runtime = self.payload_runtime.max(a.runtime_bytes);
         if let Some(run) = owner.current() {
             let o = run.observation();
-            assert!(o.pending_inputs <= 64 && o.pending_events <= 64);
+            assert!(o.pending_inputs <= if self.tiny { 4 } else { 64 });
+            assert!(o.pending_events <= if self.tiny { 2 } else { 64 });
             self.inputs = self.inputs.max(o.pending_inputs);
             self.events = self.events.max(o.pending_events);
         }
@@ -97,8 +108,16 @@ pub struct Driver {
     pub trace: Trace,
     pub events: usize,
     pub peaks: Peaks,
+    pub prepared_work: WorkCounts,
+    tiny: bool,
+}
+#[derive(Clone, Copy)]
+pub struct Setup {
+    pub id: u64,
+    pub tiny: bool,
 }
 impl Driver {
+    #[cfg(test)]
     pub fn create(
         n: usize,
         trace: Trace,
@@ -106,16 +125,48 @@ impl Driver {
         data: &[Circle],
         meter: &mut Meter,
     ) -> Self {
+        Self::create_with(
+            n,
+            trace,
+            budget,
+            data,
+            meter,
+            Setup {
+                id: 800_001,
+                tiny: false,
+            },
+        )
+    }
+    pub fn create_with(
+        n: usize,
+        trace: Trace,
+        budget: WorkBudget,
+        data: &[Circle],
+        meter: &mut Meter,
+        setup: Setup,
+    ) -> Self {
+        assert!(!setup.tiny || (n == 4 && budget == WorkBudget::one()));
         let mut owner = SyntheticCoordinator::new(
-            CoordinatorId::new(800_001).unwrap(),
-            Limits::reference(),
-            PreparationLimits::reference(),
+            CoordinatorId::new(setup.id.into()).unwrap(),
+            if setup.tiny {
+                Limits::tiny()
+            } else {
+                Limits::reference()
+            },
+            if setup.tiny {
+                PreparationLimits::tiny()
+            } else {
+                PreparationLimits::reference()
+            },
         )
         .unwrap();
-        let mut peaks = Peaks::default();
+        let mut peaks = Peaks {
+            tiny: setup.tiny,
+            ..Peaks::default()
+        };
         let mut job = meter
             .timed(Op::Request, || {
-                owner.request_create(source(), data, t(START))
+                owner.request_create(source_with_run(setup.id), data, t(START))
             })
             .unwrap();
         peaks.observe(&owner);
@@ -140,6 +191,7 @@ impl Driver {
         assert!(job.work_counts().valid);
         assert_eq!(job.work_counts().record_reads, n as u64);
         assert_eq!(job.work_counts().state_initializations, n as u64);
+        let prepared_work = job.work_counts();
         meter
             .timed(Op::Activate, || owner.activate(job.key(), &mut job))
             .unwrap();
@@ -152,6 +204,8 @@ impl Driver {
             trace,
             events: 0,
             peaks,
+            prepared_work,
+            tiny: setup.tiny,
         }
     }
     pub fn source(&self) -> RunSource {
@@ -323,8 +377,9 @@ impl Driver {
             assert_eq!(self.source().input.get(), 3);
         }
         if self.trace != Trace::G0 {
-            for first in (0..self.n).step_by(32) {
-                let count = (self.n - first).min(32);
+            let batch_objects = if self.tiny { 1 } else { 32 };
+            for first in (0..self.n).step_by(batch_objects) {
+                let count = (self.n - first).min(batch_objects);
                 let at = target(first + count - 1) + 1;
                 if self.trace == Trace::A1 {
                     self.automatic(m, at);
@@ -386,7 +441,7 @@ impl Driver {
             }
         );
     }
-    pub fn query(&mut self, m: &mut Meter) {
+    pub fn query(&mut self, m: &mut Meter, out: &mut [Option<CircleFrame>; 64]) {
         let run = self.owner.current().unwrap();
         let s = run.source();
         let header = run.observation().ready_frame.unwrap();
@@ -399,13 +454,12 @@ impl Driver {
                 Some(header)
             );
         }
-        let mut out = [None; 64];
         let mut cursor = header.key().cursor(0);
         let mut checked = 0;
         for _ in 0..self.n.div_ceil(64) {
             let page = m
                 .timed(Op::Page, || {
-                    black_box(run).read_frame_page(black_box(cursor), 64, &mut out)
+                    black_box(run).read_frame_page(black_box(cursor), 64, out)
                 })
                 .unwrap()
                 .unwrap();
@@ -447,7 +501,7 @@ impl Driver {
         m.timed(Op::QueryBatch, || {
             for _ in 0..QUERY_BATCH {
                 let page = black_box(run)
-                    .read_frame_page(black_box(header.key().cursor(0)), 64, &mut out)
+                    .read_frame_page(black_box(header.key().cursor(0)), 64, out)
                     .unwrap()
                     .unwrap();
                 assert_eq!(page.written, self.n.min(64));

@@ -36,6 +36,30 @@ def graph():
 
 
 class GameplayCostChecks(unittest.TestCase):
+    def test_process_capacity_is_global_and_stops_before_the_next_native_sample(self):
+        from test_check_gameplay_query import rows
+        class Process:
+            pid=123
+            def __init__(self):
+                self.stdout=io.BytesIO(b''.join((json.dumps(r)+'\n').encode() for r in rows()[:2]));self.stdin=io.BytesIO()
+            def poll(self):return 0
+            def wait(self,timeout):return 0
+        class Monitor:
+            calls=0
+            def __init__(self,pid):pass
+            def sample(self):
+                Monitor.calls+=1
+                return dict(user_ns=0,kernel_ns=0,working_set_bytes=1,private_commit_bytes=1,os_peak_working_set_bytes=1,os_peak_commit_bytes=1)
+            def close(self):pass
+        for capacity in (0,3):
+            Monitor.calls=0
+            with tempfile.TemporaryDirectory() as directory,patch.object(cost.subprocess,'Popen',return_value=Process()),\
+                 patch.object(cost,'OwnedProcess',Monitor),patch.object(cost,'SAMPLE_LIMIT',capacity),patch('sys.stdout',io.StringIO()):
+                result=cost.run_probe(Path('owned.exe'),'g0',1,1,Path(directory))
+            self.assertEqual(result['status'],'Invalid');self.assertLessEqual(Monitor.calls,capacity)
+            self.assertEqual(len(result['phases']),0 if capacity==0 else 1)
+            self.assertIn('capacity',result['reason'])
+
     def test_non_object_rows_and_metric_members_are_rejected_as_protocol_errors(self):
         for value in ([],None,True):
             with self.assertRaises(ValueError):protocol.validate_row(value,'ready','g0',1)
@@ -111,12 +135,12 @@ class GameplayCostChecks(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             binary=Path(directory)/'probe.exe';binary.write_bytes(b'build')
             output=Path(directory)/'new'
-            with patch.object(cost,'identity',return_value={'source':'changed'}),patch.object(cost.os,'name','nt'),\
+            with patch.object(cost,'identity',return_value={'source':'changed'}),\
                  patch.object(cost.subprocess,'check_output',return_value='head'),patch.object(cost,'run_probe') as probe:
-                report=cost.measure(binary,'compiler',output,2,{'source':'compiled'},cost.hashlib.sha256(b'build').hexdigest())
+                report=cost.measure(binary,'compiler',output,2,{'source':'compiled'},cost.hashlib.sha256(b'build').hexdigest(),[])
             self.assertEqual(report['status'],'Invalid');self.assertEqual(report['product_status'],'NotEvaluated')
             self.assertEqual(report['source_sha256'],{'source':'compiled'});probe.assert_not_called()
-            self.assertTrue((output/'report.json').is_file())
+            self.assertFalse(output.exists())
 
     def test_native_peak_scope_does_not_inherit_protocol_valid(self):
         point=dict(user_ns=0,kernel_ns=0,working_set_bytes=1,private_commit_bytes=1,os_peak_working_set_bytes=1,os_peak_commit_bytes=1)
@@ -132,8 +156,8 @@ class GameplayCostChecks(unittest.TestCase):
         class Process:
             pid=123
             def __init__(self):
-                end=dict(schema_version=protocol.SCHEMA,phase='end',status='Valid',previous_emit_ns=0,previous_gate_ns=0)
-                self.stdout=io.BytesIO((json.dumps(row())+'\n'+json.dumps(end)+'\n').encode());self.stdin=io.BytesIO()
+                from test_check_gameplay_query import rows, end
+                self.stdout=io.BytesIO((json.dumps(rows()[0])+'\n'+json.dumps(end())+'\n').encode());self.stdin=io.BytesIO()
             def poll(self):return 0
             def wait(self,timeout):raise cost.subprocess.TimeoutExpired('owned',timeout)
         class Monitor:
@@ -236,7 +260,7 @@ class GameplayCostChecks(unittest.TestCase):
     def test_diagnostic_source_cannot_import_platform_io_project_or_external_includes(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);base=root/'tools/gameplay-cost/src';base.mkdir(parents=True)
-            for name in ('main.rs','driver.rs','meter.rs'):(base/name).write_text('#![forbid(unsafe_code)]\n',encoding='utf-8')
+            for name in ('main.rs','driver.rs','meter.rs','query.rs'):(base/name).write_text('#![forbid(unsafe_code)]\n',encoding='utf-8')
             self.assertEqual(protocol.tool_source_errors(root),[])
             for content in ('use skin_editor_application::ProjectSession;','use std::fs;','include!("outside.rs");','use wgpu::Device;'):
                 (base/'driver.rs').write_text(content,encoding='utf-8');self.assertTrue(protocol.tool_source_errors(root))

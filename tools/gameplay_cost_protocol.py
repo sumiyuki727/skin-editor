@@ -48,7 +48,7 @@ def validate_cancel_checkpoint(candidate,n):
         raise ValueError('Cancellation checkpoint changed')
 
 
-def validate_row(row, phase, trace, budget, n=10000):
+def validate_row(row, phase, trace, budget, n=10000, *, operations=True):
     if not isinstance(row,dict):
         raise ValueError('Protocol row must be an object')
     for field in ('schema_version', 'budget', 'objects', 'api_version', 'profile_version', 'pointer_bits'):
@@ -152,7 +152,8 @@ def validate_row(row, phase, trace, budget, n=10000):
             raise ValueError('Query workload changed')
     if phase == 'calibrated':
         validate_calibration(row)
-    validate_operations(row,phase,trace)
+    if operations:
+        validate_operations(row,phase,trace)
     if (phase in ('ready','calibrated','released')) != (row['fixture_bytes']==0):
         raise ValueError('Caller fixture lifetime changed')
     return row
@@ -300,7 +301,7 @@ def tool_graph_errors(metadata, root):
 
 def tool_source_errors(root):
     base = Path(root)/'tools/gameplay-cost/src'
-    expected = {'main.rs', 'driver.rs', 'meter.rs'}
+    expected = {'main.rs', 'driver.rs', 'meter.rs', 'query.rs'}
     if {p.relative_to(base).as_posix() for p in base.rglob('*.rs')} != expected:
         return ['unreviewed diagnostic source/module set']
     if '#![forbid(unsafe_code)]' not in (base/'main.rs').read_text(encoding='utf-8'):

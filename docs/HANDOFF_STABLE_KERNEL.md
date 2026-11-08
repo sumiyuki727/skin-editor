@@ -1,5 +1,7 @@
 # 独立 stable 兼容内核：新对话交接
 
+2026-11-09查询最小增量：轮前8份规格审阅文档已通过正常完整hook备份推送`d8f2ad99e8bb6035470619c6136701388540d180`，私有origin及远端SHA一致。本轮实现schema3／`CostClosure-Query-v1`的受测副本冻结、限根只读复核、摘要／账本／分页各16固定批次及真实Tiny canary；细节和验证见[实现记录](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量实现记录)。核心API7／profile1、Reference10000／Tiny4保持。PC三批次及正式新成本测量未开展，coverage固定NeedsEvidence、产品NotEvaluated，KT23／K1和stable兼容结论不升级。新增量未提交；下一步先备份并审阅本轮实现，下方旧记录保留各自时点。
+
 2026-11-09成本收口规格一致性审阅：上一轮8份文档已通过正常完整hook备份推送`bc6075737be8893735f896a5ef57aa5eec2f0e8a`，PRIVATE origin及远端SHA一致。[本轮文档修正](K1_COST_CLOSURE_SPEC.md#2026-11-09一致性审阅记录)补齐真实Tiny 4／2／4容量与专用调度、24类操作的阶段映射、补证建立的采样容量、逐样本回执、失败清理及冻结证据只读复核。32份准备样本的64MiB静态公式保持，1MiB容器准入和实际分辨能力待实现验证。本轮仅审阅／文档修正，无schema3实现、无新成本轮；Reference10000／Tiny4、API7／profile1和现有schema2保持，KT23／K1、产品性能及stable兼容结论均不升级。修订未提交；下一步先备份，再按用户明确任务推进，不自动进入功能开发。下方旧记录保留原时点。
 
 2026-11-09成本收口规格：K1整体退出审阅9文件已通过正常完整hook备份推送`921547f8462d93e4cfef7531c11b756f1932406b`，私有origin及远端SHA一致。[成本补证开工规格](K1_COST_CLOSURE_SPEC.md)已细化6类固定批次、32份实际准备后取消样本的单池／64MiB聚合准入、Unknown边界和受测二进制独立冻结。schema3／CostClosure-v1仍是待一致性审阅的拟实施契约，现有工具仍schema2；本轮只改文档，不开发／重测。Reference10000／Tiny4、API7／profile1和产品预算保持，KT23／K1仍未签收。本轮规格未提交，下一步先备份并审阅规格，再按明确任务实施最小增量；不接GUI／原生设备，不宣称产品性能或stable兼容达标。下方旧记录保留原时点。
@@ -28,7 +30,7 @@
 
 “独立”是纯Rust、可无窗口测试的模块；产品保持单进程模块化单体。不能裁剪、复制、翻译移植无授权旧stable源码，不能因为lazer有实现就当stable规则已验证。
 
-已实现SyntheticTest圆圈生命周期、输入、冻结／恢复／重新武装、检查、候选／预算及三驱动互斥；API7／profile1、Tiny4／Reference10000。成本收口草案已备份bc60757，本轮完成规格一致性审阅和文档修正，实际schema仍2；32样本批次／schema3未实现，KT23成本补证未闭合。修订未提交，不开发／重测或进入K2／GUI／原生设备。
+已实现SyntheticTest圆圈生命周期、输入、冻结／恢复／重新武装、检查、候选／预算及三驱动互斥；API7／profile1、Tiny4／Reference10000。本轮成本工具已实现schema3／CostClosure-Query-v1、冻结保管、只读复核与三类查询固定批次，核心保持不变。PC三批次／完整CostClosure-v1仍未实现，未运行正式新成本轮；KT23／K1、产品性能及stable兼容结论不升级。本轮新增量未提交。
 
 ## 2. Git、代码基线和并行修改
 
@@ -125,9 +127,9 @@
 
 ## 6. 下一增量、检查和证据
 
-当前[成本收口规格一致性审阅](K1_COST_CLOSURE_SPEC.md#2026-11-09一致性审阅记录)已完成文档修正；轮前8文档bc60757已通过正常完整hook推送私有origin。保持6类批次各16样本、32份独立候选、64MiB聚合准入及每池原限额；补充Tiny真实4／2／4容量、逐阶段映射、无单调用计时的组建立、每样本计数、ACK失败清理和从原始值只读复核。实际schema仍2，拟议schema3／CostClosure-v1未实现，必需批次Unknown仍NeedsEvidence。下一步先备份本轮文档；仅在明确任务授权后做冻结保管与查询最小增量，部分实现不能伪造66条完整协议或宣称ReadyForReview。当前无新成本轮，KT23／K1、产品性能和stable兼容结论保持。
+当前停靠点是[CostClosure-Query-v1实现](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量实现记录)。上一轮8文档已正常备份推送d8f2ad9。本轮采用独立16记录协议：baseline9、查询建立／3批次／释放5、summary和end；三类各16样本、外层参考各16，共96个新时间槽。查询组无单调用计时，1MiB实际容器准入，复用64项页缓冲；每样本核对完整结果、FrameKey、WorkCounts差值和资源不变。失败可输出有界原始残留，不等待正常ACK或新样本位。Reference10000两预算／三轨迹及真实Tiny4三轨迹均有无窗口功能回归。
 
-本轮规格给查询部分增量独立plan_id=CostClosure-Query-v1／16条记录，完整计划仍66条；两者须严格区分，部分coverage固定NeedsEvidence，均未实现。8份文档425处本地链接／锚点、围栏／行尾和git diff --check、807文件候选检查通过；24类映射及容量是静态核对，不是新回归或计量。旧冻结二进制及两份历史报告SHA未变，源码／清单／锁文件无实际差异，暂存区为空；本轮8文档修订未提交。
+冻结入口先复制Cargo真实产物到新目录frozen/probe.exe，再独占发布freeze.json；未来每子进程前后核对源码／副本，最终report.json和evidence-index.json依序非覆盖发布。只读--verify按已知角色检查路径、字节数和SHA，从JSONL／CSV重算协议、计数／资源、校准和统计，与report逐项比对；不构建、执行、采样或读取当前工作区源码。Python临时假证据只作回归，不是正式成本。PC三批次、真实12进程新测量及其独立审阅仍待后续明确任务；本轮coverage固定NeedsEvidence，不能宣称ReadyForReview。验证结果见实现记录；新增量未提交，原schema.rs空差异标记保留。
 
 规格审阅已备份为f1c8dbf，正常完整hook验证旧API5／116项及桌面默认／全feature无窗口基线；随后实现[K1-6A](K1_6A_STORAGE_REVIEW.md)，API6／profile1、4对象。新增实现经正式check_core通过424项Python检查回归、格式、Clippy、三个核心包测试及release构建，gameplay共132项；桌面architecture-only通过。没有成本测量／窗口／设备接线，日志在本机忽略目录artifacts/k1-6a/。过程中一次夹具目标错误及换行整理误清空本轮源码均已修复，恢复／黄金内容核对和最终正式检查通过，历史日志保留。
 
@@ -175,9 +177,9 @@ K1-1至K1-5已运行适用纯核心回归，完整KT仍待验收，具体检查�
 ```text
 请在 E:\skin-editor 接手独立stable兼容内核规划。先读AGENTS.md、docs/HANDOFF_STABLE_KERNEL.md、docs/STABLE_KERNEL_PLAN.md及当前Git状态／HEAD／暂存差异，按最新规则保护上一轮已审查工作，核对私有origin并保留其他对话修改，不并发Git写入。
 
-首批仅osu!standard／No Mod／纯圆圈受测子集。gameplay API7／profile1、Tiny4／Reference10000，G0／G1／A1及有限交错已测；成本工具独立std＋gameplay，时钟／I/O不进入核心。先读docs/K1_COST_CLOSURE_SPEC.md的6批次、32样本容量、候选键公开接口限制、Unknown及冻结保管，再读K1_EXIT_REVIEW.md和D／C／B／A、K1-6、K0-A及C1／C2／C3。现有成本schema2，schema3是拟议协议；compatibility未实现，不用合成数值或旧源码补未知stable规则。
+首批仅osu!standard／No Mod／纯圆圈受测子集。gameplay API7／profile1、Tiny4／Reference10000，G0／G1／A1及有限交错已测；成本工具独立std＋gameplay，时钟／I/O不进入核心。先读docs/K1_COST_CLOSURE_SPEC.md的6批次、32样本容量、候选键公开接口限制、Unknown及冻结保管，再读K1_EXIT_REVIEW.md和D／C／B／A、K1-6、K0-A及C1／C2／C3。当前成本工具为schema3／CostClosure-Query-v1；完整CostClosure-v1仍待PC三批次，历史v1／v2保留原样；compatibility未实现，不用合成数值或旧源码补未知stable规则。
 
-按我本轮明确任务执行；交接不授权后续开发、私人谱面、P3保存UI或窗口／设备。2026-11-09停靠点为成本收口规格一致性审阅及文档修正完成：轮前8文档已通过正常完整hook备份推送bc60757并核对私有origin／SHA，本轮修订未提交。下一轮先备份，再按用户明确任务推进，不自动实现。先读docs/K1_COST_CLOSURE_SPEC.md的本轮审阅记录，尤其Tiny真实配置、24类映射、组建立样本容量、失败清理和冻结只读复核。保持Reference10000／Tiny4、API7／profile1及现有schema2；6批次、32份候选、64MiB聚合准入及schema3均未实现。部分实现不能伪造完整协议，必需批次Unknown仍NeedsEvidence。旧Valid／Unknown及原始散列不变，不据文档宣布KT23／K1／产品性能／stable兼容通过。
+按我本轮明确任务执行；交接不授权后续开发、私人谱面、P3保存UI或窗口／设备。2026-11-09停靠点是CostClosure-Query-v1实现：轮前规格审阅已备份d8f2ad9，本轮新增量未提交。下一轮先备份，再审阅冻结保管／只读复核和固定查询批次的一致性；先读docs/K1_COST_CLOSURE_SPEC.md的查询增量实现记录。保持Reference10000／Tiny4及API7／profile1；当前只实现16记录的QueryOnly计划，PC三批次与正式新成本测量未开展。coverage仍NeedsEvidence，旧证据散列保留，不签收KT23／K1、产品性能或stable兼容。
 
 保持完整历史不删不覆盖、图片与音效独立、皮肤热替换不重置音乐／对象、冻结恢复不补跑及旧代次清理。零欠载、提交p95≤20ms、内存／GPU／实际释放门槛保持，播放CPU≤15%为优化目标。新原生路径和兼容性须另验，合成小模型测试不能替代这些证据。
 ```

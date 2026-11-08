@@ -2,14 +2,16 @@
 #![forbid(unsafe_code)]
 mod driver;
 mod meter;
+mod query;
 use driver::{Calibration, Driver, Peaks, Trace, bound, calibrate, fixture, t};
 use meter::{Meter, Op};
 use skin_editor_gameplay::*;
 use std::io::{self, BufRead, Read, Write};
 use std::time::Instant;
 
-const SCHEMA: u32 = 2;
+const SCHEMA: u32 = 3;
 struct Context {
+    case_ordinal: usize,
     trace: Trace,
     budget: WorkBudget,
     n: usize,
@@ -52,7 +54,22 @@ impl Context {
         state: Option<&Driver>,
         calibration: Option<&Calibration>,
     ) -> io::Result<()> {
-        self.emit(phase, elapsed, m, state, calibration)?;
+        self.emit(phase, elapsed, m, state, calibration, None)?;
+        self.acknowledge()
+    }
+    fn query_boundary(
+        &mut self,
+        phase: &str,
+        elapsed: u64,
+        m: &Meter,
+        state: Option<&Driver>,
+        storage: &query::Storage,
+        receipt: query::Receipt<'_>,
+    ) -> io::Result<()> {
+        self.emit(phase, elapsed, m, state, None, Some((storage, receipt)))?;
+        self.acknowledge()
+    }
+    fn acknowledge(&mut self) -> io::Result<()> {
         let begin = Instant::now();
         let input = io::stdin();
         let mut reader = input.lock().take(32);
@@ -74,6 +91,7 @@ impl Context {
         m: &Meter,
         state: Option<&Driver>,
         calibration: Option<&Calibration>,
+        query: Option<(&query::Storage, query::Receipt<'_>)>,
     ) -> io::Result<()> {
         let begin = Instant::now();
         let output = io::stdout();
@@ -175,6 +193,18 @@ impl Context {
             std::env::consts::OS,
             std::mem::size_of::<usize>() * 8
         )?;
+        write!(
+            out,
+            ",\"plan_id\":\"{}\",\"case_ordinal\":{},\"query_storage_bytes\":{},\"query\":",
+            query::PLAN,
+            self.case_ordinal,
+            query::storage_bytes()
+        )?;
+        if let Some((storage, receipt)) = query {
+            storage.write(&mut out, receipt, state)?;
+        } else {
+            write!(out, "null")?;
+        }
         write!(out, ",\"metrics\":")?;
         m.json(&mut out)?;
         writeln!(out, "}}")?;
@@ -183,7 +213,8 @@ impl Context {
         Ok(())
     }
 }
-fn run(context: &mut Context, m: &mut Meter) {
+fn run(context: &mut Context, m: &mut Meter, storage: &mut query::Storage) {
+    query::admit(context.n, false, query::STORAGE_LIMIT).unwrap();
     context.boundary("ready", 0, m, None, None).unwrap();
     m.reset();
     let begin = Instant::now();
@@ -200,7 +231,17 @@ fn run(context: &mut Context, m: &mut Meter) {
     let begin = Instant::now();
     let data = m.timed(Op::Fixture, || fixture(context.n));
     context.fixture_bytes = data.capacity() * std::mem::size_of::<Circle>();
-    let mut d = Driver::create(context.n, context.trace, context.budget, &data, m);
+    let mut d = Driver::create_with(
+        context.n,
+        context.trace,
+        context.budget,
+        &data,
+        m,
+        driver::Setup {
+            id: query::base_id(context.case_ordinal) + 1,
+            tiny: false,
+        },
+    );
     context.peaks = d.peaks;
     context
         .boundary(
@@ -226,7 +267,7 @@ fn run(context: &mut Context, m: &mut Meter) {
         .unwrap();
     m.reset();
     let begin = Instant::now();
-    d.query(m);
+    d.query(m, storage.page_buffer());
     context
         .boundary(
             "queried",
@@ -322,14 +363,82 @@ fn run(context: &mut Context, m: &mut Meter) {
     context
         .boundary("released", begin.elapsed().as_nanos() as u64, m, None, None)
         .unwrap();
+    m.reset();
+    let begin = Instant::now();
+    let data = fixture(context.n);
+    context.fixture_bytes = data.capacity() * std::mem::size_of::<Circle>();
+    let mut setup = Meter::unmeasured();
+    let d = query::establish(
+        context.n,
+        context.trace,
+        context.budget,
+        &data,
+        driver::Setup {
+            id: query::base_id(context.case_ordinal) + 2,
+            tiny: false,
+        },
+        &mut setup,
+    );
+    storage.bind(&d);
+    context
+        .query_boundary(
+            "query_group_ready",
+            begin.elapsed().as_nanos() as u64,
+            m,
+            Some(&d),
+            storage,
+            query::Receipt::Setup(&setup),
+        )
+        .unwrap();
+    for (kind, phase) in ["query_summary", "query_ledger", "query_page"]
+        .iter()
+        .enumerate()
+    {
+        let begin = Instant::now();
+        storage.measure(kind, &d);
+        context
+            .query_boundary(
+                phase,
+                begin.elapsed().as_nanos() as u64,
+                m,
+                Some(&d),
+                storage,
+                query::Receipt::Batch(kind),
+            )
+            .unwrap();
+    }
+    let begin = Instant::now();
+    drop(d);
+    drop(data);
+    context.fixture_bytes = 0;
+    context
+        .query_boundary(
+            "query_group_released",
+            begin.elapsed().as_nanos() as u64,
+            m,
+            None,
+            storage,
+            query::Receipt::Released,
+        )
+        .unwrap();
+    context
+        .query_boundary(
+            "batch_summary",
+            0,
+            m,
+            None,
+            storage,
+            query::Receipt::Summary,
+        )
+        .unwrap();
     let output = io::stdout();
     let mut out = output.lock();
-    writeln!(out,"{{\"schema_version\":{SCHEMA},\"phase\":\"end\",\"status\":\"Valid\",\"previous_emit_ns\":{},\"previous_gate_ns\":{}}}",context.previous_emit,context.previous_gate).unwrap();
+    writeln!(out,"{{\"schema_version\":{SCHEMA},\"plan_id\":\"{}\",\"case_ordinal\":{},\"trace\":\"{}\",\"budget\":{},\"objects\":{},\"phase\":\"end\",\"status\":\"Valid\",\"previous_emit_ns\":{},\"previous_gate_ns\":{}}}",query::PLAN,context.case_ordinal,context.trace.name(),context.budget.get(),context.n,context.previous_emit,context.previous_gate).unwrap();
     out.flush().unwrap();
 }
 fn parse(args: &[String]) -> Result<(Trace, WorkBudget, usize), &'static str> {
     if args.len() != 3 {
-        return Err("usage: probe g0|g1|a1 1|256 objects(1..10000)");
+        return Err("usage: probe g0|g1|a1 1|256 case-ordinal(0..11)");
     }
     let trace = Trace::parse(&args[0]).ok_or("invalid trace")?;
     let budget = match args[1].as_str() {
@@ -337,22 +446,31 @@ fn parse(args: &[String]) -> Result<(Trace, WorkBudget, usize), &'static str> {
         "256" => WorkBudget::full(),
         _ => return Err("invalid budget"),
     };
-    let n = args[2].parse::<usize>().map_err(|_| "invalid count")?;
-    if n == 0 || n > 10_000 {
-        return Err("invalid count");
+    let ordinal = args[2].parse::<usize>().map_err(|_| "invalid ordinal")?;
+    let trace_index = match trace {
+        Trace::G0 => 0,
+        Trace::G1 => 1,
+        Trace::A1 => 2,
+    };
+    if ordinal >= 12
+        || ordinal / 4 != trace_index
+        || (ordinal / 2) % 2 != usize::from(budget == WorkBudget::full())
+    {
+        return Err("case identity mismatch");
     }
-    Ok((trace, budget, n))
+    Ok((trace, budget, ordinal))
 }
 fn main() {
     let args: Vec<_> = std::env::args().skip(1).collect();
-    let (trace, budget, n) = parse(&args).unwrap_or_else(|error| {
+    let (trace, budget, case_ordinal) = parse(&args).unwrap_or_else(|error| {
         eprintln!("{error}");
         std::process::exit(2)
     });
     let mut context = Context {
+        case_ordinal,
         trace,
         budget,
-        n,
+        n: 10000,
         previous_emit: 0,
         previous_gate: 0,
         fixture_bytes: 0,
@@ -360,14 +478,30 @@ fn main() {
         candidate: None,
         events_checked: 0,
     };
-    let mut meter = Meter::new(n);
+    let mut meter = Meter::new(context.n);
+    assert!(meter.failure_capacity_bytes() + 256 * 1024 < 32 * 1024 * 1024);
+    let mut storage = query::Storage::new();
     if std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-        run(&mut context, &mut meter)
+        run(&mut context, &mut meter, &mut storage)
     }))
     .is_err()
     {
         meter.invalid = Some(meter.invalid.unwrap_or("workload-or-protocol"));
-        let _ = context.emit("failed", 0, &meter, None, None);
+        let output = io::stdout();
+        let mut out = output.lock();
+        // Bounded failure channel; no normal sample slot, observer or ACK is needed.
+        let _ = write!(
+            out,
+            "{{\"schema_version\":{SCHEMA},\"plan_id\":\"{}\",\"case_ordinal\":{},\"phase\":\"failed\",\"status\":\"Invalid\",\"reason\":\"{}\",\"retained_query_samples\":",
+            query::PLAN,
+            context.case_ordinal,
+            meter.invalid.unwrap()
+        );
+        let _ = storage.write_failure(&mut out);
+        let _ = write!(out, ",\"retained_baseline_metrics\":");
+        let _ = meter.write_failure(&mut out);
+        let _ = writeln!(out, "}}");
+        let _ = out.flush();
         std::process::exit(1);
     }
 }
@@ -389,7 +523,7 @@ mod tests {
     }
     #[test]
     fn trace_budget_and_count_are_explicit_not_silently_clamped() {
-        for args in [vec!["g0", "1", "10000"], vec!["a1", "256", "4"]] {
+        for args in [vec!["g0", "1", "0"], vec!["a1", "256", "11"]] {
             let args: Vec<_> = args.into_iter().map(str::to_owned).collect();
             assert!(parse(&args).is_ok());
         }
@@ -397,7 +531,7 @@ mod tests {
             vec![],
             vec!["g2", "1", "4"],
             vec!["g1", "2", "4"],
-            vec!["g0", "1", "0"],
+            vec!["g0", "256", "0"],
             vec!["g0", "1", "10001"],
         ] {
             let args: Vec<_> = args.into_iter().map(str::to_owned).collect();
@@ -414,7 +548,7 @@ mod tests {
                 m.reset();
                 d.play(&mut m);
                 m.reset();
-                d.query(&mut m);
+                d.query(&mut m, &mut [None; 64]);
                 m.reset();
                 d.inspect(&mut m);
                 assert_eq!(

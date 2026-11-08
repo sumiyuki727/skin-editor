@@ -29,7 +29,7 @@ pub enum Op {
     FixtureDrop,
     ControlBatch,
 }
-const NAMES: [&str; 24] = [
+pub const NAMES: [&str; 24] = [
     "empty",
     "fixture",
     "create_request",
@@ -64,8 +64,46 @@ pub struct Meter {
     buckets: Vec<Bucket>,
     pub invalid: Option<&'static str>,
     pub bytes: usize,
+    counts_only: Option<[u64; 24]>,
 }
 impl Meter {
+    /// Supplement setup/canaries collect calls without clocks or sample slots.
+    pub fn unmeasured() -> Self {
+        Self {
+            buckets: Vec::new(),
+            invalid: None,
+            bytes: 0,
+            counts_only: Some([0; 24]),
+        }
+    }
+    pub fn calls(&self) -> &[u64; 24] {
+        self.counts_only.as_ref().expect("unmeasured setup")
+    }
+    pub fn failure_capacity_bytes(&self) -> usize {
+        // At most 20 decimal digits plus one separator per retained u64.
+        (self.bytes / 8)
+            .checked_mul(21)
+            .unwrap()
+            .checked_add(8192)
+            .unwrap()
+    }
+    pub fn write_failure(&self, out: &mut impl Write) -> io::Result<()> {
+        write!(out, "[")?;
+        for (i, bucket) in self.buckets.iter().enumerate() {
+            if i > 0 {
+                write!(out, ",")?;
+            }
+            write!(out, "{{\"name\":\"{}\",\"raw_ns\":[", NAMES[i])?;
+            for (j, ns) in bucket.raw.iter().enumerate() {
+                if j > 0 {
+                    write!(out, ",")?;
+                }
+                write!(out, "{ns}")?;
+            }
+            write!(out, "]}}")?;
+        }
+        write!(out, "]")
+    }
     pub fn new(n: usize) -> Self {
         let levels = usize::BITS as usize - (n.max(2) - 1).leading_zeros() as usize;
         let linear = n * 32 + 256;
@@ -119,6 +157,7 @@ impl Meter {
             buckets,
             invalid: None,
             bytes,
+            counts_only: None,
         }
     }
     pub fn reset(&mut self) {
@@ -152,6 +191,12 @@ impl Meter {
         Ok(())
     }
     pub fn timed<R>(&mut self, op: Op, call: impl FnOnce() -> R) -> R {
+        if let Some(counts) = &mut self.counts_only {
+            counts[op as usize] = counts[op as usize]
+                .checked_add(1)
+                .expect("bounded setup calls");
+            return std::hint::black_box(call());
+        }
         self.room(op)
             .expect("sample capacity exhausted before invoking operation");
         let begin = Instant::now();
@@ -168,6 +213,10 @@ impl Meter {
         result
     }
     pub fn json(&self, out: &mut impl Write) -> io::Result<()> {
+        assert!(
+            self.counts_only.is_none(),
+            "setup is not a timed baseline bucket"
+        );
         write!(out, "[")?;
         for (index, b) in self.buckets.iter().enumerate() {
             if index > 0 {
@@ -215,6 +264,21 @@ pub fn percentile(sorted: &[u64], percent: usize) -> Option<u64> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn failure_channel_keeps_raw_samples_without_another_slot_or_sort() {
+        let mut m = Meter::with_limits(&[1; 24]);
+        m.record(Op::Empty, u64::MAX).unwrap();
+        assert!(m.record(Op::Empty, 0).is_err());
+        let mut out = Vec::new();
+        m.write_failure(&mut out).unwrap();
+        assert!(
+            String::from_utf8(out)
+                .unwrap()
+                .contains("\"raw_ns\":[18446744073709551615]")
+        );
+        assert_eq!(m.buckets[0].raw, [u64::MAX]);
+        assert!(Meter::new(10000).failure_capacity_bytes() + 256 * 1024 < 32 * 1024 * 1024);
+    }
     #[test]
     fn nearest_rank_has_no_zero_sample_statistics() {
         assert_eq!(percentile(&[], 95), None);

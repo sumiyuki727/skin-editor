@@ -1,5 +1,7 @@
 # K1成本收口补证开工规格
 
+2026-11-09后续实施：已按本页审阅规格实现schema3／`CostClosure-Query-v1`的冻结、只读复核和三种查询固定批次，见[查询增量实现记录](#2026-11-09查询增量实现记录)。本轮没有正式成本测量；PC三批次／完整计划仍未实现。下述开篇及历史审阅记录保留各自时点，不能把拟议完整计划当成本轮完成范围。
+
 2026-11-09，规格一致性审阅修订。上一轮本规格及相关8份文档已通过正常完整hook备份推送`bc6075737be8893735f896a5ef57aa5eec2f0e8a`，PRIVATE origin及远端SHA一致。本轮只审阅并修正文档，不实现下列行为、不采集新性能轮，也不签收K1。现有工具仍为输出schema2；下文schema3及CostClosure-v1是尚未实施的契约，审阅结论与剩余条件见[本轮记录](#2026-11-09一致性审阅记录)。
 
 本规格具体化[K1-6成本要求](K1_6_SCALE_SPEC.md#成本记录和结论分层)：为未分辨单调用补固定批次，保留原始数值及粒度，不把混合阶段、请求重放或未开始任务的管理批次冒充实际准备后的成功取消。gameplay API7／SyntheticTest profile1、Reference10000／Tiny4保持。Reference输入／事件／重放窗口各64、最大工作量256、两池各8MiB；Tiny输入4／事件2／重放4、最大工作量1、两池各64KiB；两者的单运行存储限额分别8MiB／64KiB，均不调整。产品预算、GUI／原生设备、真实stable及K2不在本轮范围。
@@ -210,3 +212,27 @@ schema3独立于gameplay API／profile和工程格式；v1／v2报告原样保�
 审阅接受32份真实准备样本的状态机和按当前布局计算的64MiB聚合公式；这是静态可行性核对，不是实际类型容器已满足1MiB、批次可分辨或300秒内完成的证明。上述准入／超时／Unknown条件保留，任何实现失败须按该契约停下并报告。当前没有需要修改gameplay API7／profile1、Reference10000／Tiny4或放宽预算的文档理由；实际schema仍2。
 
 本轮只修改这8份项目文档，未编写schema3／新回归，未重跑成本或执行冻结程序；旧报告和冻结副本保持。8份文档425处本地链接／锚点、围栏／行尾、git diff --check及807文件仓库候选检查通过；24类映射、66／16条记录、96批次样本和Reference／Tiny容量仅作静态核对。冻结二进制及两份历史报告SHA未变，核心／工具／桌面源码、清单和锁文件没有实际差异；暂存区为空，schema.rs规范化内容与HEAD相同且既有标记保留。本轮修订未提交，不沿用远端CI为新增文档或拟议行为背书。下一阶段须由用户明确任务授权，KT23／K1、产品性能和stable兼容结论均不升级。
+
+## 2026-11-09查询增量实现记录
+
+轮前8份规格审阅文档已通过正常完整hook保存并推送`d8f2ad99e8bb6035470619c6136701388540d180`，origin为已核对的私有仓库且远端SHA相同。hook沿用453项Python／169项gameplay／6项工具Rust及桌面默认／全feature检查，日志在本机忽略目录`artifacts/k1-cost-query/backup-hook.log`。本节以下是该回退点之后的未提交实现，不沿用旧CI或历史成本为新工具背书。
+
+实现仅接受schema3／CostClosure-Query-v1。正常流固定16条：原baseline9条、query_group_ready、query_summary／query_ledger／query_page、query_group_released、batch_summary和end；前15条逐条ACK，end后还须EOF、退出码0、成功清理及冻结核对。完整CostClosure-v1／PC三批次被明确拒绝，原baseline半程取消探针保留，不能以它冒充PC补证。
+
+| 实际修改 | 已实现行为及边界 |
+| --- | --- |
+| [Rust固定查询](../tools/gameplay-cost/src/query.rs) | Q-SUMMARY-4096、Q-LEDGER-N、Q-PAGE-4096各保留16样本及16外层参考；逐次完整Eq／黄金守卫与逐样本完整WorkCounts差值；帧／活动账本／资源不变，无新增核心API |
+| [工具驱动](../tools/gameplay-cost/src/driver.rs)、[计数器](../tools/gameplay-cost/src/meter.rs) | 查询建立采用无时钟／无普通样本槽的调用计数模式；Reference10000两预算／三轨迹，真实Tiny4使用tiny配置和逐对象调度；baseline与新增查询复用一个64项页缓冲 |
+| [schema3读取器](../tools/gameplay_cost_query.py) | 严格计划／角色／数量／类型、来源配方、帧及逐样本计数、汇总对照；24类阶段映射、5个n=1家族与3个查询批次分别判分辨，QueryOnly的coverage固定NeedsEvidence |
+| [冻结及只读复核](../tools/gameplay_cost_custody.py) | 先核对源码与Cargo实际产物，限16MiB独占复制frozen/probe.exe，flush／close／散列后发布freeze.json；最终报告和索引非覆盖写入，只读复核从原始JSONL／CSV重新派生 |
+| [父进程入口](../tools/check_gameplay_cost.py) | --check保持不测量；--verify在构建入口前返回，不执行／采样／依赖当前源码；未来显式--measure只启动冻结副本，每进程前后校验源码及副本，总样本120000和总300秒看门狗在下一采样前拒绝 |
+
+实际查询容器以当前Rust布局核算Storage、Driver、无计时Meter和64项输入缓冲，≤1MiB才准入；96个新u64时间槽先非零写入再清空，Reference／Tiny仍按各自原池限额核对。原baseline样本容量、调用者fixture和受管资源分列。每个查询样本计数区间外的摘要守卫单列：首样本之前1次、相邻样本之间2次、最后样本之后3次，共34次；父端逐项交叉核对，不通过总数掩盖未列工作。计时循环内不输出、分配或套单调用时钟；比较、屏障及固定循环仍计入诊断成本，空参考不扣除。
+
+异常通过独立有界失败输出保留已完成查询样本、已完成参考和baseline原始样本，不排序、不申请普通样本位、不等待正常ACK；失败输出容量在ready前按u64最坏十进制长度检查至32MiB以内。任务／协调器经Rust展开实际Drop，父端异常时有界终止自有子进程并记录清理结果；OS退出不冒充核心释放观察。未完成样本不伪造为0样本通过，非法流不补正常end。
+
+保管清单固定51个已知文件角色，index自身不循环入册；单文件／单行／CSV总条数在读取前检查，拒绝路径跳转、大小写别名、未知角色、硬链接和重解析点。冻结清单另保留父端时基／分辨率、平台／CPU说明、编译器完整身份及受限原始build参数；只读复核不改用当前机器的计量背景。report.partial可保留为明确临时角色，不能替代report.json或index；缺任一最终文件不能给保管Valid。只读复核检查哈希之外，还重算原始批次／分位数、工作数、来源／资源寿命、校准／ε、CPU增量和有限采样最大值，再逐项对比最终报告。它不执行当前源码比对，不验证对抗性真实性或ABA，不声称掉电原子发布或完全可复现构建。
+
+新增回归覆盖真实Reference／Tiny查询、错误黄金／非查询计数、样本容量／失败原始值保留，严格schema／计划／角色／逐样本差值／来源／汇总、短最小样本Unknown，冻结复制／清单／索引失败、target重建、副本／原始数据／报告篡改、路径与JSON错误、只读无执行／构建／写入、冻结目标编排及跨阶段采样总上限。Python中的二进制和计数均为明确假数据，生成于临时目录，不作为成本证据；Rust Tiny与新增Reference固定查询canary不读取性能时钟或原生采样。
+
+正式check_core通过474项Python、169项gameplay、11项工具Rust及其他纯核心测试、格式、Clippy、release与依赖／源码边界；最后补齐平台未支持时NotRun／Unknown语义后，50项成本工具Python针对性复验全部通过（相对轮前共新增22项Python、5项Rust回归）。桌面architecture-only通过，未重复运行桌面窗口／设备路径。9份文档452处本地链接／锚点、UTF-8／行尾／围栏、git diff --check及812文件候选检查通过。既有冻结二进制及两份历史报告SHA保持，核心／桌面／清单／锁文件无实际差异；暂存区为空，原schema.rs空差异标记保留。新增日志留在`artifacts/k1-cost-query/`，不纳入Git。未实现PC三批次，未运行--measure或执行旧冻结程序，不接GUI／原生设备、不触碰参考客户端／旧源码。API7／profile1和Reference10000／Tiny4保持；KT23／K1暂不签收，产品NotEvaluated、stable兼容未知。下一轮应先备份并独立审阅这份实现，正式补证及后续范围仍依用户明确任务。

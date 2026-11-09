@@ -1,6 +1,6 @@
 # 独立 stable 兼容内核：新对话交接
 
-2026-11-09当前执行状态：轮前9份规格审阅修订已通过正常完整hook备份推送c5101f914d7f007c59d708e51d04550bab463646，PUBLIC origin及远端SHA一致。本轮按已审阅规格实现[PC128工具与读取器](K1_COST_CLOSURE_SPEC.md#2026-11-09pc128增量实现记录)：CostClosure-PC128-v1／reader-v1，128独立候选、256MiB受管聚合、1MiB工作容器和512KiB失败补充编码；旧Query-v1及完整PC32计划保留只读复核。Reference10000／Tiny4、API7／profile1及原单池／产品预算不变。未运行PC128正式成本测量，旧轮NeedsEvidence、K1暂不签收、产品NotEvaluated及stable兼容未知保持。新增实现／回归／文档尚未提交；下一步先备份并审阅实现，再另行安排正式新轮和退出审阅，之后补P3保存闭环。下方记录保留各自历史时点。
+2026-11-09当前执行状态：PC128实现23个路径已通过正常完整hook备份推送3f74e5201dd05f07b8b07b6c249dee81b4f5d218，PUBLIC origin及远端SHA一致。本轮完成[PC128实现一致性审阅](K1_COST_CLOSURE_SPEC.md#2026-11-09pc128实现一致性审阅)，修复准备前置校验失败时旧轮回执残留，以及完整Stream／贯通对跨组身份、fixture和峰值漂移的校验遗漏；补部分owner释放回归。128候选、256MiB聚合、1MiB工作容器、512KiB失败补充编码、Reference10000／Tiny4、API7／profile1均保持；旧计划只读复核结论不变。未运行正式成本测量，K1仍NeedsEvidence／暂不签收、产品NotEvaluated、stable兼容未知。本轮修订未提交；下一步先备份并确认CI，之后正式新测量须另行明确安排，不自动推进P3、GUI或原生设备。下方记录保留各自历史时点。
 
 2026-11-09 CI故障确认：[019a296的Actions 42523539838](https://github.com/sumiyuki727/skin-editor/actions/runs/42523539838)中Linux核心和Windows桌面通过，Windows核心在Python 3.12.10的test_reparse_points_are_refused_without_following_target失败。硬链接测试以tuple重建stat_result，丢失Windows专用st_file_attributes；新pathlib的lstat委托stat后取得None，触发None与0x400位运算异常。本机Python 3.9.6用同一委托路径成功复现。修正仅用转发替身覆盖st_nlink，保留全部原生属性，并显式覆盖委托路径；生产安全检查、workflow及产品行为均不变。上一轮17文件修订已通过正常完整hook备份推送856cabd5ae34af686bc10f933d6d8aeec63590ea，远端SHA一致；该备份尚不包含本次CI修正，不能声明远端已恢复。本次测试修正与此记录未提交，修正后62项成本工具Python回归及仓库候选／git diff --check通过；直接Python 3.12复验尚缺，日志见本机artifacts/github-query-ci-review/，后续需提交后由远端重新验证。
 

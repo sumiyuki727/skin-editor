@@ -1,6 +1,6 @@
 # K1成本收口补证开工规格
 
-2026-11-09当前执行状态：轮前9份规格审阅修订已通过正常完整hook备份推送c5101f914d7f007c59d708e51d04550bab463646，PUBLIC origin及远端SHA一致。本轮按已审阅规格实现[PC128工具与读取器](K1_COST_CLOSURE_SPEC.md#2026-11-09pc128增量实现记录)：CostClosure-PC128-v1／reader-v1，128独立候选、256MiB受管聚合、1MiB工作容器和512KiB失败补充编码；旧Query-v1及完整PC32计划保留只读复核。Reference10000／Tiny4、API7／profile1及原单池／产品预算不变。未运行PC128正式成本测量，旧轮NeedsEvidence、K1暂不签收、产品NotEvaluated及stable兼容未知保持。新增实现／回归／文档尚未提交；下一步先备份并审阅实现，再另行安排正式新轮和退出审阅，之后补P3保存闭环。下方记录保留各自历史时点。
+2026-11-09当前执行状态：PC128实现23个路径已通过正常完整hook备份推送3f74e5201dd05f07b8b07b6c249dee81b4f5d218，PUBLIC origin及远端SHA一致。本轮完成[PC128实现一致性审阅](K1_COST_CLOSURE_SPEC.md#2026-11-09pc128实现一致性审阅)，修复准备前置校验失败时旧轮回执残留，以及完整Stream／贯通对跨组身份、fixture和峰值漂移的校验遗漏；补部分owner释放回归。128候选、256MiB聚合、1MiB工作容器、512KiB失败补充编码、Reference10000／Tiny4、API7／profile1均保持；旧计划只读复核结论不变。未运行正式成本测量，K1仍NeedsEvidence／暂不签收、产品NotEvaluated、stable兼容未知。本轮修订未提交；下一步先备份并确认CI，之后正式新测量须另行明确安排，不自动推进P3、GUI或原生设备。下方记录保留各自历史时点。
 
 2026-11-09查询增量一致性审阅：轮前实现已通过正常完整hook备份推送`019a296f3198446aa1d2ee267dc9fda4f3378e0d`，私有origin及远端SHA一致。本轮修复冻结清单／原始证据／最终报告的发布截面、索引复核、输入代次校验和失败收尾边界，并补真实Rust查询输出到Python的无计时贯通回归，详见[审阅记录](#2026-11-09查询增量一致性审阅)。计划仍为schema3／CostClosure-Query-v1，读取器修订为reader-v2；Reference10000／Tiny4、API7／profile1不变。PC三批次和正式成本测量未开展，coverage NeedsEvidence、产品NotEvaluated、KT23／K1及stable兼容结论保持。本轮修订未提交；后续先备份，再依明确任务推进。下方历史记录保留各自时点。
 
@@ -492,3 +492,29 @@ PC128固定改为512KiB补充失败编码上限，包含查询、PC、下面新�
 旧artifacts/k1-cost-closure-run/measurement-v3-01已通过新入口只读复核，仍为12例protocol／custody Valid、coverage NeedsEvidence、product NotEvaluated；冻结二进制、freeze、report、index及三份历史保管文件SHA与轮前一致。未创建PC128正式成本目录或冻结副本，不访问外部stable源码／客户端，不修改gameplay核心、桌面业务、依赖或锁文件。暂存区为空，新增实现与文档未提交；原schema.rs规范化空差异标记保留。
 
 下一步先备份并一致性审阅本增量，重点复核预算口径、失败最大编码、跨轮隔离、完整Stream分派与贯通接线；审阅后才另行安排完整12进程PC128正式成本轮及K1退出审阅。Reference10000／Tiny4、API7／profile1保持，KT23／K1仍未签收，产品NotEvaluated、stable兼容未知；先有限收口K1，再补P3保存闭环。
+
+## 2026-11-09PC128实现一致性审阅
+
+审阅基线为正常完整hook备份的3f74e5201dd05f07b8b07b6c249dee81b4f5d218，已推送现有PUBLIC origin／codex/p1-bootstrap并核对远端完整SHA。授权范围仅PC128一致性复核、修复及无窗口回归；未运行正式成本测量，不推进P3、UI设计／实现、皮肤skill或原生设备。审阅同时核对固定容量、失败包络、真实资源释放、三个固定计划分派、冻结必需来源和真实贯通调用链。
+
+| 发现与证据 | 本轮处置 |
+| --- | --- |
+| 新轮prepare先更新attempt_r，再校验上一轮资源基线；若此时失败，清空回执的循环尚未运行，旧key／task_work／cancel_success会被带入新尝试。真实Tiny反例在r=1／槽0复现，原回归未覆盖这个更早的失败点。 | [pc.rs](../tools/gameplay-cost/src/pc.rs)在前置守卫拒绝路径清空本轮回执，再停止；保留previous、已完成原始时间序列和实际任务所有权。正常路径仍在原prepare连续时钟内执行同一清空逻辑；cancel／Drop时钟、批次工作与预算均未改动。 |
+| 单行校验能接受本身合法的另一目标／容器／fixture或较低峰值；完整流直到末尾才校验这些跨行事实，父端此前已ACK。补充canary仅把查询部分送入查询生命周期校验，遗漏PC跨组事实。六种扰动在Stream与canary合计12个反例中被旧实现漏拒绝。 | [PC128 Stream](../tools/gameplay_cost_pc128.py)以固定大小首行身份、fixture锚点及前一峰值校验每条记录，在ACK前拒绝漂移；正常完整流、只读重算及补充canary共用这条路径。既有末尾检查保留，未增加协议字段、改分辨门槛或改旧reader。 |
+| 既有部分task Drop覆盖不能单独证明owner已部分释放后的清理计数和空观察者语义。 | 新增真实Tiny A1的16轮后release反例，分别在槽0／63／127的工具资源守卫中断：只计本次清理中仍存活的owner，已由正常路径释放的前缀保持null观察者，任务清理数为0，重入不重复累计。此项补覆盖，未发现需改动释放实现的问题。 |
+
+先保留反例失败证据，再实施修正。Rust旧实现出现明确“old results relabelled as a new attempt”；Python两项新测试共有12个子用例失败。修正后25项常规工具Rust和13项PC128 Python定向回归通过。前置失败覆盖r=1／15与槽0／63／127，验证全部128槽本轮字段为空、previous和原样本不变及实际清理后资源；原r=0／1／15请求／step／cancel／task Drop中断回归继续通过。在线假进程覆盖目标、指针宽度、查询／整体容器、fixture和峰值漂移，在pc_group_ready前只发送14次ACK即停止；这些假数据不作为成本证据。
+
+另从备份Commit只读加载自有旧Python读取器，给它六个完整假案例、336条补充记录，每例加入一种跨组漂移；旧读取器仍返回六例通过。相同生成器交给修正版时，在首个PC组的身份检查即拒绝。该反例没有运行冻结程序、创建正式成本目录或产生性能证据，日志见本机full-counterproof.log。
+
+容量核对未发现需调整预算的问题。工具类型／容量未新增字段或分配，现有测试构建工作容器780584字节、受管聚合250441728字节、失败补充最大宽度264058字节及完整失败行25969291字节的生产写出回归继续通过；256MiB／1MiB／512KiB和32MiB单行上限保持。新增Python元数据为固定大小，不保留更多owner表，仍保留2项原始行队列、基线／最近／当前owner表与16MiB报告边界。上述不是OS峰值、CPU成本或产品性能证明。
+
+Query-v1／Query-reader-v2和完整PC32／CostClosure-reader-v2正文、固定分派及必需来源未修改；PC128 reader-v1的本次修正把既定跨行不变量提前用于Stream及贯通，未改变正常协议字段或验收标准，也没有待重解释的PC128正式测量。旧完整v1的12例经修正后的入口只读复核，protocol／custody仍Valid、coverage仍NeedsEvidence、product仍NotEvaluated。冻结二进制、freeze、report、index及三份历史文件SHA与轮前一致；未构建／执行或改写旧证据。
+
+正式tools/check_core.py通过509项Python、169项gameplay及其余核心回归，工具25项常规Rust测试及1项显式昂贵贯通；Query六组合、PC128六组合／336条真实生产补充记录均通过读取器，最大补充行415897字节，所有补充时钟为0。格式、Clippy、release及依赖／源码规则通过，完整本机核心检查日志跨度约762秒，仅记录检查耗时。轮前hook已完成完整桌面默认／全部feature检查和构建；本轮工具修正未涉及桌面代码，未打开窗口、GPU或声卡。
+
+[备份Actions 42565376458](https://github.com/sumiyuki727/skin-editor/actions/runs/42565376458)的Windows核心、Linux核心、Windows桌面三项全部成功，耗时desktop-windows 1265s / core (windows-2025) 802s / core (ubuntu-24.04) 372s；首次PC128实现的远端覆盖已确认。远端运行基线为3f74e52，不包含本轮尚未提交的两处修正，不能将其当作修正版CI。每次正式检查均明确执行一次昂贵贯通，备份hook和修正后的检查分别履行各自流程，没有跳过组合或降低断言。
+
+本轮仅3个工具／回归源码路径及9份项目文档有实际修订，暂存区为空、修订未提交，既有schema.rs规范化空差异未触碰。日志位于本机忽略目录artifacts/k1-pc128-review/；参考源码、私人资源、原始诊断和生成产物未上传。Reference10000／Tiny4及API7／profile1保持；K1仍暂不签收、产品NotEvaluated、stable兼容未知。
+
+下一具体步骤是备份本轮审阅修订并确认该提交的Windows／Linux核心及Windows桌面CI；之后才在明确的测试安排下执行全新12进程CostClosure-PC128-v1正式成本轮、只读复核及退出审阅。本次停在正式测量决策边界，不自动运行，不推进P3或其他阶段。

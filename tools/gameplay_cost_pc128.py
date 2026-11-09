@@ -180,9 +180,24 @@ class Stream:
         if start not in (0,9):raise ValueError('Stream start')
         self.index=start;self.base=None;self.previous=None;self.admitted=None
         self.query_batches=[];self.pc_times=[[],[],[]];self.refs=None
+        self.header=None;self.fixture=None;self.previous_peaks=None
     def consume(self,row):
         if self.index>=len(PHASES) or row['phase']!=PHASES[self.index]:raise ValueError('Incomplete/reordered complete flow')
         phase=row['phase'];value=row['pc']
+        # Check cross-row facts before acknowledging this row, for both the
+        # complete protocol and the supplemental Rust canary. Only fixed-size
+        # identity/peak/fixture state is retained alongside the owner tables.
+        header=tuple(row[k] for k in ('plan_id','case_ordinal','target_arch','target_os','pointer_bits',
+                                     'sample_storage_bytes','query_storage_bytes','closure_storage_bytes'))
+        if self.header is not None and self.header!=header:raise ValueError('Complete identity/storage drift')
+        if self.previous_peaks is not None and any(row['peaks'][k]<v for k,v in self.previous_peaks.items()):
+            raise ValueError('Complete peak regression')
+        if phase in ('prepared','query_group_ready'):
+            if self.fixture is not None and row['fixture_bytes']!=self.fixture:raise ValueError('Complete fixture capacity drift')
+            self.fixture=row['fixture_bytes']
+        if phase in (*q.QUERY_PHASES,'pc_group_ready',*PC_PHASES):
+            if self.fixture is None or row['fixture_bytes']!=self.fixture:raise ValueError('Complete fixture capacity drift')
+        self.header=header;self.previous_peaks=dict(row['peaks'])
         if phase in q.QUERY_PHASES:
             self.query_batches.append({k:row['query'][k] for k in ('id','timing','reference')})
         if phase=='pc_group_ready':

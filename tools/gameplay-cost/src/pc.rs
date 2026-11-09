@@ -6,6 +6,101 @@ mod tests {
     use crate::driver::fixture;
 
     #[test]
+    fn prepare_preflight_failure_does_not_relabel_old_round_receipts() {
+        for round in [1, 15] {
+            for at in [0, 63, 127] {
+                let mut s = Storage::new();
+                s.establish(4, Trace::G0, WorkBudget::one(), &fixture(4), 0, true);
+                for r in 0..round {
+                    s.prepare(r, false);
+                    s.cancel(r, false);
+                    s.drop_tasks(r, false);
+                }
+                let previous: Vec<_> = s.slots.iter().map(|x| x.previous).collect();
+                let baseline: Vec<_> = s.slots.iter().map(|x| x.baseline.unwrap().usage).collect();
+                s.times[0][round - 1] = 17;
+                let times = s.times;
+                // Corrupt only a tool guard receipt, never the core owner or API.
+                s.slots[at].baseline.as_mut().unwrap().usage[0] += 1;
+                let outcome = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                    s.prepare(round, false)
+                }));
+                assert!(outcome.is_err());
+                assert_eq!(
+                    s.attempt,
+                    Attempt {
+                        round: Some(round),
+                        phase: "prepare"
+                    }
+                );
+                assert!(
+                    s.slots.iter().all(|x| x.key.is_none()
+                        && x.steps == 0
+                        && x.task_work.is_none()
+                        && x.cancel.is_none()
+                        && x.cleanup_cancel.is_none()
+                        && !x.checked
+                        && !x.fresh),
+                    "old results relabelled as a new attempt"
+                );
+                assert_eq!(s.lengths, [round; 3]);
+                assert_eq!(s.times, times);
+                for (slot, key) in s.slots.iter().zip(previous) {
+                    assert_eq!(slot.previous, key);
+                }
+                s.cleanup();
+                assert_eq!(s.cleanup_tasks, 0);
+                assert_eq!(s.cleanup_owners, OWNERS);
+                for (i, usage) in baseline.into_iter().enumerate() {
+                    assert_eq!(s.cleanup_after_tasks[i], Some(usage));
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn partial_owner_release_counts_only_remaining_cleanup_and_keeps_unknown_observers() {
+        for at in [0, 63, 127] {
+            let mut s = Storage::new();
+            s.establish(4, Trace::A1, WorkBudget::one(), &fixture(4), 0, true);
+            for r in 0..REPEATS {
+                s.prepare(r, false);
+                s.cancel(r, false);
+                s.drop_tasks(r, false);
+            }
+            s.references(false);
+            let baseline: Vec<_> = s.slots.iter().map(|x| x.baseline.unwrap().usage).collect();
+            s.slots[at].baseline.as_mut().unwrap().usage[0] += 1;
+            let outcome = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| s.release()));
+            assert!(outcome.is_err());
+            assert_eq!(
+                s.attempt,
+                Attempt {
+                    round: None,
+                    phase: "release"
+                }
+            );
+            assert_eq!(
+                s.slots.iter().filter(|x| x.driver.is_some()).count(),
+                OWNERS - at
+            );
+            s.cleanup();
+            assert_eq!(s.cleanup_tasks, 0);
+            assert_eq!(s.cleanup_owners, OWNERS - at);
+            assert!(s.cleanup_before[..at].iter().all(Option::is_none));
+            assert!(s.cleanup_after_tasks[..at].iter().all(Option::is_none));
+            for (i, usage) in baseline.into_iter().enumerate().skip(at) {
+                assert_eq!(s.cleanup_after_tasks[i], Some(usage));
+            }
+            assert_eq!(s.lengths, [REPEATS; 3]);
+            assert_eq!(s.reference_lengths, [REPEATS; 3]);
+            s.cleanup();
+            assert_eq!(s.cleanup_tasks, 0);
+            assert_eq!(s.cleanup_owners, OWNERS - at);
+        }
+    }
+
+    #[test]
     fn bounded_heap_initialization_counts_capacity_and_rejects_partial_construction() {
         assert!(storage_bytes() <= query::STORAGE_LIMIT);
         let s = Storage::try_new().unwrap();
@@ -713,22 +808,7 @@ impl Storage {
             slot.fresh = true;
         }
     }
-    pub fn prepare(&mut self, r: usize, timed: bool) {
-        self.attempt = Attempt {
-            round: (r < REPEATS).then_some(r),
-            phase: "prepare",
-        };
-        assert!(r < REPEATS && self.lengths == [r; 3] && !self.released);
-        for slot in &self.slots {
-            assert!(
-                slot.task.is_none() && slot.driver.as_ref().unwrap().owner.candidate().is_none()
-            );
-            assert_eq!(
-                usage(&slot.driver.as_ref().unwrap().owner),
-                slot.baseline.unwrap().usage
-            );
-        }
-        let begin = timed.then(Instant::now);
+    fn clear_round_receipts(&mut self) {
         for slot in &mut self.slots {
             slot.key = None;
             slot.steps = 0;
@@ -738,6 +818,29 @@ impl Storage {
             slot.checked = false;
             slot.fresh = false;
         }
+    }
+    pub fn prepare(&mut self, r: usize, timed: bool) {
+        self.attempt = Attempt {
+            round: (r < REPEATS).then_some(r),
+            phase: "prepare",
+        };
+        // Guard failure starts no sample, but must not label last round's
+        // successful receipts as the current failed attempt. The normal reset
+        // remains inside the same continuous prepare clock as before.
+        let ready = r < REPEATS
+            && self.lengths == [r; 3]
+            && !self.released
+            && self.slots.iter().all(|slot| {
+                matches!((&slot.driver, slot.baseline), (Some(d), Some(base))
+                    if slot.task.is_none() && d.owner.candidate().is_none()
+                        && usage(&d.owner) == base.usage)
+            });
+        if !ready {
+            self.clear_round_receipts();
+            panic!("PC prepare preflight");
+        }
+        let begin = timed.then(Instant::now);
+        self.clear_round_receipts();
         for i in 0..OWNERS {
             #[cfg(test)]
             self.fail("request", i);

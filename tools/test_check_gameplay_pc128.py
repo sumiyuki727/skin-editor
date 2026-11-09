@@ -17,7 +17,54 @@ import gameplay_cost_query as q
 from test_check_gameplay_closure import rows, end, validate, setup, run_files
 
 
+
+def drift(value, mode):
+    if mode=='arch':value['target_arch']='aarch64'
+    if mode=='pointer':value.update(target_arch='x86',pointer_bits=32)
+    if mode=='query':value['query_storage_bytes']+=8
+    if mode=='container':
+        value['closure_storage_bytes']+=8
+        value['pc']['admission']['container_bytes']+=8
+    if mode=='fixture':value['fixture_bytes']+=1
+    if mode=='peak':
+        value['peaks']['source_reserved']=0
+        value['peaks']['source_payload']=0
+
+def zero_clocks(value):
+    if isinstance(value,dict):
+        for k,v in value.items():
+            if k in ('ns','elapsed_ns','previous_emit_ns','previous_gate_ns','action_ns','sum_ns','p50_ns','p95_ns','p99_ns','max_ns'):
+                if v is not None:value[k]=0
+            elif k=='raw_ns':value[k]=[0]*len(v)
+            else:zero_clocks(v)
+    elif isinstance(value,list):
+        for v in value:zero_clocks(v)
+
+
 class PC128Checks(unittest.TestCase):
+
+    def test_stream_rejects_cross_group_identity_and_peak_drift_before_accepting_row(self):
+        original=rows(plan=p)
+        for mode in ('arch','pointer','query','container','fixture','peak'):
+            value=copy.deepcopy(original[14]);drift(value,mode)
+            p.validate_row(value,'pc_group_ready','g0',1)
+            stream=p.Stream()
+            for row in original[:14]:stream.consume(row)
+            with self.subTest(mode=mode),self.assertRaisesRegex(ValueError,'identity/storage|fixture|peak'):
+                stream.consume(value)
+
+    def test_canary_cannot_skip_the_normal_cross_group_invariants(self):
+        target={'win32':'windows','linux':'linux','darwin':'macos'}[sys.platform]
+        for mode in ('arch','pointer','query','container','fixture','peak'):
+            values=rows(plan=p)[9:15]
+            for row in values:zero_clocks(row);row['target_os']=target
+            drift(values[-1],mode)
+            p._validate_row(values[-1],'pc_group_ready','g0',1,1,target)
+            wire=('PC_CANARY\t'+json.dumps(row)+'\n' for row in values)
+            with self.subTest(mode=mode),self.assertRaisesRegex(ValueError,'identity/storage|fixture|peak'):
+                p.validate_canary(wire,c.decode)
+
+
     def test_online_parent_validates_128th_owner_before_ack(self):
         class Input(io.BytesIO):
             receipt=b''
@@ -34,11 +81,12 @@ class PC128Checks(unittest.TestCase):
                 self.n+=1000000
                 return dict(user_ns=self.n,kernel_ns=0,working_set_bytes=1,private_commit_bytes=1,os_peak_working_set_bytes=1,os_peak_commit_bytes=1)
             def close(self):pass
-        for mode in ('complete','tail_frame','missing_end','extra'):
+        for mode in ('complete','tail_frame','missing_end','extra','drift_arch','drift_pointer','drift_query','drift_container','drift_fixture','drift_peak'):
             values=rows(plan=p)+[end(plan=p)]
             if mode=='tail_frame':values[15]['pc']['owners'][127]['frame']['publication']+=1
             if mode=='missing_end':values.pop()
             if mode=='extra':values.append(end(plan=p))
+            if mode.startswith('drift_'):drift(values[14],mode[6:])
             child=Process(values)
             with tempfile.TemporaryDirectory() as temp,patch.object(cost.subprocess,'Popen',return_value=child),\
                  patch.object(cost,'OwnedProcess',Monitor),patch.object(cost,'cpu_reference_valid',return_value=True),\
@@ -46,7 +94,7 @@ class PC128Checks(unittest.TestCase):
                  patch.object(cost.time,'monotonic_ns',side_effect=itertools.count(1,100000000)),patch('sys.stdout',io.StringIO()):
                 result=cost.run_probe(Path('never-executed.exe'),'g0',1,1,Path(temp),p)
             self.assertEqual(result['status'],'Valid' if mode=='complete' else 'Invalid',result.get('reason'))
-            self.assertEqual(child.stdin.receipt.count(b'continue\n'),15 if mode=='tail_frame' else 65)
+            self.assertEqual(child.stdin.receipt.count(b'continue\n'),14 if mode.startswith('drift_') else 15 if mode=='tail_frame' else 65)
             self.assertTrue(result['completion']['cleanup_complete'])
             self.assertTrue(all('owners' not in r['pc'] for r in result['phases'] if r['phase'] in ('pc_group_ready',*p.PC_PHASES)))
 
@@ -229,15 +277,6 @@ class PC128Checks(unittest.TestCase):
         self.assertTrue(child.terminated)
 
     def test_canary_references_are_zero_and_case_coverage_is_complete(self):
-        def zero(value):
-            if isinstance(value,dict):
-                for k,v in value.items():
-                    if k in ('ns','elapsed_ns','previous_emit_ns','previous_gate_ns','action_ns','sum_ns','p50_ns','p95_ns','p99_ns','max_ns'):
-                        if v is not None:value[k]=0
-                    elif k=='raw_ns':value[k]=[0]*len(v)
-                    else:zero(v)
-            elif isinstance(value,list):
-                for v in value:zero(v)
         target={'win32':'windows','linux':'linux','darwin':'macos'}[sys.platform]
         for mode in ('complete','pc_reference','query_reference','missing_case'):
             def lines():
@@ -245,7 +284,7 @@ class PC128Checks(unittest.TestCase):
                     for b in (1,256):
                         if mode=='missing_case' and (t,b)==('a1',256):continue
                         values=rows(t,b,plan=p)[9:]
-                        for row in values:zero(row);row['target_os']=target
+                        for row in values:zero_clocks(row);row['target_os']=target
                         if mode=='pc_reference':
                             for row in (values[-2]['pc']['reference_ns'][0],values[-1]['pc']['batches'][0]['reference']):
                                 row['raw_ns'][0]=1;row['sum_ns']=1;row['p95_ns']=1;row['p99_ns']=1;row['max_ns']=1

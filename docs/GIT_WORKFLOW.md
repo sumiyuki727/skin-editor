@@ -1,5 +1,7 @@
 # Git 与远端管理
 
+2026-11-10独立K1退出审阅轮前备份：上一轮9份正式测量／只读复核文档经正常完整hook提交并推送b6bc96deb66b154d880e95945ef4380952479421，PUBLIC origin、codex/p1-bootstrap及远端SHA一致。512项Python、169项gameplay、25项常规工具Rust、Query／PC128各六组合无计时贯通、核心和桌面默认／全feature检查通过；[Actions 42700152248](https://github.com/sumiyuki727/skin-editor/actions/runs/42700152248)三项全部成功。本轮[独立退出审阅](K1_EXIT_REVIEW.md#2026-11-10独立退出审阅与签收结论)为备份之后的10份未提交文档；仅作只读复核与审阅，未重测或改功能。160个新旧证据文件及schema.rs既存字节保持，暂存区为空；冻结程序、原始采样及机器详情不上传。未强推、改写历史或绕过检查，以下记录保留历史时点。
+
 2026-11-10统一时基正式轮前确认：HEAD／PUBLIC origin／codex/p1-bootstrap均为3310e491614adff1e0ab02d88d0d028deb90df55；该备份包含4个Python文件及9份文档，正常完整hook与[Actions 42678534807](https://github.com/sumiyuki727/skin-editor/actions/runs/42678534807)三项CI全部通过。轮前无暂存或实际内容差异，复用HEAD、不造空提交；schema.rs既存空差异标记及字节保留。本轮按授权完成一次[新正式测量与只读复核](K1_EXIT_REVIEW.md#2026-11-10统一时基正式成本轮与只读复核)，协议／保管Valid、ReadyForReview，K1仍暂不签收。新增9份文档留本地未提交；原始样本、机器详情、冻结副本和诊断仅存忽略目录，不上传。下方记录保留各自时点。
 
 2026-11-10时基修正轮前备份：上一轮9份PC128失败审阅／交接文档经正常完整hook提交并推送9daac5fa15efa54df6c44780bc4733d2d1657a42，PUBLIC origin、分支和远端SHA一致；[Actions 42666703263](https://github.com/sumiyuki727/skin-editor/actions/runs/42666703263)三项全部成功。仅包含已审查项目说明，原始测量、机器详情、冻结程序和诊断未上传；schema.rs空差异标记及原始字节保留。下面[本轮时基修正](K1_COST_CLOSURE_SPEC.md#2026-11-10父端统一时基修正与审阅)属于备份之后的未提交增量，该CI不覆盖新代码；未强推、改写历史或跳过检查。

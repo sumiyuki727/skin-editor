@@ -1,6 +1,6 @@
 # 独立 stable 兼容内核：新对话交接
 
-2026-11-10当前执行状态：父端时基修正已通过正常完整hook备份并公开推送3310e491614adff1e0ab02d88d0d028deb90df55，对应Windows／Linux核心及Windows桌面CI均成功。本轮按明确授权执行一次全新完整12进程CostClosure-PC128-v1正式测量；[统一时基新轮与只读复核](K1_EXIT_REVIEW.md#2026-11-10统一时基正式成本轮与只读复核)均为协议／保管Valid、coverage ReadyForReview、产品NotEvaluated。72组必需批次和60个家族满足既定分辨条件，单调用／短CPU／阶段真实峰值Unknown仍保留；ReadyForReview不等于K1验收，K1仍暂不签收、stable兼容未知。Reference10000／Tiny4及256MiB／1MiB／512KiB不变，107个旧证据文件原样保留。本轮只新增本地测量证据和文档，未改工具／核心或接GUI／原生设备；新文档未提交，下一项先备份并独立审阅K1退出条件，不自动重测或推进P3／K2。下方记录保留历史时点。
+2026-11-10当前执行状态：正式测量／只读复核文档已备份并公开推送b6bc96deb66b154d880e95945ef4380952479421，正常完整hook及Windows／Linux核心、Windows桌面三项CI均通过。[独立退出审阅](K1_EXIT_REVIEW.md#2026-11-10独立退出审阅与签收结论)确认K1适用纯核心范围可签收：Reference10000／Tiny4、API7／profile1保持，必需批次／家族及操作映射已闭合，合法Unknown按原契约保留。范围仅为纯Rust、无窗口的SyntheticTest圆圈模型；原报告仍为Valid／ReadyForReview／产品NotEvaluated，stable兼容未知。本轮只读复核及文档更新，未重测、改功能或接GUI／设备；160个新旧证据文件保持原样，新增审阅文档待下轮备份。下一项按已定顺序准备P3保存闭环规格，不自动开发。下方带日期记录保留各自历史时点。
 
 2026-11-09 CI故障确认：[019a296的Actions 42523539838](https://github.com/sumiyuki727/skin-editor/actions/runs/42523539838)中Linux核心和Windows桌面通过，Windows核心在Python 3.12.10的test_reparse_points_are_refused_without_following_target失败。硬链接测试以tuple重建stat_result，丢失Windows专用st_file_attributes；新pathlib的lstat委托stat后取得None，触发None与0x400位运算异常。本机Python 3.9.6用同一委托路径成功复现。修正仅用转发替身覆盖st_nlink，保留全部原生属性，并显式覆盖委托路径；生产安全检查、workflow及产品行为均不变。上一轮17文件修订已通过正常完整hook备份推送856cabd5ae34af686bc10f933d6d8aeec63590ea，远端SHA一致；该备份尚不包含本次CI修正，不能声明远端已恢复。本次测试修正与此记录未提交，修正后62项成本工具Python回归及仓库候选／git diff --check通过；直接Python 3.12复验尚缺，日志见本机artifacts/github-query-ci-review/，后续需提交后由远端重新验证。
 
@@ -135,9 +135,9 @@
 
 ## 6. 下一增量、检查和证据
 
-当前停靠点是[项目全面检查](PROJECT_REVIEW_20261109.md)，Query-v1实现与一致性审阅已完成，分别保存于019a296／856cabd；本轮轮前备份为6ac5fda。现有计划是独立16记录的QueryOnly协议：baseline9、查询建立／3批次／释放5、summary和end；三类各16样本、外层参考各16，共96个新时间槽。查询组无单调用计时，1MiB实际容器准入，复用64项页缓冲；每样本核对完整结果、FrameKey、WorkCounts差值和资源不变。Reference10000两预算／三轨迹及真实Tiny4三轨迹已有无窗口功能回归，正式成本尚未运行。
+当前停靠点是2026-11-10[独立K1退出审阅](K1_EXIT_REVIEW.md#2026-11-10独立退出审阅与签收结论)：K1适用纯核心范围可签收，正式结果文档已保存b6bc96d且三项CI成功，本次退出审阅文档待下轮备份。Query、完整PC32及PC128工具和审阅均已有记录，统一时基PC128正式12进程新轮已完成，只读复核为Valid／ReadyForReview／产品NotEvaluated；不再把这些工作列为待开发。Reference10000／Tiny4、API7／profile1保持，K0-B、K2–K5仍未因此验收。
 
-冻结入口复制Cargo真实产物到新目录frozen/probe.exe，关闭并核对后独占发布freeze.json；正式测量时逐子进程核对源码／副本，全部收尾后依序非覆盖发布report.json与evidence-index.json。只读--verify核对角色、路径、字节数、SHA及逐条重算结果，不构建、执行、采样或读取当前源码。Python临时假证据只作回归。剩余为PC三批次／完整读取器与回归审阅、正式完整12进程新轮、独立退出决定；Query-only正式测量不是必须另跑的前置，旧Query结果不得拼接。当前coverage保持NeedsEvidence，既定合法Unknown保留；实现／审阅事实见[Query修订记录](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量一致性审阅)。
+冻结入口复制Cargo真实产物到新目录frozen/probe.exe，关闭并核对后独占发布freeze.json；正式测量时逐子进程核对源码／副本，全部收尾后依序非覆盖发布report.json与evidence-index.json。只读--verify核对角色、路径、字节数、SHA及逐条重算结果，不构建、执行、采样或读取当前源码。新轮必需六批次／五家族及正调用映射均满足既定条件，原单调用／短CPU／真实峰值Unknown保留；旧PC32不足分辨及旧PC128时基失败不追认。160个新旧证据文件保留于本机忽略目录，不上传。下一项按已定顺序准备P3保存闭环规格，本轮不开发或重测。
 
 规格审阅已备份为f1c8dbf，正常完整hook验证旧API5／116项及桌面默认／全feature无窗口基线；随后实现[K1-6A](K1_6A_STORAGE_REVIEW.md)，API6／profile1、4对象。新增实现经正式check_core通过424项Python检查回归、格式、Clippy、三个核心包测试及release构建，gameplay共132项；桌面architecture-only通过。没有成本测量／窗口／设备接线，日志在本机忽略目录artifacts/k1-6a/。过程中一次夹具目标错误及换行整理误清空本轮源码均已修复，恢复／黄金内容核对和最终正式检查通过，历史日志保留。
 
@@ -145,14 +145,14 @@ K1-6A已完成本次一致性复核，补5项回归至137项并通过正式check
 
 读取须同时保留实时已提交单项与T处完整帧；Pending不丢既有完整帧，也不将新判定／实时计数混入旧T。只读分页核对来源／发布键及有界输出，确认事件不换键，来源换代／新截面拒旧页。工作量除steps外记录读取／初始化／索引比较搬移和管理计数；准入预留、实际请求容量及存活所有者分列，不能相加冒充内存。相同修订令牌的独立分配不去重，共享来源一次、独立账本各计，取消资格后仍持有则不退额。成本输出另有版本及Unknown／Invalid状态，不凭低读数或缺失样本通过。
 
-KT23固定10000圆圈生成式：ObjectId=i、目标i×1000000µs、S01偏移，从-200001至9999300000。G0预期10000 Miss／10000 Judgement，G1固定脚本每批最多32对象／64边沿，序号2i+1／2i+2，预期10000 Hit／20000事件；A1经S冻结／切换／恢复，序号1为释放事实，脉冲2i+2／2i+3。三轨迹及来源／最终账本／页／控制交错已有通过证据，SoundIntent不触发设备。成本阶段已有有效基线，短调用批次补证尚缺，不把规模或协议Valid当成产品预算或完整KT23通过。
+KT23固定10000圆圈生成式：ObjectId=i、目标i×1000000µs、S01偏移，从-200001至9999300000。G0预期10000 Miss／10000 Judgement，G1固定脚本每批最多32对象／64边沿，序号2i+1／2i+2，预期10000 Hit／20000事件；A1经S冻结／切换／恢复，序号1为释放事实，脉冲2i+2／2i+3。三轨迹及来源／最终账本／页／控制交错已有通过证据，SoundIntent不触发设备。成本批次／家族及映射补证已由独立退出审阅闭合；适用KT23通过不等于产品预算或stable兼容通过。
 
 | 门槛 | 必须准备 | 当前边界 |
 | --- | --- | --- |
 | K0-A → K1 | 固定SyntheticTest范围／值模型，C1／C2及C3纯事件约定，有限配置与拒绝结果，S01正例和S02–S04边界／交错／小预算的完整预期及KT映射 | 只允许合成预编译圆圈；没有.osu／设备／GUI依赖，不声称stable兼容 |
 | K0-B → 可执行兼容profile | v14／Mode0逐字段支持矩阵，必需规则逐项来源／版本／数值边界／未知及fixture，R01非空自制兼容候选和R02明确拒绝样例 | 可以独立推进解析／拒绝诊断；必需未知的profile仍Blocked，不以过滤对象或合成规则放行 |
 
-S01工程数值和Hit／Miss预期以主方案为准，不是stable窗口／半径／分值。S01–S04适用纯核心、Reference10000／Tiny4容量、G0／G1／A1及有限控制交错已有通过证据；KT23成本批次待补。R01另须必要规则依据，R02整谱拒绝不支持对象／未知语义／歧义布局；同点同刻身份可表达不代表已验证布局，没有新增真实谱面或外部资源fixture。
+S01工程数值和Hit／Miss预期以主方案为准，不是stable窗口／半径／分值。S01–S04适用纯核心、Reference10000／Tiny4容量、G0／G1／A1及有限控制交错已有通过证据；KT23成本批次补证已闭合。R01另须必要规则依据，R02整谱拒绝不支持对象／未知语义／歧义布局；同点同刻身份可表达不代表已验证布局，没有新增真实谱面或外部资源fixture。
 
 证据至少区分SyntheticTest、公开文档依据、当前客户端已验证和Unknown；逐项覆盖格式／属性默认、AR／CS／OD、边界／顺序／堆叠、皮肤呈现及声音选择。客户端条目记录真实build／设置／输入与结果，不能从旧源码、lazer或合成通过自动升级；静态F12仅在已记录范围内验证外观，不证明时序。K0-A不要求把所有stable未知项解决后才做工程模型；K0-B不能用S01补齐必需未知或宣称空的兼容范围已可执行。
 

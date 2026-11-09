@@ -1,6 +1,6 @@
 # 开发路线与质量门槛
 
-2026-11-10当前执行状态：父端时基修正已通过正常完整hook备份并公开推送3310e491614adff1e0ab02d88d0d028deb90df55，对应Windows／Linux核心及Windows桌面CI均成功。本轮按明确授权执行一次全新完整12进程CostClosure-PC128-v1正式测量；[统一时基新轮与只读复核](K1_EXIT_REVIEW.md#2026-11-10统一时基正式成本轮与只读复核)均为协议／保管Valid、coverage ReadyForReview、产品NotEvaluated。72组必需批次和60个家族满足既定分辨条件，单调用／短CPU／阶段真实峰值Unknown仍保留；ReadyForReview不等于K1验收，K1仍暂不签收、stable兼容未知。Reference10000／Tiny4及256MiB／1MiB／512KiB不变，107个旧证据文件原样保留。本轮只新增本地测量证据和文档，未改工具／核心或接GUI／原生设备；新文档未提交，下一项先备份并独立审阅K1退出条件，不自动重测或推进P3／K2。下方记录保留历史时点。
+2026-11-10当前执行状态：正式测量／只读复核文档已备份并公开推送b6bc96deb66b154d880e95945ef4380952479421，正常完整hook及Windows／Linux核心、Windows桌面三项CI均通过。[独立退出审阅](K1_EXIT_REVIEW.md#2026-11-10独立退出审阅与签收结论)确认K1适用纯核心范围可签收：Reference10000／Tiny4、API7／profile1保持，必需批次／家族及操作映射已闭合，合法Unknown按原契约保留。范围仅为纯Rust、无窗口的SyntheticTest圆圈模型；原报告仍为Valid／ReadyForReview／产品NotEvaluated，stable兼容未知。本轮只读复核及文档更新，未重测、改功能或接GUI／设备；160个新旧证据文件保持原样，新增审阅文档待下轮备份。下一项按已定顺序准备P3保存闭环规格，不自动开发。下方带日期记录保留各自历史时点。
 
 2026-11-09查询增量一致性审阅：轮前实现已通过正常完整hook备份推送`019a296f3198446aa1d2ee267dc9fda4f3378e0d`，私有origin及远端SHA一致。本轮修复冻结清单／原始证据／最终报告的发布截面、索引复核、输入代次校验和失败收尾边界，并补真实Rust查询输出到Python的无计时贯通回归，详见[审阅记录](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量一致性审阅)。计划仍为schema3／CostClosure-Query-v1，读取器修订为reader-v2；Reference10000／Tiny4、API7／profile1不变。PC三批次和正式成本测量未开展，coverage NeedsEvidence、产品NotEvaluated、KT23／K1及stable兼容结论保持。本轮修订未提交；后续先备份，再依明确任务推进。下方历史记录保留各自时点。
 
@@ -75,7 +75,7 @@ P3-0审阅修订2已补齐.oskproj命名、地址／记录解耦、跨Schema原�
 
 ## P4／P5的独立内核准备切片
 
-按[专题K计划](STABLE_KERNEL_PLAN.md#12-分阶段执行与准入)执行：K0设计／规则证据→K1无窗口SyntheticTest圆圈模型→K2纯格式与规则编译→K3编辑器自动预览与WAV接线→K4手动圆圈及客户端对照→K5当前入口长时／循环／故障验收。K1纯核心功能及有界资源已有适用证据，KT23成本补证未闭合；[Query-v1一致性审阅](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量一致性审阅)已完成并保存856cabd，CI测试修正已包含于6ac5fda。PC三批次／完整CostClosure-v1工具已实现且待独立审阅，正式新轮及独立退出决定仍缺，具体有限工作包见[全面检查](PROJECT_REVIEW_20261109.md#k1剩余工作与收口规则)。不自动进入K2／GUI／设备或判产品预算通过。
+按[专题K计划](STABLE_KERNEL_PLAN.md#12-分阶段执行与准入)执行：K0设计／规则证据→K1无窗口SyntheticTest圆圈模型→K2纯格式与规则编译→K3编辑器自动预览与WAV接线→K4手动圆圈及客户端对照→K5当前入口长时／循环／故障验收。2026-11-10[独立退出审阅](K1_EXIT_REVIEW.md#2026-11-10独立退出审阅与签收结论)确认K1适用纯核心功能、有界资源及KT23成本补证闭合，可在该范围签收；Reference10000／Tiny4及合法Unknown保持，产品性能NotEvaluated、stable兼容Unknown。下一项按用户已定顺序准备P3保存闭环规格，仍需先审阅恢复基础／接线边界；不自动启动开发或进入K2／GUI／设备。
 
 无窗口模型可不依赖正式保存UI、在线库和AI独立准备；导出一致性仍等P3共同输出计划及素材规则验收。K3前先验证原生输入时间戳／封口、音频时间观测／排程及场景多实例绘制，未具备时如实限定能力。现有回归只覆盖KT的适用纯核心条款，完整KT仍待验收；P2性能／像素证据不能直接证明新运行路径。
 

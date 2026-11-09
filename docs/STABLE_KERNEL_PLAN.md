@@ -1,6 +1,6 @@
 # 独立 stable 兼容内核：架构与分阶段计划
 
-2026-11-10当前执行状态：父端时基修正已通过正常完整hook备份并公开推送3310e491614adff1e0ab02d88d0d028deb90df55，对应Windows／Linux核心及Windows桌面CI均成功。本轮按明确授权执行一次全新完整12进程CostClosure-PC128-v1正式测量；[统一时基新轮与只读复核](K1_EXIT_REVIEW.md#2026-11-10统一时基正式成本轮与只读复核)均为协议／保管Valid、coverage ReadyForReview、产品NotEvaluated。72组必需批次和60个家族满足既定分辨条件，单调用／短CPU／阶段真实峰值Unknown仍保留；ReadyForReview不等于K1验收，K1仍暂不签收、stable兼容未知。Reference10000／Tiny4及256MiB／1MiB／512KiB不变，107个旧证据文件原样保留。本轮只新增本地测量证据和文档，未改工具／核心或接GUI／原生设备；新文档未提交，下一项先备份并独立审阅K1退出条件，不自动重测或推进P3／K2。下方记录保留历史时点。
+2026-11-10当前执行状态：正式测量／只读复核文档已备份并公开推送b6bc96deb66b154d880e95945ef4380952479421，正常完整hook及Windows／Linux核心、Windows桌面三项CI均通过。[独立退出审阅](K1_EXIT_REVIEW.md#2026-11-10独立退出审阅与签收结论)确认K1适用纯核心范围可签收：Reference10000／Tiny4、API7／profile1保持，必需批次／家族及操作映射已闭合，合法Unknown按原契约保留。范围仅为纯Rust、无窗口的SyntheticTest圆圈模型；原报告仍为Valid／ReadyForReview／产品NotEvaluated，stable兼容未知。本轮只读复核及文档更新，未重测、改功能或接GUI／设备；160个新旧证据文件保持原样，新增审阅文档待下轮备份。下一项按已定顺序准备P3保存闭环规格，不自动开发。下方带日期记录保留各自历史时点。
 
 2026-11-09查询增量一致性审阅：轮前实现已通过正常完整hook备份推送`019a296f3198446aa1d2ee267dc9fda4f3378e0d`，私有origin及远端SHA一致。本轮修复冻结清单／原始证据／最终报告的发布截面、索引复核、输入代次校验和失败收尾边界，并补真实Rust查询输出到Python的无计时贯通回归，详见[审阅记录](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量一致性审阅)。计划仍为schema3／CostClosure-Query-v1，读取器修订为reader-v2；Reference10000／Tiny4、API7／profile1不变。PC三批次和正式成本测量未开展，coverage NeedsEvidence、产品NotEvaluated、KT23／K1及stable兼容结论保持。本轮修订未提交；后续先备份，再依明确任务推进。下方历史记录保留各自时点。
 
@@ -331,7 +331,7 @@ K0须建规则清单，至少涵盖：格式／属性默认、AR／CS／OD及量
 
 ## 12. 分阶段执行与准入
 
-K编号是P4／P5的内部工作切片，不另立替代路线。每个增量独立审阅，未通过的范围不靠后续UI掩盖；K1-1至K1-5及[K1-6 A–D](K1_6_SCALE_SPEC.md)已有适用实现与复核。当前只剩成本补证工作组未收口：Query-v1已实现并审阅，PC三批次、完整新轮和独立K1退出决定仍缺，详见[有限收口建议](PROJECT_REVIEW_20261109.md#k1剩余工作与收口规则)。K0-B规则证据仍独立准备，K2–K5未开始。
+K编号是P4／P5的内部工作切片，不另立替代路线。每个增量独立审阅，未通过的范围不靠后续UI掩盖；K1-1至K1-5及[K1-6 A–D](K1_6_SCALE_SPEC.md)已有适用实现与复核。查询／PC128工具、完整正式新轮、只读复核及[独立退出决定](K1_EXIT_REVIEW.md#2026-11-10独立退出审阅与签收结论)已闭合，K1适用SyntheticTest纯核心范围可签收；原报告ReadyForReview与产品NotEvaluated保持，未把合法Unknown改成通过指标。下一项按已定顺序准备P3保存闭环规格，K0-B规则证据及K2–K5仍独立待推进。
 
 ### K0 准入要求
 

@@ -1,6 +1,6 @@
 # 独立 stable 兼容内核：新对话交接
 
-2026-11-10当前执行状态：轮前无新增实际差异，复用已公开备份的804302849da7adce1ed285489d0e288b59ca4e44及三项成功CI，未创建空提交或重复备份hook。本轮仅执行一次全新12进程CostClosure-PC128-v1正式轮，并完成[只读失败复核与K1独立退出审阅](K1_EXIT_REVIEW.md#2026-11-10pc128正式成本轮与退出审阅)。12例已采集，但最终发布因两例父端观测跨度超过寿命回执而拒绝：入口Invalid、coverage NeedsEvidence、产品NotEvaluated；成功报告／索引未发布，完整保管验收未通过，K1仍暂不签收。128候选、256MiB／1MiB／512KiB、Reference10000／Tiny4及API7／profile1保持。原始证据、机器详情和冻结程序仅存本机，本轮文档未提交／未上传。下一步先明确父端时基修复、回归与新旧证据读取策略，再另行决定新测量；不自动重跑、提额、改门槛或推进P3／GUI／原生设备。下方记录保留各自历史时点。
+2026-11-10当前执行状态：上一轮9份PC128失败审阅文档已通过正常完整hook备份并公开推送9daac5fa15efa54df6c44780bc4733d2d1657a42，Windows／Linux核心及Windows桌面CI均成功。本轮实施[父端统一时基最小修正与回归](K1_COST_CLOSURE_SPEC.md#2026-11-10父端统一时基修正与审阅)：CSV与寿命回执统一perf_counter，看门狗保持monotonic；读取器、计划字段、门槛及128候选／256MiB／1MiB／512KiB不变。旧正式轮仍Invalid／NeedsEvidence，K1暂不签收、产品NotEvaluated、stable兼容未知；未运行新正式测量。修正及文档未提交，原始证据和机器详情仍仅本地；后续新测量须另行明确安排，不推进P3、GUI／原生设备或皮肤skill。下方记录保留历史时点。
 
 2026-11-09 CI故障确认：[019a296的Actions 42523539838](https://github.com/sumiyuki727/skin-editor/actions/runs/42523539838)中Linux核心和Windows桌面通过，Windows核心在Python 3.12.10的test_reparse_points_are_refused_without_following_target失败。硬链接测试以tuple重建stat_result，丢失Windows专用st_file_attributes；新pathlib的lstat委托stat后取得None，触发None与0x400位运算异常。本机Python 3.9.6用同一委托路径成功复现。修正仅用转发替身覆盖st_nlink，保留全部原生属性，并显式覆盖委托路径；生产安全检查、workflow及产品行为均不变。上一轮17文件修订已通过正常完整hook备份推送856cabd5ae34af686bc10f933d6d8aeec63590ea，远端SHA一致；该备份尚不包含本次CI修正，不能声明远端已恢复。本次测试修正与此记录未提交，修正后62项成本工具Python回归及仓库候选／git diff --check通过；直接Python 3.12复验尚缺，日志见本机artifacts/github-query-ci-review/，后续需提交后由远端重新验证。
 

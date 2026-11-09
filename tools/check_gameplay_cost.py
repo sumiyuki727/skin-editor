@@ -134,8 +134,8 @@ def decode_line(line):
     return row
 
 
-def completion_timeout(child_begin):
-    remaining=300-(time.monotonic_ns()-child_begin)/1e9
+def completion_timeout(watchdog_begin):
+    remaining=300-(time.monotonic_ns()-watchdog_begin)/1e9
     if remaining<=0: raise ValueError('Total child watchdog exceeded before completion')
     return min(5,remaining)
 
@@ -160,7 +160,9 @@ def run_probe(executable, trace, budget, repetition, output, plan=query):
     messages = queue.Queue(maxsize=2)
     stop_reader = threading.Event()
     observer_begin = time.process_time_ns()
-    child_begin = time.monotonic_ns()
+    # Evidence uses one perf_counter timebase; monotonic only bounds waits.
+    watchdog_begin = time.monotonic_ns()
+    observation_begin = time.perf_counter_ns()
     total_samples = 0
     eof = False
     exit_code = None
@@ -213,7 +215,7 @@ def run_probe(executable, trace, budget, repetition, output, plan=query):
                 previous_sample = previous
                 min_positive = None
                 while True:
-                    if total_samples>=SAMPLE_LIMIT or time.monotonic()>deadline or time.monotonic_ns()-child_begin>300_000_000_000:
+                    if total_samples>=SAMPLE_LIMIT or time.monotonic()>deadline or time.monotonic_ns()-watchdog_begin>300_000_000_000:
                         raise ValueError('Bounded process observation timed out or exceeded total sample capacity')
                     clock = time.perf_counter_ns()
                     point = validate_process_point(monitor.sample(),previous_sample)
@@ -242,7 +244,7 @@ def run_probe(executable, trace, budget, repetition, output, plan=query):
                     raw.flush()
                     row = plan.validate_row(decode_line(line), phase, trace, budget, repetition)
                     if validator is not None: row=validator.consume(row)
-                    if total_samples>=SAMPLE_LIMIT or time.monotonic()>deadline or time.monotonic_ns()-child_begin>300_000_000_000:
+                    if total_samples>=SAMPLE_LIMIT or time.monotonic()>deadline or time.monotonic_ns()-watchdog_begin>300_000_000_000:
                         raise ValueError('Validation exceeded total observation capacity/deadline')
                     clock = time.perf_counter_ns()
                     point = validate_process_point(monitor.sample(),previous_sample)
@@ -285,7 +287,7 @@ def run_probe(executable, trace, budget, repetition, output, plan=query):
                     process.stdin.flush()
                     print(name, phase, 'work_ms=%.3f' % (row['elapsed_ns']/1e6), flush=True)
                     break
-            line = messages.get(timeout=completion_timeout(child_begin))
+            line = messages.get(timeout=completion_timeout(watchdog_begin))
             if line is None or len(line) > MAX_LINE:
                 raise ValueError('Missing bounded end receipt')
             raw.write(line)
@@ -294,10 +296,10 @@ def run_probe(executable, trace, budget, repetition, output, plan=query):
             record['phases'][-1]['emit_ns'] = end['previous_emit_ns']
             record['phases'][-1]['gate_wait_ns'] = end['previous_gate_ns']
             process.stdin.close()
-            exit_code = process.wait(timeout=completion_timeout(child_begin))
+            exit_code = process.wait(timeout=completion_timeout(watchdog_begin))
             if exit_code != 0:
                 raise ValueError('Child reported failure')
-            trailing = messages.get(timeout=completion_timeout(child_begin))
+            trailing = messages.get(timeout=completion_timeout(watchdog_begin))
             if trailing is not None:
                 raw.write(trailing); raw.flush()
                 raise ValueError('Unexpected trailing protocol output')
@@ -337,8 +339,8 @@ def run_probe(executable, trace, budget, repetition, output, plan=query):
             if cleanup:
                 record.update(status='Invalid',reason='; '.join(([record['reason']] if 'reason' in record else [])+cleanup))
     record['observer_cpu_ns_excluded_from_child'] = time.process_time_ns()-observer_begin
-    elapsed_parent = time.monotonic_ns()-child_begin
-    if elapsed_parent > 300_000_000_000:
+    elapsed_parent = time.perf_counter_ns()-observation_begin
+    if time.monotonic_ns()-watchdog_begin > 300_000_000_000:
         record.update(status='Invalid',reason='Total child watchdog exceeded')
     if record['status']=='Valid':
         try: plan.validate_durations(record['phases'],elapsed_parent)

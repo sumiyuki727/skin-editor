@@ -81,6 +81,7 @@ class PC128Checks(unittest.TestCase):
                 self.n+=1000000
                 return dict(user_ns=self.n,kernel_ns=0,working_set_bytes=1,private_commit_bytes=1,os_peak_working_set_bytes=1,os_peak_commit_bytes=1)
             def close(self):pass
+        # Keep 130 fake boundary observations inside the unchanged 300 s cap.
         for mode in ('complete','tail_frame','missing_end','extra','drift_arch','drift_pointer','drift_query','drift_container','drift_fixture','drift_peak'):
             values=rows(plan=p)+[end(plan=p)]
             if mode=='tail_frame':values[15]['pc']['owners'][127]['frame']['publication']+=1
@@ -90,7 +91,7 @@ class PC128Checks(unittest.TestCase):
             child=Process(values)
             with tempfile.TemporaryDirectory() as temp,patch.object(cost.subprocess,'Popen',return_value=child),\
                  patch.object(cost,'OwnedProcess',Monitor),patch.object(cost,'cpu_reference_valid',return_value=True),\
-                 patch.object(cost.time,'perf_counter_ns',side_effect=itertools.count(1,3000000000)),\
+                 patch.object(cost.time,'perf_counter_ns',side_effect=itertools.count(1,1100000000)),\
                  patch.object(cost.time,'monotonic_ns',side_effect=itertools.count(1,100000000)),patch('sys.stdout',io.StringIO()):
                 result=cost.run_probe(Path('never-executed.exe'),'g0',1,1,Path(temp),p)
             self.assertEqual(result['status'],'Valid' if mode=='complete' else 'Invalid',result.get('reason'))

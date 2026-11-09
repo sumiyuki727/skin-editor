@@ -1,5 +1,7 @@
 # Git 与远端管理
 
+2026-11-10时基修正轮前备份：上一轮9份PC128失败审阅／交接文档经正常完整hook提交并推送9daac5fa15efa54df6c44780bc4733d2d1657a42，PUBLIC origin、分支和远端SHA一致；[Actions 42666703263](https://github.com/sumiyuki727/skin-editor/actions/runs/42666703263)三项全部成功。仅包含已审查项目说明，原始测量、机器详情、冻结程序和诊断未上传；schema.rs空差异标记及原始字节保留。下面[本轮时基修正](K1_COST_CLOSURE_SPEC.md#2026-11-10父端统一时基修正与审阅)属于备份之后的未提交增量，该CI不覆盖新代码；未强推、改写历史或跳过检查。
+
 2026-11-10正式测量轮前核对：HEAD／codex/p1-bootstrap为已公开备份的804302849da7adce1ed285489d0e288b59ca4e44，[Actions 42577917542](https://github.com/sumiyuki727/skin-editor/actions/runs/42577917542)三项成功；轮前无暂存或实际内容差异，复用该回退点，未造空提交或重复备份hook。schema.rs既存空差异标记及原始字节保持。本轮按新授权仅执行一次PC128正式轮及[只读失败复核与退出审阅](K1_EXIT_REVIEW.md#2026-11-10pc128正式成本轮与退出审阅)，最终Invalid／NeedsEvidence；新增9份文档留本地未提交／未上传。原始证据、冻结程序、机器详情和诊断留在忽略目录，后续备份须单独核对文档范围。以下记录保留历史时点。
 
 2026-11-09PC128一致性审阅轮前备份：23个已审查路径经正常完整hook提交并推送3f74e5201dd05f07b8b07b6c249dee81b4f5d218，PUBLIC origin、codex/p1-bootstrap及远端SHA一致。核心507项Python、169项gameplay、23项常规工具Rust及显式PC128六组合贯通，桌面默认／全部feature检查与构建均通过；未跳过hook或改写历史。[Actions 42565376458](https://github.com/sumiyuki727/skin-editor/actions/runs/42565376458)结果见[本轮审阅记录](K1_COST_CLOSURE_SPEC.md#2026-11-09pc128实现一致性审阅)，仅覆盖备份提交。本轮审阅修订尚未提交，暂存区为空；schema.rs规范化空差异标记保留，原始诊断和产物未上传。以下为历史记录。

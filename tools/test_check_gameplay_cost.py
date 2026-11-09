@@ -35,7 +35,108 @@ def graph():
                           package('skin-editor-gameplay',Path('crates/gameplay'),[])])
 
 
+
+def clock_fixture(root, plan=cost.query, *, quantum=15625000, cleanup_ns=0, expire_watchdog=False):
+    """Deterministic parent/reader fixture; no child, native observer or wall-time wait."""
+    from test_check_gameplay_custody import setup as query_setup
+    from test_check_gameplay_query import rows as query_rows, end as query_end
+    from test_check_gameplay_closure import setup as full_setup, rows as full_rows, end as full_end
+    c=cost.custody
+    if plan is cost.query:
+        output,manifest,_,_=query_setup(root);values=query_rows()+[query_end()]
+    else:
+        output,manifest,_=full_setup(root,plan=plan);values=full_rows(plan=plan)+[full_end(plan=plan)]
+
+    class Clock:
+        ns=0
+        watchdog_shift=0
+        def perf(self):return 9000000000000+self.ns
+        def watchdog(self):return 4000000000000+(self.ns//quantum)*quantum+self.watchdog_shift
+        def seconds(self):return self.watchdog()/1e9
+    clock=Clock()
+    class Inbox:
+        def __init__(self):self.values=iter([*values,None])
+        def get(self,timeout):
+            value=next(self.values)
+            clock.ns+=(value.get('elapsed_ns',0) if value is not None else 0)+1000000
+            return None if value is None else c.canonical(value)+b'\n'
+    class Reader:
+        ident=None
+        def start(self):pass
+        def is_alive(self):return False
+    class Process:
+        pid=123
+        stdout=io.BytesIO()
+        stdin=io.BytesIO()
+        def poll(self):return 0
+        def wait(self,timeout):
+            assert 0<timeout<=5
+            clock.ns+=100
+            return 0
+    class Monitor:
+        def __init__(self,pid):assert pid==123
+        def sample(self):
+            clock.ns+=100
+            return dict(user_ns=clock.ns,kernel_ns=0,working_set_bytes=1,private_commit_bytes=1,
+                        os_peak_working_set_bytes=1,os_peak_commit_bytes=1)
+        def close(self):
+            clock.ns+=cleanup_ns
+            if expire_watchdog:clock.watchdog_shift=301000000000
+    with patch.object(cost.subprocess,'Popen',return_value=Process()) as spawn,\
+         patch.object(cost.threading,'Thread',return_value=Reader()),patch.object(cost.queue,'Queue',return_value=Inbox()),\
+         patch.object(cost,'OwnedProcess',Monitor),patch.object(cost.time,'perf_counter_ns',side_effect=clock.perf),\
+         patch.object(cost.time,'monotonic_ns',side_effect=clock.watchdog),patch.object(cost.time,'monotonic',side_effect=clock.seconds),\
+         patch('sys.stdout',io.StringIO()):
+        result=cost.run_probe(Path('never-executed.exe'),'g0',1,1,output,plan)
+    spawn.assert_called_once()
+    receipt=dict(result['completion'],source_before=manifest['source_map_sha256'],source_after=manifest['source_map_sha256'],
+                 binary_before=manifest['binary']['sha256'],binary_after=manifest['binary']['sha256'])
+    c.write_json(output/'g0-b1-r1.process.json',receipt)
+    return output,manifest,result,clock.ns
+
 class GameplayCostChecks(unittest.TestCase):
+
+    def test_parent_lifetime_and_csv_use_one_clock_despite_coarse_independent_watchdog(self):
+        c=cost.custody
+        for plan in (cost.query,cost.closure,cost.pc128):
+            with self.subTest(plan=plan.PLAN),tempfile.TemporaryDirectory() as temp:
+                output,manifest,result,elapsed=clock_fixture(Path(temp),plan)
+                self.assertEqual(result['status'],'Valid',result.get('reason'))
+                self.assertEqual(result['completion']['elapsed_parent_ns'],elapsed)
+                observed=c.process_points(output/'g0-b1-r1.samples.csv',plan)
+                span=observed[-1]['clock']-observed[0]['first_clock']
+                self.assertLessEqual(span,elapsed)
+                derived=c.derive_run(output,manifest,'g0-b1-r1','g0',1,1)
+                self.assertEqual(derived['phases'],result['phases'])
+
+    def test_readonly_lifetime_span_guard_has_no_quantization_tolerance(self):
+        c=cost.custody
+        from test_check_gameplay_custody import replace_json
+        with tempfile.TemporaryDirectory() as temp:
+            output,manifest,result,_=clock_fixture(Path(temp))
+            self.assertEqual(result['status'],'Valid',result.get('reason'))
+            points=c.process_points(output/'g0-b1-r1.samples.csv')
+            span=points[-1]['clock']-points[0]['first_clock']
+            path=output/'g0-b1-r1.process.json'
+            receipt=c.read_json(path,65536)
+            for lifetime in (span,span+1):
+                replace_json(path,dict(receipt,elapsed_parent_ns=lifetime))
+                self.assertEqual(c.derive_run(output,manifest,'g0-b1-r1','g0',1,1)['status'],'Valid')
+            replace_json(path,dict(receipt,elapsed_parent_ns=span-1))
+            with self.assertRaisesRegex(ValueError,'Observation span exceeds child lifetime'):
+                c.derive_run(output,manifest,'g0-b1-r1','g0',1,1)
+
+    def test_cleanup_keeps_perf_lifetime_and_watchdog_as_separate_bounds(self):
+        for cleanup,expired in ((3000000,False),(0,True),(301000000000,False)):
+            with self.subTest(cleanup=cleanup,expired=expired),tempfile.TemporaryDirectory() as temp:
+                _,_,result,elapsed=clock_fixture(Path(temp),quantum=1000000000000 if cleanup>300000000000 else 1000000000,
+                                                 cleanup_ns=cleanup,expire_watchdog=expired)
+                self.assertEqual(result['completion']['elapsed_parent_ns'],elapsed)
+                self.assertTrue(result['completion']['cleanup_complete'])
+                self.assertEqual(result['status'],'Invalid' if expired or cleanup>300000000000 else 'Valid')
+                if expired:self.assertIn('Total child watchdog exceeded',result['reason'])
+
+
     def test_process_capacity_is_global_and_stops_before_the_next_native_sample(self):
         from test_check_gameplay_query import rows
         class Process:

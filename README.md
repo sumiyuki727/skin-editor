@@ -45,7 +45,7 @@ python tools/run_desktop.py
 
 核心检查包括格式、Clippy、无窗口测试、实际 Cargo 图与源码边界；桌面检查包含默认／全部 feature，不默认打开窗口、GPU或声卡。`--architecture-only` 只检查边界。远程 Windows／Linux CI 已配置但未在本机替代实测。
 
-正式核心检查也包含独立的 SyntheticTest 成本工具检查，可单独运行 `python -B tools/check_gameplay_cost.py --check`。只读复核入口为 `python -B tools/check_gameplay_cost.py --verify <schema3证据目录>`，不构建、执行受测程序或采样。当前新构建输出schema3／CostClosure-v1，完整读取器为CostClosure-reader-v1；旧CostClosure-Query-v1仍由独立reader-v2读取。--check另校验六种真实Rust查询及完整补充流程的无计时输出。Windows显式测量入口 --measure --output artifacts/gameplay-cost-new 要求全新目录，固定三轨迹／两预算／各两个进程，执行冻结副本；本轮未运行。协议Valid、指标Unknown、覆盖程度及产品NotEvaluated分开，ReadyForReview仅表示完整新轮满足既定补证条件，仍需独立审阅；历史v1／v2原样保留。详见[实现与限制](docs/K1_COST_CLOSURE_SPEC.md#2026-11-09完整计划实现记录)。
+正式核心检查也包含独立的 SyntheticTest 成本工具检查，可单独运行 `python -B tools/check_gameplay_cost.py --check`。只读复核入口为 `python -B tools/check_gameplay_cost.py --verify <schema3证据目录>`，不构建、执行受测程序或采样。当前新构建输出schema3／CostClosure-v1，完整读取器为CostClosure-reader-v2；旧CostClosure-Query-v1仍由独立reader-v2读取。--check另校验六种真实Rust查询及完整补充流程的无计时输出。Windows显式测量入口 --measure --output artifacts/gameplay-cost-new 要求全新目录，固定三轨迹／两预算／各两个进程，执行冻结副本；本轮未运行。协议Valid、指标Unknown、覆盖程度及产品NotEvaluated分开，ReadyForReview仅表示完整新轮满足既定补证条件，仍需独立审阅；历史v1／v2原样保留。详见[审阅与限制](docs/K1_COST_CLOSURE_SPEC.md#2026-11-09完整计划一致性审阅)。
 
 公开远端、检查后提交／同步和缓存整理规则见[Git 管理](docs/GIT_WORKFLOW.md)。
 

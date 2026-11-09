@@ -10,7 +10,7 @@ from gameplay_cost_query import fields, natural, times, work, delta, case_ordina
 
 SCHEMA=3
 PLAN='CostClosure-v1'
-VALIDATOR='CostClosure-reader-v1'
+VALIDATOR='CostClosure-reader-v2'
 SCOPE='Complete'
 PC_BATCHES=('PC-PREPARE-32','PC-CANCEL-32','PC-DROP-32')
 PC_PHASES=('pc_prepared','pc_cancelled_held','pc_dropped')
@@ -95,6 +95,8 @@ def owner(value,row,base,kind,r,a):
     for p in ('source','runtime'):
         if not peaks[p+'_payload']<=peaks[p+'_reserved']<=8*1024*1024:raise ValueError('PC setup pool peak')
     if kind=='ready':
+        for key in ('source_reserved','runtime_reserved','source_payload','runtime_payload'):
+            if u[key]>peaks[key]:raise ValueError('PC setup peak omitted a live baseline owner')
         if any(value[k] is not None for k in ('task_work','cancel_success','key')) or natural(value['steps'],'steps')!=0:raise ValueError('Unstarted PC baseline')
         return
     legacy.validate_cancel_checkpoint(value['task_work'],10000)
@@ -133,6 +135,9 @@ def _validate_row(row,phase,trace,budget,repetition,target_os):
         raise ValueError('PC cannot borrow a single-owner or query receipt')
     if row['target_os']!=target_os or row['target_arch'] not in ('x86_64','x86','aarch64') or row['pointer_bits']!=(32 if row['target_arch']=='x86' else 64):
         raise ValueError('PC target identity')
+    # The legacy projection has no collection of owners. Validate the original
+    # caller field before replacing it for that single-owner check.
+    natural(row['fixture_bytes'],'PC fixture bytes')
     old=dict(row,schema_version=2,phase='released',owner_alive=False,fixture_bytes=0)
     legacy.validate_row(old,'released',trace,budget,operations=False)
     if any(m['calls'] for m in row['metrics']):raise ValueError('PC nested baseline clocks')

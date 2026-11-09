@@ -97,6 +97,45 @@ def run_files(root,manifest,name,trace,budget,repetition,*,unknown=False):
 
 class CompleteProtocolChecks(unittest.TestCase):
 
+    def test_pc_fixture_types_are_checked_before_legacy_projection(self):
+        values=rows()
+        for phase in ('pc_group_ready',*p.PC_PHASES,'pc_group_released'):
+            original=next(r for r in values if r['phase']==phase)
+            for bad in (False,True,float(original['fixture_bytes']),None,'0',[]):
+                changed=copy.deepcopy(original);changed['fixture_bytes']=bad
+                with self.subTest(phase=phase,value=bad),self.assertRaises(ValueError):
+                    p.validate_row(changed,phase,'g0',1)
+
+    def test_setup_resource_peak_cannot_omit_a_live_baseline_owner(self):
+        original=rows()[14]
+        for key in ('source_reserved','runtime_reserved','source_payload','runtime_payload'):
+            changed=copy.deepcopy(original)
+            owner=changed['pc']['owners'][0]
+            owner['peaks'].update({k:owner['resources'][k] for k in ('source_reserved','runtime_reserved','source_payload','runtime_payload')})
+            owner['peaks'][key]-=1
+            with self.subTest(key=key),self.assertRaises(ValueError):
+                p.validate_row(changed,'pc_group_ready','g0',1)
+
+    def test_each_required_batch_and_family_keeps_its_own_unknown_boundary(self):
+        values=validate(rows())
+        for phase in q.FAMILIES:
+            changed=copy.deepcopy(values)
+            next(r for r in changed if r['phase']==phase)['elapsed_ns']=99
+            result=p.coverage(changed,1)
+            self.assertEqual(result['status'],'NeedsEvidence',phase)
+            self.assertEqual(result['families'][phase]['timing_status'],'Unknown')
+        for batch in p.BATCHES:
+            changed=copy.deepcopy(values)
+            if batch in q.BATCHES:
+                timing=next(r['query']['timing'] for r in changed if r['phase'] in q.QUERY_PHASES and r['query']['id']==batch)
+            else:timing=next(b['timing'] for b in changed[-1]['pc']['batches'] if b['id']==batch)
+            timing['raw_ns'][0]=19
+            result=p.coverage(changed,1)
+            self.assertEqual(result['status'],'NeedsEvidence',batch)
+            self.assertEqual(result['batches'][batch],'Unknown')
+        self.assertTrue(all(m['status']=='NotApplicable' for m in p.coverage(values,1)['mapping'] if not m['calls']))
+
+
     def test_parent_consumes_all_65_ack_boundaries_then_end_eof_and_cleanup(self):
         import io
         import itertools
@@ -116,18 +155,19 @@ class CompleteProtocolChecks(unittest.TestCase):
                 self.n+=1000000
                 return dict(user_ns=self.n,kernel_ns=0,working_set_bytes=1,private_commit_bytes=1,os_peak_working_set_bytes=1,os_peak_commit_bytes=1)
             def close(self):pass
-        for mode in ('complete','missing_end','extra','wrong_round'):
+        for mode in ('complete','missing_end','extra','wrong_round','typed_fixture'):
             values=rows()+[end()]
             if mode=='missing_end':values.pop()
             if mode=='extra':values.append(end())
             if mode=='wrong_round':values[18]['pc']['r']=0
+            if mode=='typed_fixture':values[15]['fixture_bytes']=float(values[15]['fixture_bytes'])
             child=Process(values)
             with tempfile.TemporaryDirectory() as temp,patch.object(cost.subprocess,'Popen',return_value=child),patch.object(cost,'OwnedProcess',Monitor),\
                  patch.object(cost,'cpu_reference_valid',return_value=True),patch.object(cost.time,'perf_counter_ns',side_effect=itertools.count(1,3000000000)),\
                  patch.object(cost.time,'monotonic_ns',side_effect=itertools.count(1,100000000)),patch('sys.stdout',io.StringIO()):
                 result=cost.run_probe(Path('never-executed.exe'),'g0',1,1,Path(temp),p)
                 self.assertEqual(result['status'],'Valid' if mode=='complete' else 'Invalid',result.get('reason'))
-                self.assertEqual(child.stdin.receipt.count(b'continue\n'),18 if mode=='wrong_round' else 65)
+                self.assertEqual(child.stdin.receipt.count(b'continue\n'),18 if mode=='wrong_round' else 15 if mode=='typed_fixture' else 65)
                 self.assertTrue(result['completion']['cleanup_complete'])
                 self.assertTrue((Path(temp)/result['raw_file']).is_file())
                 self.assertTrue(all('owners' not in r['pc'] for r in result['phases'] if r['phase'] in ('pc_group_ready',*p.PC_PHASES)))
@@ -198,9 +238,10 @@ class CompleteProtocolChecks(unittest.TestCase):
         for unknown in (False,True):
             with self.subTest(unknown=unknown),tempfile.TemporaryDirectory() as temp:
                 output,manifest,_=setup(Path(temp))
-                for case in c.names():run_files(output,manifest,*case,unknown=unknown)
+                for case in c.names():run_files(output,manifest,*case,unknown=unknown and case[0]=='a1-b256-r2')
                 report=c.publish(output,manifest)
                 self.assertEqual(report['coverage'],'NeedsEvidence' if unknown else 'ReadyForReview')
+                self.assertEqual(sum(r['coverage']['status']!='Satisfied' for r in report['runs']),int(unknown))
                 self.assertEqual(report['status'],'Valid');self.assertEqual(report['product_status'],'NotEvaluated')
                 before=c.inventory(output,plan=p)
                 with patch.object(cost,'check_tool',side_effect=AssertionError('no build')),patch.object(cost.subprocess,'Popen',side_effect=AssertionError('no execute')),patch.object(c,'write_json',side_effect=AssertionError('read only')):
@@ -219,5 +260,7 @@ class CompleteProtocolChecks(unittest.TestCase):
                 changed=copy.deepcopy(manifest);del changed['source_sha256'][name]
                 changed['source_map_sha256']=c.digest(changed['source_sha256'])
                 with self.assertRaises(ValueError):c.validate_freeze(changed)
+            changed=copy.deepcopy(manifest);changed['validator']='CostClosure-reader-v1'
+            with self.assertRaises(ValueError):c.validate_freeze(changed)
             changed=copy.deepcopy(manifest);changed['parameters']['pc_owners']=31
             with self.assertRaises(ValueError):c.validate_freeze(changed)

@@ -1,6 +1,6 @@
 # K1成本收口补证开工规格
 
-2026-11-09当前执行状态：用户已确定先有限收口K1，再补P3普通保存闭环；仓库已按明确要求改为PUBLIC，全面检查文档经完整hook备份推送为42e3b4d28e145cd34f5afd7c5123c76e2349cf3d。本轮已实现PC-PREPARE-32／PC-CANCEL-32／PC-DROP-32和完整CostClosure-v1读取器，见[实现记录](K1_COST_CLOSURE_SPEC.md#2026-11-09完整计划实现记录)。Reference10000／Tiny4、API7／profile1保持；正式新成本测量、独立退出决定和P3接线尚未开展，KT23／K1、产品性能及stable兼容结论不升级。本轮新增量未提交；下方历史记录保留各自时点，旧“未实现／私有／本轮”不覆盖本段。
+2026-11-09当前执行状态：先有限收口K1，再补P3普通保存闭环；PUBLIC仓库沿用用户授权。完整PC三批次及CostClosure-v1实现已通过正常完整hook备份推送为3945bb6483d05dab3f9bf84613335cd79ef11e5b。本轮完成一致性审阅，修正PC原始字段校验、建立期资源峰值与异常清理回执，完整读取器修订为CostClosure-reader-v2，见[审阅记录](K1_COST_CLOSURE_SPEC.md#2026-11-09完整计划一致性审阅)。Reference10000／Tiny4、API7／profile1保持；正式新成本测量、独立退出决定和P3接线尚未开展，KT23／K1、产品性能及stable兼容结论不升级。本轮审阅修订未提交；下方记录保留各自历史时点。
 
 2026-11-09查询增量一致性审阅：轮前实现已通过正常完整hook备份推送`019a296f3198446aa1d2ee267dc9fda4f3378e0d`，私有origin及远端SHA一致。本轮修复冻结清单／原始证据／最终报告的发布截面、索引复核、输入代次校验和失败收尾边界，并补真实Rust查询输出到Python的无计时贯通回归，详见[审阅记录](#2026-11-09查询增量一致性审阅)。计划仍为schema3／CostClosure-Query-v1，读取器修订为reader-v2；Reference10000／Tiny4、API7／profile1不变。PC三批次和正式成本测量未开展，coverage NeedsEvidence、产品NotEvaluated、KT23／K1及stable兼容结论保持。本轮修订未提交；后续先备份，再依明确任务推进。下方历史记录保留各自时点。
 
@@ -285,3 +285,22 @@ schema3独立于gameplay API／profile和工程格式；v1／v2报告原样保�
 新增回归覆盖：Reference10000的G0／G1／A1×W1／256真实32-owner全16轮，生产编码输出336条无时钟补充记录并经Python逐行读取；Tiny严格4对象、输入4／事件2／重放4、W1，3轨迹全16轮；容量不足／算术溢出、旧／跨owner键、准备／取消／Drop各边界失败清理。Python另用明确假数据覆盖完整12例、66条与ACK／EOF、完整冻结／只读重算、字段／轮次／资源／汇总负例以及Valid／Unknown／ReadyForReview分离。假二进制不执行，假进程计数不访问PID；无时钟轨迹不构成正式测量证据。
 
 正式check_core全部通过：493项Python、169项gameplay及其余纯核心回归、16项工具Rust，原Query六组合和完整计划六组合生产输出均经Python无计时复核；格式、Clippy、release及依赖／源码检查通过。桌面architecture-only通过，轮前备份的完整hook也已通过桌面默认／全feature检查；未打开窗口或原生设备。21个实际文本增量UTF-8／LF、10份文档438处本地链接／锚点、git diff --check及816文件仓库候选检查通过。日志位于本机忽略目录artifacts/k1-cost-pc/；三份既有冻结程序／历史报告SHA与轮前一致，未执行或重写。暂存区为空，本轮新增量未提交，既有schema.rs空差异标记保留。没有修改gameplay核心、桌面业务、依赖或锁文件；API7／profile1、Reference10000／Tiny4保持。KT23／K1仍未签收；下一步先备份并独立审阅本增量，然后再明确安排全新正式成本轮及退出审阅；P3保存闭环在K1有限收口后按自身规格推进，本轮未接线。
+
+## 2026-11-09完整计划一致性审阅
+
+上一轮21文件完整计划增量已通过正常完整hook保存并推送3945bb6483d05dab3f9bf84613335cd79ef11e5b，PUBLIC origin及远端完整SHA一致。备份检查通过493项Python、169项gameplay、16项独立工具Rust及其余核心／桌面默认和全feature检查、构建；日志为本机忽略目录artifacts/k1-cost-pc-review/backup-hook.log。[本次备份CI](https://github.com/sumiyuki727/skin-editor/actions/runs/42539581458)的Windows／Linux核心检查已通过，桌面任务仍在运行；远端结果只覆盖此备份提交。本轮新增修订不沿用其远端结论。
+
+| 已复现问题／覆盖缺口 | 最小修正与回归 |
+| --- | --- |
+| PC回执投影到旧单owner验证结构时，先覆盖fixture_bytes为0，丢失原始字段类型；布尔值／浮点数可冒充字节数 | 在投影前检查原始非负整数类型；所有5种PC角色覆盖错误类型，父端流式回归在错误行发ACK之前拒绝，不进入有效报告 |
+| 每owner建立期资源峰值只有上界，可遗漏仍存活的基线资源 | ready阶段的4个字节峰值必须各自至少覆盖基线资源；后续回执保持同一建立期快照，不把它解释为准备／取消阶段真实峰值或OS峰值 |
+| 核心step实际完成工作后，若诊断／结果处理提前中断，缓存task_work可能为空或仍是上一轮；清理丢掉任务后无法补记 | 新请求清空旧缓存；先计尝试并保存实际WorkCounts，再判断step结果；清理在取消／Drop前从仍持有任务读取实际工作。单独保留cleanup_cancel_success，不填入计时cancel_success、不补成功样本或时钟；清理重入不重复释放 |
+| 原回归没有逐一保护每个必需批次／家族，以及仅一个进程Unknown的完整矩阵 | 覆盖6批次最小样本、5家族总时间和零调用NotApplicable；12例中仅最后一例不足时仍为协议Valid／coverage NeedsEvidence／产品NotEvaluated |
+
+先运行反例，旧读取器有26个子用例误放行，Rust反例确认已实际工作后仍记录None；修正后定向9项完整协议Python测试和4项PC Rust测试通过。Rust反例使用真实Tiny4协调器／任务，模拟step完成后诊断中断，验证实际工作、任务释放后基线资源、32个owner释放、清理取消与计时取消分离、原样本长度和清理幂等；Python测试用临时假数据及假进程，不产生性能证据。
+
+计划仍为schema3／CostClosure-v1，正常66条流／65个ACK、32个独立owner、16轮、6类各16个动作／外层参考、W1半程检查点和64MiB／1MiB预算均不变。读取器身份升至CostClosure-reader-v2；旧完整reader-v1清单由新读取器明确拒绝，不能仅改身份或重算哈希追认旧证据。尚无本完整计划的正式测量可迁移；历史阅读须使用对应保管工具／源码身份。独立CostClosure-Query-v1／Query-reader-v2读取不变，既有schema1／2程序及历史报告保持。
+
+审阅核对：PC准备与实际取消／Drop有各自时钟；取消后任务仍持有资源，Drop后6字段精确回基线；来源完整键、跨owner／跨轮隔离、原始工作和固定容量准入保留；父端先验证每行再ACK，限行限时，end之后仍需EOF／退出码0／有界清理；只读复核重算而不构建或执行。新增清理字段只出现在失败诊断，不改变正常行角色。类型容器继续按实际布局准入，不放宽预算；核心资源公式不变。以上是结构和回归证据，不是实际成本或资源峰值达标证明。
+
+正式check_core全部通过：496项Python、169项gameplay及其余纯核心回归、17项工具Rust，Query六组合及完整PC六组合生产输出经Python无计时复核；格式、Clippy、release与依赖／源码检查通过。桌面architecture-only通过；本轮未改桌面业务，正常备份hook已通过完整桌面检查。11个实际文本增量UTF-8／LF、8份文档422处本地链接／锚点、git diff --check及816文件候选检查通过。三个既有冻结程序／报告散列与轮前一致。日志保留在本机忽略目录artifacts/k1-cost-pc-review/；暂存区为空，本轮审阅修订未提交，既有schema.rs规范化空差异标记保留。未执行--measure或旧冻结程序，不接GUI／原生设备，未读取参考客户端／旧源码；不修改gameplay API、桌面业务、依赖或锁文件。下一步先备份本轮审阅修订，再明确安排全新12例CostClosure-v1正式成本轮与独立退出审阅；K1有限收口后才推进P3保存闭环。KT23／K1仍未签收，产品NotEvaluated、stable兼容未知。

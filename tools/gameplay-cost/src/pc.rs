@@ -4,6 +4,63 @@
 mod tests {
     use super::*;
     use crate::driver::fixture;
+
+    #[test]
+    fn cleanup_reads_actual_task_work_even_when_the_last_step_receipt_was_interrupted() {
+        let mut s = Storage::new();
+        s.establish(4, Trace::G0, WorkBudget::one(), &fixture(4), 0, true);
+        let baseline = s.slots[0].baseline.unwrap().usage;
+        {
+            let slot = &mut s.slots[0];
+            let d = slot.driver.as_mut().unwrap();
+            let task = d.owner.request_inspection(d.source(), t(0)).unwrap();
+            slot.key = Some(task.key());
+            slot.task = Some(task);
+        }
+        // Core work has happened, but an enclosing diagnostic fails before its
+        // cached work receipt is refreshed. No batch has completed.
+        let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let slot = &mut s.slots[0];
+            let task = slot.task.as_mut().unwrap();
+            slot.steps += 1;
+            task.step(task.cursor(), WorkBudget::one()).unwrap();
+            panic!("interrupted diagnostic receipt");
+        }));
+        assert!(result.is_err());
+        let actual = s.slots[0].task.as_ref().unwrap().work_counts();
+        assert!(actual.valid && actual.management_steps > 0);
+        assert!(s.slots[0].task_work.is_none());
+        s.cleanup();
+        assert_eq!(s.slots[0].task_work, Some(actual));
+        assert_eq!(s.cleanup_after_tasks[0], Some(baseline));
+        assert_eq!(s.cleanup_tasks, 1);
+        assert_eq!(s.cleanup_owners, 32);
+        assert_eq!(s.slots[0].cleanup_cancel, Some(Ok(())));
+        assert!(
+            s.slots[1..]
+                .iter()
+                .all(|slot| slot.cleanup_cancel.is_none())
+        );
+        s.cleanup();
+        assert_eq!(s.cleanup_tasks, 1);
+        assert_eq!(s.cleanup_owners, 32);
+        assert_eq!(s.lengths, [0; 3]);
+        assert!(s.slots.iter().all(|slot| slot.cancel.is_none()));
+        let mut out = Vec::new();
+        s.write_failure(&mut out).unwrap();
+        assert!(out.len() < 256 * 1024);
+        let receipt = String::from_utf8(out).unwrap();
+        assert_eq!(
+            receipt.matches("\"cleanup_cancel_success\":true").count(),
+            1
+        );
+        assert_eq!(
+            receipt.matches("\"cleanup_cancel_success\":null").count(),
+            31
+        );
+        assert_eq!(receipt.matches("\"cancel_success\":null").count(), 32);
+    }
+
     #[test]
     fn admission_is_checked_before_any_owner_and_counts_independent_sources() {
         let a = admit(10000, false, query::STORAGE_LIMIT, AGGREGATE_LIMIT).unwrap();
@@ -140,6 +197,7 @@ struct Slot {
     checked: bool,
     fresh: bool,
     cancel: Option<Result<(), PreparationError>>,
+    cleanup_cancel: Option<Result<(), PreparationError>>,
 }
 impl Slot {
     fn empty() -> Self {
@@ -159,6 +217,7 @@ impl Slot {
             checked: false,
             fresh: false,
             cancel: None,
+            cleanup_cancel: None,
         }
     }
 }
@@ -442,6 +501,7 @@ impl Storage {
                 slot.key = Some(task.key());
                 slot.task = Some(task);
                 slot.steps = 0;
+                slot.task_work = None;
                 slot.cancel = None;
                 slot.checked = false;
                 slot.fresh = false;
@@ -451,15 +511,15 @@ impl Storage {
             for _ in 0..bound(self.n) {
                 let slot = &mut self.slots[i];
                 let task = slot.task.as_mut().unwrap();
-                let report = task.step(task.cursor(), WorkBudget::one()).unwrap();
                 slot.steps += 1;
+                let report = task.step(task.cursor(), WorkBudget::one());
+                let w = task.work_counts();
+                slot.task_work = Some(w);
+                assert!(w.valid);
                 assert!(matches!(
-                    report,
+                    report.unwrap(),
                     PreparationReport::Pending { steps: 1, .. }
                 ));
-                let w = task.work_counts();
-                assert!(w.valid);
-                slot.task_work = Some(w);
                 reached = w.allocation_attempts == 3
                     && w.state_initializations == (self.n + self.n / 2) as u64
                     && w.inspection_objects == (self.n / 2) as u64;
@@ -576,10 +636,15 @@ impl Storage {
     }
     pub fn cleanup(&mut self) {
         for (i, slot) in self.slots.iter_mut().enumerate() {
+            // A step/diagnostic may unwind before updating the cached receipt.
+            // Read the surviving task before cancellation/Drop; no new work or timer.
+            if let Some(task) = slot.task.as_ref() {
+                slot.task_work = Some(task.work_counts());
+            }
             if let Some(d) = slot.driver.as_mut() {
                 self.cleanup_before[i] = Some(usage(&d.owner));
                 if let Some(key) = d.owner.candidate() {
-                    let _ = d.owner.cancel(key);
+                    slot.cleanup_cancel = Some(d.owner.cancel(key));
                 }
                 if let Some(task) = slot.task.take() {
                     drop(task);
@@ -812,6 +877,12 @@ impl Storage {
             }
             write!(out, ",\"cancel_success\":")?;
             if let Some(r) = self.slots[i].cancel {
+                write!(out, "{}", r.is_ok())?;
+            } else {
+                write!(out, "null")?;
+            }
+            write!(out, ",\"cleanup_cancel_success\":")?;
+            if let Some(r) = self.slots[i].cleanup_cancel {
                 write!(out, "{}", r.is_ok())?;
             } else {
                 write!(out, "null")?;

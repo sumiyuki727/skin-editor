@@ -22,6 +22,7 @@ from gameplay_cost_query import (PHASES, SCHEMA, PLAN, PARAMETERS, case_ordinal,
 import gameplay_cost_custody as custody
 import gameplay_cost_query as query
 import gameplay_cost_closure as closure
+import gameplay_cost_pc128 as pc128
 
 MAX_LINE = 32*1024*1024
 SAMPLE_LIMIT = 120000
@@ -64,7 +65,7 @@ def check_tool(directory=None):
         'tests::query_wire_canary_without_clocks', '--', '--exact', '--nocapture'], cwd=ROOT, env=env, text=True)
     cases=validate_canary(canary,custody.decode)
     print(f'Query wire canary: {cases} real Rust cases, no timing/native observation',flush=True)
-    command=[cargo,*linker,'test',*common,'--all-features','tests::closure_wire_canary_without_clocks','--','--exact','--nocapture']
+    command=[cargo,*linker,'test',*common,'--all-features','tests::closure_wire_canary_without_clocks','--','--ignored','--exact','--nocapture']
     cases=check_full_canary(command,env)
     print(f'Complete wire canary: {cases} real Rust cases, no timing/native observation',flush=True)
     build_arguments = [cargo, *linker, 'build', *common, '--release', '--message-format=json']
@@ -78,20 +79,24 @@ def check_tool(directory=None):
 
 def check_full_canary(command, env):
     with subprocess.Popen(command,cwd=ROOT,env=env,stdout=subprocess.PIPE) as child:
+        largest=0
         def lines():
+            nonlocal largest
             while True:
                 line=child.stdout.readline(1024*1024+1)
                 if not line: return
                 if len(line)>1024*1024: raise ValueError('Full canary line capacity')
+                if line.startswith(b'PC_CANARY\t'):largest=max(largest,len(line))
                 yield line.decode('utf-8')
         try:
-            cases=closure.validate_canary(lines(),custody.decode)
+            cases=pc128.validate_canary(lines(),custody.decode)
             if child.wait(timeout=30)!=0: raise ValueError('Full canary child failed')
         except BaseException:
             child.terminate()
             try: child.wait(timeout=5)
             except subprocess.TimeoutExpired: child.kill(); child.wait(timeout=5)
             raise
+        print(f'PC128 supplemental wire maximum: {largest} bytes including prefix/newline; limit=1048576',flush=True)
     return cases
 
 
@@ -109,7 +114,7 @@ def identity():
                                'tools/gameplay-cost/Cargo.lock', 'tools/check_core.py', 'tools/check_gameplay_cost.py',
                                'tools/gameplay_cost_protocol.py', 'tools/gameplay_cost_platform.py',
                                'tools/gameplay_cost_query.py', 'tools/gameplay_cost_custody.py', 'tools/gameplay_cost_closure.py',
-                               'tools/test_check_gameplay_closure.py',
+                               'tools/test_check_gameplay_closure.py', 'tools/gameplay_cost_pc128.py', 'tools/test_check_gameplay_pc128.py',
                                'tools/test_check_gameplay_query.py', 'tools/test_check_gameplay_custody.py',
                                'docs/K1_COST_CLOSURE_SPEC.md',
                                'tools/test_check_gameplay_cost.py', 'tools/check_core_architecture.py')]
@@ -149,7 +154,7 @@ def process_summary(point,peaks,samples,gap,interval,quantum,reference_valid,pre
 
 
 def run_probe(executable, trace, budget, repetition, output, plan=query):
-    validator=closure.Stream() if plan is closure else None
+    validator=plan.Stream() if plan in (closure,pc128) else None
     name = f'{trace}-b{budget}-r{repetition}'
     record = dict(trace=trace, budget=budget, repetition=repetition, objects=10000, status='Invalid', phases=[])
     messages = queue.Queue(maxsize=2)
@@ -409,7 +414,7 @@ def main():
     action = parser.add_mutually_exclusive_group(required=True)
     action.add_argument('--check', action='store_true')
     action.add_argument('--measure', action='store_true')
-    action.add_argument('--verify', metavar='EVIDENCE_DIRECTORY', help='read-only Query-v1 / CostClosure-v1 evidence verification; no build or execution')
+    action.add_argument('--verify', metavar='EVIDENCE_DIRECTORY', help='read-only Query-v1 / CostClosure-v1 / CostClosure-PC128-v1 evidence verification; no build or execution')
     parser.add_argument('--toolchain-dir')
     parser.add_argument('--output')
     parser.add_argument('--repetitions', type=int, choices=(2,), default=2)
@@ -428,7 +433,7 @@ def main():
     if args.check:
         print('PASS: independent gameplay cost tool format/Clippy/tests/release and dependency/source rules')
         return
-    report = measure(executable, compiler, output, args.repetitions, frozen, binary_hash, build_arguments, closure)
+    report = measure(executable, compiler, output, args.repetitions, frozen, binary_hash, build_arguments, pc128)
     print('Measurement protocol status:', report['status'], '; coverage:', report['coverage'], '; product verdict: NotEvaluated;', output)
     if report['status'] != 'Valid':
         raise RuntimeError('Incomplete/invalid/unknown measurement; original evidence retained')

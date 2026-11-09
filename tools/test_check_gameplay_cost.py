@@ -293,9 +293,9 @@ class GameplayCostChecks(unittest.TestCase):
     def test_diagnostic_source_cannot_import_platform_io_project_or_external_includes(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);base=root/'tools/gameplay-cost/src';base.mkdir(parents=True)
-            for name in ('main.rs','driver.rs','meter.rs','query.rs','pc.rs'):(base/name).write_text('#![forbid(unsafe_code)]\n',encoding='utf-8')
+            for name in ('main.rs','driver.rs','meter.rs','query.rs','pc.rs','failure.rs'):(base/name).write_text('#![forbid(unsafe_code)]\n',encoding='utf-8')
             self.assertEqual(protocol.tool_source_errors(root),[])
-            for name in ('driver.rs','pc.rs'):
+            for name in ('driver.rs','pc.rs','failure.rs'):
                 for content in ('use skin_editor_application::ProjectSession;','use std::fs;','include!("outside.rs");','use wgpu::Device;'):
                     (base/name).write_text(content,encoding='utf-8');self.assertTrue(protocol.tool_source_errors(root))
                 (base/name).write_text('',encoding='utf-8')

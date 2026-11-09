@@ -1,6 +1,7 @@
 //! Independent, versioned, headless SyntheticTest cost probe.
 #![forbid(unsafe_code)]
 mod driver;
+mod failure;
 mod meter;
 mod pc;
 mod query;
@@ -605,35 +606,70 @@ fn main() {
         candidate: None,
         events_checked: 0,
     };
-    let mut meter = Meter::new(context.n);
-    assert!(meter.failure_capacity_bytes() + 256 * 1024 < 32 * 1024 * 1024);
-    let mut storage = query::Storage::new();
-    let mut pc = pc::Storage::new();
+    let mut meter = None;
+    let mut storage = None;
+    let mut pc = None;
     if std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-        run(&mut context, &mut meter, &mut storage, &mut pc)
+        // All admission and fallible tool-container construction precedes ready
+        // and the first core owner; incomplete containers are never zero ledgers.
+        pc::admit(context.n, false, query::STORAGE_LIMIT, pc::AGGREGATE_LIMIT).unwrap();
+        pc = Some(pc::Storage::try_new().expect("PC container initialization"));
+        storage = Some(query::Storage::new());
+        meter = Some(Meter::new(context.n));
+        let m = meter.as_mut().unwrap();
+        assert!(
+            m.failure_capacity_bytes()
+                .checked_add(pc::FAILURE_LIMIT)
+                .unwrap()
+                < failure::LINE_LIMIT
+        );
+        run(
+            &mut context,
+            m,
+            storage.as_mut().unwrap(),
+            pc.as_mut().unwrap(),
+        )
     }))
     .is_err()
     {
-        pc.cleanup();
-        meter.invalid = Some(meter.invalid.unwrap_or("workload-or-protocol"));
         let output = io::stdout();
         let mut out = output.lock();
-        // Bounded failure channel; no normal sample slot, observer or ACK is needed.
-        let _ = write!(
-            out,
-            "{{\"schema_version\":{SCHEMA},\"plan_id\":\"{}\",\"case_ordinal\":{},\"phase\":\"failed\",\"status\":\"Invalid\",\"reason\":\"{}\",\"retained_query_samples\":",
-            context.plan,
-            context.case_ordinal,
-            meter.invalid.unwrap()
+        let _ = failure::report(
+            &mut out,
+            &context,
+            meter.as_ref(),
+            storage.as_ref(),
+            &mut pc,
         );
-        let _ = storage.write_failure(&mut out);
-        let _ = write!(out, ",\"retained_pc\":");
-        let _ = pc.write_failure(&mut out);
-        let _ = write!(out, ",\"retained_baseline_metrics\":");
-        let _ = meter.write_failure(&mut out);
-        let _ = writeln!(out, "}}");
         let _ = out.flush();
+        // Cleanup of core ownership was attempted before any output. Tool
+        // containers also leave scope explicitly before the non-unwinding exit.
+        drop(pc);
+        drop(meter);
         std::process::exit(1);
+    }
+}
+
+#[cfg(test)]
+fn maximum_work() -> WorkCounts {
+    WorkCounts {
+        valid: false,
+        record_reads: u64::MAX,
+        record_copies: u64::MAX,
+        index_initializations: u64::MAX,
+        id_comparisons: u64::MAX,
+        index_moves: u64::MAX,
+        state_initializations: u64::MAX,
+        search_objects: u64::MAX,
+        inspection_objects: u64::MAX,
+        automatic_objects: u64::MAX,
+        publications: u64::MAX,
+        summaries: u64::MAX,
+        frame_objects: u64::MAX,
+        ledger_objects: u64::MAX,
+        management_steps: u64::MAX,
+        allocation_attempts: u64::MAX,
+        allocation_bytes: u64::MAX,
     }
 }
 
@@ -643,6 +679,7 @@ mod tests {
 
     /// Full Reference matrix through the real writer and real tasks, clocks disabled.
     #[test]
+    #[ignore = "Executed exactly once by check_gameplay_cost.py with streaming PC128 validation"]
     fn closure_wire_canary_without_clocks() {
         for (index, trace) in [Trace::G0, Trace::G1, Trace::A1].into_iter().enumerate() {
             for (b, budget) in [WorkBudget::one(), WorkBudget::full()]

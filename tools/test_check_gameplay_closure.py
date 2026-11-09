@@ -13,15 +13,17 @@ import gameplay_cost_protocol as old
 from test_check_gameplay_query import rows as query_rows, end as query_end, times
 from test_check_gameplay_custody import COMPILER, BUILD
 
-def rows(trace='g0',budget=1,repetition=1):
+def rows(trace='g0',budget=1,repetition=1,*,plan=p):
+    p=plan
+    count=p.PARAMETERS['pc_owners']
     query=query_rows(trace,budget,repetition)
     for row in query:row.update(plan_id=p.PLAN,closure_storage_bytes=200000,pc=None)
     admission=dict(source_bytes=1000000,run_bytes=400000,task_bytes=1000,pool_bytes=100,coordinator_bytes=100,
-        pool_limit=8388608,aggregate_limit=67108864,aggregate_required=32*1801200,container_bytes=200000)
+        pool_limit=8388608,aggregate_limit=p.PARAMETERS['aggregate_reserved_limit'],aggregate_required=count*1801200,container_bytes=200000)
     baseline=dict(source_reserved=1000000,runtime_reserved=400200,source_payload=640000,runtime_payload=390000,source_allocations=3,runtime_allocations=3)
     held=dict(baseline,runtime_reserved=801200,runtime_payload=780000,runtime_allocations=6)
     ordinal=q.case_ordinal(trace,budget,repetition);owners=[]
-    for i in range(32):
+    for i in range(count):
         source=dict(run=10000000+1000*ordinal+100+i,transport=2,input=4 if trace=='a1' else 2,revision=730)
         calls=dict.fromkeys(old.METRICS,0)
         calls.update(create_request=1,prepare_step=1,activate=1,task_drop=2,seal=1,advance=1,
@@ -52,15 +54,16 @@ def rows(trace='g0',budget=1,repetition=1):
                         operation='Inspect',at=0,driver=o['frame']['driver'],full_eq_checked=True,fresh=True))
             result.append(checkpoint(phase,('prepared','cancelled-held','dropped')[kind],r))
     released=copy.deepcopy(query[13]);released.update(phase='pc_group_released',query=None,
-        pc=dict(kind='released',owners_dropped=32,tasks_held=0,owners=None,aggregate=None,reference_scope='outer_loop_only',reference_ns=[times(0) for _ in range(3)]))
+        pc=dict(kind='released',owners_dropped=count,tasks_held=0,owners=None,aggregate=None,reference_scope='outer_loop_only',reference_ns=[times(0) for _ in range(3)]))
     summary=query[-1];summary['pc']=dict(kind='summary',scope='Complete',product_verdict='NotEvaluated',
         batches=[dict(id=k,timing=times(),reference=times(0)) for k in p.PC_BATCHES])
     return result+[released,summary]
 
-def end(trace='g0',budget=1,repetition=1):
-    return dict(query_end(trace,budget,repetition),plan_id=p.PLAN)
+def end(trace='g0',budget=1,repetition=1,*,plan=p):
+    return dict(query_end(trace,budget,repetition),plan_id=plan.PLAN)
 
-def validate(values,trace='g0',budget=1,repetition=1):
+def validate(values,trace='g0',budget=1,repetition=1,*,plan=p):
+    p=plan
     stream=p.Stream();compact=[]
     for row in values:
         p.validate_row(row,row['phase'],trace,budget,repetition)
@@ -68,20 +71,22 @@ def validate(values,trace='g0',budget=1,repetition=1):
     stream.finish();p.validate_lifecycle(compact)
     return compact
 
-def setup(root):
+def setup(root,*,plan=p):
+    p=plan
     source=cost.identity();binary=root/'built.exe';binary.write_bytes(b'not executable: full fixture')
     output=root/'evidence'
     manifest,target=c.freeze(binary,COMPILER,source,c.hash_file(binary,c.MAX_BINARY)['sha256'],output,BUILD,lambda:source,p)
     return output,manifest,target
 
-def run_files(root,manifest,name,trace,budget,repetition,*,unknown=False):
-    values=rows(trace,budget,repetition)
+def run_files(root,manifest,name,trace,budget,repetition,*,unknown=False,plan=p):
+    p=plan
+    values=rows(trace,budget,repetition,plan=p)
     if unknown:
         values[16]['pc']['action_ns']=19
         raw=values[-1]['pc']['batches'][1]['timing']['raw_ns'];raw[0]=19
         values[-1]['pc']['batches'][1]['timing']['sum_ns']=sum(raw)
     with (root/(name+'.child.jsonl')).open('wb') as stream:
-        for value in [*values,end(trace,budget,repetition)]:stream.write(c.canonical(value)+b'\n')
+        for value in [*values,end(trace,budget,repetition,plan=p)]:stream.write(c.canonical(value)+b'\n')
     with (root/(name+'.samples.csv')).open('w',newline='',encoding='utf-8') as stream:
         writer=csv.writer(stream);writer.writerow(('phase','parent_monotonic_ns',*c.COUNTERS));clock=1;cpu=0
         for value in values:

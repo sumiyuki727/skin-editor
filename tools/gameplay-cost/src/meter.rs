@@ -67,6 +67,14 @@ pub struct Meter {
     counts_only: Option<[u64; 24]>,
 }
 impl Meter {
+    #[cfg(test)]
+    pub(crate) fn maximum_failure_fixture(&mut self) {
+        for b in &mut self.buckets {
+            b.raw.resize(b.limit, u64::MAX);
+        }
+        self.invalid = Some("sample-total-overflow");
+    }
+
     /// Supplement setup/canaries collect calls without clocks or sample slots.
     pub fn unmeasured() -> Self {
         Self {
@@ -277,7 +285,10 @@ mod tests {
                 .contains("\"raw_ns\":[18446744073709551615]")
         );
         assert_eq!(m.buckets[0].raw, [u64::MAX]);
-        assert!(Meter::new(10000).failure_capacity_bytes() + 256 * 1024 < 32 * 1024 * 1024);
+        assert!(
+            Meter::new(10000).failure_capacity_bytes() + crate::pc::FAILURE_LIMIT
+                < 32 * 1024 * 1024
+        );
     }
     #[test]
     fn nearest_rank_has_no_zero_sample_statistics() {

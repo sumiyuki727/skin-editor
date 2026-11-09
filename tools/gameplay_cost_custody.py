@@ -16,10 +16,11 @@ import time
 
 import gameplay_cost_query as query
 import gameplay_cost_closure as closure
+import gameplay_cost_pc128 as pc128
 
 
 def plan_for(name):
-    for plan in (query, closure):
+    for plan in (query, closure, pc128):
         if name == plan.PLAN: return plan
     raise ValueError("Unknown evidence plan")
 from gameplay_cost_protocol import natural, validate_process_point
@@ -128,7 +129,7 @@ def roles(plan=query):
 
 def diagnostics(plan):
     value=dict(always_on_work_counts=True,query_result_guards=True,query_nested_call_timers=False,outer_reference_subtracted=False)
-    if plan is closure:value.update(pc_result_guards=True,pc_nested_call_timers=False,pc_full_key_equality=True)
+    if plan in (closure,pc128):value.update(pc_result_guards=True,pc_nested_call_timers=False,pc_full_key_equality=True)
     return value
 
 
@@ -153,7 +154,8 @@ def validate_freeze(value):
               'tools/check_gameplay_cost.py','tools/gameplay_cost_protocol.py','tools/gameplay_cost_platform.py',
               'tools/test_check_gameplay_query.py','tools/test_check_gameplay_custody.py',
               'Cargo.toml','Cargo.lock','rust-toolchain.toml','tools/gameplay-cost/Cargo.toml','tools/gameplay-cost/Cargo.lock'}
-    if plan is closure: required.update(('tools/gameplay-cost/src/pc.rs','tools/gameplay_cost_closure.py','tools/test_check_gameplay_closure.py'))
+    if plan in (closure,pc128): required.update(('tools/gameplay-cost/src/pc.rs','tools/gameplay_cost_closure.py','tools/test_check_gameplay_closure.py'))
+    if plan is pc128: required.update(('tools/gameplay-cost/src/failure.rs','tools/gameplay_cost_pc128.py','tools/test_check_gameplay_pc128.py'))
     if not required<=set(source) or value['source_map_sha256']!=digest(source) or value['spec_sha256']!=source[SPEC]:
         raise ValueError('Incomplete/mismatched frozen source identity')
     query.fields(value['binary'],('path','bytes','sha256'),'frozen binary')
@@ -284,7 +286,7 @@ def process_points(path, plan=query):
 
 def derive_run(root, manifest, name, trace, budget, repetition):
     plan=plan_for(manifest["plan_id"])
-    validator=closure.Stream() if plan is closure else None
+    validator=plan.Stream() if plan in (closure,pc128) else None
     receipt=read_json(relative(root,name+'.process.json'),65536)
     query.fields(receipt, ('schema_version','plan_id','case_ordinal','pid','exit_code','eof','cleanup_complete','observer_cpu_ns_excluded_from_child',
                            'elapsed_parent_ns','source_before','source_after','binary_before','binary_after'), 'process receipt')
@@ -341,7 +343,7 @@ def derive_report(root, manifest):
     binary=hash_file(relative(root,'frozen/probe.exe'),MAX_BINARY)
     if binary!={k:manifest['binary'][k] for k in ('bytes','sha256')}: raise ValueError('Frozen copy mismatch')
     runs=[derive_run(root,manifest,*case) for case in names()]
-    return dict(schema_version=3,plan_id=plan.PLAN,validator=plan.VALIDATOR,status='Valid',coverage=('ReadyForReview' if plan is closure and len(runs)==12 and all(r['coverage']['status']=='Satisfied' for r in runs) else 'NeedsEvidence'),scope=plan.SCOPE,
+    return dict(schema_version=3,plan_id=plan.PLAN,validator=plan.VALIDATOR,status='Valid',coverage=('ReadyForReview' if plan in (closure,pc128) and len(runs)==12 and all(r['coverage']['status']=='Satisfied' for r in runs) else 'NeedsEvidence'),scope=plan.SCOPE,
                 product_status='NotEvaluated',api_version=7,profile_version=1,source_sha256=manifest['source_sha256'],
                 source_map_sha256=manifest['source_map_sha256'],executable_sha256=manifest['binary']['sha256'],freeze_sha256=hash_file(root/'freeze.json',1048576)['sha256'],
                 host_observer=manifest['host_observer'],

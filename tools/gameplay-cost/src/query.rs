@@ -44,7 +44,7 @@ pub fn base_id(ordinal: usize) -> u64 {
         .checked_add(1000_u64.checked_mul(ordinal as u64).unwrap())
         .unwrap()
 }
-pub fn storage_bytes() -> usize {
+pub const fn storage_bytes() -> usize {
     // Caller descriptors/temporary input and counters are included, not just time slots.
     std::mem::size_of::<Storage>()
         .checked_add(std::mem::size_of::<Driver>())
@@ -223,6 +223,21 @@ fn empty_body(kind: usize, d: &Driver, expected: Observation, out: &mut [Option<
     }
 }
 impl Storage {
+    #[cfg(test)]
+    pub(crate) fn maximum_failure_fixture(&mut self) {
+        for series in &mut self.series {
+            series.len = REPEATS;
+            series.reference_len = REPEATS;
+            series.references = [u64::MAX; REPEATS];
+            series.samples = [Sample {
+                ns: u64::MAX,
+                before: crate::maximum_work(),
+                after: crate::maximum_work(),
+                delta: crate::maximum_work(),
+            }; REPEATS];
+        }
+    }
+
     pub fn page_buffer(&mut self) -> &mut [Option<CircleFrame>; 64] {
         &mut self.output
     }

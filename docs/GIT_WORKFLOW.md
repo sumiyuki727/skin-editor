@@ -1,5 +1,7 @@
 # Git 与远端管理
 
+2026-11-09PC128实现轮前备份：9份规格审阅修订通过正常完整hook提交并推送c5101f914d7f007c59d708e51d04550bab463646，PUBLIC origin及远端SHA一致；本地核心与桌面完整检查通过。[Actions 42560760228](https://github.com/sumiyuki727/skin-editor/actions/runs/42560760228)的Windows核心、Linux核心、Windows桌面三项全部成功。该远端结果只覆盖轮前规格；本轮[PC128实现与回归](K1_COST_CLOSURE_SPEC.md#2026-11-09pc128增量实现记录)仍未提交，后续先备份再独立审阅。未强推、amend或跳过hook；暂存区为空，schema.rs规范化空差异标记保留。以下为历史记录。
+
 2026-11-09PC128规格审阅轮前备份：原草案9份文档通过正常完整hook提交并推送7c9715ad5a15a3604fa7312d9877e16bf4fbf4b3，PUBLIC origin及远端SHA一致。496项Python／169项gameplay／17项工具Rust、两组各六组合无计时贯通，以及核心和桌面默认／全feature检查及构建通过，未打开窗口或GPU。814de56的Actions 42552051281三项已全部成功；[本次备份Actions 42555453095](https://github.com/sumiyuki727/skin-editor/actions/runs/42555453095)三项仍在运行，仅覆盖备份提交。新增[PC128规格一致性审阅](K1_COST_CLOSURE_SPEC.md#2026-11-09pc128规格一致性审阅)属于备份之后的未提交文档，不包含工具、核心或workflow修改。原schema.rs规范化空差异继续保留未暂存。
 
 2026-11-09取消分辨规格轮前备份：上一轮10份正式成本结果文档经正常完整hook提交并推送814de56f39a4bddf8e26851e733a79d1df43ee1e，PUBLIC origin及远端SHA一致。496项Python／169项gameplay／17项工具Rust、两组各六组合贯通及核心、桌面默认／全feature检查与构建通过；schema.rs规范化空差异继续保留未暂存。76810dd的Actions 42544000658三项已全部成功；[本次备份的Actions 42552051281](https://github.com/sumiyuki727/skin-editor/actions/runs/42552051281)Linux核心已通过，Windows核心及桌面仍在运行；该状态只覆盖备份提交。新增[取消批次分辨修订草案](K1_COST_CLOSURE_SPEC.md#2026-11-09取消批次分辨修订草案)属于备份之后的未提交文档；本轮不改工具／核心／workflow，不执行新测量。以下记录保留各自历史时点。

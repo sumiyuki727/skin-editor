@@ -6,6 +6,134 @@ mod tests {
     use crate::driver::fixture;
 
     #[test]
+    fn bounded_heap_initialization_counts_capacity_and_rejects_partial_construction() {
+        assert!(storage_bytes() <= query::STORAGE_LIMIT);
+        let s = Storage::try_new().unwrap();
+        assert_eq!(s.slots.capacity(), 128);
+        assert_eq!(s.slots.len(), 128);
+        assert!(!s.owners_alive());
+        assert!(s.slots.iter().all(|x| x.task.is_none() && x.key.is_none()));
+        assert!(Storage::with_limit(storage_bytes() - 1, None).is_err());
+        assert!(Storage::check_capacity(129, query::STORAGE_LIMIT).is_err());
+        assert!(Storage::check_capacity(usize::MAX, query::STORAGE_LIMIT).is_err());
+        for at in [0, 63, 127] {
+            assert!(Storage::with_limit(query::STORAGE_LIMIT, Some(at)).is_err());
+        }
+        let a = admit(10000, false, storage_bytes(), AGGREGATE_LIMIT).unwrap();
+        assert_eq!(
+            a.aggregate_required,
+            128 * (a.costs.source_bytes
+                + a.costs.pool_bytes
+                + a.costs.coordinator_bytes
+                + a.costs.task_bytes
+                + 2 * a.costs.run_bytes)
+        );
+        assert!(admit(10000, false, storage_bytes(), a.aggregate_required).is_ok());
+        assert!(admit(10000, false, storage_bytes(), a.aggregate_required - 1).is_err());
+        let mut overflow = a.costs;
+        overflow.source_bytes = usize::MAX;
+        assert!(admission(overflow, a.pool_limit, AGGREGATE_LIMIT).is_err());
+        println!(
+            "PC128 bounded layout: container={}, slots={}, slot={}, aggregate={}",
+            storage_bytes(),
+            s.slots.capacity(),
+            std::mem::size_of::<Slot>(),
+            a.aggregate_required
+        );
+    }
+
+    #[test]
+    fn partial_setup_only_reports_created_owners_and_observed_resources() {
+        for at in [0, 63, 127] {
+            let mut s = Storage::new();
+            s.fault = Some(("setup", at));
+            let outcome = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                s.establish(4, Trace::G0, WorkBudget::one(), &fixture(4), 0, true);
+            }));
+            assert!(outcome.is_err());
+            assert_eq!(s.slots.iter().filter(|x| x.driver.is_some()).count(), at);
+            s.cleanup();
+            assert_eq!(s.cleanup_owners, at);
+            assert_eq!(s.cleanup_tasks, 0);
+            assert!(s.cleanup_after_tasks[..at].iter().all(Option::is_some));
+            assert!(s.cleanup_after_tasks[at..].iter().all(Option::is_none));
+            assert!(!s.owners_alive());
+            s.cleanup();
+            assert_eq!(s.cleanup_owners, at);
+        }
+    }
+
+    #[test]
+    fn every_round_failure_discards_old_results_and_releases_actual_remaining_tasks() {
+        for round in [0, 1, 15] {
+            for at in [0, 63, 127] {
+                for stage in ["request", "work", "cancel", "drop"] {
+                    let mut s = Storage::new();
+                    s.establish(4, Trace::A1, WorkBudget::one(), &fixture(4), 0, true);
+                    for r in 0..round {
+                        s.prepare(r, false);
+                        s.cancel(r, false);
+                        s.drop_tasks(r, false);
+                    }
+                    let baseline: Vec<_> =
+                        s.slots.iter().map(|x| x.baseline.unwrap().usage).collect();
+                    s.fault = Some((stage, at));
+                    let outcome = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                        s.prepare(round, false);
+                        s.cancel(round, false);
+                        s.drop_tasks(round, false);
+                    }));
+                    assert!(outcome.is_err(), "{round}/{at}/{stage}");
+                    let held = match stage {
+                        "request" => at,
+                        "work" => at + 1,
+                        "cancel" => OWNERS,
+                        _ => OWNERS - at - 1,
+                    };
+                    assert_eq!(s.slots.iter().filter(|x| x.task.is_some()).count(), held);
+                    assert_eq!(s.attempt.round, Some(round));
+                    let completed = match stage {
+                        "request" | "work" => [round; 3],
+                        "cancel" => [round + 1, round, round],
+                        _ => [round + 1, round + 1, round],
+                    };
+                    assert_eq!(s.lengths, completed);
+                    let interrupted_work = s.slots[at].task.as_ref().map(|t| t.work_counts());
+                    if matches!(stage, "request" | "work") {
+                        assert!(s.slots.iter().all(|x| x.cancel.is_none()));
+                        let unrequested = if stage == "request" { at } else { at + 1 };
+                        assert!(s.slots[unrequested..].iter().all(|x| x.task_work.is_none()
+                            && x.key.is_none()
+                            && !x.checked
+                            && !x.fresh));
+                    } else if stage == "cancel" {
+                        assert!(s.slots[..=at].iter().all(|x| x.cancel == Some(Ok(()))));
+                        assert!(s.slots[at + 1..].iter().all(|x| x.cancel.is_none()));
+                    }
+                    s.cleanup();
+                    assert_eq!(s.lengths, completed);
+                    if stage == "work" {
+                        assert_eq!(s.slots[at].task_work, interrupted_work);
+                        assert!(s.slots[at].task_work.unwrap().management_steps > 0);
+                    }
+                    assert_eq!(s.cleanup_tasks, held);
+                    assert_eq!(s.cleanup_owners, OWNERS);
+                    assert!(
+                        s.slots
+                            .iter()
+                            .all(|x| x.task.is_none() && x.driver.is_none())
+                    );
+                    for (i, original) in baseline.iter().enumerate() {
+                        assert_eq!(s.cleanup_after_tasks[i], Some(*original));
+                    }
+                    s.cleanup();
+                    assert_eq!(s.cleanup_tasks, held);
+                    assert_eq!(s.cleanup_owners, OWNERS);
+                }
+            }
+        }
+    }
+    #[test]
     fn cleanup_reads_actual_task_work_even_when_the_last_step_receipt_was_interrupted() {
         let mut s = Storage::new();
         s.establish(4, Trace::G0, WorkBudget::one(), &fixture(4), 0, true);
@@ -34,7 +162,7 @@ mod tests {
         assert_eq!(s.slots[0].task_work, Some(actual));
         assert_eq!(s.cleanup_after_tasks[0], Some(baseline));
         assert_eq!(s.cleanup_tasks, 1);
-        assert_eq!(s.cleanup_owners, 32);
+        assert_eq!(s.cleanup_owners, OWNERS);
         assert_eq!(s.slots[0].cleanup_cancel, Some(Ok(())));
         assert!(
             s.slots[1..]
@@ -43,12 +171,12 @@ mod tests {
         );
         s.cleanup();
         assert_eq!(s.cleanup_tasks, 1);
-        assert_eq!(s.cleanup_owners, 32);
+        assert_eq!(s.cleanup_owners, OWNERS);
         assert_eq!(s.lengths, [0; 3]);
         assert!(s.slots.iter().all(|slot| slot.cancel.is_none()));
         let mut out = Vec::new();
         s.write_failure(&mut out).unwrap();
-        assert!(out.len() < 256 * 1024);
+        assert!(out.len() < FAILURE_LIMIT);
         let receipt = String::from_utf8(out).unwrap();
         assert_eq!(
             receipt.matches("\"cleanup_cancel_success\":true").count(),
@@ -56,9 +184,9 @@ mod tests {
         );
         assert_eq!(
             receipt.matches("\"cleanup_cancel_success\":null").count(),
-            31
+            OWNERS - 1
         );
-        assert_eq!(receipt.matches("\"cancel_success\":null").count(), 32);
+        assert_eq!(receipt.matches("\"cancel_success\":null").count(), OWNERS);
     }
 
     #[test]
@@ -66,11 +194,12 @@ mod tests {
         let a = admit(10000, false, query::STORAGE_LIMIT, AGGREGATE_LIMIT).unwrap();
         assert_eq!(
             a.aggregate_required,
-            32 * (a.costs.source_bytes
-                + a.costs.pool_bytes
-                + a.costs.coordinator_bytes
-                + a.costs.task_bytes
-                + 2 * a.costs.run_bytes)
+            OWNERS
+                * (a.costs.source_bytes
+                    + a.costs.pool_bytes
+                    + a.costs.coordinator_bytes
+                    + a.costs.task_bytes
+                    + 2 * a.costs.run_bytes)
         );
         assert!(admit(10000, false, query::STORAGE_LIMIT, a.aggregate_required - 1).is_err());
         assert!(admit(10000, false, storage_bytes() - 1, AGGREGATE_LIMIT).is_err());
@@ -90,7 +219,7 @@ mod tests {
                 s.prepare(r, false);
                 assert_eq!(s.aggregate[0], baseline[0]);
                 assert_eq!(s.aggregate[4], baseline[4]);
-                assert_eq!(s.aggregate[5], baseline[5] + 32 * 3);
+                assert_eq!(s.aggregate[5], baseline[5] + OWNERS * 3);
                 s.cancel(r, false);
                 let held = s.aggregate;
                 assert!(held[1] > baseline[1]);
@@ -121,8 +250,8 @@ mod tests {
                 s.drop_tasks(0, false);
             }
             s.cleanup();
-            assert_eq!(s.cleanup_tasks, if stage == 2 { 0 } else { 32 });
-            assert_eq!(s.cleanup_owners, 32);
+            assert_eq!(s.cleanup_tasks, if stage == 2 { 0 } else { OWNERS });
+            assert_eq!(s.cleanup_owners, OWNERS);
             assert!(!s.owners_alive());
             assert_eq!(s.cleanup_after_tasks[0], Some(baseline));
             assert_eq!(
@@ -135,7 +264,7 @@ mod tests {
             );
             let mut row = Vec::new();
             s.write_failure(&mut row).unwrap();
-            assert!(row.len() < 256 * 1024);
+            assert!(row.len() < FAILURE_LIMIT);
         }
         let mut s = Storage::new();
         s.establish(4, Trace::G0, WorkBudget::one(), &fixture(4), 0, true);
@@ -146,9 +275,16 @@ mod tests {
             std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| s.cancel(0, false))).is_err()
         );
         assert_eq!(s.lengths, [1, 0, 0]);
+        assert_eq!(
+            s.attempt,
+            Attempt {
+                round: Some(0),
+                phase: "cancel"
+            }
+        );
         assert!(s.slots.iter().all(|x| x.cancel.is_none()));
         s.cleanup();
-        assert_eq!(s.cleanup_tasks, 32);
+        assert_eq!(s.cleanup_tasks, OWNERS);
     }
 }
 
@@ -160,11 +296,12 @@ use std::hint::black_box;
 use std::io::{self, Write};
 use std::time::Instant;
 
-pub const PLAN: &str = "CostClosure-v1";
-pub const OWNERS: usize = 32;
+pub const PLAN: &str = "CostClosure-PC128-v1";
+pub const OWNERS: usize = 128;
 pub const REPEATS: usize = 16;
-pub const IDS: [&str; 3] = ["PC-PREPARE-32", "PC-CANCEL-32", "PC-DROP-32"];
-pub const AGGREGATE_LIMIT: usize = 64 * 1024 * 1024;
+pub const IDS: [&str; 3] = ["PC-PREPARE-128", "PC-CANCEL-128", "PC-DROP-128"];
+pub const AGGREGATE_LIMIT: usize = 256 * 1024 * 1024;
+pub const FAILURE_LIMIT: usize = 512 * 1024;
 pub const USAGE: [&str; 6] = [
     "source_reserved",
     "runtime_reserved",
@@ -227,10 +364,47 @@ pub struct Admission {
     pool_limit: usize,
     aggregate_required: usize,
 }
-pub fn storage_bytes() -> usize {
+// A conservative requested-storage bound, including known constructor/move
+// scratch, not an OS peak or a complete compiler-stack/allocator accounting.
+// Four control structures cover construction, Result, Option and caller moves;
+// only one heap slot allocation exists. Two empty Slot temporaries cover
+// construction/push. Three query bounds include construction/move and its
+// fixed caller buffers. Extra Driver/Context/Attempt scratch is explicit.
+pub const fn storage_bytes() -> usize {
     std::mem::size_of::<Storage>()
-        .checked_add(query::storage_bytes())
+        .checked_mul(4)
         .unwrap()
+        .checked_add(OWNERS.checked_mul(std::mem::size_of::<Slot>()).unwrap())
+        .unwrap()
+        .checked_add(std::mem::size_of::<Slot>().checked_mul(2).unwrap())
+        .unwrap()
+        .checked_add(query::storage_bytes().checked_mul(3).unwrap())
+        .unwrap()
+        .checked_add(std::mem::size_of::<Driver>().checked_mul(2).unwrap())
+        .unwrap()
+        .checked_add(
+            std::mem::size_of::<crate::Context>()
+                .checked_mul(2)
+                .unwrap(),
+        )
+        .unwrap()
+        .checked_add(std::mem::size_of::<Attempt>().checked_mul(2).unwrap())
+        .unwrap()
+}
+const _: () = assert!(storage_bytes() <= query::STORAGE_LIMIT);
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Attempt {
+    pub round: Option<usize>,
+    pub phase: &'static str,
+}
+impl Attempt {
+    pub const fn setup() -> Self {
+        Self {
+            round: None,
+            phase: "setup",
+        }
+    }
 }
 fn admission(
     costs: PreparationCosts,
@@ -312,7 +486,10 @@ pub enum Receipt {
     Summary,
 }
 pub struct Storage {
-    slots: [Slot; OWNERS],
+    pub attempt: Attempt,
+    #[cfg(test)]
+    fault: Option<(&'static str, usize)>,
+    slots: Vec<Slot>,
     live: [Usage; OWNERS],
     aggregate: Usage,
     times: [[u64; REPEATS]; 3],
@@ -330,13 +507,61 @@ pub struct Storage {
     cleanup_after_tasks: [Option<Usage>; OWNERS],
 }
 impl Storage {
+    #[cfg(test)]
+    pub(crate) fn maximum_failure_fixture(&mut self) {
+        self.lengths = [REPEATS; 3];
+        self.reference_lengths = [REPEATS; 3];
+        self.times = [[u64::MAX; REPEATS]; 3];
+        self.references = self.times;
+        self.cleanup_tasks = OWNERS;
+        self.cleanup_owners = OWNERS;
+        self.cleanup_before = [Some([usize::MAX; 6]); OWNERS];
+        self.cleanup_after_tasks = self.cleanup_before;
+        for slot in &mut self.slots {
+            slot.steps = usize::MAX;
+            slot.task_work = Some(crate::maximum_work());
+            slot.cancel = Some(Err(PreparationError::StaleRequest));
+            slot.cleanup_cancel = slot.cancel;
+        }
+    }
+
     pub fn owners_alive(&self) -> bool {
         self.slots.iter().any(|s| s.driver.is_some())
     }
+    #[cfg(test)]
     pub fn new() -> Self {
-        assert!(storage_bytes() <= query::STORAGE_LIMIT);
+        Self::try_new().unwrap()
+    }
+
+    pub fn try_new() -> Result<Self, &'static str> {
+        Self::with_limit(query::STORAGE_LIMIT, None)
+    }
+    fn check_capacity(capacity: usize, limit: usize) -> Result<(), &'static str> {
+        if capacity != OWNERS || storage_bytes() > limit || limit > query::STORAGE_LIMIT {
+            return Err("PC actual container capacity");
+        }
+        Ok(())
+    }
+    // The optional stop is used only by initialization failure tests; production
+    // always passes None. No coordinator, task or source exists in this phase.
+    fn with_limit(limit: usize, stop: Option<usize>) -> Result<Self, &'static str> {
+        Self::check_capacity(OWNERS, limit)?;
+        let mut slots = Vec::new();
+        slots
+            .try_reserve_exact(OWNERS)
+            .map_err(|_| "PC slot reservation")?;
+        Self::check_capacity(slots.capacity(), limit)?;
+        for i in 0..OWNERS {
+            if stop == Some(i) {
+                return Err("PC slot initialization");
+            }
+            slots.push(Slot::empty());
+        }
         let mut value = Self {
-            slots: std::array::from_fn(|_| Slot::empty()),
+            attempt: Attempt::setup(),
+            #[cfg(test)]
+            fault: None,
+            slots,
             live: [[0; 6]; OWNERS],
             aggregate: [0; 6],
             times: [[1; REPEATS]; 3],
@@ -356,7 +581,11 @@ impl Storage {
         black_box(&value);
         value.times = [[0; REPEATS]; 3];
         value.references = [[0; REPEATS]; 3];
-        value
+        Ok(value)
+    }
+    #[cfg(test)]
+    fn fail(&self, stage: &'static str, index: usize) {
+        assert_ne!(self.fault, Some((stage, index)), "injected tool boundary");
     }
     fn observe_resources(&mut self, i: usize) {
         let now = usage(&self.slots[i].driver.as_ref().unwrap().owner);
@@ -422,7 +651,10 @@ impl Storage {
         self.n = n;
         self.ordinal = ordinal;
         let base = query::base_id(ordinal);
+        self.attempt = Attempt::setup();
         for i in 0..OWNERS {
+            #[cfg(test)]
+            self.fail("setup", i);
             let mut meter = Meter::unmeasured();
             self.slots[i].driver = Some(Driver::create_with(
                 n,
@@ -482,6 +714,10 @@ impl Storage {
         }
     }
     pub fn prepare(&mut self, r: usize, timed: bool) {
+        self.attempt = Attempt {
+            round: (r < REPEATS).then_some(r),
+            phase: "prepare",
+        };
         assert!(r < REPEATS && self.lengths == [r; 3] && !self.released);
         for slot in &self.slots {
             assert!(
@@ -493,18 +729,24 @@ impl Storage {
             );
         }
         let begin = timed.then(Instant::now);
+        for slot in &mut self.slots {
+            slot.key = None;
+            slot.steps = 0;
+            slot.task_work = None;
+            slot.cancel = None;
+            slot.cleanup_cancel = None;
+            slot.checked = false;
+            slot.fresh = false;
+        }
         for i in 0..OWNERS {
+            #[cfg(test)]
+            self.fail("request", i);
             {
                 let slot = &mut self.slots[i];
                 let d = slot.driver.as_mut().unwrap();
                 let task = d.owner.request_inspection(d.source(), t(0)).unwrap();
                 slot.key = Some(task.key());
                 slot.task = Some(task);
-                slot.steps = 0;
-                slot.task_work = None;
-                slot.cancel = None;
-                slot.checked = false;
-                slot.fresh = false;
             }
             self.observe_resources(i);
             let mut reached = false;
@@ -513,6 +755,8 @@ impl Storage {
                 let task = slot.task.as_mut().unwrap();
                 slot.steps += 1;
                 let report = task.step(task.cursor(), WorkBudget::one());
+                #[cfg(test)]
+                assert_ne!(self.fault, Some(("work", i)), "interrupted work receipt");
                 let w = task.work_counts();
                 slot.task_work = Some(w);
                 assert!(w.valid);
@@ -542,10 +786,15 @@ impl Storage {
         self.assert_aggregate();
     }
     pub fn cancel(&mut self, r: usize, timed: bool) {
+        self.attempt = Attempt {
+            round: (r < REPEATS).then_some(r),
+            phase: "cancel",
+        };
         assert!(r < REPEATS && self.lengths == [r + 1, r, r]);
         self.check_keys();
         let begin = timed.then(Instant::now);
-        for slot in &mut self.slots {
+        for i in 0..OWNERS {
+            let slot = &mut self.slots[i];
             slot.cancel = Some(black_box(
                 slot.driver
                     .as_mut()
@@ -553,6 +802,8 @@ impl Storage {
                     .owner
                     .cancel(black_box(slot.key.unwrap())),
             ));
+            #[cfg(test)]
+            self.fail("cancel", i);
         }
         self.times[1][r] = ns(begin);
         self.lengths[1] += 1;
@@ -573,6 +824,10 @@ impl Storage {
         self.assert_aggregate();
     }
     pub fn drop_tasks(&mut self, r: usize, timed: bool) {
+        self.attempt = Attempt {
+            round: (r < REPEATS).then_some(r),
+            phase: "drop",
+        };
         assert!(r < REPEATS && self.lengths == [r + 1, r + 1, r]);
         for slot in &self.slots {
             assert_eq!(slot.cancel, Some(Ok(())));
@@ -581,8 +836,10 @@ impl Storage {
             );
         }
         let begin = timed.then(Instant::now);
-        for slot in &mut self.slots {
-            drop(black_box(slot.task.take()));
+        for i in 0..OWNERS {
+            drop(black_box(self.slots[i].task.take()));
+            #[cfg(test)]
+            self.fail("drop", i);
         }
         self.times[2][r] = ns(begin);
         self.lengths[2] += 1;
@@ -598,6 +855,10 @@ impl Storage {
         self.assert_aggregate();
     }
     pub fn references(&mut self, timed: bool) {
+        self.attempt = Attempt {
+            round: None,
+            phase: "reference",
+        };
         assert_eq!(self.lengths, [REPEATS; 3]);
         assert_eq!(self.reference_lengths, [0; 3]);
         for kind in 0..3 {
@@ -622,6 +883,10 @@ impl Storage {
         }
     }
     pub fn release(&mut self) {
+        self.attempt = Attempt {
+            round: None,
+            phase: "release",
+        };
         assert_eq!(self.lengths, [REPEATS; 3]);
         assert_eq!(self.reference_lengths, [REPEATS; 3]);
         for slot in &mut self.slots {
@@ -691,7 +956,7 @@ impl Storage {
             );
             write!(
                 out,
-                "{{\"kind\":\"released\",\"owners_dropped\":32,\"tasks_held\":0,\"owners\":null,\"aggregate\":null,\"reference_scope\":\"outer_loop_only\",\"reference_ns\":["
+                "{{\"kind\":\"released\",\"owners_dropped\":{OWNERS},\"tasks_held\":0,\"owners\":null,\"aggregate\":null,\"reference_scope\":\"outer_loop_only\",\"reference_ns\":["
             )?;
             for kind in 0..3 {
                 if kind > 0 {

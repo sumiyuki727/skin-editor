@@ -301,7 +301,7 @@ def tool_graph_errors(metadata, root):
 
 def tool_source_errors(root):
     base = Path(root)/'tools/gameplay-cost/src'
-    expected = {'main.rs', 'driver.rs', 'meter.rs', 'query.rs', 'pc.rs'}
+    expected = {'main.rs', 'driver.rs', 'meter.rs', 'query.rs', 'pc.rs', 'failure.rs'}
     if {p.relative_to(base).as_posix() for p in base.rglob('*.rs')} != expected:
         return ['unreviewed diagnostic source/module set']
     if '#![forbid(unsafe_code)]' not in (base/'main.rs').read_text(encoding='utf-8'):

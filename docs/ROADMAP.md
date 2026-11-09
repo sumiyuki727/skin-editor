@@ -1,6 +1,6 @@
 # 开发路线与质量门槛
 
-2026-11-09当前执行状态：PC128实现23个路径已通过正常完整hook备份推送3f74e5201dd05f07b8b07b6c249dee81b4f5d218，PUBLIC origin及远端SHA一致。本轮完成[PC128实现一致性审阅](K1_COST_CLOSURE_SPEC.md#2026-11-09pc128实现一致性审阅)，修复准备前置校验失败时旧轮回执残留，以及完整Stream／贯通对跨组身份、fixture和峰值漂移的校验遗漏；补部分owner释放回归。128候选、256MiB聚合、1MiB工作容器、512KiB失败补充编码、Reference10000／Tiny4、API7／profile1均保持；旧计划只读复核结论不变。未运行正式成本测量，K1仍NeedsEvidence／暂不签收、产品NotEvaluated、stable兼容未知。本轮修订未提交；下一步先备份并确认CI，之后正式新测量须另行明确安排，不自动推进P3、GUI或原生设备。下方记录保留各自历史时点。
+2026-11-10当前执行状态：轮前无新增实际差异，复用已公开备份的804302849da7adce1ed285489d0e288b59ca4e44及三项成功CI，未创建空提交或重复备份hook。本轮仅执行一次全新12进程CostClosure-PC128-v1正式轮，并完成[只读失败复核与K1独立退出审阅](K1_EXIT_REVIEW.md#2026-11-10pc128正式成本轮与退出审阅)。12例已采集，但最终发布因两例父端观测跨度超过寿命回执而拒绝：入口Invalid、coverage NeedsEvidence、产品NotEvaluated；成功报告／索引未发布，完整保管验收未通过，K1仍暂不签收。128候选、256MiB／1MiB／512KiB、Reference10000／Tiny4及API7／profile1保持。原始证据、机器详情和冻结程序仅存本机，本轮文档未提交／未上传。下一步先明确父端时基修复、回归与新旧证据读取策略，再另行决定新测量；不自动重跑、提额、改门槛或推进P3／GUI／原生设备。下方记录保留各自历史时点。
 
 2026-11-09查询增量一致性审阅：轮前实现已通过正常完整hook备份推送`019a296f3198446aa1d2ee267dc9fda4f3378e0d`，私有origin及远端SHA一致。本轮修复冻结清单／原始证据／最终报告的发布截面、索引复核、输入代次校验和失败收尾边界，并补真实Rust查询输出到Python的无计时贯通回归，详见[审阅记录](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量一致性审阅)。计划仍为schema3／CostClosure-Query-v1，读取器修订为reader-v2；Reference10000／Tiny4、API7／profile1不变。PC三批次和正式成本测量未开展，coverage NeedsEvidence、产品NotEvaluated、KT23／K1及stable兼容结论保持。本轮修订未提交；后续先备份，再依明确任务推进。下方历史记录保留各自时点。
 

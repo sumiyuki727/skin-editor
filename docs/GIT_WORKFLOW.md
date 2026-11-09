@@ -1,5 +1,7 @@
 # Git 与远端管理
 
+2026-11-09PC128规格审阅轮前备份：原草案9份文档通过正常完整hook提交并推送7c9715ad5a15a3604fa7312d9877e16bf4fbf4b3，PUBLIC origin及远端SHA一致。496项Python／169项gameplay／17项工具Rust、两组各六组合无计时贯通，以及核心和桌面默认／全feature检查及构建通过，未打开窗口或GPU。814de56的Actions 42552051281三项已全部成功；[本次备份Actions 42555453095](https://github.com/sumiyuki727/skin-editor/actions/runs/42555453095)三项仍在运行，仅覆盖备份提交。新增[PC128规格一致性审阅](K1_COST_CLOSURE_SPEC.md#2026-11-09pc128规格一致性审阅)属于备份之后的未提交文档，不包含工具、核心或workflow修改。原schema.rs规范化空差异继续保留未暂存。
+
 2026-11-09取消分辨规格轮前备份：上一轮10份正式成本结果文档经正常完整hook提交并推送814de56f39a4bddf8e26851e733a79d1df43ee1e，PUBLIC origin及远端SHA一致。496项Python／169项gameplay／17项工具Rust、两组各六组合贯通及核心、桌面默认／全feature检查与构建通过；schema.rs规范化空差异继续保留未暂存。76810dd的Actions 42544000658三项已全部成功；[本次备份的Actions 42552051281](https://github.com/sumiyuki727/skin-editor/actions/runs/42552051281)Linux核心已通过，Windows核心及桌面仍在运行；该状态只覆盖备份提交。新增[取消批次分辨修订草案](K1_COST_CLOSURE_SPEC.md#2026-11-09取消批次分辨修订草案)属于备份之后的未提交文档；本轮不改工具／核心／workflow，不执行新测量。以下记录保留各自历史时点。
 
 2026-11-09正式成本轮前备份：上一轮11文件审阅修订经正常完整hook提交并推送76810dde6bab5be73707cba2a1d3c40cf3598c01，PUBLIC origin及远端SHA一致。496项Python／169项gameplay／17项工具Rust、核心与桌面默认／全feature检查通过。3945bb6的Actions 42539581458三项均已成功；[76810dd的Actions 42544000658](https://github.com/sumiyuki727/skin-editor/actions/runs/42544000658)核心Windows／Linux通过，桌面仍在运行。本轮[正式成本及退出记录](K1_EXIT_REVIEW.md#2026-11-09完整成本新轮与退出决定)属于此备份之后的未提交文档；原始测量与冻结程序在忽略目录，不纳入Git。

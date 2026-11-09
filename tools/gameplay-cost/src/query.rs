@@ -420,7 +420,7 @@ impl Storage {
         write!(out, "]")
     }
 }
-fn write_times(out: &mut impl Write, raw: &[u64; REPEATS]) -> io::Result<()> {
+pub(crate) fn write_times(out: &mut impl Write, raw: &[u64; REPEATS]) -> io::Result<()> {
     let mut sorted = *raw;
     sorted.sort_unstable();
     let total = raw

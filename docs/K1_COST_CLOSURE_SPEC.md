@@ -1,6 +1,6 @@
 # K1成本收口补证开工规格
 
-2026-11-09当前状态以[项目全面检查](PROJECT_REVIEW_20261109.md)为统一入口：Query-v1实现及一致性修订已完成；轮前CI测试修正已通过完整hook备份推送`6ac5fda`。K1仍缺PC三批次／完整新轮及独立退出决定，P3普通保存闭环未接入。建议有限收口K1后优先审阅P3接线，尚未授权开发。本轮只修正文档；下方带日期的增量记录保留各自时点，其“本轮／下一步／未提交”不覆盖当前快照。
+2026-11-09当前执行状态：用户已确定先有限收口K1，再补P3普通保存闭环；仓库已按明确要求改为PUBLIC，全面检查文档经完整hook备份推送为42e3b4d28e145cd34f5afd7c5123c76e2349cf3d。本轮已实现PC-PREPARE-32／PC-CANCEL-32／PC-DROP-32和完整CostClosure-v1读取器，见[实现记录](K1_COST_CLOSURE_SPEC.md#2026-11-09完整计划实现记录)。Reference10000／Tiny4、API7／profile1保持；正式新成本测量、独立退出决定和P3接线尚未开展，KT23／K1、产品性能及stable兼容结论不升级。本轮新增量未提交；下方历史记录保留各自时点，旧“未实现／私有／本轮”不覆盖本段。
 
 2026-11-09查询增量一致性审阅：轮前实现已通过正常完整hook备份推送`019a296f3198446aa1d2ee267dc9fda4f3378e0d`，私有origin及远端SHA一致。本轮修复冻结清单／原始证据／最终报告的发布截面、索引复核、输入代次校验和失败收尾边界，并补真实Rust查询输出到Python的无计时贯通回归，详见[审阅记录](#2026-11-09查询增量一致性审阅)。计划仍为schema3／CostClosure-Query-v1，读取器修订为reader-v2；Reference10000／Tiny4、API7／profile1不变。PC三批次和正式成本测量未开展，coverage NeedsEvidence、产品NotEvaluated、KT23／K1及stable兼容结论保持。本轮修订未提交；后续先备份，再依明确任务推进。下方历史记录保留各自时点。
 
@@ -264,3 +264,24 @@ schema3独立于gameplay API／profile和工程格式；v1／v2报告原样保�
 正式check_core全部通过：487项Python（相对备份新增12项）、169项gameplay及其余纯核心测试、12项工具Rust（新增1项）和六组合真实输出贯通；格式、Clippy、release与依赖／源码边界通过。桌面architecture-only通过，未运行窗口／GPU／音频设备验证。9份文档459处本地链接／锚点、UTF-8／LF／围栏、git diff --check及812文件仓库候选检查通过。日志保留于本机忽略目录artifacts/k1-cost-query-review/。三份既有证据SHA与轮前一致，未执行或重写；核心／桌面／清单／锁文件没有实际差异，原schema.rs空差异标记保留。暂存区为空，本轮17文件修订未提交，不沿用备份或远端CI为修订背书。
 
 当前停靠点是Query-v1一致性修订，不是成本补证完成。Reference10000／Tiny4和API7／profile1保持；PC-PREPARE-32／PC-CANCEL-32／PC-DROP-32未实现，完整CostClosure-v1／KT23／K1仍未签收，产品NotEvaluated、stable兼容未知。下一步先备份本轮修订，再按用户明确任务处理PC或正式测量；本轮不授权自动进入任一步。
+
+## 2026-11-09完整计划实现记录
+
+本轮按用户明确授权实现PC三批次及完整读取器，未运行正式成本测量。备份42e3b4d的[Actions 42534918264](https://github.com/sumiyuki727/skin-editor/actions/runs/42534918264)已完成，Windows核心、Linux核心、Windows桌面三项全部成功；桌面于2026-11-08T23:44:35Z完成。本次没有重现上一提交的25分钟超时，无需改变workflow或删减检查。此远端结果只覆盖轮前文档备份，不覆盖本轮未提交实现。前置全面检查文档11文件已通过正常完整hook备份推送42e3b4d；origin已按用户要求从PRIVATE改为PUBLIC并确认归属、权限和远端SHA。历史证据保持，不把本轮工具可运行或假数据报告的ReadyForReview当作真实成本补证。
+
+| 实现 | 行为与边界 |
+| --- | --- |
+| [PC固定批次](../tools/gameplay-cost/src/pc.rs) | 32个独立来源／协调器，各完成真实整曲黄金、冻结及Q_base检查激活；用无计时Meter保存实际建立调用数、创建／整曲／检查工作数。相同MapRevision的独立分配仍计32份。 |
+| 准备／取消／释放 | 每轮32个Q=0候选，W=1推进到allocation_attempts=3、state_initializations=15000、inspection_objects=5000的Rebuilding检查点。Rust按完整PreparationKey判等并与上一轮区分，父端只复核公开投影与判等回执，不解析Debug或声称重算私有generation。cancel及实际task Drop各自连续计时，计时内没有准备、查询、ACK或输出。 |
+| 资源和失败 | 每步维护六字段聚合账本；cancel后任务继续占用，Drop后六字段精确回到各owner基准，最后再释放32个owner。独立失败清理不取普通采样槽或等待ACK，保留已完成动作／参考及实际部分结果，所有权释放后资源标不可查询，不伪造零账本。 |
+| [完整读取器](../tools/gameplay_cost_closure.py) | schema3／CostClosure-v1／CostClosure-reader-v1；66条正常流、65次ACK、end后EOF／退出码0／有界清理。逐owner检查帧、来源、work、真实取消结果和资源寿命，跨轮重排、旧索引、资源提前退还、汇总不一致均拒绝。原始JSONL逐行验证，常驻只留基准／当前32回执与小摘要；报告保存已验证数量和owner原始回执摘要，原件仍在JSONL。 |
+| [冻结与复核](../tools/gameplay_cost_custody.py) | 按plan_id严格分派完整计划或旧Query计划，不把旧结果改名；完整计划冻结pc.rs、完整读取器／回归与诊断开关。12个独立进程／51个文件角色、源与副本前后核对、限根限容量、只读重算及最终索引规则保留。 |
+| 计量状态 | 6批次各16个原始动作／外层参考；最短样本≥20ε才可分辨，5个baseline家族各n=1且≥100ε。完整12例全部满足固定映射才返回ReadyForReview，单例只用Satisfied；短调用、短CPU窗口和真实阶段峰值仍分别Unknown，产品NotEvaluated，K1须人工独立退出决定。 |
+
+查询fixture在查询组释放后实际Drop，再建立一份PC fixture，任何时刻至多一份N对象调用者数据；这遵守规格允许的顺序生命周期。PC外层参考只走固定32槽及参数／屏障，不调用核心、不销毁真实任务，不扣减。额外192个u64时钟槽由查询96槽和PC96槽组成，预写后清空；baseline原始采样缓冲另列。
+
+本机x86_64实际布局核算：S=640168、R=492456、T=331000、pool=304、coordinator=192，32×(S+pool+coordinator+T+2R)=62610432字节，小于67108864上限，剩余4498432。完整工具容器167096字节，小于1048576；它包含固定32槽、基准／当前快照、原始工作与键／结果、两组样本和有界页／输入缓冲。未以Vec.len代替capacity，未重复计入资源payload。类型、平台或负载变化后仍重新准入；这是静态容量证据，不是OS峰值或产品性能证明。
+
+新增回归覆盖：Reference10000的G0／G1／A1×W1／256真实32-owner全16轮，生产编码输出336条无时钟补充记录并经Python逐行读取；Tiny严格4对象、输入4／事件2／重放4、W1，3轨迹全16轮；容量不足／算术溢出、旧／跨owner键、准备／取消／Drop各边界失败清理。Python另用明确假数据覆盖完整12例、66条与ACK／EOF、完整冻结／只读重算、字段／轮次／资源／汇总负例以及Valid／Unknown／ReadyForReview分离。假二进制不执行，假进程计数不访问PID；无时钟轨迹不构成正式测量证据。
+
+正式check_core全部通过：493项Python、169项gameplay及其余纯核心回归、16项工具Rust，原Query六组合和完整计划六组合生产输出均经Python无计时复核；格式、Clippy、release及依赖／源码检查通过。桌面architecture-only通过，轮前备份的完整hook也已通过桌面默认／全feature检查；未打开窗口或原生设备。21个实际文本增量UTF-8／LF、10份文档438处本地链接／锚点、git diff --check及816文件仓库候选检查通过。日志位于本机忽略目录artifacts/k1-cost-pc/；三份既有冻结程序／历史报告SHA与轮前一致，未执行或重写。暂存区为空，本轮新增量未提交，既有schema.rs空差异标记保留。没有修改gameplay核心、桌面业务、依赖或锁文件；API7／profile1、Reference10000／Tiny4保持。KT23／K1仍未签收；下一步先备份并独立审阅本增量，然后再明确安排全新正式成本轮及退出审阅；P3保存闭环在K1有限收口后按自身规格推进，本轮未接线。

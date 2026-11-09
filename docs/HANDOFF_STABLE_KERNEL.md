@@ -1,6 +1,6 @@
 # 独立 stable 兼容内核：新对话交接
 
-2026-11-09当前状态以[项目全面检查](PROJECT_REVIEW_20261109.md)为统一入口：Query-v1实现及一致性修订已完成；轮前CI测试修正已通过完整hook备份推送`6ac5fda`。K1仍缺PC三批次／完整新轮及独立退出决定，P3普通保存闭环未接入。建议有限收口K1后优先审阅P3接线，尚未授权开发。本轮只修正文档；下方带日期的增量记录保留各自时点，其“本轮／下一步／未提交”不覆盖当前快照。
+2026-11-09当前执行状态：用户已确定先有限收口K1，再补P3普通保存闭环；仓库已按明确要求改为PUBLIC，全面检查文档经完整hook备份推送为42e3b4d28e145cd34f5afd7c5123c76e2349cf3d。本轮已实现PC-PREPARE-32／PC-CANCEL-32／PC-DROP-32和完整CostClosure-v1读取器，见[实现记录](K1_COST_CLOSURE_SPEC.md#2026-11-09完整计划实现记录)。Reference10000／Tiny4、API7／profile1保持；正式新成本测量、独立退出决定和P3接线尚未开展，KT23／K1、产品性能及stable兼容结论不升级。本轮新增量未提交；下方历史记录保留各自时点，旧“未实现／私有／本轮”不覆盖本段。
 
 2026-11-09 CI故障确认：[019a296的Actions 42523539838](https://github.com/sumiyuki727/skin-editor/actions/runs/42523539838)中Linux核心和Windows桌面通过，Windows核心在Python 3.12.10的test_reparse_points_are_refused_without_following_target失败。硬链接测试以tuple重建stat_result，丢失Windows专用st_file_attributes；新pathlib的lstat委托stat后取得None，触发None与0x400位运算异常。本机Python 3.9.6用同一委托路径成功复现。修正仅用转发替身覆盖st_nlink，保留全部原生属性，并显式覆盖委托路径；生产安全检查、workflow及产品行为均不变。上一轮17文件修订已通过正常完整hook备份推送856cabd5ae34af686bc10f933d6d8aeec63590ea，远端SHA一致；该备份尚不包含本次CI修正，不能声明远端已恢复。本次测试修正与此记录未提交，修正后62项成本工具Python回归及仓库候选／git diff --check通过；直接Python 3.12复验尚缺，日志见本机artifacts/github-query-ci-review/，后续需提交后由远端重新验证。
 

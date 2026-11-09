@@ -20,6 +20,8 @@ from gameplay_cost_protocol import tool_graph_errors, tool_source_errors, valida
 from gameplay_cost_query import (PHASES, SCHEMA, PLAN, PARAMETERS, case_ordinal, summarize,
                                  validate_end, validate_lifecycle, validate_row, validate_durations, validate_canary)
 import gameplay_cost_custody as custody
+import gameplay_cost_query as query
+import gameplay_cost_closure as closure
 
 MAX_LINE = 32*1024*1024
 SAMPLE_LIMIT = 120000
@@ -62,6 +64,9 @@ def check_tool(directory=None):
         'tests::query_wire_canary_without_clocks', '--', '--exact', '--nocapture'], cwd=ROOT, env=env, text=True)
     cases=validate_canary(canary,custody.decode)
     print(f'Query wire canary: {cases} real Rust cases, no timing/native observation',flush=True)
+    command=[cargo,*linker,'test',*common,'--all-features','tests::closure_wire_canary_without_clocks','--','--exact','--nocapture']
+    cases=check_full_canary(command,env)
+    print(f'Complete wire canary: {cases} real Rust cases, no timing/native observation',flush=True)
     build_arguments = [cargo, *linker, 'build', *common, '--release', '--message-format=json']
     output = subprocess.check_output(build_arguments, cwd=ROOT, env=env, text=True)
     executable = built_executable(output)
@@ -69,6 +74,25 @@ def check_tool(directory=None):
     if identity()!=frozen:
         raise ValueError('Source changed while checking/building the diagnostic; do not measure this binary')
     return executable, compiler, frozen, custody.hash_file(executable,custody.MAX_BINARY)['sha256'], build_arguments
+
+
+def check_full_canary(command, env):
+    with subprocess.Popen(command,cwd=ROOT,env=env,stdout=subprocess.PIPE) as child:
+        def lines():
+            while True:
+                line=child.stdout.readline(1024*1024+1)
+                if not line: return
+                if len(line)>1024*1024: raise ValueError('Full canary line capacity')
+                yield line.decode('utf-8')
+        try:
+            cases=closure.validate_canary(lines(),custody.decode)
+            if child.wait(timeout=30)!=0: raise ValueError('Full canary child failed')
+        except BaseException:
+            child.terminate()
+            try: child.wait(timeout=5)
+            except subprocess.TimeoutExpired: child.kill(); child.wait(timeout=5)
+            raise
+    return cases
 
 
 def validate_build_environment(environment):
@@ -84,7 +108,8 @@ def identity():
     source += [ROOT/p for p in ('Cargo.toml', 'Cargo.lock', 'rust-toolchain.toml', 'tools/gameplay-cost/Cargo.toml',
                                'tools/gameplay-cost/Cargo.lock', 'tools/check_core.py', 'tools/check_gameplay_cost.py',
                                'tools/gameplay_cost_protocol.py', 'tools/gameplay_cost_platform.py',
-                               'tools/gameplay_cost_query.py', 'tools/gameplay_cost_custody.py',
+                               'tools/gameplay_cost_query.py', 'tools/gameplay_cost_custody.py', 'tools/gameplay_cost_closure.py',
+                               'tools/test_check_gameplay_closure.py',
                                'tools/test_check_gameplay_query.py', 'tools/test_check_gameplay_custody.py',
                                'docs/K1_COST_CLOSURE_SPEC.md',
                                'tools/test_check_gameplay_cost.py', 'tools/check_core_architecture.py')]
@@ -123,7 +148,8 @@ def process_summary(point,peaks,samples,gap,interval,quantum,reference_valid,pre
                 os_peak_scope='process_lifetime',sampling_target_met=gap<=1_000_000)
 
 
-def run_probe(executable, trace, budget, repetition, output):
+def run_probe(executable, trace, budget, repetition, output, plan=query):
+    validator=closure.Stream() if plan is closure else None
     name = f'{trace}-b{budget}-r{repetition}'
     record = dict(trace=trace, budget=budget, repetition=repetition, objects=10000, status='Invalid', phases=[])
     messages = queue.Queue(maxsize=2)
@@ -173,7 +199,7 @@ def run_probe(executable, trace, budget, repetition, output):
             reader.start()
             writer.writerow(('phase', 'parent_monotonic_ns', *keys))
             monitor = OwnedProcess(process.pid)
-            for phase in PHASES:
+            for phase in plan.PHASES:
                 deadline = time.monotonic()+PHASE_TIMEOUT
                 count = 0
                 max_gap = 0
@@ -209,7 +235,8 @@ def run_probe(executable, trace, budget, repetition, output):
                         raise ValueError('Child exited before completing '+phase)
                     raw.write(line)
                     raw.flush()
-                    row = validate_row(decode_line(line), phase, trace, budget, repetition)
+                    row = plan.validate_row(decode_line(line), phase, trace, budget, repetition)
+                    if validator is not None: row=validator.consume(row)
                     if total_samples>=SAMPLE_LIMIT or time.monotonic()>deadline or time.monotonic_ns()-child_begin>300_000_000_000:
                         raise ValueError('Validation exceeded total observation capacity/deadline')
                     clock = time.perf_counter_ns()
@@ -238,7 +265,7 @@ def run_probe(executable, trace, budget, repetition, output):
                         reference_valid = cpu_reference_valid(delta_user, delta_kernel, row['elapsed_ns'], cpu_quantum)
                         if not reference_valid:
                             raise ValueError('Owned continuous representative CPU reference failed')
-                    result = summarize(row, uncertainty)
+                    result = plan.summarize(row, uncertainty)
                     result['process'] = process_summary(point,maxima,count+1,max_gap,interval,cpu_quantum,reference_valid,previous)
                     if phase == 'calibrated':
                         result['cpu_reference_valid'] = reference_valid
@@ -258,7 +285,7 @@ def run_probe(executable, trace, budget, repetition, output):
                 raise ValueError('Missing bounded end receipt')
             raw.write(line)
             raw.flush()
-            end = validate_end(decode_line(line),trace,budget,repetition)
+            end = plan.validate_end(decode_line(line),trace,budget,repetition)
             record['phases'][-1]['emit_ns'] = end['previous_emit_ns']
             record['phases'][-1]['gate_wait_ns'] = end['previous_gate_ns']
             process.stdin.close()
@@ -270,7 +297,8 @@ def run_probe(executable, trace, budget, repetition, output):
                 raw.write(trailing); raw.flush()
                 raise ValueError('Unexpected trailing protocol output')
             eof = True
-            validate_lifecycle(record['phases'])
+            if validator is not None: validator.finish()
+            plan.validate_lifecycle(record['phases'])
             record['status'] = 'Valid'
         except (OSError, ValueError, KeyError, TypeError, queue.Empty, subprocess.SubprocessError) as error:
             record['reason'] = str(error)
@@ -308,13 +336,13 @@ def run_probe(executable, trace, budget, repetition, output):
     if elapsed_parent > 300_000_000_000:
         record.update(status='Invalid',reason='Total child watchdog exceeded')
     if record['status']=='Valid':
-        try: validate_durations(record['phases'],elapsed_parent)
+        try: plan.validate_durations(record['phases'],elapsed_parent)
         except ValueError as error: record.update(status='Invalid',reason=str(error))
-    record['completion'] = dict(schema_version=SCHEMA,plan_id=PLAN,case_ordinal=case_ordinal(trace,budget,repetition),pid=process.pid,
+    record['completion'] = dict(schema_version=SCHEMA,plan_id=plan.PLAN,case_ordinal=case_ordinal(trace,budget,repetition),pid=process.pid,
                                 exit_code=exit_code,eof=eof,cleanup_complete=not cleanup,
                                 observer_cpu_ns_excluded_from_child=record['observer_cpu_ns_excluded_from_child'],elapsed_parent_ns=elapsed_parent)
     record['raw_file'] = name+'.child.jsonl'
-    record['raw_sha256'] = custody.hash_file(output/record['raw_file'],17*MAX_LINE)['sha256']
+    record['raw_sha256'] = custody.hash_file(output/record['raw_file'],(len(plan.PHASES)+2)*MAX_LINE)['sha256']
     record['process_samples_file'] = name+'.samples.csv'
     return record
 
@@ -323,13 +351,13 @@ def supports_observation():
     return os.name == 'nt'
 
 
-def measure(executable, compiler, output, repetitions, frozen, binary_hash, build_arguments):
+def measure(executable, compiler, output, repetitions, frozen, binary_hash, build_arguments, plan=query):
     output = custody.plain_path(output)
     if repetitions != 2:
-        raise ValueError('CostClosure-Query-v1 requires exactly two processes per case')
+        raise ValueError(plan.PLAN+' requires exactly two processes per case')
     if output.exists():
         raise ValueError('Measurement output must be new; existing evidence is never overwritten')
-    report = dict(schema_version=SCHEMA,plan_id=PLAN,status='Invalid',coverage='NeedsEvidence',
+    report = dict(schema_version=SCHEMA,plan_id=plan.PLAN,status='Invalid',coverage='NeedsEvidence',
                   product_status='NotEvaluated',provisional=True,source_sha256=frozen,runs=[])
     try:
         if identity()!=frozen:
@@ -339,14 +367,14 @@ def measure(executable, compiler, output, repetitions, frozen, binary_hash, buil
             output.mkdir(parents=True,exist_ok=False)
             partial(output,report)
             return report
-        manifest, executable = custody.freeze(executable,compiler,frozen,binary_hash,output,build_arguments,identity)
+        manifest, executable = custody.freeze(executable,compiler,frozen,binary_hash,output,build_arguments,identity,plan)
         freeze_hash=custody.hash_file(output/'freeze.json',1048576)
         for name,trace,budget,repetition in custody.names():
             before_source=custody.digest(identity())
             before_binary=custody.hash_file(executable,custody.MAX_BINARY)['sha256']
             if before_source!=manifest['source_map_sha256'] or before_binary!=binary_hash or custody.hash_file(output/'freeze.json',1048576)!=freeze_hash:
                 raise ValueError('Frozen source, binary or manifest changed before child')
-            run=run_probe(executable,trace,budget,repetition,output)
+            run=run_probe(executable,trace,budget,repetition,output) if plan is query else run_probe(executable,trace,budget,repetition,output,plan)
             after_source=custody.digest(identity())
             after_binary=custody.hash_file(executable,custody.MAX_BINARY)['sha256']
             freeze_changed=custody.hash_file(output/'freeze.json',1048576)!=freeze_hash
@@ -381,7 +409,7 @@ def main():
     action = parser.add_mutually_exclusive_group(required=True)
     action.add_argument('--check', action='store_true')
     action.add_argument('--measure', action='store_true')
-    action.add_argument('--verify', metavar='EVIDENCE_DIRECTORY', help='read-only Query-v1 evidence verification; no build or execution')
+    action.add_argument('--verify', metavar='EVIDENCE_DIRECTORY', help='read-only Query-v1 / CostClosure-v1 evidence verification; no build or execution')
     parser.add_argument('--toolchain-dir')
     parser.add_argument('--output')
     parser.add_argument('--repetitions', type=int, choices=(2,), default=2)
@@ -400,8 +428,8 @@ def main():
     if args.check:
         print('PASS: independent gameplay cost tool format/Clippy/tests/release and dependency/source rules')
         return
-    report = measure(executable, compiler, output, args.repetitions, frozen, binary_hash, build_arguments)
-    print('Measurement protocol status:', report['status'], '; coverage: NeedsEvidence; product verdict: NotEvaluated;', output)
+    report = measure(executable, compiler, output, args.repetitions, frozen, binary_hash, build_arguments, closure)
+    print('Measurement protocol status:', report['status'], '; coverage:', report['coverage'], '; product verdict: NotEvaluated;', output)
     if report['status'] != 'Valid':
         raise RuntimeError('Incomplete/invalid/unknown measurement; original evidence retained')
 

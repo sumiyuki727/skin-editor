@@ -6,6 +6,7 @@ import gameplay_cost_protocol as legacy
 from gameplay_cost_protocol import WORK, METRICS, natural, nearest, validate_work
 
 SCHEMA = 3
+SCOPE = 'QueryOnly'
 PLAN = 'CostClosure-Query-v1'
 VALIDATOR = 'CostClosure-Query-reader-v2'
 BATCHES = ('Q-SUMMARY-4096', 'Q-LEDGER-N', 'Q-PAGE-4096')

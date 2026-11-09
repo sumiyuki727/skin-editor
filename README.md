@@ -45,9 +45,9 @@ python tools/run_desktop.py
 
 核心检查包括格式、Clippy、无窗口测试、实际 Cargo 图与源码边界；桌面检查包含默认／全部 feature，不默认打开窗口、GPU或声卡。`--architecture-only` 只检查边界。远程 Windows／Linux CI 已配置但未在本机替代实测。
 
-正式核心检查也包含独立的 SyntheticTest 成本工具检查，可单独运行 `python -B tools/check_gameplay_cost.py --check`。只读复核入口为 `python -B tools/check_gameplay_cost.py --verify <schema3证据目录>`，不构建、执行受测程序或采样。当前协议为schema3／CostClosure-Query-v1；读取器为CostClosure-Query-reader-v2；冻结／复核和查询流程已由回归覆盖，--check另校验六种真实Rust查询组合的无计时输出，正式新成本测量尚未运行。Windows显式测量入口 `--measure --output artifacts/gameplay-cost-new` 要求全新目录，固定三轨迹／两预算／各两个进程，执行冻结副本；不打开窗口或设备。协议Valid、指标Unknown、coverage NeedsEvidence与产品NotEvaluated分开，历史v1／v2原样保留，详见[实现与限制](docs/K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量一致性审阅)。
+正式核心检查也包含独立的 SyntheticTest 成本工具检查，可单独运行 `python -B tools/check_gameplay_cost.py --check`。只读复核入口为 `python -B tools/check_gameplay_cost.py --verify <schema3证据目录>`，不构建、执行受测程序或采样。当前新构建输出schema3／CostClosure-v1，完整读取器为CostClosure-reader-v1；旧CostClosure-Query-v1仍由独立reader-v2读取。--check另校验六种真实Rust查询及完整补充流程的无计时输出。Windows显式测量入口 --measure --output artifacts/gameplay-cost-new 要求全新目录，固定三轨迹／两预算／各两个进程，执行冻结副本；本轮未运行。协议Valid、指标Unknown、覆盖程度及产品NotEvaluated分开，ReadyForReview仅表示完整新轮满足既定补证条件，仍需独立审阅；历史v1／v2原样保留。详见[实现与限制](docs/K1_COST_CLOSURE_SPEC.md#2026-11-09完整计划实现记录)。
 
-私有远端、检查后提交／同步和缓存整理规则见[Git 管理](docs/GIT_WORKFLOW.md)。
+公开远端、检查后提交／同步和缓存整理规则见[Git 管理](docs/GIT_WORKFLOW.md)。
 
 启动后拖入 PNG，或填写路径导入，再“加入当前元素”。编辑工具下选择图片，拖动／角点缩放／圆柄旋转；Shift锁定比例，拖动中Esc取消，松手一次提交。多选形成临时共同框；切交互工具清空视觉选择。音效编辑窗口支持 WAV 路径导入、组件绑定及显式试听；同源增益可作用于当前试听，Esc恢复本次增益。
 
@@ -71,6 +71,6 @@ python tools/check_repository.py
 python tools/check_repository.py --staged
 ```
 
-仓库检查扫描常见敏感信息及生成／私人路径，不是资源授权证明。Git hook复用正式检查；每轮项目工作先按[长期规则](AGENTS.md)检查并提交已有可审查变更作为回退点，并同步到已确认的私有origin，用户明确要求不提交／推送时除外。本轮新增工作检查后保留供审阅，下一轮再按规则保存；用户设置、原版皮肤／头像／谱面／音乐、密钥和构建诊断不得进入版本库。
+仓库检查扫描常见敏感信息及生成／私人路径，不是资源授权证明。Git hook复用正式检查；每轮项目工作先按[长期规则](AGENTS.md)检查并提交已有可审查变更作为回退点，并同步到已确认归属及用户指定可见性的origin（当前PUBLIC），用户明确要求不提交／推送时除外。本轮新增工作检查后保留供审阅，下一轮再按规则保存；用户设置、原版皮肤／头像／谱面／音乐、密钥和构建诊断不得进入版本库。
 
 旧 stable 源码仅作外部只读研究，不进入产品或实验。预览只使用自制或获准输入；对照通过明确的 F12 本地图片及受限文件／日志完成，不依赖系统窗口捕获。发布资源和项目自身许可证仍须在分发前明确。

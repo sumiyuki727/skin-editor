@@ -15,6 +15,13 @@ import stat
 import time
 
 import gameplay_cost_query as query
+import gameplay_cost_closure as closure
+
+
+def plan_for(name):
+    for plan in (query, closure):
+        if name == plan.PLAN: return plan
+    raise ValueError("Unknown evidence plan")
 from gameplay_cost_protocol import natural, validate_process_point
 
 MAX_BINARY = 16*1024*1024
@@ -110,21 +117,28 @@ def names():
                 yield f'{trace}-b{budget}-r{repetition}',trace,budget,repetition
 
 
-def roles():
+def roles(plan=query):
     result={'freeze.json':('freeze',1048576),'frozen/probe.exe':('binary',MAX_BINARY),'report.json':('report',16*1024*1024)}
     for name,_,_,_ in names():
-        for suffix,role,limit in (('.child.jsonl','child',16*MAX_LINE),('.samples.csv','samples',64*1024*1024),
+        for suffix,role,limit in (('.child.jsonl','child',(len(plan.PHASES)+1)*MAX_LINE),('.samples.csv','samples',64*1024*1024),
                                   ('.stderr.log','stderr',1048576),('.process.json','process',65536)):
             result[name+suffix]=(role,limit)
     return result
 
 
+def diagnostics(plan):
+    value=dict(always_on_work_counts=True,query_result_guards=True,query_nested_call_timers=False,outer_reference_subtracted=False)
+    if plan is closure:value.update(pc_result_guards=True,pc_nested_call_timers=False,pc_full_key_equality=True)
+    return value
+
+
 def validate_freeze(value):
     query.fields(value, ('schema_version','plan_id','validator','parameters','scope','product_verdict','source_sha256',
                          'source_map_sha256','spec_sha256','binary','compiler','build_arguments','target','pointer_bits','diagnostics','host_observer'), 'freeze')
-    if type(value['schema_version']) is not int or value['schema_version']!=3 or value['plan_id']!=query.PLAN or value['validator']!=query.VALIDATOR or canonical(value['parameters'])!=canonical(query.PARAMETERS):
+    plan=plan_for(value['plan_id'])
+    if type(value['schema_version']) is not int or value['schema_version']!=3 or value['validator']!=plan.VALIDATOR or canonical(value['parameters'])!=canonical(plan.PARAMETERS):
         raise ValueError('Unknown frozen plan/validator/parameters')
-    if value['scope']!='QueryOnly' or value['product_verdict']!='NotEvaluated': raise ValueError('Frozen scope changed')
+    if value['scope']!=plan.SCOPE or value['product_verdict']!='NotEvaluated': raise ValueError('Frozen scope changed')
     source=value['source_sha256']
     if not isinstance(source,dict) or not 1<=len(source)<=256: raise ValueError('Source map capacity')
     aliases=set()
@@ -139,6 +153,7 @@ def validate_freeze(value):
               'tools/check_gameplay_cost.py','tools/gameplay_cost_protocol.py','tools/gameplay_cost_platform.py',
               'tools/test_check_gameplay_query.py','tools/test_check_gameplay_custody.py',
               'Cargo.toml','Cargo.lock','rust-toolchain.toml','tools/gameplay-cost/Cargo.toml','tools/gameplay-cost/Cargo.lock'}
+    if plan is closure: required.update(('tools/gameplay-cost/src/pc.rs','tools/gameplay_cost_closure.py','tools/test_check_gameplay_closure.py'))
     if not required<=set(source) or value['source_map_sha256']!=digest(source) or value['spec_sha256']!=source[SPEC]:
         raise ValueError('Incomplete/mismatched frozen source identity')
     query.fields(value['binary'],('path','bytes','sha256'),'frozen binary')
@@ -157,7 +172,7 @@ def validate_freeze(value):
         raise ValueError('Unknown compiler/linker arguments')
     if value['target'] not in ('x86_64-pc-windows-msvc','i686-pc-windows-msvc','aarch64-pc-windows-msvc') or type(value['pointer_bits']) is not int or value['pointer_bits']!=(32 if value['target'].startswith('i686') else 64) or '\nhost: '+value['target'] not in value['compiler']:
         raise ValueError('Unsupported/mismatched frozen target')
-    if canonical(value['diagnostics']) != canonical(dict(always_on_work_counts=True,query_result_guards=True,query_nested_call_timers=False,outer_reference_subtracted=False)):
+    if canonical(value['diagnostics']) != canonical(diagnostics(plan)):
         raise ValueError('Changed diagnostic contract')
     host=value['host_observer']
     query.fields(host,('platform','processor','logical_cpus','parent_clock','child_clock'),'host observer')
@@ -175,7 +190,7 @@ def validate_freeze(value):
     return value
 
 
-def freeze(executable, compiler, source, expected_hash, output, build_arguments, source_now):
+def freeze(executable, compiler, source, expected_hash, output, build_arguments, source_now, plan=query):
     """Exclusive copy first; publish freeze only after both original and copy match."""
     output=plain_path(output)
     if source_now()!=source: raise ValueError('Source changed after build')
@@ -197,15 +212,15 @@ def freeze(executable, compiler, source, expected_hash, output, build_arguments,
         raise ValueError('Copy/source changed during freeze')
     target_name=next((s[6:] for s in compiler.splitlines() if s.startswith('host: ')), '')
     clock=time.get_clock_info('perf_counter')
-    manifest=dict(schema_version=3,plan_id=query.PLAN,validator=query.VALIDATOR,parameters=copy.deepcopy(query.PARAMETERS),
-                  scope='QueryOnly',product_verdict='NotEvaluated',source_sha256=dict(source),source_map_sha256=digest(source),
+    manifest=dict(schema_version=3,plan_id=plan.PLAN,validator=plan.VALIDATOR,parameters=copy.deepcopy(plan.PARAMETERS),
+                  scope=plan.SCOPE,product_verdict='NotEvaluated',source_sha256=dict(source),source_map_sha256=digest(source),
                   spec_sha256=source.get(SPEC),binary=dict(path='frozen/probe.exe',**original),compiler=compiler,
                   build_arguments=list(build_arguments),target=target_name,pointer_bits=32 if target_name.startswith('i686') else 64,
                   host_observer=dict(platform=platform.platform(),processor=platform.processor() or 'Unknown',logical_cpus=os.cpu_count(),
                                      parent_clock=dict(implementation=clock.implementation,resolution_seconds=clock.resolution,
                                                        monotonic=clock.monotonic,adjustable=clock.adjustable),
                                      child_clock='std::time::Instant; observed positive resolution and empty-call p95; no subtraction'),
-                  diagnostics=dict(always_on_work_counts=True,query_result_guards=True,query_nested_call_timers=False,outer_reference_subtracted=False))
+                  diagnostics=diagnostics(plan))
     validate_freeze(manifest)
     write_json(output/'freeze.json',manifest)
     return manifest,target
@@ -226,7 +241,7 @@ def process_summary(point,peaks,samples,gap,interval,quantum,reference_valid,pre
                 stage_peak_reason='finite sampling may miss transients; no stage peak counter',os_peak_scope='process_lifetime',sampling_target_met=gap<=1000000)
 
 
-def process_points(path):
+def process_points(path, plan=query):
     """Stream/reduce at most 120000 CSV samples, including cross-ACK gaps."""
     hash_file(path,64*1024*1024)
     phases=[]; current=None; previous=None; previous_clock=None; total=0
@@ -250,7 +265,7 @@ def process_points(path):
             point=validate_process_point(dict(zip(COUNTERS,map(int,cells[2:]))),previous)
             if previous_clock is not None and clock<=previous_clock: raise ValueError('Non-monotonic observation clock')
             if current is None or phase!=current['phase']:
-                if len(phases)>=len(query.PHASES) or phase!=query.PHASES[len(phases)]: raise ValueError('CSV role/order')
+                if len(phases)>=len(plan.PHASES) or phase!=plan.PHASES[len(phases)]: raise ValueError('CSV role/order')
                 current=dict(phase=phase,samples=0,peaks=dict.fromkeys(COUNTERS[2:],0),gap=0,quantum=None,previous=previous,previous_clock=previous_clock)
                 current['first_clock']=clock
                 phases.append(current)
@@ -262,30 +277,33 @@ def process_points(path):
             for key in current['peaks']: current['peaks'][key]=max(current['peaks'][key],point[key])
             current['point']=point;current['clock']=clock
             previous,previous_clock=point,clock
-    if len(phases)!=15 or any(p['samples']<2 for p in phases): raise ValueError('Missing process boundaries')
+    if len(phases)!=len(plan.PHASES) or any(p['samples']<2 for p in phases): raise ValueError('Missing process boundaries')
     if phases[-1]['clock']-phases[0]['first_clock']>300000000000: raise ValueError('Child total watchdog')
     return phases
 
 
 def derive_run(root, manifest, name, trace, budget, repetition):
+    plan=plan_for(manifest["plan_id"])
+    validator=closure.Stream() if plan is closure else None
     receipt=read_json(relative(root,name+'.process.json'),65536)
     query.fields(receipt, ('schema_version','plan_id','case_ordinal','pid','exit_code','eof','cleanup_complete','observer_cpu_ns_excluded_from_child',
                            'elapsed_parent_ns','source_before','source_after','binary_before','binary_after'), 'process receipt')
-    if type(receipt['schema_version']) is not int or receipt['schema_version']!=3 or receipt['plan_id']!=query.PLAN or natural(receipt['case_ordinal'],'case')!=query.case_ordinal(trace,budget,repetition): raise ValueError('Process identity')
+    if type(receipt['schema_version']) is not int or receipt['schema_version']!=3 or receipt['plan_id']!=plan.PLAN or natural(receipt['case_ordinal'],'case')!=query.case_ordinal(trace,budget,repetition): raise ValueError('Process identity')
     if type(receipt['exit_code']) is not int or receipt['exit_code']!=0 or receipt['eof'] is not True or receipt['cleanup_complete'] is not True or natural(receipt['pid'],'pid')==0: raise ValueError('Incomplete owned child cleanup')
     natural(receipt['observer_cpu_ns_excluded_from_child'],'observer CPU')
     natural(receipt['elapsed_parent_ns'],'child lifetime',300000000000)
     if any(receipt[k]!=manifest['source_map_sha256'] for k in ('source_before','source_after')) or any(receipt[k]!=manifest['binary']['sha256'] for k in ('binary_before','binary_after')): raise ValueError('Per-child freeze changed')
-    observed=process_points(relative(root,name+'.samples.csv'))
+    observed=process_points(relative(root,name+'.samples.csv'),plan)
     if observed[-1]['clock']-observed[0]['first_clock']>receipt['elapsed_parent_ns']:
         raise ValueError('Observation span exceeds child lifetime receipt')
-    raw_path=relative(root,name+'.child.jsonl'); hash_file(raw_path,16*MAX_LINE)
+    raw_path=relative(root,name+'.child.jsonl'); hash_file(raw_path,(len(plan.PHASES)+1)*MAX_LINE)
     phases=[]; epsilon=1; quantum=None; reference=False
     with raw_path.open('rb') as stream:
-        for i,phase in enumerate(query.PHASES):
+        for i,phase in enumerate(plan.PHASES):
             line=stream.readline(MAX_LINE+1)
             if len(line)>MAX_LINE or not line.endswith(b'\n'): raise ValueError('Missing/overfull protocol line')
-            row=query.validate_row(decode(line),phase,trace,budget,repetition)
+            row=plan.validate_row(decode(line),phase,trace,budget,repetition)
+            if validator is not None: row=validator.consume(row)
             obs=observed[i]; previous=obs['previous']; point=obs['point']
             interval=None if obs['previous_clock'] is None else obs['clock']-obs['previous_clock']
             span=obs['clock']-(obs['first_clock'] if interval is None else obs['previous_clock'])
@@ -296,32 +314,34 @@ def derive_run(root, manifest, name, trace, budget, repetition):
                 quantum=obs['quantum']
                 reference=cpu_reference_valid(point['user_ns']-previous['user_ns'],point['kernel_ns']-previous['kernel_ns'],row['elapsed_ns'],quantum)
                 if not reference: raise ValueError('Owned CPU calibration failed')
-            result=query.summarize(row,epsilon)
+            result=plan.summarize(row,epsilon)
             result['process']=process_summary(point,obs['peaks'],obs['samples'],obs['gap'],interval,quantum,reference,previous)
             if phase=='calibrated': result.update(cpu_reference_valid=True,observed_min_cpu_increment_ns=quantum,call_uncertainty_proxy_ns=epsilon)
             if phases: phases[-1].update(emit_ns=row['previous_emit_ns'],gate_wait_ns=row['previous_gate_ns'])
             phases.append(result)
         line=stream.readline(MAX_LINE+1)
         if len(line)>MAX_LINE or not line.endswith(b'\n'): raise ValueError('Missing bounded end')
-        end=query.validate_end(decode(line),trace,budget,repetition)
+        end=plan.validate_end(decode(line),trace,budget,repetition)
         if stream.read(1): raise ValueError('Extra protocol output')
         phases[-1].update(emit_ns=end['previous_emit_ns'],gate_wait_ns=end['previous_gate_ns'])
-    query.validate_lifecycle(phases)
-    query.validate_durations(phases,receipt['elapsed_parent_ns'])
+    if validator is not None: validator.finish()
+    plan.validate_lifecycle(phases)
+    plan.validate_durations(phases,receipt['elapsed_parent_ns'])
     target={'x86_64':'x86_64-pc-windows-msvc','x86':'i686-pc-windows-msvc','aarch64':'aarch64-pc-windows-msvc'}
     if phases[0]['target_os']!='windows' or target.get(phases[0]['target_arch'])!=manifest['target'] or phases[0]['pointer_bits']!=manifest['pointer_bits']: raise ValueError('Child/frozen target mismatch')
     return dict(trace=trace,budget=budget,repetition=repetition,objects=10000,status='Valid',phases=phases,
                 completion=receipt,raw_file=name+'.child.jsonl',process_samples_file=name+'.samples.csv',
-                raw_sha256=hash_file(raw_path,16*MAX_LINE)['sha256'],coverage=query.coverage(phases,epsilon))
+                raw_sha256=hash_file(raw_path,(len(plan.PHASES)+1)*MAX_LINE)['sha256'],coverage=plan.coverage(phases,epsilon))
 
 
 def derive_report(root, manifest):
     validate_freeze(manifest)
+    plan=plan_for(manifest["plan_id"])
     bind_freeze(root,manifest)
     binary=hash_file(relative(root,'frozen/probe.exe'),MAX_BINARY)
     if binary!={k:manifest['binary'][k] for k in ('bytes','sha256')}: raise ValueError('Frozen copy mismatch')
     runs=[derive_run(root,manifest,*case) for case in names()]
-    return dict(schema_version=3,plan_id=query.PLAN,validator=query.VALIDATOR,status='Valid',coverage='NeedsEvidence',scope='QueryOnly',
+    return dict(schema_version=3,plan_id=plan.PLAN,validator=plan.VALIDATOR,status='Valid',coverage=('ReadyForReview' if plan is closure and len(runs)==12 and all(r['coverage']['status']=='Satisfied' for r in runs) else 'NeedsEvidence'),scope=plan.SCOPE,
                 product_status='NotEvaluated',api_version=7,profile_version=1,source_sha256=manifest['source_sha256'],
                 source_map_sha256=manifest['source_map_sha256'],executable_sha256=manifest['binary']['sha256'],freeze_sha256=hash_file(root/'freeze.json',1048576)['sha256'],
                 host_observer=manifest['host_observer'],
@@ -333,26 +353,27 @@ def bind_freeze(root, manifest):
         raise ValueError('Persisted freeze differs from the checked manifest')
 
 
-def inventory(root, *, inputs_only=False):
-    return [dict(path=name,role=role,**hash_file(relative(root,name),limit)) for name,(role,limit) in sorted(roles().items())
+def inventory(root, *, inputs_only=False, plan=query):
+    return [dict(path=name,role=role,**hash_file(relative(root,name),limit)) for name,(role,limit) in sorted(roles(plan).items())
             if not inputs_only or role!='report']
 
 
 def publish(root, manifest):
-    before=inventory(root,inputs_only=True)
+    plan=plan_for(manifest["plan_id"])
+    before=inventory(root,inputs_only=True,plan=plan)
     report=derive_report(root,manifest)
-    if inventory(root,inputs_only=True)!=before: raise ValueError('Evidence changed during report derivation')
+    if inventory(root,inputs_only=True,plan=plan)!=before: raise ValueError('Evidence changed during report derivation')
     write_json(relative(root,'report.json'),report)
-    files=inventory(root)
+    files=inventory(root,plan=plan)
     if [entry for entry in files if entry['role']!='report']!=before:
         raise ValueError('Evidence changed before final index publication')
     written=canonical(report)+b'\n'
     expected=dict(path='report.json',role='report',bytes=len(written),sha256=hashlib.sha256(written).hexdigest())
     if next(entry for entry in files if entry['role']=='report')!=expected:
         raise ValueError('Report changed before final index publication')
-    index=dict(schema_version=3,plan_id=query.PLAN,validator=query.VALIDATOR,files=files)
+    index=dict(schema_version=3,plan_id=plan.PLAN,validator=plan.VALIDATOR,files=files)
     write_json(relative(root,'evidence-index.json'),index)
-    if inventory(root)!=files or canonical(read_json(relative(root,'evidence-index.json'),65536))!=canonical(index):
+    if inventory(root,plan=plan)!=files or canonical(read_json(relative(root,'evidence-index.json'),65536))!=canonical(index):
         raise ValueError('Evidence changed during final index publication')
     return report
 
@@ -364,8 +385,9 @@ def verify(root):
     index_hash=hash_file(index_path,65536)
     index=read_json(index_path,65536)
     query.fields(index,('schema_version','plan_id','validator','files'),'index')
-    if type(index['schema_version']) is not int or index['schema_version']!=3 or index['plan_id']!=query.PLAN or index['validator']!=query.VALIDATOR: raise ValueError('Unknown custody protocol')
-    files=index['files']; expected=roles()
+    plan=plan_for(index['plan_id'])
+    if type(index['schema_version']) is not int or index['schema_version']!=3 or index['validator']!=plan.VALIDATOR: raise ValueError('Unknown custody protocol')
+    files=index['files']; expected=roles(plan)
     if not isinstance(files,list) or len(files)!=len(expected): raise ValueError('Incomplete evidence inventory')
     seen=set()
     for item in files:
@@ -375,13 +397,14 @@ def verify(root):
         seen.add(name); relative(root,name)
         natural(item['bytes'],'file size',expected[name][1])
         if not isinstance(item['sha256'],str) or not re.fullmatch('[0-9a-f]{64}',item['sha256']): raise ValueError('Inventory digest')
-    actual=inventory(root)
+    actual=inventory(root,plan=plan)
     if files!=actual: raise ValueError('Evidence inventory bytes/hash/order mismatch')
     manifest=validate_freeze(read_json(relative(root,'freeze.json'),1048576))
+    if manifest['plan_id']!=plan.PLAN: raise ValueError('Index/freeze plan mismatch')
     recorded=read_json(relative(root,'report.json'),16*1024*1024)
     derived=derive_report(root,manifest)
     if canonical(recorded)!=canonical(derived): raise ValueError('Report differs from raw evidence derivation')
-    if inventory(root)!=actual or hash_file(index_path,65536)!=index_hash:
+    if inventory(root,plan=plan)!=actual or hash_file(index_path,65536)!=index_hash:
         raise ValueError('Evidence changed during read-only verification')
-    return dict(custody_status='Valid',protocol_status='Valid',coverage='NeedsEvidence',product_status='NotEvaluated',
-                plan_id=query.PLAN,verified_runs=12,current_workspace_source_checked=False)
+    return dict(custody_status='Valid',protocol_status='Valid',coverage=derived['coverage'],product_status='NotEvaluated',
+                plan_id=plan.PLAN,verified_runs=12,current_workspace_source_checked=False)

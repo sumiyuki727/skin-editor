@@ -2,6 +2,7 @@
 #![forbid(unsafe_code)]
 mod driver;
 mod meter;
+mod pc;
 mod query;
 use driver::{Calibration, Driver, Peaks, Trace, bound, calibrate, fixture, t};
 use meter::{Meter, Op};
@@ -10,7 +11,13 @@ use std::io::{self, BufRead, Read, Write};
 use std::time::Instant;
 
 const SCHEMA: u32 = 3;
+type Receipts<'a> = (
+    Option<&'a Calibration>,
+    Option<(&'a query::Storage, query::Receipt<'a>)>,
+    Option<(&'a pc::Storage, pc::Receipt)>,
+);
 struct Context {
+    plan: &'static str,
     case_ordinal: usize,
     trace: Trace,
     budget: WorkBudget,
@@ -54,7 +61,7 @@ impl Context {
         state: Option<&Driver>,
         calibration: Option<&Calibration>,
     ) -> io::Result<()> {
-        self.emit(phase, elapsed, m, state, calibration, None)?;
+        self.emit(phase, elapsed, m, state, (calibration, None, None))?;
         self.acknowledge()
     }
     fn query_boundary(
@@ -66,7 +73,30 @@ impl Context {
         storage: &query::Storage,
         receipt: query::Receipt<'_>,
     ) -> io::Result<()> {
-        self.emit(phase, elapsed, m, state, None, Some((storage, receipt)))?;
+        self.emit(
+            phase,
+            elapsed,
+            m,
+            state,
+            (None, Some((storage, receipt)), None),
+        )?;
+        self.acknowledge()
+    }
+    fn pc_boundary(
+        &mut self,
+        phase: &str,
+        elapsed: u64,
+        m: &Meter,
+        storage: &pc::Storage,
+        receipt: pc::Receipt,
+    ) -> io::Result<()> {
+        self.emit(
+            phase,
+            elapsed,
+            m,
+            None,
+            (None, None, Some((storage, receipt))),
+        )?;
         self.acknowledge()
     }
     fn acknowledge(&mut self) -> io::Result<()> {
@@ -90,13 +120,12 @@ impl Context {
         elapsed: u64,
         m: &Meter,
         state: Option<&Driver>,
-        calibration: Option<&Calibration>,
-        query: Option<(&query::Storage, query::Receipt<'_>)>,
+        receipts: Receipts<'_>,
     ) -> io::Result<()> {
         let begin = Instant::now();
         let output = io::stdout();
         let mut out = io::BufWriter::new(output.lock());
-        self.write_row(&mut out, (phase, elapsed), m, state, (calibration, query))?;
+        self.write_row(&mut out, (phase, elapsed), m, state, receipts)?;
         out.flush()?;
         self.previous_emit = begin.elapsed().as_nanos() as u64;
         Ok(())
@@ -107,10 +136,7 @@ impl Context {
         (phase, elapsed): (&str, u64),
         m: &Meter,
         state: Option<&Driver>,
-        (calibration, query): (
-            Option<&Calibration>,
-            Option<(&query::Storage, query::Receipt<'_>)>,
-        ),
+        (calibration, query, pc): Receipts<'_>,
     ) -> io::Result<()> {
         if let Some(s) = state {
             self.events_checked = s.events;
@@ -132,7 +158,7 @@ impl Context {
             self.previous_gate,
             m.bytes,
             self.fixture_bytes,
-            state.is_some(),
+            state.is_some() || pc.is_some_and(|(s, _)| s.owners_alive()),
             self.events_checked
         )?;
         if let Some(s) = state {
@@ -212,7 +238,7 @@ impl Context {
         write!(
             out,
             ",\"plan_id\":\"{}\",\"case_ordinal\":{},\"query_storage_bytes\":{},\"query\":",
-            query::PLAN,
+            self.plan,
             self.case_ordinal,
             query::storage_bytes()
         )?;
@@ -221,12 +247,26 @@ impl Context {
         } else {
             write!(out, "null")?;
         }
+        assert!(matches!(self.plan, pc::PLAN | query::PLAN));
+        if self.plan == pc::PLAN {
+            write!(
+                out,
+                ",\"closure_storage_bytes\":{},\"pc\":",
+                pc::storage_bytes()
+            )?;
+            if let Some((storage, receipt)) = pc {
+                storage.write(&mut out, receipt)?;
+            } else {
+                write!(out, "null")?;
+            }
+        }
         write!(out, ",\"metrics\":")?;
         m.json(&mut out)?;
         writeln!(out, "}}")
     }
 }
-fn run(context: &mut Context, m: &mut Meter, storage: &mut query::Storage) {
+fn run(context: &mut Context, m: &mut Meter, storage: &mut query::Storage, pc: &mut pc::Storage) {
+    pc::admit(context.n, false, query::STORAGE_LIMIT, pc::AGGREGATE_LIMIT).unwrap();
     query::admit(context.n, false, query::STORAGE_LIMIT).unwrap();
     context.boundary("ready", 0, m, None, None).unwrap();
     m.reset();
@@ -434,19 +474,92 @@ fn run(context: &mut Context, m: &mut Meter, storage: &mut query::Storage) {
             query::Receipt::Released,
         )
         .unwrap();
+    let begin = Instant::now();
+    let data = fixture(context.n);
+    context.fixture_bytes = data.capacity() * std::mem::size_of::<Circle>();
+    pc.establish(
+        context.n,
+        context.trace,
+        context.budget,
+        &data,
+        context.case_ordinal,
+        false,
+    );
     context
-        .query_boundary(
+        .pc_boundary(
+            "pc_group_ready",
+            begin.elapsed().as_nanos() as u64,
+            m,
+            pc,
+            pc::Receipt::Ready,
+        )
+        .unwrap();
+    for r in 0..pc::REPEATS {
+        let begin = Instant::now();
+        pc.prepare(r, true);
+        context
+            .pc_boundary(
+                "pc_prepared",
+                begin.elapsed().as_nanos() as u64,
+                m,
+                pc,
+                pc::Receipt::Prepared(r),
+            )
+            .unwrap();
+        let begin = Instant::now();
+        pc.cancel(r, true);
+        context
+            .pc_boundary(
+                "pc_cancelled_held",
+                begin.elapsed().as_nanos() as u64,
+                m,
+                pc,
+                pc::Receipt::Held(r),
+            )
+            .unwrap();
+        let begin = Instant::now();
+        pc.drop_tasks(r, true);
+        context
+            .pc_boundary(
+                "pc_dropped",
+                begin.elapsed().as_nanos() as u64,
+                m,
+                pc,
+                pc::Receipt::Dropped(r),
+            )
+            .unwrap();
+    }
+    let begin = Instant::now();
+    pc.references(true);
+    pc.release();
+    drop(data);
+    context.fixture_bytes = 0;
+    context
+        .pc_boundary(
+            "pc_group_released",
+            begin.elapsed().as_nanos() as u64,
+            m,
+            pc,
+            pc::Receipt::Released,
+        )
+        .unwrap();
+    context
+        .emit(
             "batch_summary",
             0,
             m,
             None,
-            storage,
-            query::Receipt::Summary,
+            (
+                None,
+                Some((storage, query::Receipt::Summary)),
+                Some((pc, pc::Receipt::Summary)),
+            ),
         )
         .unwrap();
+    context.acknowledge().unwrap();
     let output = io::stdout();
     let mut out = output.lock();
-    writeln!(out,"{{\"schema_version\":{SCHEMA},\"plan_id\":\"{}\",\"case_ordinal\":{},\"trace\":\"{}\",\"budget\":{},\"objects\":{},\"phase\":\"end\",\"status\":\"Valid\",\"previous_emit_ns\":{},\"previous_gate_ns\":{}}}",query::PLAN,context.case_ordinal,context.trace.name(),context.budget.get(),context.n,context.previous_emit,context.previous_gate).unwrap();
+    writeln!(out,"{{\"schema_version\":{SCHEMA},\"plan_id\":\"{}\",\"case_ordinal\":{},\"trace\":\"{}\",\"budget\":{},\"objects\":{},\"phase\":\"end\",\"status\":\"Valid\",\"previous_emit_ns\":{},\"previous_gate_ns\":{}}}",context.plan,context.case_ordinal,context.trace.name(),context.budget.get(),context.n,context.previous_emit,context.previous_gate).unwrap();
     out.flush().unwrap();
 }
 fn parse(args: &[String]) -> Result<(Trace, WorkBudget, usize), &'static str> {
@@ -480,6 +593,7 @@ fn main() {
         std::process::exit(2)
     });
     let mut context = Context {
+        plan: pc::PLAN,
         case_ordinal,
         trace,
         budget,
@@ -494,11 +608,13 @@ fn main() {
     let mut meter = Meter::new(context.n);
     assert!(meter.failure_capacity_bytes() + 256 * 1024 < 32 * 1024 * 1024);
     let mut storage = query::Storage::new();
+    let mut pc = pc::Storage::new();
     if std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-        run(&mut context, &mut meter, &mut storage)
+        run(&mut context, &mut meter, &mut storage, &mut pc)
     }))
     .is_err()
     {
+        pc.cleanup();
         meter.invalid = Some(meter.invalid.unwrap_or("workload-or-protocol"));
         let output = io::stdout();
         let mut out = output.lock();
@@ -506,11 +622,13 @@ fn main() {
         let _ = write!(
             out,
             "{{\"schema_version\":{SCHEMA},\"plan_id\":\"{}\",\"case_ordinal\":{},\"phase\":\"failed\",\"status\":\"Invalid\",\"reason\":\"{}\",\"retained_query_samples\":",
-            query::PLAN,
+            context.plan,
             context.case_ordinal,
             meter.invalid.unwrap()
         );
         let _ = storage.write_failure(&mut out);
+        let _ = write!(out, ",\"retained_pc\":");
+        let _ = pc.write_failure(&mut out);
         let _ = write!(out, ",\"retained_baseline_metrics\":");
         let _ = meter.write_failure(&mut out);
         let _ = writeln!(out, "}}");
@@ -522,6 +640,174 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Full Reference matrix through the real writer and real tasks, clocks disabled.
+    #[test]
+    fn closure_wire_canary_without_clocks() {
+        for (index, trace) in [Trace::G0, Trace::G1, Trace::A1].into_iter().enumerate() {
+            for (b, budget) in [WorkBudget::one(), WorkBudget::full()]
+                .into_iter()
+                .enumerate()
+            {
+                let ordinal = index * 4 + b * 2;
+                let data = fixture(10000);
+                let mut setup = Meter::unmeasured();
+                let d = query::establish(
+                    10000,
+                    trace,
+                    budget,
+                    &data,
+                    driver::Setup {
+                        id: query::base_id(ordinal) + 2,
+                        tiny: false,
+                    },
+                    &mut setup,
+                );
+                let mut q = query::Storage::new();
+                q.bind(&d);
+                let m = Meter::new(10000);
+                let mut context = Context {
+                    plan: pc::PLAN,
+                    case_ordinal: ordinal,
+                    trace,
+                    budget,
+                    n: 10000,
+                    previous_emit: 0,
+                    previous_gate: 0,
+                    fixture_bytes: data.capacity() * std::mem::size_of::<Circle>(),
+                    peaks: d.peaks,
+                    candidate: None,
+                    events_checked: 0,
+                };
+                let mut row = Vec::new();
+                fn emit(row: &mut Vec<u8>) {
+                    assert!(row.len() < 1024 * 1024);
+                    println!(
+                        "\nPC_CANARY\t{}",
+                        std::str::from_utf8(row).unwrap().trim_end()
+                    );
+                    row.clear();
+                }
+                context
+                    .write_row(
+                        &mut row,
+                        ("query_group_ready", 0),
+                        &m,
+                        Some(&d),
+                        (None, Some((&q, query::Receipt::Setup(&setup))), None),
+                    )
+                    .unwrap();
+                emit(&mut row);
+                for (kind, phase) in ["query_summary", "query_ledger", "query_page"]
+                    .into_iter()
+                    .enumerate()
+                {
+                    q.collect(kind, &d, false);
+                    context
+                        .write_row(
+                            &mut row,
+                            (phase, 0),
+                            &m,
+                            Some(&d),
+                            (None, Some((&q, query::Receipt::Batch(kind))), None),
+                        )
+                        .unwrap();
+                    emit(&mut row);
+                }
+                drop(d);
+                drop(data);
+                context.fixture_bytes = 0;
+                context
+                    .write_row(
+                        &mut row,
+                        ("query_group_released", 0),
+                        &m,
+                        None,
+                        (None, Some((&q, query::Receipt::Released)), None),
+                    )
+                    .unwrap();
+                emit(&mut row);
+                let data = fixture(10000);
+                context.fixture_bytes = data.capacity() * std::mem::size_of::<Circle>();
+                let mut pc = pc::Storage::new();
+                pc.establish(10000, trace, budget, &data, ordinal, false);
+                context
+                    .write_row(
+                        &mut row,
+                        ("pc_group_ready", 0),
+                        &m,
+                        None,
+                        (None, None, Some((&pc, pc::Receipt::Ready))),
+                    )
+                    .unwrap();
+                emit(&mut row);
+                for r in 0..pc::REPEATS {
+                    pc.prepare(r, false);
+                    context
+                        .write_row(
+                            &mut row,
+                            ("pc_prepared", 0),
+                            &m,
+                            None,
+                            (None, None, Some((&pc, pc::Receipt::Prepared(r)))),
+                        )
+                        .unwrap();
+                    emit(&mut row);
+                    pc.cancel(r, false);
+                    context
+                        .write_row(
+                            &mut row,
+                            ("pc_cancelled_held", 0),
+                            &m,
+                            None,
+                            (None, None, Some((&pc, pc::Receipt::Held(r)))),
+                        )
+                        .unwrap();
+                    emit(&mut row);
+                    pc.drop_tasks(r, false);
+                    context
+                        .write_row(
+                            &mut row,
+                            ("pc_dropped", 0),
+                            &m,
+                            None,
+                            (None, None, Some((&pc, pc::Receipt::Dropped(r)))),
+                        )
+                        .unwrap();
+                    emit(&mut row);
+                }
+                pc.references(false);
+                pc.release();
+                drop(data);
+                context.fixture_bytes = 0;
+                context
+                    .write_row(
+                        &mut row,
+                        ("pc_group_released", 0),
+                        &m,
+                        None,
+                        (None, None, Some((&pc, pc::Receipt::Released))),
+                    )
+                    .unwrap();
+                emit(&mut row);
+                context
+                    .write_row(
+                        &mut row,
+                        ("batch_summary", 0),
+                        &m,
+                        None,
+                        (
+                            None,
+                            Some((&q, query::Receipt::Summary)),
+                            Some((&pc, pc::Receipt::Summary)),
+                        ),
+                    )
+                    .unwrap();
+                emit(&mut row);
+            }
+        }
+    }
+
     #[test]
     fn fixed_track_uses_independent_microsecond_anchors() {
         let data = fixture(10_000);
@@ -616,6 +902,7 @@ mod tests {
                 storage.bind(&d);
                 let m = Meter::new(10000);
                 let mut context = Context {
+                    plan: query::PLAN,
                     case_ordinal: ordinal,
                     trace,
                     budget,
@@ -634,7 +921,7 @@ mod tests {
                         ("query_group_ready", 0),
                         &m,
                         Some(&d),
-                        (None, Some((&storage, query::Receipt::Setup(&setup)))),
+                        (None, Some((&storage, query::Receipt::Setup(&setup))), None),
                     )
                     .unwrap();
                 for (kind, phase) in ["query_summary", "query_ledger", "query_page"]
@@ -648,7 +935,7 @@ mod tests {
                             (phase, 0),
                             &m,
                             Some(&d),
-                            (None, Some((&storage, query::Receipt::Batch(kind)))),
+                            (None, Some((&storage, query::Receipt::Batch(kind))), None),
                         )
                         .unwrap();
                 }
@@ -665,7 +952,7 @@ mod tests {
                             (phase, 0),
                             &m,
                             None,
-                            (None, Some((&storage, receipt))),
+                            (None, Some((&storage, receipt)), None),
                         )
                         .unwrap();
                 }

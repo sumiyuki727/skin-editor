@@ -127,7 +127,7 @@ class GameplayCostChecks(unittest.TestCase):
             artifact=json.dumps(dict(reason='compiler-artifact',target=dict(name='skin-editor-gameplay-cost'),executable=str(binary)))
             with patch.object(cost,'tool_environment',return_value=('cargo',{'RUSTC':'rustc'})),patch.object(cost,'linker_arguments',return_value=[]),\
                  patch.object(cost,'tool_graph_errors',return_value=[]),patch.object(cost,'tool_source_errors',return_value=[]),\
-                 patch.object(cost.subprocess,'run'),patch.object(cost,'validate_canary',return_value=6),\
+                 patch.object(cost.subprocess,'run'),patch.object(cost,'validate_canary',return_value=6),patch.object(cost,'check_full_canary',return_value=6),\
                  patch.object(cost.subprocess,'check_output',side_effect=['{}','canary',artifact,'rustc identity']),\
                  patch.object(cost,'identity',side_effect=[{'source':'before'},{'source':'after'}]):
                 with self.assertRaises(ValueError):cost.check_tool()
@@ -166,7 +166,7 @@ class GameplayCostChecks(unittest.TestCase):
             def sample(self):return dict(user_ns=0,kernel_ns=0,working_set_bytes=1,private_commit_bytes=1,os_peak_working_set_bytes=1,os_peak_commit_bytes=1)
             def close(self):raise OSError('owned handle close failed')
         with tempfile.TemporaryDirectory() as directory,patch.object(cost.subprocess,'Popen',return_value=Process()),\
-             patch.object(cost,'OwnedProcess',Monitor),patch.object(cost,'PHASES',('ready',)):
+             patch.object(cost,'OwnedProcess',Monitor),patch.object(cost.query,'PHASES',('ready',)):
             result=cost.run_probe(Path('owned.exe'),'g0',1,1,Path(directory))
             self.assertEqual(result['status'],'Invalid');self.assertEqual(len(result['phases']),1)
             self.assertIn('handle close failed',result['reason'])
@@ -293,11 +293,12 @@ class GameplayCostChecks(unittest.TestCase):
     def test_diagnostic_source_cannot_import_platform_io_project_or_external_includes(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory);base=root/'tools/gameplay-cost/src';base.mkdir(parents=True)
-            for name in ('main.rs','driver.rs','meter.rs','query.rs'):(base/name).write_text('#![forbid(unsafe_code)]\n',encoding='utf-8')
+            for name in ('main.rs','driver.rs','meter.rs','query.rs','pc.rs'):(base/name).write_text('#![forbid(unsafe_code)]\n',encoding='utf-8')
             self.assertEqual(protocol.tool_source_errors(root),[])
-            for content in ('use skin_editor_application::ProjectSession;','use std::fs;','include!("outside.rs");','use wgpu::Device;'):
-                (base/'driver.rs').write_text(content,encoding='utf-8');self.assertTrue(protocol.tool_source_errors(root))
-            (base/'driver.rs').write_text('',encoding='utf-8')
+            for name in ('driver.rs','pc.rs'):
+                for content in ('use skin_editor_application::ProjectSession;','use std::fs;','include!("outside.rs");','use wgpu::Device;'):
+                    (base/name).write_text(content,encoding='utf-8');self.assertTrue(protocol.tool_source_errors(root))
+                (base/name).write_text('',encoding='utf-8')
             (base/'hidden').mkdir();(base/'hidden/mod.rs').write_text('use std::net;',encoding='utf-8')
             self.assertTrue(protocol.tool_source_errors(root))
 

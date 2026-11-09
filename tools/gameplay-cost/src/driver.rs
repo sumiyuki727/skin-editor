@@ -510,7 +510,7 @@ impl Driver {
         });
         assert!(run.work_counts().valid);
     }
-    pub fn inspect(&mut self, m: &mut Meter) {
+    pub fn inspect(&mut self, m: &mut Meter) -> WorkCounts {
         self.freeze(m, end(self.n));
         let at = target(self.n / 2);
         let mut job = m
@@ -531,6 +531,7 @@ impl Driver {
         }
         assert!(ready, "inspection progress bound");
         assert_eq!(job.work_counts().inspection_objects, self.n as u64);
+        let work = job.work_counts();
         m.timed(Op::InspectActivate, || {
             self.owner.activate(job.key(), &mut job)
         })
@@ -551,6 +552,7 @@ impl Driver {
             state.statistics_origin,
             StatisticsOrigin::Inspection { at: t(at) }
         );
+        work
     }
 }
 

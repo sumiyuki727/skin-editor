@@ -5,15 +5,16 @@
 ## 当前阅读入口
 
 - [2026-11-09项目全面检查](PROJECT_REVIEW_20261109.md)
-- [父端统一时基修正与审阅](K1_COST_CLOSURE_SPEC.md#2026-11-10父端统一时基修正与审阅)（9daac5f文档备份及CI已通过；寿命与CSV统一perf_counter，旧证据不追认，本轮不重测、K1仍暂不签收）
-- [PC128正式成本轮与K1独立退出审阅](K1_EXIT_REVIEW.md#2026-11-10pc128正式成本轮与退出审阅)（8043028已备份且CI全绿；12例采集完成，父端时基跨度矛盾导致Invalid／NeedsEvidence，K1仍暂不签收；先决定时基修复范围，不自动重测）
+- [统一时基PC128新轮与只读复核](K1_EXIT_REVIEW.md#2026-11-10统一时基正式成本轮与只读复核)（3310e49已备份且三项CI通过；新12例协议／保管Valid、ReadyForReview，旧证据原样保留，K1仍待独立退出审阅）
+- [父端统一时基修正与审阅](K1_COST_CLOSURE_SPEC.md#2026-11-10父端统一时基修正与审阅)（修正已保存3310e49并通过CI；寿命与CSV统一perf_counter，旧失败不追认，新正式证据见上）
+- [旧PC128正式成本轮与K1独立退出审阅](K1_EXIT_REVIEW.md#2026-11-10pc128正式成本轮与退出审阅)（8043028旧轮因父端时基跨度矛盾Invalid／NeedsEvidence；失败原件保留，与后续成功轮分开解释）
 - [完整CostClosure-v1正式成本与退出决定](K1_EXIT_REVIEW.md#2026-11-09完整成本新轮与退出决定)（结果已保存814de56；12进程协议及保管Valid，9个纯取消序列不足分辨，NeedsEvidence，K1仍暂不签收）
-- [K1整体退出审阅／成本补证待办](K1_EXIT_REVIEW.md)（D v2修订备份2c387f2；功能及有界资源的适用证据已有记录，KT23短调用批次补证未闭合，K1暂不签收；新轮12进程及独立冻结二进制，不代表产品预算通过）
+- [K1整体退出审阅／成本补证](K1_EXIT_REVIEW.md)（新轮已达到ReadyForReview；既有适用功能证据与Unknown仍需独立核对，K1暂不签收，产品NotEvaluated）
 - [K1-6D工具一致性审阅及v2重测](K1_6D_COST_REVIEW.md#2026-11-08一致性审阅记录)（初版4994d2e、一致性修订2c387f2已备份；453项Python／169项gameplay／6项工具Rust通过；历史v2-01协议Valid／指标Unknown／产品NotEvaluated，整体退出结论及新轮证据见上）
 - [K1-6C规模回归及一致性审阅](K1_6C_SCALE_REVIEW.md#2026-11-07一致性审阅记录)（C初版备份09075738、一致性修订备份13fb466；169项gameplay通过，API7／profile1、Reference10000／Tiny4保持；后续D工具及基线见上）
 - [K1-6B变长存储／容量证明／分步工作及一致性审阅](K1_6B_STORAGE_PROOF.md#2026-11-06一致性审阅记录)（API7／profile1，Tiny4／Reference10000；B阶段156项回归与容量证明，后续C规模复核及D工具基线见上）
 - [独立stable兼容内核架构／K计划](STABLE_KERNEL_PLAN.md) · [专用新对话交接](HANDOFF_STABLE_KERNEL.md) · [K1-1合成圆圈模型](K1_1_SYNTHETIC_REVIEW.md) · [K1-2冻结／恢复／重新武装](K1_2_FREEZE_REVIEW.md) · [K1-3同谱面检查定位](K1_3_INSPECTION_REVIEW.md) · [K1-4统一候选准备／激活](K1_4_PREPARATION_REVIEW.md) · [K1-5自动输入／驱动互斥](K1_5_DRIVER_REVIEW.md) · [K1-6A固定四槽／只读截面及一致性审阅](K1_6A_STORAGE_REVIEW.md)（API6、4对象无窗口，137项gameplay通过，K1部分完成；未接GUI／设备，不宣称stable兼容）
-- [K1-6规模／资源成本规格及文档审阅](K1_6_SCALE_SPEC.md)（A–D及完整CostClosure-v1已实施、审阅及测量；取消分辨仍NeedsEvidence，PC128仅为待审阅草案，K1暂不签收）
+- [K1-6规模／资源成本规格及文档审阅](K1_6_SCALE_SPEC.md)（A–D、PC128及父端时基修正已实施、审阅和测量；新轮ReadyForReview，K1尚未签收）
 - [编辑器新对话交接](HANDOFF_EDITOR_CONTINUATION.md) · [素材制作／未来编辑器操作skill交接](HANDOFF_SKIN_ASSET_SKILL.md)（2026-11-03快照，含可粘贴开场提示）
 - [动画来源／原始帧时长／stable重采样](ANIMATION_ASSETS.md)（设计已记录；模型、版本和功能未改；AN01–AN16全部待实施）
 - [P3-1C 热日志／进程中断恢复补充](P3_1_RECOVERY_REVIEW.md) · [独立证据](P3_1_RECOVERY_PROOF.json)

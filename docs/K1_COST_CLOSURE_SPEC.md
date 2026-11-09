@@ -1,6 +1,6 @@
 # K1成本收口补证开工规格
 
-2026-11-10当前执行状态：上一轮9份PC128失败审阅文档已通过正常完整hook备份并公开推送9daac5fa15efa54df6c44780bc4733d2d1657a42，Windows／Linux核心及Windows桌面CI均成功。本轮实施[父端统一时基最小修正与回归](K1_COST_CLOSURE_SPEC.md#2026-11-10父端统一时基修正与审阅)：CSV与寿命回执统一perf_counter，看门狗保持monotonic；读取器、计划字段、门槛及128候选／256MiB／1MiB／512KiB不变。旧正式轮仍Invalid／NeedsEvidence，K1暂不签收、产品NotEvaluated、stable兼容未知；未运行新正式测量。修正及文档未提交，原始证据和机器详情仍仅本地；后续新测量须另行明确安排，不推进P3、GUI／原生设备或皮肤skill。下方记录保留历史时点。
+2026-11-10当前执行状态：父端时基修正已通过正常完整hook备份并公开推送3310e491614adff1e0ab02d88d0d028deb90df55，对应Windows／Linux核心及Windows桌面CI均成功。本轮按明确授权执行一次全新完整12进程CostClosure-PC128-v1正式测量；[统一时基新轮与只读复核](K1_EXIT_REVIEW.md#2026-11-10统一时基正式成本轮与只读复核)均为协议／保管Valid、coverage ReadyForReview、产品NotEvaluated。72组必需批次和60个家族满足既定分辨条件，单调用／短CPU／阶段真实峰值Unknown仍保留；ReadyForReview不等于K1验收，K1仍暂不签收、stable兼容未知。Reference10000／Tiny4及256MiB／1MiB／512KiB不变，107个旧证据文件原样保留。本轮只新增本地测量证据和文档，未改工具／核心或接GUI／原生设备；新文档未提交，下一项先备份并独立审阅K1退出条件，不自动重测或推进P3／K2。下方记录保留历史时点。
 
 2026-11-09查询增量一致性审阅：轮前实现已通过正常完整hook备份推送`019a296f3198446aa1d2ee267dc9fda4f3378e0d`，私有origin及远端SHA一致。本轮修复冻结清单／原始证据／最终报告的发布截面、索引复核、输入代次校验和失败收尾边界，并补真实Rust查询输出到Python的无计时贯通回归，详见[审阅记录](#2026-11-09查询增量一致性审阅)。计划仍为schema3／CostClosure-Query-v1，读取器修订为reader-v2；Reference10000／Tiny4、API7／profile1不变。PC三批次和正式成本测量未开展，coverage NeedsEvidence、产品NotEvaluated、KT23／K1及stable兼容结论保持。本轮修订未提交；后续先备份，再依明确任务推进。下方历史记录保留各自时点。
 
@@ -566,3 +566,9 @@ Query-v1／Query-reader-v2和完整PC32／CostClosure-reader-v2正文、固定�
 旧读取器对旧文件的数值复核只保留其原有结论，不证明旧寿命已经满足本次统一时基契约。合成回归证明该缺陷及边界已覆盖，不是实际成本测量或产品性能验收；未来仍可能出现其他有效性／分辨率不足，需要按新证据判断。
 
 本轮实际修订为1个生产采集器、3个回归文件及9份项目文档，均未提交；暂存区为空。新正式测量没有运行。下一项先备份本轮修正并确认对应CI，再另行明确批准一次全新完整12进程测量、只读复核和K1退出审阅；不自动进入P3／K2、GUI／原生设备或皮肤skill。K1仍暂不签收、产品NotEvaluated、stable兼容未知。
+
+## 2026-11-10统一时基新轮执行记录
+
+父端修正及回归已保存于3310e491614adff1e0ab02d88d0d028deb90df55，正常完整hook与对应三项CI通过。本轮按新授权运行一次全新12进程CostClosure-PC128-v1：入口和正式只读复核均为协议／保管Valid、ReadyForReview、产品NotEvaluated；[完整身份、原始覆盖与Unknown边界](K1_EXIT_REVIEW.md#2026-11-10统一时基正式成本轮与只读复核)已登记。CSV与寿命使用相同perf_counter时基，12例严格跨度守卫通过；72个必需批次及60个有限家族满足原分辨判据，不升级短单调用、CPU或真实峰值Unknown。
+
+本页在测量、只读复核和源码身份核对完成后才补记，旧freeze不改写。Reference10000／Tiny4、128候选、256MiB／1MiB／512KiB、原单池限制及全部判据保持；107个旧证据文件原样保全，旧PC32仍NeedsEvidence，旧失败PC128仍Invalid。K1暂不签收，下一项是独立退出审阅，不自动进入新测量或功能开发。本轮仅新增证据／文档，文档未提交。

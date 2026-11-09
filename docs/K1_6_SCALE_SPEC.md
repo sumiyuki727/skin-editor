@@ -1,5 +1,7 @@
 # K1-6：SyntheticTest 规模与资源成本开工规格
 
+2026-11-09当前执行状态：上一轮11文件一致性修订已通过正常完整hook备份推送76810dde6bab5be73707cba2a1d3c40cf3598c01，PUBLIC授权保持。本轮已执行完整CostClosure-v1／reader-v2的12进程正式新轮并通过只读保管复核：protocol／custody Valid，coverage NeedsEvidence。唯一必需缺口是PC-CANCEL-32在9个进程中最短样本不足2微秒；其余5批次和5家族全部满足分辨要求，见[正式成本与退出决定](K1_EXIT_REVIEW.md#2026-11-09完整成本新轮与退出决定)。K1适用纯核心仍暂不签收，下一步先审阅取消批次的有界分辨补证规格，再按明确任务实现／新轮验证；P3保存闭环顺序保留。本轮未改核心／工具／桌面代码，保持Reference10000／Tiny4、API7／profile1，产品NotEvaluated、stable兼容未知。本轮结果文档未提交；下方记录保留各自历史时点。
+
 2026-11-09查询增量一致性审阅：轮前实现已通过正常完整hook备份推送`019a296f3198446aa1d2ee267dc9fda4f3378e0d`，私有origin及远端SHA一致。本轮修复冻结清单／原始证据／最终报告的发布截面、索引复核、输入代次校验和失败收尾边界，并补真实Rust查询输出到Python的无计时贯通回归，详见[审阅记录](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量一致性审阅)。计划仍为schema3／CostClosure-Query-v1，读取器修订为reader-v2；Reference10000／Tiny4、API7／profile1不变。PC三批次和正式成本测量未开展，coverage NeedsEvidence、产品NotEvaluated、KT23／K1及stable兼容结论保持。本轮修订未提交；后续先备份，再依明确任务推进。下方历史记录保留各自时点。
 
 2026-11-09查询最小增量：轮前8份规格审阅文档已通过正常完整hook备份推送`d8f2ad99e8bb6035470619c6136701388540d180`，私有origin及远端SHA一致。本轮实现schema3／`CostClosure-Query-v1`的受测副本冻结、限根只读复核、摘要／账本／分页各16固定批次及真实Tiny canary；细节和验证见[实现记录](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量实现记录)。核心API7／profile1、Reference10000／Tiny4保持。PC三批次及正式新成本测量未开展，coverage固定NeedsEvidence、产品NotEvaluated，KT23／K1和stable兼容结论不升级。新增量未提交；下一步先备份并审阅本轮实现，下方旧记录保留各自时点。

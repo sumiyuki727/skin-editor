@@ -1,6 +1,6 @@
 # 独立 stable 兼容内核：新对话交接
 
-2026-11-09当前执行状态：先有限收口K1，再补P3普通保存闭环；PUBLIC仓库沿用用户授权。完整PC三批次及CostClosure-v1实现已通过正常完整hook备份推送为3945bb6483d05dab3f9bf84613335cd79ef11e5b。本轮完成一致性审阅，修正PC原始字段校验、建立期资源峰值与异常清理回执，完整读取器修订为CostClosure-reader-v2，见[审阅记录](K1_COST_CLOSURE_SPEC.md#2026-11-09完整计划一致性审阅)。Reference10000／Tiny4、API7／profile1保持；正式新成本测量、独立退出决定和P3接线尚未开展，KT23／K1、产品性能及stable兼容结论不升级。本轮审阅修订未提交；下方记录保留各自历史时点。
+2026-11-09当前执行状态：上一轮11文件一致性修订已通过正常完整hook备份推送76810dde6bab5be73707cba2a1d3c40cf3598c01，PUBLIC授权保持。本轮已执行完整CostClosure-v1／reader-v2的12进程正式新轮并通过只读保管复核：protocol／custody Valid，coverage NeedsEvidence。唯一必需缺口是PC-CANCEL-32在9个进程中最短样本不足2微秒；其余5批次和5家族全部满足分辨要求，见[正式成本与退出决定](K1_EXIT_REVIEW.md#2026-11-09完整成本新轮与退出决定)。K1适用纯核心仍暂不签收，下一步先审阅取消批次的有界分辨补证规格，再按明确任务实现／新轮验证；P3保存闭环顺序保留。本轮未改核心／工具／桌面代码，保持Reference10000／Tiny4、API7／profile1，产品NotEvaluated、stable兼容未知。本轮结果文档未提交；下方记录保留各自历史时点。
 
 2026-11-09 CI故障确认：[019a296的Actions 42523539838](https://github.com/sumiyuki727/skin-editor/actions/runs/42523539838)中Linux核心和Windows桌面通过，Windows核心在Python 3.12.10的test_reparse_points_are_refused_without_following_target失败。硬链接测试以tuple重建stat_result，丢失Windows专用st_file_attributes；新pathlib的lstat委托stat后取得None，触发None与0x400位运算异常。本机Python 3.9.6用同一委托路径成功复现。修正仅用转发替身覆盖st_nlink，保留全部原生属性，并显式覆盖委托路径；生产安全检查、workflow及产品行为均不变。上一轮17文件修订已通过正常完整hook备份推送856cabd5ae34af686bc10f933d6d8aeec63590ea，远端SHA一致；该备份尚不包含本次CI修正，不能声明远端已恢复。本次测试修正与此记录未提交，修正后62项成本工具Python回归及仓库候选／git diff --check通过；直接Python 3.12复验尚缺，日志见本机artifacts/github-query-ci-review/，后续需提交后由远端重新验证。
 

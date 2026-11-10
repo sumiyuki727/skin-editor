@@ -1,6 +1,6 @@
 # 独立 stable 兼容内核：新对话交接
 
-2026-11-10当前执行状态：正式测量／只读复核文档已备份并公开推送b6bc96deb66b154d880e95945ef4380952479421，正常完整hook及Windows／Linux核心、Windows桌面三项CI均通过。[独立退出审阅](K1_EXIT_REVIEW.md#2026-11-10独立退出审阅与签收结论)确认K1适用纯核心范围可签收：Reference10000／Tiny4、API7／profile1保持，必需批次／家族及操作映射已闭合，合法Unknown按原契约保留。范围仅为纯Rust、无窗口的SyntheticTest圆圈模型；原报告仍为Valid／ReadyForReview／产品NotEvaluated，stable兼容未知。本轮只读复核及文档更新，未重测、改功能或接GUI／设备；160个新旧证据文件保持原样，新增审阅文档待下轮备份。下一项按已定顺序准备P3保存闭环规格，不自动开发。下方带日期记录保留各自历史时点。
+2026-11-10当前工作：K1退出审阅文档已通过正常完整hook备份并公开推送24325cac9f8c0b0d98eea1b154dae0061a5b9dff，[GitHub三项检查](https://github.com/sumiyuki727/skin-editor/actions/runs/42711015731)全部成功。本轮审阅P3恢复基础并细化[P3保存／关闭／重开闭环规格](P3_SAVE_LOOP_SPEC.md)，明确完整历史／资源、新会话／旧结果、真实保存回执、失败保护及容量耗尽；仅新增文档，未开始功能开发。K1维持既定SyntheticTest纯核心范围可签收，Reference10000／Tiny4不变，产品性能NotEvaluated、stable兼容Unknown，未重测。下一项先备份并一致性审阅P3-2规格，不自动接UI／设备或启用自动保护周期。下方带日期记录保留各自历史时点。
 
 2026-11-09 CI故障确认：[019a296的Actions 42523539838](https://github.com/sumiyuki727/skin-editor/actions/runs/42523539838)中Linux核心和Windows桌面通过，Windows核心在Python 3.12.10的test_reparse_points_are_refused_without_following_target失败。硬链接测试以tuple重建stat_result，丢失Windows专用st_file_attributes；新pathlib的lstat委托stat后取得None，触发None与0x400位运算异常。本机Python 3.9.6用同一委托路径成功复现。修正仅用转发替身覆盖st_nlink，保留全部原生属性，并显式覆盖委托路径；生产安全检查、workflow及产品行为均不变。上一轮17文件修订已通过正常完整hook备份推送856cabd5ae34af686bc10f933d6d8aeec63590ea，远端SHA一致；该备份尚不包含本次CI修正，不能声明远端已恢复。本次测试修正与此记录未提交，修正后62项成本工具Python回归及仓库候选／git diff --check通过；直接Python 3.12复验尚缺，日志见本机artifacts/github-query-ci-review/，后续需提交后由远端重新验证。
 
@@ -135,7 +135,7 @@
 
 ## 6. 下一增量、检查和证据
 
-当前停靠点是2026-11-10[独立K1退出审阅](K1_EXIT_REVIEW.md#2026-11-10独立退出审阅与签收结论)：K1适用纯核心范围可签收，正式结果文档已保存b6bc96d且三项CI成功，本次退出审阅文档待下轮备份。Query、完整PC32及PC128工具和审阅均已有记录，统一时基PC128正式12进程新轮已完成，只读复核为Valid／ReadyForReview／产品NotEvaluated；不再把这些工作列为待开发。Reference10000／Tiny4、API7／profile1保持，K0-B、K2–K5仍未因此验收。
+K1停靠点仍是[独立退出审阅](K1_EXIT_REVIEW.md#2026-11-10独立退出审阅与签收结论)：适用SyntheticTest纯核心范围可签收，原报告／Unknown／产品结论保持。用户已转入P3路线，本次[P3保存／关闭／重开闭环规格](P3_SAVE_LOOP_SPEC.md)只细化保存、关闭及重开契约；下一步备份并一致性审阅该规格，不重复成本补证或自动进入K2。
 
 冻结入口复制Cargo真实产物到新目录frozen/probe.exe，关闭并核对后独占发布freeze.json；正式测量时逐子进程核对源码／副本，全部收尾后依序非覆盖发布report.json与evidence-index.json。只读--verify核对角色、路径、字节数、SHA及逐条重算结果，不构建、执行、采样或读取当前源码。新轮必需六批次／五家族及正调用映射均满足既定条件，原单调用／短CPU／真实峰值Unknown保留；旧PC32不足分辨及旧PC128时基失败不追认。160个新旧证据文件保留于本机忽略目录，不上传。下一项按已定顺序准备P3保存闭环规格，本轮不开发或重测。
 

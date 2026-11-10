@@ -1,5 +1,7 @@
 # Git 与远端管理
 
+2026-11-10 P3规格轮前备份：上一轮10份K1退出审阅／路线文档保存为24325cac9f8c0b0d98eea1b154dae0061a5b9dff，正常推送PUBLIC origin的codex/p1-bootstrap并核对远端完整SHA；[Actions](https://github.com/sumiyuki727/skin-editor/actions/runs/42711015731)的Windows／Linux核心与Windows桌面三项成功。首次hook因当前环境未注册Rust1.95.0停止，失败日志保留；随后显式指定已存在且版本核对一致的工具链和离线缓存，正常完整hook通过512项Python、169项gameplay、25项常规工具Rust及两组各六组合无计时贯通、核心与桌面默认／全feature检查。没有下载／修改全局版本、跳过hook或改写历史。本轮[P3保存／关闭／重开闭环规格](P3_SAVE_LOOP_SPEC.md)及同步说明是备份后的未提交文档，不含功能修改或新成本测量。旧证明／160项K1证据和schema.rs既存字节保留；原始日志、冻结程序和机器详情仍在忽略目录。
+
 2026-11-10独立K1退出审阅轮前备份：上一轮9份正式测量／只读复核文档经正常完整hook提交并推送b6bc96deb66b154d880e95945ef4380952479421，PUBLIC origin、codex/p1-bootstrap及远端SHA一致。512项Python、169项gameplay、25项常规工具Rust、Query／PC128各六组合无计时贯通、核心和桌面默认／全feature检查通过；[Actions 42700152248](https://github.com/sumiyuki727/skin-editor/actions/runs/42700152248)三项全部成功。本轮[独立退出审阅](K1_EXIT_REVIEW.md#2026-11-10独立退出审阅与签收结论)为备份之后的10份未提交文档；仅作只读复核与审阅，未重测或改功能。160个新旧证据文件及schema.rs既存字节保持，暂存区为空；冻结程序、原始采样及机器详情不上传。未强推、改写历史或绕过检查，以下记录保留历史时点。
 
 2026-11-10统一时基正式轮前确认：HEAD／PUBLIC origin／codex/p1-bootstrap均为3310e491614adff1e0ab02d88d0d028deb90df55；该备份包含4个Python文件及9份文档，正常完整hook与[Actions 42678534807](https://github.com/sumiyuki727/skin-editor/actions/runs/42678534807)三项CI全部通过。轮前无暂存或实际内容差异，复用HEAD、不造空提交；schema.rs既存空差异标记及字节保留。本轮按授权完成一次[新正式测量与只读复核](K1_EXIT_REVIEW.md#2026-11-10统一时基正式成本轮与只读复核)，协议／保管Valid、ReadyForReview，K1仍暂不签收。新增9份文档留本地未提交；原始样本、机器详情、冻结副本和诊断仅存忽略目录，不上传。下方记录保留各自时点。

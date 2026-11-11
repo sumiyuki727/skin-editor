@@ -1,5 +1,9 @@
 # Git 与远端管理
 
+2026-11-11新增收尾约定：用户要求本轮新增文档在结束时也正常检查、提交并推送，并确认项目文件夹丢失后的恢复路径；进一步明确选择“历史测量原件及冻结程序加密附件备份、密钥另存项目外”。源码沿用PUBLIC origin，机器诊断与原始材料不原样公开；恢复套件／排除范围和实际核验入口见[项目恢复](PROJECT_RECOVERY.md)。本条是授权与操作要求，是否完成以最终回执及收尾报告为准，不把上传成功或本文本身当作恢复通过。
+
+2026-11-11可视化配置需求轮前备份：上一轮11份P3一致性文档经实际暂存差异／散列及仓库检查核对，正常完整hook提交bfd7b38eeeea7849dd9a66b8ef693ad32bea8c35，推送既有PUBLIC origin的codex/p1-bootstrap并确认远端SHA一致。512项Python、gameplay与成本工具Rust、Query／PC128各六组合无计时贯通、核心及桌面默认／全部feature检查和最终构建通过；无新正式测量或设备运行。新[Actions 43027891909](https://github.com/sumiyuki727/skin-editor/actions/runs/43027891909)查询时仍在运行，不借上一提交CI代替。用户本轮要求结束时把新增[可视化编辑规格](SKIN_INI_VISUAL_EDITING.md)等文档也检查提交推送，并核对可恢复范围；最终提交及核验状态在收尾记录中明确。schema.rs既存空差异标记和原始字节保留，以下日期记录保持历史事实。
+
 2026-11-10 P3一致性审阅轮前备份：逐项核对上一轮收尾散列及实际差异，仅暂存11份项目文档；正常完整hook提交10c8d14f301df1cae2f0cd12b4b42b8df87a6bd9并推送既有PUBLIC origin的codex/p1-bootstrap，远端SHA一致。[Actions 42735776243](https://github.com/sumiyuki727/skin-editor/actions/runs/42735776243)核心Windows／Linux与Windows桌面三项成功。使用既有Rust1.95.0及离线缓存，512项Python、169项gameplay、25项常规工具Rust、两组各六组合无计时贯通及核心／桌面默认和全部feature检查通过，没有正式重测、跳过hook或修改全局设置。本次[P3规格修订2](P3_SAVE_LOOP_SPEC.md#11-2026-11-10一致性审阅与剩余准入)是备份后的未提交文档，CI不覆盖这些新文字；旧证明／160项K1证据和schema.rs既存字节保留，诊断／程序／机器详情未上传。以下记录保留历史时点。
 
 2026-11-10 P3规格轮前备份：上一轮10份K1退出审阅／路线文档保存为24325cac9f8c0b0d98eea1b154dae0061a5b9dff，正常推送PUBLIC origin的codex/p1-bootstrap并核对远端完整SHA；[Actions](https://github.com/sumiyuki727/skin-editor/actions/runs/42711015731)的Windows／Linux核心与Windows桌面三项成功。首次hook因当前环境未注册Rust1.95.0停止，失败日志保留；随后显式指定已存在且版本核对一致的工具链和离线缓存，正常完整hook通过512项Python、169项gameplay、25项常规工具Rust及两组各六组合无计时贯通、核心与桌面默认／全feature检查。没有下载／修改全局版本、跳过hook或改写历史。本轮[P3保存／关闭／重开闭环规格](P3_SAVE_LOOP_SPEC.md)及同步说明是备份后的未提交文档，不含功能修改或新成本测量。旧证明／160项K1证据和schema.rs既存字节保留；原始日志、冻结程序和机器详情仍在忽略目录。

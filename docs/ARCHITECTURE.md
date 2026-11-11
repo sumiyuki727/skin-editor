@@ -94,6 +94,12 @@ History保留父子、补丁和有界坐标；检出旧节点再编辑不删旧�
 
 当前普通 GUI 没有历史持久化、同时多个活动分支工作区或完整树UI；独立存储适配已可恢复完整树。六类系统标签是显示／导航契约，保存标签必须由真实保存关联捕获节点。永久引用见[文件格式](PROJECT_FORMAT_V1.md)，不能把API6会话或私有Patch写成永久格式。回执寿命和素材导入语义仍见[决策清单](review/DECISIONS.md)。
 
+## 配置布局的可视化编辑（规格，尚未实现）
+
+[skin.ini可视化编辑](SKIN_INI_VISUAL_EDITING.md)面向所有适用参数，首批只定约拖拽／缩放，不限mania。配置布局目标与Layer／Component及游戏对象分离；其真值为SkinConfiguration记录，几何只作带来源的派生投影。现有通用配置Command不代表已解析stable参数或已有布局控制柄。
+
+compatibility提供有证据的纯映射，application定义窄查询／编辑值契约并经草稿原子修改配置，UI路由手势，preview消费只读结果，desktop适配组装；保持现有单向边界，不引入通用脚本或项目写入旁路。配置→几何与手势→参数共用规则身份／上下文；多项联动一次校验和提交，未知／不可逆映射不开放。目标、草稿、预览及指针事件核对完整运行来源；图片原始字节和已有变换不受隐式修改。持久化／导出沿用完整历史与指定节点路径，具体版本或格式演进须在实施前独立定约。
+
 ## 状态编码与后续文件交接
 
 infrastructure::project_format通过application::values只读查询SkinProject，并用显式schema 1映射生成小块／分页索引。serde与serde_json仅在infrastructure使用，domain不持有序列化derive或文件依赖。解码验证字节摘要、引用闭包、结构限额及领域不变量，返回脱离活动会话的SkinProject；没有替换ProjectSession的入口。详见[状态契约](PROJECT_STATE_SCHEMA.md)。

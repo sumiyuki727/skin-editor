@@ -4,6 +4,7 @@
 
 ## 当前阅读入口
 
+- [skin.ini可视化布局编辑：拖拽与缩放](SKIN_INI_VISUAL_EDITING.md)（2026-11-11新增R31；不限mania，V0–V3／VL01–VL14，只有需求与规格、尚未实现；主线仍先P3保存闭环）
 - [P3恢复基础复核与保存／关闭／重开闭环规格](P3_SAVE_LOOP_SPEC.md)（P3规格已备份且CI通过；一致性修订2、8组发现、四增量／20项分层验收，待A开工契约，尚未开发／接UI）
 - [2026-11-09项目全面检查](PROJECT_REVIEW_20261109.md)
 - [K1独立退出审阅与签收结论](K1_EXIT_REVIEW.md#2026-11-10独立退出审阅与签收结论)（正式结果已备份b6bc96d、三项CI成功；K1适用SyntheticTest纯核心范围可签收，合法Unknown保留，产品NotEvaluated／stable Unknown）
@@ -22,6 +23,7 @@
 - [P3-1C 热日志／进程中断恢复补充](P3_1_RECOVERY_REVIEW.md) · [独立证据](P3_1_RECOVERY_PROOF.json)
 - [P3-1C Rust存储／完整恢复候选](P3_1_STORAGE_REVIEW.md) · [本轮证据](P3_1_STORAGE_PROOF.json)
 - [GitHub 与空间整理规则](GIT_WORKFLOW.md)
+- [Git与加密证据附件恢复](PROJECT_RECOVERY.md)（2026-11-11用户要求结束时全部提交推送并备份原始材料；恢复范围、独立密钥和远端下载／解密核验，完成状态见发布回执）
 
 - [P3-1B完整捕获／身份／租约](P3_1_CAPTURE_REVIEW.md) · [本轮证据](P3_1_CAPTURE_PROOF.json)
 
@@ -47,6 +49,7 @@
 | [HANDOFF_STABLE_KERNEL.md](HANDOFF_STABLE_KERNEL.md) | 新对话接手内核规划的范围、代码入口、风险、检查及可粘贴任务 |
 | [AUDIO_EDITING_REVIEW.md](AUDIO_EDITING_REVIEW.md) | 当前契约／入口 |
 | [ANIMATION_ASSETS.md](ANIMATION_ASSETS.md) | 动画导入、精确原时序、元素输出计划及后续AN验收；尚未实现，不能将静态PNG／分页sequence视作动画 |
+| [SKIN_INI_VISUAL_EDITING.md](SKIN_INI_VISUAL_EDITING.md) | 所有适用skin.ini项的可视化编辑需求，当前仅拖拽／缩放的映射、草稿、来源与文件闭环规格；尚未实现 |
 | [COMMANDS.md](COMMANDS.md) | 当前契约／入口 |
 | [COMPONENT_MODEL.md](COMPONENT_MODEL.md) | 当前契约／入口 |
 | [CORE_COST_BASELINE.md](CORE_COST_BASELINE.md) | P1阶段记录 |

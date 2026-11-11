@@ -4,7 +4,7 @@
 
 ## 当前阅读入口
 
-- [P3恢复基础复核与保存／关闭／重开闭环规格](P3_SAVE_LOOP_SPEC.md)（K1退出文档已备份且CI通过；四个待实施增量、20项验收要求，尚未开发／接UI）
+- [P3恢复基础复核与保存／关闭／重开闭环规格](P3_SAVE_LOOP_SPEC.md)（P3规格已备份且CI通过；一致性修订2、8组发现、四增量／20项分层验收，待A开工契约，尚未开发／接UI）
 - [2026-11-09项目全面检查](PROJECT_REVIEW_20261109.md)
 - [K1独立退出审阅与签收结论](K1_EXIT_REVIEW.md#2026-11-10独立退出审阅与签收结论)（正式结果已备份b6bc96d、三项CI成功；K1适用SyntheticTest纯核心范围可签收，合法Unknown保留，产品NotEvaluated／stable Unknown）
 - [统一时基PC128新轮与只读复核](K1_EXIT_REVIEW.md#2026-11-10统一时基正式成本轮与只读复核)（完整12例Valid／ReadyForReview及全部原始证据保持，退出决定独立记录于上项）

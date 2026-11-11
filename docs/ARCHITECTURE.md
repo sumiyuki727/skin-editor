@@ -1,5 +1,7 @@
 # 架构：当前实现与后续边界
 
+2026-11-10一致性修订补充：[P3-2修订2](P3_SAVE_LOOP_SPEC.md#11-2026-11-10一致性审阅与剩余准入)保持应用唯一写入与协调边界；Save／Close／Load独立资格、只读事实复核及最终激活是拟议用例，底层Manual回退／四字段回执不能直接充当产品成功。共同容量须分别计算捕获、codec、文件缓存、恢复模型与在途所有权。未新增实现、依赖或运行时。
+
 2026-11-10拟议闭环边界：[P3保存／关闭／重开闭环规格](P3_SAVE_LOOP_SPEC.md)新增的保存事实、关闭门控与候选激活协调仍归application；文件／线程／原生清理分别由infrastructure和desktop适配，UI只提交动作和呈现状态。该协调器及宿主文件入口尚未实现，本轮没有新增包、依赖、运行时或项目替换旁路；下方实现表不因此扩大。
 
 2026-10-30，P2约定Windows范围收尾后的代码基线。本文以实际Cargo图和代码为准；详细对象／方法、源码位置及trait关系见[审阅包](review/README.md)。此前混合历次实验和计划的完整原文已[原样归档](archive/2026-10-30-pre-review/README.md)，原始证明JSON未改写。
@@ -70,7 +72,7 @@ flowchart TD
 
 2026-11-06的[K1-6B](K1_6B_STORAGE_PROOF.md)在固定Rust1.95分配请求证明下采用私有有界缓冲，按N预留来源／运行／索引容量后再申请；归并比较／搬移及状态初始化均可分步。API7取消Copy地图，独立RunPreparation与统一候选共享同一玩法实现；局部工作计数和当前已请求payload另列，不充当进程成本。Reference开放10000，Tiny4；已测G0无输入及大图检查初始化，原四对象业务回归保持，无新依赖／线程或设备。
 
-K1[整体退出审阅](K1_EXIT_REVIEW.md)暂不签收：适用纯核心功能及有界资源已有通过记录，KT23短调用固定批次补证尚缺。2026-11-09的[Query-v1一致性修订](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量一致性审阅)已备份856cabd；当前schema3／CostClosure-Query-v1、reader-v2实现冻结保管、只读复核和三类查询批次，PC三批次／完整CostClosure-v1及正式新轮仍未完成。tools/gameplay-cost是独立诊断工作区，仅单向依赖gameplay和标准库；时钟／stdio在工具内，进程观察在Python父进程内，产品包不得导入工具。check_core检查其独立图、源码、格式／Clippy／测试／release及负向canary，并验证六组合真实查询输出的无计时贯通。成本协议独立于API7／profile1；协议Valid、指标Unknown、coverage NeedsEvidence与产品NotEvaluated分开，不能据此证明阶段真实峰值。K2–K5未开始，项目模型、application API和持久化格式保持。当前总览及顺序建议见[全面检查](PROJECT_REVIEW_20261109.md)。
+2026-11-09历史快照（当前K1适用纯核心签收见[2026-11-10退出结论](K1_EXIT_REVIEW.md#2026-11-10独立退出审阅与签收结论)，不以本段回退）：当时K1[整体退出审阅](K1_EXIT_REVIEW.md)暂不签收：适用纯核心功能及有界资源已有通过记录，KT23短调用固定批次补证尚缺。2026-11-09的[Query-v1一致性修订](K1_COST_CLOSURE_SPEC.md#2026-11-09查询增量一致性审阅)已备份856cabd；当前schema3／CostClosure-Query-v1、reader-v2实现冻结保管、只读复核和三类查询批次，PC三批次／完整CostClosure-v1及正式新轮仍未完成。tools/gameplay-cost是独立诊断工作区，仅单向依赖gameplay和标准库；时钟／stdio在工具内，进程观察在Python父进程内，产品包不得导入工具。check_core检查其独立图、源码、格式／Clippy／测试／release及负向canary，并验证六组合真实查询输出的无计时贯通。成本协议独立于API7／profile1；协议Valid、指标Unknown、coverage NeedsEvidence与产品NotEvaluated分开，不能据此证明阶段真实峰值。K2–K5未开始，项目模型、application API和持久化格式保持。当前总览及顺序建议见[全面检查](PROJECT_REVIEW_20261109.md)。
 
 ## 对象、状态与所有权
 

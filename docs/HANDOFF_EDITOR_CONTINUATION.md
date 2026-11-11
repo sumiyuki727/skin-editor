@@ -1,6 +1,6 @@
 # 编辑器开发交接：从 P3-1C 继续
 
-2026-11-10当前工作：K1退出审阅文档已通过正常完整hook备份并公开推送24325cac9f8c0b0d98eea1b154dae0061a5b9dff，[GitHub三项检查](https://github.com/sumiyuki727/skin-editor/actions/runs/42711015731)全部成功。本轮审阅P3恢复基础并细化[P3保存／关闭／重开闭环规格](P3_SAVE_LOOP_SPEC.md)，明确完整历史／资源、新会话／旧结果、真实保存回执、失败保护及容量耗尽；仅新增文档，未开始功能开发。K1维持既定SyntheticTest纯核心范围可签收，Reference10000／Tiny4不变，产品性能NotEvaluated、stable兼容Unknown，未重测。下一项先备份并一致性审阅P3-2规格，不自动接UI／设备或启用自动保护周期。下方带日期记录保留各自历史时点。 本页早期P3-1C记录是2026-11-03快照；当前继续入口及顺序以第7／9节和新规格为准。
+2026-11-10当前工作：上一轮11份P3规格文档已通过正常完整hook备份并公开推送10c8d14f301df1cae2f0cd12b4b42b8df87a6bd9，[GitHub三项检查](https://github.com/sumiyuki727/skin-editor/actions/runs/42735776243)全部成功。本轮完成[P3-2规格一致性审阅](P3_SAVE_LOOP_SPEC.md#11-2026-11-10一致性审阅与剩余准入)，修正NoChange／未知提交、取消归属、无Manual激活、捕获释放及容量相容等8组问题，20项验收按A–D分层；仅文档修订、未开发。下一步先备份，再细化P3-2A无窗口开工契约，不自动实施。B前的恢复区／配额及转正身份关系仍待定约。K1保持SyntheticTest纯核心已签收范围、Reference10000／Tiny4、产品NotEvaluated／stable Unknown，未重测或扩展；皮肤skill不推进。下方带日期内容保留各自时点。 本页早期P3-1C记录是2026-11-03快照。
 
 交接日期：2026-11-03。供没有旧聊天上下文的新对话使用。本文是有日期的交接快照；执行时先核对最新代码、Git、AGENTS.md 和用户本轮指令，不把建议当作已实现功能或新任务授权。
 
@@ -133,7 +133,7 @@ UI与未来AI都提交application值请求；不能互相调用内部实现，�
 
 ## 7. 继续工作的建议顺序
 
-2026-11-10当前顺序：K1适用纯核心退出审阅已通过，用户已明确先补P3保存闭环。[P3保存／关闭／重开闭环规格](P3_SAVE_LOOP_SPEC.md)记录恢复基础复核、8项现状／缺口、四个实施增量和20项待实现回归；下一步先备份并审阅规格，之后再按明确任务实施P3-2A。gameplay已有SyntheticTest实现，compatibility和K0-B／K2–K5仍另行推进；不把纯核心结果当作真实游玩或stable兼容。
+2026-11-10当前顺序：K1适用纯核心退出审阅已通过，用户已明确先补P3保存闭环。[P3保存／关闭／重开闭环规格](P3_SAVE_LOOP_SPEC.md)记录恢复基础复核、8项现状／缺口、四个实施增量和20项待实现回归；规格一致性修订已完成，下一步先备份并细化P3-2A开工契约，实施仍需具体任务。gameplay已有SyntheticTest实现，compatibility和K0-B／K2–K5仍另行推进；不把纯核心结果当作真实游玩或stable兼容。
 
 本次已对照当前源码／实际回归复核P3-1C恢复边界。完整历史、非当前资源、持久身份和Windows副本恢复基础可复用；保存事实关联、关闭门控、UI身份重绑、旧导入隔离、未命名恢复转正式目标及容量相容证明仍缺。当前不启动新成本轮，其他平台原生实测继续单列，不阻塞独立Windows规格工作。
 
@@ -168,6 +168,6 @@ Rust固定1.95.0。工具链不在PATH时按README使用`--toolchain-dir`或`SKI
 ```text
 项目位于 E:\skin-editor。先读根 AGENTS.md，核对 Git 状态、最近提交及暂存差异，按既定规则检查并备份已有可审查文档、推送 PUBLIC origin 并确认 GitHub 检查。
 K1已在SyntheticTest纯核心范围通过独立退出审阅，Reference10000／Tiny4保持，产品性能NotEvaluated、stable兼容Unknown，不重测或扩展K1。
-接着读 docs/P3_SAVE_LOOP_SPEC.md、docs/P3_1_RECOVERY_REVIEW.md、docs/DATA_COMPATIBILITY.md 及相关源码。当前任务入口为P3-2闭环规格一致性审阅，重点看完整历史／资源、新epoch与旧结果、NoChange／未知提交、关闭门控、未命名恢复和容量准入。
-普通保存／关闭／重开闭环尚未实现；草稿捕获、手动排队、验证复制及容量相容不能假设已有。先审阅补齐规格，除非后续用户明确授权，不开始P3-2A或UI／设备开发。旧证据与schema.rs既存空差异标记保留，不写回历史证明。
+接着读 docs/P3_SAVE_LOOP_SPEC.md、docs/P3_1_RECOVERY_REVIEW.md、docs/DATA_COMPATIBILITY.md 及相关源码。P3-2规格已完成一致性修订，当前建议入口为无窗口P3-2A开工契约：固定状态转换、值载荷／预算、版本及fake验收。先核对规格第11节与B前未决项。
+普通保存／关闭／重开闭环尚未实现；草稿捕获、手动排队、验证复制及容量相容不能假设已有。本轮继续文档工作，除非后续用户明确授权，不开始P3-2A或UI／设备开发；皮肤skill暂停。旧证据与schema.rs既存空差异标记保留，不写回历史证明。
 ```

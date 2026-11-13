@@ -1,5 +1,9 @@
 # Git 与远端管理
 
+2026-11-14 P3-2A契约轮前备份：逐项核对上轮收尾散列及实际差异，仅暂存9份可视化规格审阅文档，正常完整hook提交8f7bab01f2aad7e98f841571202b33d61907cd26（115增／17删），推送已确认归属及PUBLIC可见性的origin／codex/p1-bootstrap，远端完整SHA一致。[Actions 43459756402](https://github.com/sumiyuki727/skin-editor/actions/runs/43459756402)的Linux核心、Windows核心及Windows桌面全部成功。使用既有Rust1.95.0和离线缓存，完整核心／工具／桌面检查通过；未跳过hook、改全局设置、运行正式成本测量或打开窗口／GPU。备份后822个跟踪文件原字节及修改时间与轮初基线一致，schema.rs既存空差异标记保留。
+
+本轮新增[P3-2A开工契约](P3_2A_START_CONTRACT.md)及同步文档未提交，按下一轮轮前备份处理；上述CI不覆盖新文档或待实现PA回归。主仓库PUBLIC、完整恢复材料PRIVATE的安排不变，3435405固定恢复快照不自动包含本轮内容；未改旧证据／冻结程序／发布附件或读取密钥。检查与基线留本机忽略目录artifacts/p3-2a-contract-20261114。以下带日期段保留历史事实。
+
 2026-11-14可视化规格审阅轮前确认：HEAD与PUBLIC origin的codex/p1-bootstrap、backup-20261111-visual-config固定标签均为34354054e9724e7d1c5182d6dd766e9d347311db，暂存／实际Git差异为空，无新增可审查变更，复用HEAD且不创建空提交。schema.rs既存空差异标记及原始散列未变；全部822个跟踪文件另记本轮原字节基线，不能为清状态改写已有换行差异。[分支CI](https://github.com/sumiyuki727/skin-editor/actions/runs/43037837792)与[标签CI](https://github.com/sumiyuki727/skin-editor/actions/runs/43037948019)各三项已全部成功。
 
 上一轮9份文档已经正常完整hook提交并推送3435405。用户最终选择将完整恢复材料保存到PRIVATE的[skin-editor-recovery发布](https://github.com/sumiyuki727/skin-editor-recovery/releases/tag/backup-20261111-visual-config)，主仓库保持PUBLIC，公开恢复发布仅含源码bundle。该快照已于2026-11-12（日本时间）完成实际下载、解密、Git／逐文件恢复核验，覆盖822个原始跟踪文件、7个本地引用和40,862个历史文件；最终回执及有效v2恢复脚本在私有发布，密钥另存、不上传。本轮重新下载小型回执核对原件，确认10个私有附件和1个公开附件的元数据／可见性，未重新下载大型分卷、解密或测量。此前“公开核验回执／仍在上传”的文字是准备阶段记录，以[恢复说明](PROJECT_RECOVERY.md)的最终保管安排为准。

@@ -1,5 +1,7 @@
 # 编辑器开发交接：从 P3-1C 继续
 
+2026-11-14最新停靠点：[P3-2A无窗口开工契约草案1](P3_2A_START_CONTRACT.md)已细化，下一步先备份、独立一致性审阅，暂不开发。重点为单槽保存／Unknown、完整捕获与真实Manual／保护事实、关闭专属现有草稿收尾、Ack与最后消费者释放、版本和512KiB控制预算；PA01–PA28全部待实现。拟议application API7及协调端口1尚未改常量，现有API6／捕获2／存储1／文件格式保持。上轮9文档已提交并推送8f7bab01f2aad7e98f841571202b33d61907cd26，[三项CI](https://github.com/sumiyuki727/skin-editor/actions/runs/43459756402)成功；本轮新文档仍未提交。既存schema.rs空差异标记及原字节保留；PUBLIC主仓库／PRIVATE固定恢复套件安排不变，3435405快照不自动包含新轮次。下方日期段为历史记录。
+
 2026-11-14当前停靠点：[skin.ini拖拽／缩放规格修订2](SKIN_INI_VISUAL_EDITING.md#9-2026-11-14一致性审阅与剩余准入)已完成文档审阅，10组发现、VL01–VL22均待实现／验收。重点约束是原文字节／共享参数整组写回、application最后意图提交资格、关闭专属收尾、同源完整呈现及完整保存重开；现有草稿API不自动具备新守卫。后续主线仍先细化P3-2A开工契约，专题V0覆盖表及具体参数证据仍欠项，不自动开发。轮前HEAD／远端为3435405、六项CI成功；无新增可提交内容，未造空提交。上一轮完整备份实际为公开源码入口＋[私有恢复套件](https://github.com/sumiyuki727/skin-editor-recovery/releases/tag/backup-20261111-visual-config)，本轮只读核对小型回执与附件元数据，未重做全量恢复或成本测量。当前新文档修订未提交、不属于旧固定快照；下一轮按规则先备份。下方带日期内容保留当时事实。
 
 2026-11-11新增需求：[skin.ini可视化编辑](SKIN_INI_VISUAL_EDITING.md)不限mania，所有适合可视化调节的配置都需对应能力；当前只定约拖拽／缩放，R31及VL01–VL14已登记、尚未开发。现有图片／组件变换和通用配置记录不是配置布局编辑。后续先审阅专题，再按V0–V3逐项证据与闭环实施；当前P3-2A开工契约／保存闭环顺序保持，不重测或扩展K1。本轮用户另要求结束前将新文档也检查提交推送，并核对远端可恢复范围；轮前回退点bfd7b38及最终同步状态见[Git记录](GIT_WORKFLOW.md)。下方旧快照不作为最新备份状态。
@@ -174,6 +176,6 @@ Rust固定1.95.0。工具链不在PATH时按README使用`--toolchain-dir`或`SKI
 ```text
 项目位于 E:\skin-editor。先读根 AGENTS.md，核对 Git 状态、最近提交及暂存差异，按既定规则检查并备份已有可审查文档、推送 PUBLIC origin 并确认 GitHub 检查。
 K1已在SyntheticTest纯核心范围通过独立退出审阅，Reference10000／Tiny4保持，产品性能NotEvaluated、stable兼容Unknown，不重测或扩展K1。
-接着读 docs/P3_SAVE_LOOP_SPEC.md、docs/P3_1_RECOVERY_REVIEW.md、docs/DATA_COMPATIBILITY.md 及相关源码。P3-2规格已完成一致性修订，当前建议入口为无窗口P3-2A开工契约：固定状态转换、值载荷／预算、版本及fake验收。先核对规格第11节与B前未决项。
+接着读 docs/P3_2A_START_CONTRACT.md、docs/P3_SAVE_LOOP_SPEC.md、docs/P3_1_RECOVERY_REVIEW.md、docs/DATA_COMPATIBILITY.md 及相关源码。P3-2A草案1已形成，当前建议先作独立一致性审阅：核对保存／关闭状态、真实事实与Unknown、实际释放、拟议版本、512KiB控制预算及PA01–PA28；同时保留B前未决项。
 普通保存／关闭／重开闭环尚未实现；草稿捕获、手动排队、验证复制及容量相容不能假设已有。本轮继续文档工作，除非后续用户明确授权，不开始P3-2A或UI／设备开发；皮肤skill暂停。旧证据与schema.rs既存空差异标记保留，不写回历史证明。
 ```

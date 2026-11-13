@@ -1,5 +1,11 @@
 # Git 与远端管理
 
+2026-11-14可视化规格审阅轮前确认：HEAD与PUBLIC origin的codex/p1-bootstrap、backup-20261111-visual-config固定标签均为34354054e9724e7d1c5182d6dd766e9d347311db，暂存／实际Git差异为空，无新增可审查变更，复用HEAD且不创建空提交。schema.rs既存空差异标记及原始散列未变；全部822个跟踪文件另记本轮原字节基线，不能为清状态改写已有换行差异。[分支CI](https://github.com/sumiyuki727/skin-editor/actions/runs/43037837792)与[标签CI](https://github.com/sumiyuki727/skin-editor/actions/runs/43037948019)各三项已全部成功。
+
+上一轮9份文档已经正常完整hook提交并推送3435405。用户最终选择将完整恢复材料保存到PRIVATE的[skin-editor-recovery发布](https://github.com/sumiyuki727/skin-editor-recovery/releases/tag/backup-20261111-visual-config)，主仓库保持PUBLIC，公开恢复发布仅含源码bundle。该快照已于2026-11-12（日本时间）完成实际下载、解密、Git／逐文件恢复核验，覆盖822个原始跟踪文件、7个本地引用和40,862个历史文件；最终回执及有效v2恢复脚本在私有发布，密钥另存、不上传。本轮重新下载小型回执核对原件，确认10个私有附件和1个公开附件的元数据／可见性，未重新下载大型分卷、解密或测量。此前“公开核验回执／仍在上传”的文字是准备阶段记录，以[恢复说明](PROJECT_RECOVERY.md)的最终保管安排为准。
+
+本轮新增[可视化规格一致性修订](SKIN_INI_VISUAL_EDITING.md#9-2026-11-14一致性审阅与剩余准入)与同步文档尚未提交，不属于3435405及其CI／固定恢复快照；按下一轮轮前备份流程处理。只做文档检查，不将既有CI冒充新功能回归或本轮新文档的远端验证。只读核验及字节基线留在忽略目录artifacts/visual-config-review-20261114；未读取密钥或改动旧证据。
+
 2026-11-11新增收尾约定：用户要求本轮新增文档在结束时也正常检查、提交并推送，并确认项目文件夹丢失后的恢复路径；进一步明确选择“历史测量原件及冻结程序加密附件备份、密钥另存项目外”。源码沿用PUBLIC origin，机器诊断与原始材料不原样公开；恢复套件／排除范围和实际核验入口见[项目恢复](PROJECT_RECOVERY.md)。本条是授权与操作要求，是否完成以最终回执及收尾报告为准，不把上传成功或本文本身当作恢复通过。
 
 2026-11-11可视化配置需求轮前备份：上一轮11份P3一致性文档经实际暂存差异／散列及仓库检查核对，正常完整hook提交bfd7b38eeeea7849dd9a66b8ef693ad32bea8c35，推送既有PUBLIC origin的codex/p1-bootstrap并确认远端SHA一致。512项Python、gameplay与成本工具Rust、Query／PC128各六组合无计时贯通、核心及桌面默认／全部feature检查和最终构建通过；无新正式测量或设备运行。新[Actions 43027891909](https://github.com/sumiyuki727/skin-editor/actions/runs/43027891909)查询时仍在运行，不借上一提交CI代替。用户本轮要求结束时把新增[可视化编辑规格](SKIN_INI_VISUAL_EDITING.md)等文档也检查提交推送，并核对可恢复范围；最终提交及核验状态在收尾记录中明确。schema.rs既存空差异标记和原始字节保留，以下日期记录保持历史事实。

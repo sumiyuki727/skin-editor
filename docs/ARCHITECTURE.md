@@ -100,6 +100,8 @@ History保留父子、补丁和有界坐标；检出旧节点再编辑不删旧�
 
 compatibility提供有证据的纯映射，application定义窄查询／编辑值契约并经草稿原子修改配置，UI路由手势，preview消费只读结果，desktop适配组装；保持现有单向边界，不引入通用脚本或项目写入旁路。配置→几何与手势→参数共用规则身份／上下文；多项联动一次校验和提交，未知／不可逆映射不开放。目标、草稿、预览及指针事件核对完整运行来源；图片原始字节和已有变换不受隐式修改。持久化／导出沿用完整历史与指定节点路径，具体版本或格式演进须在实施前独立定约。
 
+2026-11-14[规格修订2](SKIN_INI_VISUAL_EDITING.md#9-2026-11-14一致性审阅与剩余准入)明确：上述规则端口和手势入口均待实施，现有application→domain依赖不变。application须拥有手势最后意图／封口／提交资格，不能仅靠UI门控或现有DraftState；规则提供者只作有界只读求值，不取得项目写入权。原文记录解释范围不是stable解析证据，读依赖、获准写入分量及受影响实例分别定约。完整可交互呈现必须同源，像素帧是否完成与内容事务／保存事实分别表达；规则变化和重开只重建派生资格，不静默改写历史原文。
+
 ## 状态编码与后续文件交接
 
 infrastructure::project_format通过application::values只读查询SkinProject，并用显式schema 1映射生成小块／分页索引。serde与serde_json仅在infrastructure使用，domain不持有序列化derive或文件依赖。解码验证字节摘要、引用闭包、结构限额及领域不变量，返回脱离活动会话的SkinProject；没有替换ProjectSession的入口。详见[状态契约](PROJECT_STATE_SCHEMA.md)。

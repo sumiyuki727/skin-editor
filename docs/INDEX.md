@@ -4,7 +4,7 @@
 
 ## 当前阅读入口
 
-- [skin.ini可视化布局编辑：拖拽与缩放](SKIN_INI_VISUAL_EDITING.md)（2026-11-11新增R31；不限mania，V0–V3／VL01–VL14，只有需求与规格、尚未实现；主线仍先P3保存闭环）
+- [skin.ini可视化布局编辑：拖拽与缩放](SKIN_INI_VISUAL_EDITING.md)（2026-11-14一致性修订2、10组发现；不限mania，V0–V3／VL01–VL22，全部待实施；主线仍先P3保存闭环，V0真实参数表及具体开工限额仍待冻结）
 - [P3恢复基础复核与保存／关闭／重开闭环规格](P3_SAVE_LOOP_SPEC.md)（P3规格已备份且CI通过；一致性修订2、8组发现、四增量／20项分层验收，待A开工契约，尚未开发／接UI）
 - [2026-11-09项目全面检查](PROJECT_REVIEW_20261109.md)
 - [K1独立退出审阅与签收结论](K1_EXIT_REVIEW.md#2026-11-10独立退出审阅与签收结论)（正式结果已备份b6bc96d、三项CI成功；K1适用SyntheticTest纯核心范围可签收，合法Unknown保留，产品NotEvaluated／stable Unknown）

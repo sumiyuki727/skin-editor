@@ -20,6 +20,7 @@ mod history_queries;
 mod preview_port;
 mod resources;
 mod restore;
+mod save_coordination;
 pub use archive::*;
 pub use audio_editor::*;
 pub use audio_port::*;
@@ -31,6 +32,7 @@ pub use capture_identity::{
 };
 pub use preview_port::*;
 pub use restore::{RestoreBuilder, RestoreCandidate};
+pub use save_coordination::*;
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::Arc;
@@ -66,7 +68,7 @@ pub mod values {
 }
 
 /// Current version of the owned application query values.
-pub const API_VERSION: u16 = 6;
+pub const API_VERSION: u16 = 7;
 
 /// A structured lifecycle validation error, usable without UI types.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -170,6 +172,8 @@ pub struct ProjectSession {
     persistence: Option<capture_identity::PersistenceMap>,
     capture_in_flight: Arc<std::sync::atomic::AtomicBool>,
     archive_metadata: Arc<ArchiveMetadata>,
+    restored_history: bool,
+    save_coordination: Option<Box<save_coordination::Coordinator>>,
     /// Cancellation tombstones are bounded by the admitted Begin requests.
     cancelled_drafts: BTreeSet<DraftId>,
 }
@@ -226,6 +230,8 @@ impl ProjectSession {
             persistence: None,
             capture_in_flight: Arc::default(),
             archive_metadata: Arc::default(),
+            restored_history: false,
+            save_coordination: None,
             cancelled_drafts: BTreeSet::new(),
         })
     }

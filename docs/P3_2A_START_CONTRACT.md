@@ -1,5 +1,7 @@
 # P3-2A：无窗口保存协调开工契约
 
+2026-11-14 A1实施覆盖：[A1实现与静态证明](P3_2A_A1_REVIEW.md)已落实API7／捕获3／协调端口1、固定八分区、单槽准入与真实捕获；显式PreparationOnly，没有MayWrite、文件保存事实或关闭流程。本文修订2的全部要求继续有效；下方第2节旧版本表和第8／11节“全部待实施”记录的是审阅基线，当前仅A1适用部分有回归，具体映射／未实施边界见实现记录。A2的见证／候选实际保管、NoChange／Unknown、A3关闭门控仍待实施；本轮结束后停止，等待用户明确指令。
+
 2026-11-14，一致性审阅修订2。上一轮P3-2A草案1及9份同步文档已通过正常完整hook备份为21f8fc935bbbaa6c25ecb4104925fd6cf0d3df21，PUBLIC origin分支SHA一致，[GitHub三项检查](https://github.com/sumiyuki727/skin-editor/actions/runs/43473977545)全部成功。本轮独立对照现有源码及P3-2总规格，补齐10组契约边界（第11节），仅修改文档；PA01–PA38全部待实现／未执行，备份检查不构成这些新回归的通过证据。
 
 本文细化[P3-2总规格](P3_SAVE_LOOP_SPEC.md)中A的边界，不取代B–D及[数据兼容约定](DATA_COMPATIBILITY.md)。K1仍为SyntheticTest适用纯核心范围已签收，Reference10000／Tiny4保持；产品性能NotEvaluated、stable兼容Unknown。本轮未正式重测或扩展K1，不接GUI、原生设备或真实客户端。

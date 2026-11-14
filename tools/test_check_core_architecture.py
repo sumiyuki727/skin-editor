@@ -5,7 +5,7 @@ import subprocess
 import tempfile
 import unittest
 
-from check_core_architecture import PACKAGES, source_issues, validate_metadata, validate_sources
+from check_core_architecture import PACKAGES, save_control_issues, source_issues, validate_metadata, validate_sources
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,6 +24,34 @@ def metadata_fixture():
 
 
 class ArchitectureChecks(unittest.TestCase):
+    def test_save_control_cannot_hide_variable_buffers_or_unbudgeted_allocations(self):
+        for text in ("Vec::with_capacity(100);", "String::new();", "let q = vec![1];",
+                     "let q = BTreeMap::new();", 'let q = format!("{}");'):
+            self.assertTrue(save_control_issues(text, "src/save_coordination.rs"), text)
+        self.assertEqual(save_control_issues("let x: [u64; 4] = [0; 4];", "src/save_coordination/values.rs"), [])
+        self.assertTrue(save_control_issues("Arc::new(0);", "src/save_coordination/hidden.rs"))
+        self.assertTrue(save_control_issues("Box::new(0); Box::new(0);", "src/save_coordination.rs"))
+        self.assertTrue(save_control_issues("Arc::new_cyclic(f);", "src/save_coordination.rs"))
+        self.assertEqual(save_control_issues("Box::new(0); Arc::new(0); Arc::new(0);", "src/save_coordination.rs"), [])
+
+    def test_nested_save_control_modules_get_the_fixed_storage_gate(self):
+        parent = ROOT / "artifacts/p1"
+        parent.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="save-control-canary-", dir=parent) as directory:
+            base = Path(directory)
+            for relative, _ in PACKAGES.values():
+                entry = base / relative / "src/lib.rs"
+                entry.parent.mkdir(parents=True)
+                entry.write_text("#![forbid(unsafe_code)]\n", encoding="utf-8")
+            source = base / "crates/application/src/save_coordination/nested/buffer.rs"
+            source.parent.mkdir(parents=True)
+            source.write_text("let q = Vec::new();", encoding="utf-8")
+            self.assertTrue(any("save control storage" in e for e in validate_sources(base)))
+            source.write_text("let q = Box::new(0);", encoding="utf-8")
+            self.assertTrue(any("capacity/ownership" in e for e in validate_sources(base)))
+            source.write_text("let q = [0; 4];", encoding="utf-8")
+            self.assertEqual(validate_sources(base), [])
+
     def test_gameplay_variable_buffers_cannot_bypass_the_reviewed_allocation_module(self):
         parent = ROOT / "artifacts/p1"
         parent.mkdir(parents=True, exist_ok=True)

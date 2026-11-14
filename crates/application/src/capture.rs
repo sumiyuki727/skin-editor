@@ -117,6 +117,9 @@ impl ProjectSession {
                 actual: self.state,
             });
         }
+        if self.save_outstanding() {
+            return Err(CaptureError::SaveOutstanding);
+        }
         if let Some(d) = &self.draft {
             return Err(CaptureError::Busy(d.state.id));
         }

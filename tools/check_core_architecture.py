@@ -19,6 +19,31 @@ FORBIDDEN_SOURCE = (
     ("external module path", r"#\s*\[\s*path\s*="),
 )
 
+# SaveCoord-Control-v1 owns fixed slots, with one reviewed box, a persistent
+# port, one task and two independent cancellation blocks. Capture payloads use
+# the separate pre-existing capture budget. This is a source gate, not a Rust
+# allocator/security sandbox; size/copy/drop proofs and behavioral tests remain
+# required when these allocation sites or their types change.
+SAVE_CONTROL_ALLOCATIONS = {
+    "src/save_coordination.rs": {"Box::new": 1, "Arc::new": 2},
+    "src/save_coordination/work.rs": {"CaptureCancellation::default": 2},
+}
+
+
+def save_control_issues(text, relative):
+    errors = []
+    if re.search(r"\b(?:Vec|String|VecDeque|HashMap|BTreeMap|HashSet|BTreeSet|Rc)\b|\b(?:vec|format)\s*!", text):
+        errors.append("save control storage must remain fixed and statically accounted")
+    calls = re.findall(r"\b(Box|Arc|CaptureCancellation)\s*::\s*(new|default|from|try_new|new_uninit|new_zeroed|new_cyclic)\s*\(", text)
+    allowed = SAVE_CONTROL_ALLOCATIONS.get(relative, {})
+    counts = {}
+    for owner, method in calls:
+        key = owner + "::" + method
+        counts[key] = counts.get(key, 0) + 1
+    if any(count > allowed.get(key, 0) for key, count in counts.items()):
+        errors.append("save control allocation requires a reviewed capacity/ownership proof")
+    return errors
+
 
 def validate_metadata(metadata, root):
     root = Path(root).resolve()
@@ -86,6 +111,10 @@ def validate_sources(root):
             for issue in source_issues(content, name):
                 errors.append(source.relative_to(root).as_posix() + ": " + issue)
             relative = source.relative_to(base).as_posix()
+            if name == "skin-editor-application" and (relative == "src/save_coordination.rs"
+                    or relative.startswith("src/save_coordination/")):
+                for issue in save_control_issues(content, relative):
+                    errors.append(source.relative_to(root).as_posix() + ": " + issue)
             if (name == "skin-editor-gameplay" and relative.startswith("src/")
                     and relative != "src/storage.rs"
                     and re.search(r"\bVec\b|\bvec\s*!|\.\s*(?:reserve|try_reserve|resize|sort)(?:_exact|_with|_unstable)?\s*\(", content)):

@@ -7,7 +7,7 @@ use crate::{
 };
 use skin_editor_domain::{BlobRef, ObjectId, ProjectId, SkinProject};
 
-pub const HISTORY_CAPTURE_VERSION: u16 = 2;
+pub const HISTORY_CAPTURE_VERSION: u16 = 3;
 
 #[derive(Clone, Default)]
 pub struct CaptureCancellation(Arc<AtomicBool>);
@@ -132,6 +132,9 @@ pub enum CaptureError {
         actual: ExpectedState,
     },
     Busy(DraftId),
+    /// A coordination result still owns the save slot, independently of the
+    /// capture traversal/consumer lease and its InFlight error.
+    SaveOutstanding,
     InFlight,
     InvalidLimits,
     InvalidWorkLimit,

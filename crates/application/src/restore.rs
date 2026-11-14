@@ -406,6 +406,7 @@ impl RestoreCandidate {
             nodes: local.into_iter().map(|(p, l)| (l, p)).collect(),
         });
         session.archive_metadata = self.header.metadata;
+        session.restored_history = true;
         restore_cancel(&cancel)?;
         Ok(session)
     }

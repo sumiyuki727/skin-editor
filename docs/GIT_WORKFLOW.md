@@ -1,5 +1,7 @@
 # Git 与远端管理
 
+2026-11-14 P3-2A A1轮前备份：10份修订2文档经实际差异／暂存审查和正常完整hook，提交1661c84e1a342f90d70bd84212cfa31d0b8a8d51并推送PUBLIC origin／codex/p1-bootstrap，远端完整SHA一致；[Actions 43483039794](https://github.com/sumiyuki727/skin-editor/actions/runs/43483039794)的Windows／Linux核心和Windows桌面三项全部成功，确认后才开始A1代码修改。未跳过检查、改全局配置或重写历史。新增[A1源码／证明](P3_2A_A1_REVIEW.md)仍为本轮未提交增量，不能引用备份CI为其验证。日志、工作区原字节／mtime基线与最终检查留在本机忽略目录artifacts/p3-2a-a1-20261114。旧证据、冻结程序、PRIVATE恢复附件及schema.rs既存字节保持，未读取密钥；固定恢复快照不自动延伸。以下日期段为历史记录。
+
 2026-11-14 P3-2A独立审阅轮前备份：核对上轮收尾散列、10份实际文档差异及暂存内容，通过正常完整hook提交21f8fc935bbbaa6c25ecb4104925fd6cf0d3df21，推送已确认PUBLIC origin／codex/p1-bootstrap，远端完整SHA一致。[本提交三项Actions](https://github.com/sumiyuki727/skin-editor/actions/runs/43473977545)全部成功。沿用既有Rust1.95.0及离线缓存，核心／工具／桌面无窗口检查通过；未跳过hook、改全局设置、重跑正式成本测量或打开GUI／设备。无源码、配置或旧证明纳入提交，schema.rs既存字节／空差异标记保留。
 
 本轮仅修订[P3-2A契约](P3_2A_START_CONTRACT.md)及同步文档，按下一轮轮前流程提交；备份CI不覆盖本轮新增修订或未实现PA。检查／实际暂存差异／基线存于本机忽略目录artifacts/p3-2a-review-20261114。PUBLIC源码／PRIVATE完整恢复材料安排不变，3435405固定恢复快照不自动延伸；未重做全量恢复、修改附件或读取／上传密钥。以下段落均保留各自历史时点。

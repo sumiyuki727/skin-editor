@@ -1,8 +1,21 @@
-//! A1 preparation-only coordination. No files, facts installation or close loop.
+//! Headless preparation and qualified storage-fact coordination. No file I/O.
 mod budget;
+mod candidate;
+mod protocol;
+mod protocol_values;
+mod protocol_work;
 mod values;
 mod work;
 pub use budget::*;
+pub use candidate::{SAVE_CANDIDATE_ALLOCATION_BYTES, SAVE_CANDIDATE_LOGICAL_BYTES};
+#[cfg(test)]
+pub(crate) use protocol::{
+    synthetic_authority, test_candidate_weak, test_query_allocation, test_query_attempt,
+};
+pub use protocol_values::*;
+pub use protocol_work::{
+    SaveCompletionSender, SaveExecution, SaveProtocolPort, SaveReconcileWork, SaveWritePermit,
+};
 pub use values::*;
 pub use work::{SavePreparationPort, SavePreparationWork};
 
@@ -11,6 +24,8 @@ use crate::{
     CaptureSnapshot, CaptureSource, CommitId, HISTORY_CAPTURE_VERSION, HistoryCapture,
     HistoryIdentitySource, ProjectSession, SaveOrigin,
 };
+use protocol::{ProtocolConfig, ProtocolSlot, ReconcileSlot};
+use protocol_work::{ProtocolTask, QueryControl};
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Arc, OnceLock};
 use work::{PortState, TaskControl, WorkRelease};
@@ -23,6 +38,7 @@ struct Resident {
     port: Arc<PortState>,
     next_save: u64,
     last_preparation_commit: Option<CommitId>,
+    protocol: Option<ProtocolConfig>,
 }
 struct SaveSlot {
     request: SaveRequest,
@@ -31,6 +47,7 @@ struct SaveSlot {
     snapshot: Option<CaptureSnapshot>,
     dispatched: bool,
     acknowledged: bool,
+    protocol: Option<ProtocolSlot>,
 }
 #[repr(C, align(16))]
 struct SaveLane {
@@ -42,10 +59,11 @@ struct Mailbox {
 }
 #[repr(C, align(16))]
 struct Facts {
-    // Reserved, independent of worker lifetime. Neither is populated in A1;
-    // candidate construction and complete proof publication are A2 gates.
-    _witness: OnceLock<PreparedWitness>,
-    _candidate: Option<Arc<ArchiveMetadata>>,
+    files: SaveFileFacts,
+    covered: Option<SaveCoverageStamp>,
+    opening: Option<protocol_values::OpeningBaseline>,
+    binding_conflict: bool,
+    installed_metadata: Option<SaveCandidateCost>,
 }
 #[repr(C, align(16))]
 struct CloseLane {
@@ -55,8 +73,7 @@ struct CloseLane {
 }
 #[repr(C, align(16))]
 struct QueryLane {
-    _ticket: Option<ReconcileTicket>,
-    _next_attempt: u64,
+    slot: Option<ReconcileSlot>,
 }
 #[repr(C, align(16))]
 struct CleanupLane {
@@ -95,16 +112,49 @@ impl Coordinator {
         }
     }
     fn refresh(&mut self, capture_busy: &AtomicBool) {
-        if let Some(slot) = &mut self.save.slot
-            && slot.control.result.get().is_some()
-        {
-            // All A1 outcomes are provably NotSaved: no MayWrite was issued.
-            // Future Unknown MUST retain its independent proof/candidate.
-            slot.snapshot = None;
+        if let Some(slot) = &mut self.save.slot {
+            let can_release = if let Some(state) = &slot.protocol {
+                let task = slot.control.protocol.as_ref().expect("qualified task");
+                state.outcome.is_some()
+                    && (!slot.dispatched
+                        || self
+                            .resident
+                            .port
+                            .completion_released_sequence
+                            .load(Ordering::Acquire)
+                            == slot.ticket.key.sequence
+                        || (state.main_seen && task.completion.get().is_some()))
+            } else {
+                slot.control.result.get().is_some()
+            };
+            if can_release {
+                slot.snapshot = None;
+            }
         }
         let can_reap = self.save.slot.as_ref().is_some_and(|slot| {
+            let terminal_and_released = if let Some(state) = &slot.protocol {
+                let task = slot.control.protocol.as_ref().expect("qualified task");
+                state.outcome.is_some()
+                    && (task.completion.get().is_none() || state.main_seen)
+                    && self.query.slot.is_none()
+                    && (!slot.dispatched
+                        || (self
+                            .resident
+                            .port
+                            .writer_released_sequence
+                            .load(Ordering::Acquire)
+                            == slot.ticket.key.sequence
+                            && self
+                                .resident
+                                .port
+                                .completion_released_sequence
+                                .load(Ordering::Acquire)
+                                == slot.ticket.key.sequence))
+            } else {
+                slot.control.result.get().is_some()
+            };
             slot.acknowledged
-                && slot.control.result.get().is_some()
+                && terminal_and_released
                 && self.released(slot)
                 && !capture_busy.load(Ordering::Acquire)
         });
@@ -120,6 +170,9 @@ impl Drop for Coordinator {
         if let Some(slot) = &self.save.slot {
             slot.control.cancellation.cancel();
             slot.control.first_query_cancellation.cancel();
+        }
+        if let Some(query) = &self.query.slot {
+            query.control.cancellation.cancel();
         }
     }
 }
@@ -207,6 +260,10 @@ impl ProjectSession {
         let port = Arc::new(PortState {
             alive: AtomicBool::new(true),
             released_sequence: AtomicU64::new(0),
+            writer_released_sequence: AtomicU64::new(0),
+            completion_released_sequence: AtomicU64::new(0),
+            query_released_save: AtomicU64::new(0),
+            query_released_attempt: AtomicU64::new(0),
         });
         self.save_coordination = Some(Box::new(Coordinator {
             resident: Resident {
@@ -214,22 +271,23 @@ impl ProjectSession {
                 port: port.clone(),
                 next_save: 1,
                 last_preparation_commit: None,
+                protocol: None,
             },
             save: SaveLane { slot: None },
             mailbox: Mailbox { pending: None },
             facts: Facts {
-                _witness: OnceLock::new(),
-                _candidate: None,
+                files: SaveFileFacts::default(),
+                covered: None,
+                opening: None,
+                binding_conflict: false,
+                installed_metadata: None,
             },
             close: CloseLane {
                 _ticket: None,
                 _permit: None,
                 _next_close: 1,
             },
-            query: QueryLane {
-                _ticket: None,
-                _next_attempt: 1,
-            },
+            query: QueryLane { slot: None },
             cleanup: CleanupLane {
                 _save_terminal: None,
                 _close_terminal: None,
@@ -263,7 +321,11 @@ impl ProjectSession {
         if let Some(c) = &self.save_coordination {
             result.reserved_control_bytes = SAVE_CONTROL_BYTES;
             if c.resident.port.alive.load(Ordering::Acquire) {
-                result.availability = SaveAvailability::PreparationOnly;
+                result.availability = if c.resident.protocol.is_some() {
+                    SaveAvailability::Coordinated
+                } else {
+                    SaveAvailability::PreparationOnly
+                };
                 if c.resident.next_save < u64::MAX {
                     result.next_key = Some(SaveAdmissionKey {
                         version,
@@ -273,10 +335,23 @@ impl ProjectSession {
                 }
             }
             result.active = c.save.slot.as_ref().map(|slot| {
-                let outcome = slot.control.result.get().copied();
+                let outcome = if slot.protocol.is_some() {
+                    None
+                } else {
+                    slot.control.result.get().copied()
+                };
                 SaveActiveStatus {
                     ticket: slot.ticket,
-                    phase: if outcome.is_some() {
+                    phase: if slot.protocol.is_some() {
+                        match c.protocol_phase(slot) {
+                            SaveProtocolPhase::DispatchPending => {
+                                SavePreparationPhase::DispatchPending
+                            }
+                            SaveProtocolPhase::Working => SavePreparationPhase::Working,
+                            SaveProtocolPhase::Reconciling => SavePreparationPhase::Reconciling,
+                            SaveProtocolPhase::Settled => SavePreparationPhase::Settled,
+                        }
+                    } else if outcome.is_some() {
                         SavePreparationPhase::Settled
                     } else if slot.dispatched {
                         SavePreparationPhase::Working
@@ -328,6 +403,9 @@ impl ProjectSession {
         if c.save.slot.is_some() {
             return Err(E::Busy(SaveBusy::SaveOutstanding));
         }
+        if c.facts.binding_conflict {
+            return Err(E::InvalidBinding);
+        }
         if !c.resident.port.alive.load(Ordering::Acquire) {
             return Err(E::Unavailable);
         }
@@ -344,6 +422,7 @@ impl ProjectSession {
             SaveOrigin::Exit => return Err(E::NeedsClose),
         }
         let config = c.resident.config;
+        let protocol_config = c.resident.protocol;
         let previous_commit = c.resident.last_preparation_commit;
         if request.binding != config.binding.key {
             return Err(E::InvalidBinding);
@@ -359,7 +438,7 @@ impl ProjectSession {
             return Err(E::Busy(SaveBusy::CaptureConsumers));
         }
 
-        let control = Arc::new(TaskControl::new());
+        let mut control = Arc::new(TaskControl::new());
         // SaveSlot is still empty. The public capture3 entry applies its normal
         // checks; there is no public bypass flag, mutable reference or fake q.
         let capture = self
@@ -419,6 +498,14 @@ impl ProjectSession {
             origin: request.origin,
             parent_close: None,
         };
+        let protocol_slot = protocol_config.map(|config| {
+            protocol::prepare_task(
+                config,
+                ticket,
+                &snapshot,
+                Arc::get_mut(&mut control).expect("not handed off"),
+            )
+        });
         let c = self.save_coordination.as_mut().expect("installed owner");
         c.resident.next_save = c
             .resident
@@ -434,6 +521,7 @@ impl ProjectSession {
             snapshot: Some(snapshot),
             dispatched: false,
             acknowledged: false,
+            protocol: protocol_slot,
         });
         Ok(SaveAdmission::Accepted(ticket))
     }
@@ -477,6 +565,7 @@ impl ProjectSession {
             .as_mut()
             .ok_or(SaveCoordinationError::Unavailable)?;
         c.check_ticket(ticket)?;
+        c.drain_protocol(&mut self.archive_metadata);
         let slot = c.save.slot.as_ref().expect("checked ticket");
         slot.control.cancellation.cancel();
         if !slot.dispatched {
@@ -484,6 +573,7 @@ impl ProjectSession {
             slot.control
                 .stop(SaveDiagnostic::new(SaveDiagnosticCode::Cancelled));
         }
+        c.drain_protocol(&mut self.archive_metadata);
         c.refresh(&self.capture_in_flight);
         Ok(())
     }
@@ -495,8 +585,13 @@ impl ProjectSession {
         self.validate_save_ticket(ticket)?;
         let c = self.save_coordination.as_mut().ok_or(E::Unavailable)?;
         c.check_ticket(ticket)?;
+        c.drain_protocol(&mut self.archive_metadata);
         let slot = c.save.slot.as_mut().expect("checked ticket");
-        if slot.control.result.get().is_none() {
+        let terminal = slot.protocol.as_ref().map_or_else(
+            || slot.control.result.get().is_some(),
+            |s| s.outcome.is_some(),
+        );
+        if !terminal {
             return Err(E::NotTerminal);
         }
         slot.acknowledged = true;

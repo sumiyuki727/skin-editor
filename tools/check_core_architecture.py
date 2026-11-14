@@ -20,20 +20,37 @@ FORBIDDEN_SOURCE = (
 )
 
 # SaveCoord-Control-v1 owns fixed slots, with one reviewed box, a persistent
-# port, one task and two independent cancellation blocks. Capture payloads use
-# the separate pre-existing capture budget. This is a source gate, not a Rust
+# port, one task, one reserved/active query and up to three cancellation blocks.
+# The exact candidate module has a separate pre-reserved metadata capacity
+# proof. Capture payloads use their existing budget. This is a source gate, not a Rust
 # allocator/security sandbox; size/copy/drop proofs and behavioral tests remain
 # required when these allocation sites or their types change.
 SAVE_CONTROL_ALLOCATIONS = {
     "src/save_coordination.rs": {"Box::new": 1, "Arc::new": 2},
     "src/save_coordination/work.rs": {"CaptureCancellation::default": 2},
+    "src/save_coordination/protocol.rs": {"Arc::new": 2, "CaptureCancellation::default": 1},
+    "src/save_coordination/candidate.rs": {"Arc::new": 1},
 }
 
 
 def save_control_issues(text, relative):
     errors = []
-    if re.search(r"\b(?:Vec|String|VecDeque|HashMap|BTreeMap|HashSet|BTreeSet|Rc)\b|\b(?:vec|format)\s*!", text):
+    candidate = relative == "src/save_coordination/candidate.rs"
+    containers = r"\b(?:VecDeque|HashMap|BTreeMap|HashSet|BTreeSet|Rc)\b|\b(?:vec|format)\s*!"
+    if not candidate:
+        containers += r"|\b(?:Vec|String)\b"
+    if re.search(containers, text):
         errors.append("save control storage must remain fixed and statically accounted")
+    if candidate:
+        # Only the reviewed fresh exact-capacity helper and zero-copy UTF-8
+        # conversion. No growth strategies, secondary queues or hidden copies.
+        constructors = re.findall(r"\b(Vec|String)\s*::\s*(\w+)\s*\(", text)
+        allowed_buffers = {("Vec", "new"): 1, ("String", "from_utf8"): 1}
+        if any(constructors.count(call) > allowed_buffers.get(call, 0) for call in constructors):
+            errors.append("metadata candidate allocation requires its exact capacity proof")
+        if len(re.findall(r"\.\s*try_reserve_exact\s*\(", text)) > 1 or re.search(
+                r"\.\s*(?:reserve|reserve_exact|try_reserve|resize|resize_with|to_vec|to_string|collect)\s*(?:::<[^>]*>)?\s*\(", text):
+            errors.append("metadata candidate may only use the reviewed exact reservation helper")
     calls = re.findall(r"\b(Box|Arc|CaptureCancellation)\s*::\s*(new|default|from|try_new|new_uninit|new_zeroed|new_cyclic)\s*\(", text)
     allowed = SAVE_CONTROL_ALLOCATIONS.get(relative, {})
     counts = {}

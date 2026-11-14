@@ -1,5 +1,7 @@
 # 编辑器开发交接：从 P3-1C 继续
 
+2026-11-15最新停靠点：[P3-2A A2实现与证明](P3_2A_A2_REVIEW.md)已完成事实投影、PreparedWitness／确认候选、NoChange／Unknown、独立核对及实际释放；28项专项、原A1回归和application既有测试保持通过。生产authority没有签发器，fake只在cfg(test)，不能宣称已接真实保存。API7／捕获3／协调1及文件格式不变，A3／B–D仍欠项。轮前A1提交abd879dc6dd03d6d1ea46ce722ea0592d436b7f9及[同SHA三项CI](https://github.com/sumiyuki727/skin-editor/actions/runs/43615335146)通过；本轮收尾核对包含A2报告的Git提交及其CI，不借用A1结果。旧证据、PRIVATE恢复材料和schema.rs原字节保持，3435405固定快照不自动延伸。后续先审阅A2，不自动进入A3；下方日期段保留历史时点。
+
 2026-11-14最新停靠点：[P3-2A A1实现与证明](P3_2A_A1_REVIEW.md)已落地API7／捕获3／协调端口1、八个固定控制分区、512KiB静态证明、单槽准入与真实捕获关联；仅PreparationOnly，不能保存文件或关闭项目。A2／A3及PA未覆盖部分继续欠项。本轮完成A1后停止，等待用户明确指令，不自动进入下一任务。轮前修订2及9份同步文档已正常hook提交推送1661c84e1a342f90d70bd84212cfa31d0b8a8d51，[三项CI](https://github.com/sumiyuki727/skin-editor/actions/runs/43483039794)成功；A1新源码／文档未提交，其验证另见实现记录。PUBLIC源码／PRIVATE恢复材料、旧证据及schema.rs既存空差异标记保持；3435405固定快照不自动包含本轮。下方日期段为历史记录。
 
 2026-11-14最新停靠点：[P3-2A契约修订2](P3_2A_START_CONTRACT.md#11-2026-11-14独立一致性审阅)已独立审阅并补齐10组边界，PA01–PA38全部待实施。关键为捕获3独立门控、首次发布来源、提交前PreparedWitness／候选保管、独立查询取消、关闭失败收尾／显式重试及512KiB全部所有者核算。后续按具体任务从A1版本化值／固定槽／静态容量证明起，不自动开发。当前仍API6／捕获2／存储1，全部文件格式不变。上轮10文档已正常hook提交推送21f8fc935bbbaa6c25ecb4104925fd6cf0d3df21，[三项CI](https://github.com/sumiyuki727/skin-editor/actions/runs/43473977545)成功；本轮新修订尚未提交。schema.rs既存空差异标记及原字节保留；PUBLIC主仓库／PRIVATE恢复材料不变，3435405固定快照不自动包含新轮次。下方日期段为历史记录。
@@ -178,6 +180,6 @@ Rust固定1.95.0。工具链不在PATH时按README使用`--toolchain-dir`或`SKI
 ```text
 项目位于 E:\skin-editor。先读根 AGENTS.md，核对 Git 状态、最近提交及暂存差异，按既定规则检查并备份已有可审查文档、推送 PUBLIC origin 并确认 GitHub 检查。
 K1已在SyntheticTest纯核心范围通过独立退出审阅，Reference10000／Tiny4保持，产品性能NotEvaluated、stable兼容Unknown，不重测或扩展K1。
-接着读 docs/P3_2A_START_CONTRACT.md、docs/P3_SAVE_LOOP_SPEC.md、docs/P3_1_RECOVERY_REVIEW.md、docs/DATA_COMPATIBILITY.md 及相关源码。P3-2A修订2的A1已实现，另读docs/P3_2A_A1_REVIEW.md；实际API7／捕获3／协调端口1、单槽真实准备及512KiB静态证明，PA仅适用部分通过。A2见证／候选、事实／Unknown及A3关闭仍未实施；B前真实证明／共同profile等未决项保留。本轮A1结束后停止，后续须用户明确恢复，不自行推进A2。
-普通保存／关闭／重开闭环尚未实现；草稿捕获、手动排队、验证复制及容量相容不能假设已有。A1已完成本轮获授权范围，后续除非用户明确恢复，不开始A2、UI／设备或其他任务；皮肤skill暂停。旧证据与schema.rs既存空差异标记保留，不写回历史证明。
+接着读 docs/P3_2A_START_CONTRACT.md、docs/P3_SAVE_LOOP_SPEC.md、docs/P3_1_RECOVERY_REVIEW.md、docs/DATA_COMPATIBILITY.md 及相关源码。P3-2A修订2的A1已实现，另读docs/P3_2A_A1_REVIEW.md；实际API7／捕获3／协调端口1、单槽真实准备及512KiB静态证明，PA仅适用部分通过。A2见证／候选、事实／Unknown已按用户直接确认实施，另读docs/P3_2A_A2_REVIEW.md；生产authority未签发，A3关闭及B前真实证明／共同profile仍欠。后续先审阅A2，不自动推进A3。
+普通保存／关闭／重开闭环尚未实现；草稿捕获、手动排队、验证复制及容量相容不能假设已有。A2已完成本轮获授权范围，后续先审阅，不自动开始A3、UI／设备或其他任务；皮肤skill暂停。旧证据与schema.rs既存空差异标记保留，不写回历史证明。
 ```

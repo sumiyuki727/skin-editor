@@ -1,5 +1,7 @@
 # 架构：当前实现与后续边界
 
+2026-11-15 A2实现：[保存事实、见证与实际释放](P3_2A_A2_REVIEW.md)加入application的显式协调端口、完整范围事实投影、提前保管的见证／确认候选、NoChange／Unknown及同槽独立核对。生产没有authority签发器，当前仅cfg(test)合格替身，无真实文件保存。固定控制512KiB与候选实际capacity／捕获逻辑预算分列，实际Drop与Ack分别门控。API7／捕获3／协调1及持久版本、application→domain边界不变；A3关闭及B–D继续待实现。下方日期段是历史记录。
+
 2026-11-14 A1实现：[版本、固定控制槽与真实捕获关联](P3_2A_A1_REVIEW.md)已加入application，运行时API7／捕获3／协调端口1；存储端口1及持久格式保持。仅显式PreparationOnly端口、单槽准入、完整q捕获及Ack／真实释放；没有文件保存事实或关闭权限。512KiB静态控制证明与捕获逻辑限额分列，PreparedWitness／候选只有保留位置，实际MayWrite前保管仍待A2。application→domain边界不变，新增无第三方依赖、线程或设备。下方日期段保留历史时点。
 
 2026-11-14 A契约独立审阅：[P3-2A修订2](P3_2A_START_CONTRACT.md#11-2026-11-14独立一致性审阅)保留application实际入口门控与唯一写入；窄端口须在可能提交前私下发布有界PreparedWitness，worker不取得活动项目可变引用。拟议API7／捕获3／协调端口1均尚未实施，当前仍API6／捕获2／存储1、application→domain。512KiB控制容量含同时持有副本／首次核对保留对象；捕获及事实候选逻辑量分别核算，A1尚须静态证明。A保护满足不是关闭许可，真实文件、完整交接、UI仍属B／C／D；本轮仅文档。

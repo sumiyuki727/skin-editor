@@ -198,8 +198,8 @@ pub struct ReconcileTicket {
     pub save: SaveTicket,
     pub attempt: u64,
 }
-/// Reserved bounded carrier. No A1 constructor, publication, verification or
-/// MayWrite authority exists. The proof profile must be supplied in A2/B.
+/// Bounded proof value. Publication requires a qualified A2 execution; the
+/// production proof profile and real file verifier remain B prerequisites.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct PreparedWitnessInfo {
     pub version: u16,
@@ -215,6 +215,9 @@ pub struct PreparedWitnessInfo {
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct PreparedWitness(PreparedWitnessInfo);
 impl PreparedWitness {
+    pub(super) fn prepared(info: PreparedWitnessInfo) -> Self {
+        Self(info)
+    }
     pub fn info(self) -> PreparedWitnessInfo {
         self.0
     }
@@ -222,6 +225,16 @@ impl PreparedWitness {
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum SaveDiagnosticCode {
+    RequiresWriteCapacity,
+    AllocationFailed,
+    CapacityProof,
+    ReadFailed,
+    TargetMissing,
+    TargetConflict,
+    JournalConflict,
+    AdapterFault,
+    OutcomeUnknown,
+    QueryCancelled,
     Cancelled,
     Abandoned,
     InvalidWorkLimit,
@@ -288,18 +301,24 @@ impl SaveDiagnostic {
 }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum SaveBusy {
+    Writer,
+    Query,
     SaveOutstanding,
     Draft,
     CaptureConsumers,
 }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum SaveLimit {
+    WriteCapacity,
+    QueryIdentity,
     Control,
     Fixture,
     FinalIdentityReserved,
 }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum SaveCoordinationError {
+    NotPrepared,
+    NotUnknown,
     UnsupportedVersion,
     Unavailable,
     AlreadyInstalled,
@@ -339,6 +358,7 @@ pub enum SavePreparationOutcome {
 pub enum SavePreparationPhase {
     DispatchPending,
     Working,
+    Reconciling,
     Settled,
 }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -355,6 +375,8 @@ pub enum SaveAvailability {
     Unavailable,
     /// No storage completion, VerifyOnly, MayWrite or close permission.
     PreparationOnly,
+    /// Requires an opaque authority from a qualified storage adapter.
+    Coordinated,
 }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct SaveCoordinationStatus {

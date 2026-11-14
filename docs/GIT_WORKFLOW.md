@@ -1,5 +1,7 @@
 # Git 与远端管理
 
+2026-11-15 A2轮前备份：A1的22个文件经实际差异／暂存审查和正常完整hook，提交abd879dc6dd03d6d1ea46ce722ea0592d436b7f9并推送PUBLIC origin／codex/p1-bootstrap，远端完整SHA一致；[Actions 43615335146](https://github.com/sumiyuki727/skin-editor/actions/runs/43615335146)三项全部成功。用户直接确认开始A2后实施[本轮增量](P3_2A_A2_REVIEW.md)，最终源码／文档另经正常hook提交、推送和同SHA三项CI核对；以包含该报告的提交和远端任务记录为准，不把A1检查套用A2。日志／基线在artifacts/p3-2a-a2-20261115；旧证据、PRIVATE附件、密钥保管及schema.rs原字节保持。以下日期段为历史记录。
+
 2026-11-14 P3-2A A1轮前备份：10份修订2文档经实际差异／暂存审查和正常完整hook，提交1661c84e1a342f90d70bd84212cfa31d0b8a8d51并推送PUBLIC origin／codex/p1-bootstrap，远端完整SHA一致；[Actions 43483039794](https://github.com/sumiyuki727/skin-editor/actions/runs/43483039794)的Windows／Linux核心和Windows桌面三项全部成功，确认后才开始A1代码修改。未跳过检查、改全局配置或重写历史。新增[A1源码／证明](P3_2A_A1_REVIEW.md)仍为本轮未提交增量，不能引用备份CI为其验证。日志、工作区原字节／mtime基线与最终检查留在本机忽略目录artifacts/p3-2a-a1-20261114。旧证据、冻结程序、PRIVATE恢复附件及schema.rs既存字节保持，未读取密钥；固定恢复快照不自动延伸。以下日期段为历史记录。
 
 2026-11-14 P3-2A独立审阅轮前备份：核对上轮收尾散列、10份实际文档差异及暂存内容，通过正常完整hook提交21f8fc935bbbaa6c25ecb4104925fd6cf0d3df21，推送已确认PUBLIC origin／codex/p1-bootstrap，远端完整SHA一致。[本提交三项Actions](https://github.com/sumiyuki727/skin-editor/actions/runs/43473977545)全部成功。沿用既有Rust1.95.0及离线缓存，核心／工具／桌面无窗口检查通过；未跳过hook、改全局设置、重跑正式成本测量或打开GUI／设备。无源码、配置或旧证明纳入提交，schema.rs既存字节／空差异标记保留。

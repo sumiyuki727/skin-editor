@@ -15,6 +15,10 @@ impl Drop for SavePreparationPort {
 pub(super) struct PortState {
     pub alive: AtomicBool,
     pub released_sequence: AtomicU64,
+    pub writer_released_sequence: AtomicU64,
+    pub completion_released_sequence: AtomicU64,
+    pub query_released_save: AtomicU64,
+    pub query_released_attempt: AtomicU64,
 }
 pub(super) struct TaskControl {
     pub result: OnceLock<SavePreparationOutcome>,
@@ -22,6 +26,7 @@ pub(super) struct TaskControl {
     // Allocated before admission, independent of the work cancellation. No A1
     // query is dispatched and neither token can ever be reset or reused.
     pub first_query_cancellation: CaptureCancellation,
+    pub protocol: Option<ProtocolTask>,
 }
 impl TaskControl {
     pub fn new() -> Self {
@@ -29,6 +34,7 @@ impl TaskControl {
             result: OnceLock::new(),
             cancellation: CaptureCancellation::default(),
             first_query_cancellation: CaptureCancellation::default(),
+            protocol: None,
         }
     }
     pub fn stop(&self, diagnostic: SaveDiagnostic) {

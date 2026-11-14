@@ -17,6 +17,8 @@ pub struct SaveControlLayout {
     pub diagnostic_bytes: usize,
     pub work_carrier_bytes: usize,
     pub completion_carrier_bytes: usize,
+    pub query_carrier_bytes: usize,
+    pub completion_sender_bytes: usize,
 }
 impl SaveControlLayout {
     pub const fn fits(self) -> bool {
@@ -33,6 +35,8 @@ impl SaveControlLayout {
             && self.diagnostic_bytes <= 128
             && self.work_carrier_bytes <= 16 * 1024
             && self.completion_carrier_bytes <= 16 * 1024
+            && self.query_carrier_bytes <= 16 * 1024
+            && self.completion_sender_bytes <= 16 * 1024
     }
     pub const fn total_bound(self) -> usize {
         let mut sum = 0;
@@ -55,7 +59,7 @@ const fn aligned(n: usize, a: usize) -> usize {
 // 59807616e1fa2540724bfbac14d7976d7e4a3860. ArcInner is repr(C, align(2)),
 // two atomic usize counters followed by T. This is a reviewed layout formula,
 // NOT an assertion of a stable private ABI or a copy of allocation code.
-const fn arc_bytes<T>() -> usize {
+pub(super) const fn arc_bytes<T>() -> usize {
     let alignment = max(2, max(align_of::<AtomicUsize>(), align_of::<T>()));
     aligned(
         aligned(2 * size_of::<AtomicUsize>(), align_of::<T>()) + size_of::<T>(),
@@ -73,18 +77,45 @@ struct WorkCarrier {
     version: u16,
     work: SavePreparationWork,
 }
+#[repr(C)]
+struct ProtocolWorkCarrier {
+    version: u16,
+    work: SaveExecution,
+}
+#[repr(C)]
+struct ProtocolCompletionCarrier {
+    version: u16,
+    ticket: SaveTicket,
+    result: SaveStorageObservation,
+}
+#[repr(C)]
+struct QueryCarrier {
+    version: u16,
+    work: SaveReconcileWork,
+}
 
-/// All control allocations: owner box, persistent port, one task and two
-/// independent cancellation blocks. Shared allocations are counted once;
+/// All control allocations: owner box, persistent port, one task, one reserved
+/// or active query, and at most three independent cancellation blocks (work,
+/// original first-query token, current later-query token). Count each once;
 /// explicit handles/producer-mailbox-consumer value copies are counted below.
-/// Captured models, manifest/resource allocations and a future metadata
+/// Captured models, manifest/resource allocations and the actual metadata
 /// candidate have separate budgets. Their handles ARE included here.
 pub const fn save_control_layout() -> SaveControlLayout {
     let port = arc_bytes::<PortState>();
     let task = arc_bytes::<TaskControl>();
     let cancellation = arc_bytes::<AtomicBool>();
-    let work = size_of::<WorkCarrier>();
-    let completion = size_of::<CompletionCarrier>();
+    let query_control = arc_bytes::<QueryControl>();
+    let work = max(size_of::<WorkCarrier>(), size_of::<ProtocolWorkCarrier>());
+    let completion = max(
+        size_of::<CompletionCarrier>(),
+        size_of::<ProtocolCompletionCarrier>(),
+    );
+    let query = size_of::<QueryCarrier>();
+    let status = max(
+        size_of::<SaveCoordinationStatus>(),
+        size_of::<SaveProtocolStatus>(),
+    );
+    let sender = size_of::<SaveCompletionSender>();
     SaveControlLayout {
         version: SAVE_CONTROL_PROFILE_VERSION,
         lane_bounds: [
@@ -92,6 +123,8 @@ pub const fn save_control_layout() -> SaveControlLayout {
                 + size_of::<Option<Box<Coordinator>>>()
                 + port
                 + size_of::<SavePreparationPort>()
+                + 3 * size_of::<SaveProtocolAuthority>()
+                + 2 * size_of::<SaveCandidateLimits>()
                 + 2 * size_of::<SavePreparationConfig>()
                 + 2 * size_of::<SaveControlLayout>(),
             size_of::<SaveLane>()
@@ -101,28 +134,45 @@ pub const fn save_control_layout() -> SaveControlLayout {
                 + 3 * size_of::<SaveAdmission>(),
             // Conservative coexistence: producer, mailbox and consumer carriers,
             // although the non-Clone worker itself transfers by move.
-            size_of::<Mailbox>() + 3 * work + 3 * completion,
+            size_of::<Mailbox>()
+                + 3 * work
+                + 3 * completion
+                + 3 * size_of::<SaveWritePermit<'static>>(),
             size_of::<Facts>()
-                + 3 * size_of::<SaveCoordinationStatus>()
-                + 2 * size_of::<PreparedWitness>(),
+                + 3 * status
+                + 3 * size_of::<PreparedWitness>()
+                // Explicit transient candidate headers/values. Its independently
+                // reserved variable payload capacities are NOT included here.
+                + 3 * size_of::<ArchiveMetadata>()
+                + 3 * size_of::<crate::ArchiveTag>()
+                + 3 * size_of::<crate::ArchiveExtension>()
+                + 3 * size_of::<candidate::PreparedCandidate>(),
             size_of::<CloseLane>()
                 + 3 * size_of::<CloseTicket>()
                 + 3 * size_of::<CloseFinishPermit>(),
             size_of::<QueryLane>()
-                + cancellation
+                + query_control
+                + 2 * cancellation
+                + 3 * query
                 + 3 * size_of::<ReconcileTicket>()
+                + 3 * size_of::<SaveReconcileAdmission>()
                 + 2 * size_of::<CaptureCancellation>(),
-            size_of::<CleanupLane>() + 3 * completion + 3 * size_of::<SaveAcknowledgement>(),
+            size_of::<CleanupLane>()
+                + 3 * completion
+                + 3 * sender
+                + 3 * size_of::<SaveAcknowledgement>(),
             size_of::<FinalLane>() + 3 * size_of::<SaveRequest>() + 3 * size_of::<SaveTicket>(),
         ],
         owner_bytes: size_of::<Coordinator>(),
-        shared_control_bytes: port + task + 2 * cancellation,
+        shared_control_bytes: port + task + query_control + 3 * cancellation,
         ticket_bytes: max(size_of::<SaveTicket>(), size_of::<ReconcileTicket>()),
         witness_bytes: size_of::<PreparedWitness>(),
-        status_bytes: size_of::<SaveCoordinationStatus>(),
+        status_bytes: status,
         diagnostic_bytes: size_of::<SaveDiagnostic>(),
         work_carrier_bytes: work,
         completion_carrier_bytes: completion,
+        query_carrier_bytes: query,
+        completion_sender_bytes: sender,
     }
 }
 

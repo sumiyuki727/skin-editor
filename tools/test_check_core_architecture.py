@@ -24,6 +24,24 @@ def metadata_fixture():
 
 
 class ArchitectureChecks(unittest.TestCase):
+    def test_candidate_is_a_narrow_payload_island_not_a_control_container_exception(self):
+        path = "src/save_coordination/candidate.rs"
+        valid = "Vec::new(); value.try_reserve_exact(count); String::from_utf8(bytes); Arc::new(metadata);"
+        self.assertEqual(save_control_issues(valid, path), [])
+        for relative in ("src/save_coordination/nested/candidate.rs", "src/save_coordination/protocol.rs"):
+            self.assertTrue(save_control_issues(valid, relative))
+        for forbidden in ("Vec::with_capacity(n);", "String::new();", "BTreeMap::new();", "Box::new(0);",
+                          "value.reserve(n);", "value.to_vec();", "vec![0];", "value.collect();",
+                          "Arc::new(x); Arc::new(y);", "a.try_reserve_exact(n); b.try_reserve_exact(n);"):
+            self.assertTrue(save_control_issues(forbidden, path), forbidden)
+
+    def test_query_allocations_require_explicit_fixed_control_sites(self):
+        path = "src/save_coordination/protocol.rs"
+        self.assertEqual(save_control_issues("Arc::new(a); Arc::new(b); CaptureCancellation::default();", path), [])
+        self.assertTrue(save_control_issues("Arc::new(a); Arc::new(b); Arc::new(c);", path))
+        self.assertTrue(save_control_issues("CaptureCancellation::default(); CaptureCancellation::default();", path))
+        self.assertTrue(save_control_issues("Vec::new();", path))
+
     def test_save_control_cannot_hide_variable_buffers_or_unbudgeted_allocations(self):
         for text in ("Vec::with_capacity(100);", "String::new();", "let q = vec![1];",
                      "let q = BTreeMap::new();", 'let q = format!("{}");'):

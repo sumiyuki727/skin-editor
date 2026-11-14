@@ -1,5 +1,7 @@
 # P3-2A A1：版本、固定控制槽与真实捕获关联
 
+2026-11-15后续保管：本报告所述A1已正常hook提交并推送abd879dc6dd03d6d1ea46ce722ea0592d436b7f9，[同提交三项CI](https://github.com/sumiyuki727/skin-editor/actions/runs/43615335146)成功。用户随后明确授权A2，其当前实现／容量变化另见[A2报告](P3_2A_A2_REVIEW.md)；下方A1数值及“未提交／待A2”保留当时事实，不作为当前进度。
+
 2026-11-14。按[开工契约修订2](P3_2A_START_CONTRACT.md)实施A1；轮前10份契约及同步文档已通过正常完整hook，备份并推送为1661c84e1a342f90d70bd84212cfa31d0b8a8d51，[同提交三项GitHub检查](https://github.com/sumiyuki727/skin-editor/actions/runs/43483039794)全部成功。本文和本轮源码是该提交之后的工作区增量，不将这次远端CI套用于新增源码。
 
 A1实现的是无窗口、仅准备的保存协调能力：application API7、捕获3、协调端口1及SaveCoord-Control-v1。存储端口1、模型2及全部持久记录版本保持。无真实文件、GUI或原生设备接线；K1、Reference10000／Tiny4、产品性能NotEvaluated与stable兼容Unknown保持。本轮不进行正式成本测量。

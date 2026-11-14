@@ -21,6 +21,8 @@ mod preview_port;
 mod resources;
 mod restore;
 mod save_coordination;
+#[cfg(test)]
+mod save_protocol_tests;
 pub use archive::*;
 pub use audio_editor::*;
 pub use audio_port::*;

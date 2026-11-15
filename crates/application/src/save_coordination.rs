@@ -1,6 +1,11 @@
 //! Headless preparation and qualified storage-fact coordination. No file I/O.
 mod budget;
 mod candidate;
+mod close;
+#[cfg(test)]
+mod close_bounds;
+mod close_values;
+pub use close_values::*;
 mod protocol;
 mod protocol_values;
 mod protocol_work;
@@ -34,9 +39,10 @@ use work::{PortState, TaskControl, WorkRelease};
 // unaccounted inter-lane padding. The reserved lanes cannot back ordinary work.
 #[repr(C, align(16))]
 struct Resident {
-    config: SavePreparationConfig,
+    config: Option<SavePreparationConfig>,
     port: Arc<PortState>,
     next_save: u64,
+    save_exhausted: bool,
     last_preparation_commit: Option<CommitId>,
     protocol: Option<ProtocolConfig>,
 }
@@ -67,9 +73,8 @@ struct Facts {
 }
 #[repr(C, align(16))]
 struct CloseLane {
-    _ticket: Option<CloseTicket>,
-    _permit: Option<CloseFinishPermit>,
-    _next_close: u64,
+    slot: Option<close::CloseSlot>,
+    next_close: Option<u64>,
 }
 #[repr(C, align(16))]
 struct QueryLane {
@@ -112,6 +117,7 @@ impl Coordinator {
         }
     }
     fn refresh(&mut self, capture_busy: &AtomicBool) {
+        self.sync_close_child();
         if let Some(slot) = &mut self.save.slot {
             let can_release = if let Some(state) = &slot.protocol {
                 let task = slot.control.protocol.as_ref().expect("qualified task");
@@ -176,6 +182,9 @@ impl Drop for Coordinator {
         }
     }
 }
+
+/// Private final-capture ownership; adapters cannot construct this value.
+pub(crate) struct FinalCapturePermit(CloseTicket);
 
 impl ProjectSession {
     pub fn save_source(&self) -> CaptureSource {
@@ -256,9 +265,35 @@ impl ProjectSession {
             return Err(E::Limit(SaveLimit::Fixture));
         }
         self.validate_save_binding(config.binding)?;
+        self.install_save_control(Some(config), config.control)
+    }
+
+    /// Bounded close-only composition, without target or executable work port.
+    pub fn install_close_control(
+        &mut self,
+        profile: SaveControlProfile,
+    ) -> Result<(), SaveCoordinationError> {
+        self.install_save_control(None, profile).map(drop)
+    }
+
+    fn install_save_control(
+        &mut self,
+        config: Option<SavePreparationConfig>,
+        profile: SaveControlProfile,
+    ) -> Result<SavePreparationPort, SaveCoordinationError> {
+        use SaveCoordinationError as E;
+        if profile.version != SAVE_CONTROL_PROFILE_VERSION {
+            return Err(E::UnsupportedVersion);
+        }
+        if self.save_coordination.is_some() {
+            return Err(E::AlreadyInstalled);
+        }
+        if profile.available_bytes < SAVE_CONTROL_BYTES || !save_control_layout().fits() {
+            return Err(E::Limit(SaveLimit::Control));
+        }
         // The entire profile is reserved before any new control allocation.
         let port = Arc::new(PortState {
-            alive: AtomicBool::new(true),
+            alive: AtomicBool::new(config.is_some()),
             released_sequence: AtomicU64::new(0),
             writer_released_sequence: AtomicU64::new(0),
             completion_released_sequence: AtomicU64::new(0),
@@ -270,6 +305,7 @@ impl ProjectSession {
                 config,
                 port: port.clone(),
                 next_save: 1,
+                save_exhausted: false,
                 last_preparation_commit: None,
                 protocol: None,
             },
@@ -283,9 +319,8 @@ impl ProjectSession {
                 installed_metadata: None,
             },
             close: CloseLane {
-                _ticket: None,
-                _permit: None,
-                _next_close: 1,
+                slot: None,
+                next_close: Some(1),
             },
             query: QueryLane { slot: None },
             cleanup: CleanupLane {
@@ -326,7 +361,7 @@ impl ProjectSession {
                 } else {
                     SaveAvailability::PreparationOnly
                 };
-                if c.resident.next_save < u64::MAX {
+                if !c.resident.save_exhausted && c.resident.next_save < u64::MAX {
                     result.next_key = Some(SaveAdmissionKey {
                         version,
                         session: self.session_id,
@@ -372,6 +407,14 @@ impl ProjectSession {
         request: SaveRequest,
         identities: &mut dyn HistoryIdentitySource,
     ) -> Result<SaveAdmission, SaveCoordinationError> {
+        self.request_save_owned(request, identities, None)
+    }
+    fn request_save_owned(
+        &mut self,
+        request: SaveRequest,
+        identities: &mut dyn HistoryIdentitySource,
+        parent: Option<CloseTicket>,
+    ) -> Result<SaveAdmission, SaveCoordinationError> {
         use SaveCoordinationError as E;
         if request.api_version != API_VERSION
             || request.capture_version != HISTORY_CAPTURE_VERSION
@@ -397,7 +440,15 @@ impl ProjectSession {
                 Err(E::Conflict)
             };
         }
-        if request.key.sequence < c.resident.next_save {
+        if parent.is_none() && c.close_active() {
+            return Err(E::BlockedByClose);
+        }
+        if let Some(ticket) = parent
+            && !c.final_capture_matches(ticket, request.origin)
+        {
+            return Err(E::BlockedByClose);
+        }
+        if c.resident.save_exhausted || request.key.sequence < c.resident.next_save {
             return Err(E::Stale);
         }
         if c.save.slot.is_some() {
@@ -406,6 +457,9 @@ impl ProjectSession {
         if c.facts.binding_conflict {
             return Err(E::InvalidBinding);
         }
+        if c.resident.config.is_none() {
+            return Err(E::NeedsTarget);
+        }
         if !c.resident.port.alive.load(Ordering::Acquire) {
             return Err(E::Unavailable);
         }
@@ -413,15 +467,16 @@ impl ProjectSession {
             return Err(E::Conflict);
         }
         // Ordinary admissions leave the last value for one final protection.
-        if c.resident.next_save == u64::MAX {
+        if parent.is_none() && c.resident.next_save == u64::MAX {
             return Err(E::Limit(SaveLimit::FinalIdentityReserved));
         }
         match request.origin {
             SaveOrigin::Manual => (),
             SaveOrigin::Automatic => return Err(E::UnsupportedOrigin),
+            SaveOrigin::Exit if parent.is_some() => (),
             SaveOrigin::Exit => return Err(E::NeedsClose),
         }
-        let config = c.resident.config;
+        let config = c.resident.config.ok_or(E::NeedsTarget)?;
         let protocol_config = c.resident.protocol;
         let previous_commit = c.resident.last_preparation_commit;
         if request.binding != config.binding.key {
@@ -439,10 +494,10 @@ impl ProjectSession {
         }
 
         let mut control = Arc::new(TaskControl::new());
-        // SaveSlot is still empty. The public capture3 entry applies its normal
-        // checks; there is no public bypass flag, mutable reference or fake q.
+        // SaveSlot is still empty. Both entries share the complete capture3
+        // checks; only a private matching final owner exempts the close gate.
         let capture = self
-            .capture_history(
+            .capture_history_owned(
                 CaptureRequest {
                     version: HISTORY_CAPTURE_VERSION,
                     session_id: self.session_id,
@@ -451,6 +506,7 @@ impl ProjectSession {
                     cancellation: control.cancellation.clone(),
                 },
                 identities,
+                parent.map(FinalCapturePermit),
             )
             .map_err(|e| E::Capture(SaveDiagnostic::capture(&e)))?;
         let snapshot = capture
@@ -496,7 +552,7 @@ impl ProjectSession {
             head: manifest.head,
             commit,
             origin: request.origin,
-            parent_close: None,
+            parent_close: parent.map(|t| t.key),
         };
         let protocol_slot = protocol_config.map(|config| {
             protocol::prepare_task(
@@ -507,11 +563,11 @@ impl ProjectSession {
             )
         });
         let c = self.save_coordination.as_mut().expect("installed owner");
-        c.resident.next_save = c
-            .resident
-            .next_save
-            .checked_add(1)
-            .expect("final value reserved");
+        if let Some(next) = c.resident.next_save.checked_add(1) {
+            c.resident.next_save = next;
+        } else {
+            c.resident.save_exhausted = true;
+        }
         c.resident.last_preparation_commit = Some(commit);
         c.mailbox.pending = Some(capture);
         c.save.slot = Some(SaveSlot {
@@ -628,7 +684,7 @@ mod tests {
             Ok(self.0)
         }
     }
-    fn setup() -> (ProjectSession, SavePreparationPort, SaveBindingKey) {
+    pub(super) fn setup() -> (ProjectSession, SavePreparationPort, SaveBindingKey) {
         let mut s = ProjectSession::new(7, 70).unwrap();
         let binding = SaveTargetBinding {
             version: 1,

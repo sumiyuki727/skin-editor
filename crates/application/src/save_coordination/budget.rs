@@ -19,6 +19,7 @@ pub struct SaveControlLayout {
     pub completion_carrier_bytes: usize,
     pub query_carrier_bytes: usize,
     pub completion_sender_bytes: usize,
+    pub close_status_bytes: usize,
 }
 impl SaveControlLayout {
     pub const fn fits(self) -> bool {
@@ -37,6 +38,7 @@ impl SaveControlLayout {
             && self.completion_carrier_bytes <= 16 * 1024
             && self.query_carrier_bytes <= 16 * 1024
             && self.completion_sender_bytes <= 16 * 1024
+            && self.close_status_bytes <= 4096
     }
     pub const fn total_bound(self) -> usize {
         let mut sum = 0;
@@ -149,7 +151,13 @@ pub const fn save_control_layout() -> SaveControlLayout {
                 + 3 * size_of::<candidate::PreparedCandidate>(),
             size_of::<CloseLane>()
                 + 3 * size_of::<CloseTicket>()
-                + 3 * size_of::<CloseFinishPermit>(),
+                + 3 * size_of::<CloseFinishPermit>()
+                + 3 * size_of::<CloseRequest>()
+                + 3 * size_of::<CloseAdmission>()
+                + 3 * size_of::<CloseStatus>()
+                + 3 * size_of::<CloseActiveStatus>()
+                + 3 * size_of::<SaveCoordinationError>()
+                + 3 * size_of::<FinalCapturePermit>(),
             size_of::<QueryLane>()
                 + query_control
                 + 2 * cancellation
@@ -173,6 +181,7 @@ pub const fn save_control_layout() -> SaveControlLayout {
         completion_carrier_bytes: completion,
         query_carrier_bytes: query,
         completion_sender_bytes: sender,
+        close_status_bytes: size_of::<CloseStatus>(),
     }
 }
 

@@ -72,6 +72,21 @@ impl ProjectSession {
         {
             return Err(CommandError::ResourceLimit("commands_per_request").into());
         }
+        if self.close_active() {
+            if matches!(request.action, DraftAction::Cancel { .. })
+                && let Some(permit) = self.close_finish_permit()
+            {
+                return self.finish_close_draft(permit, request);
+            }
+            return Err(CommandError::BlockedByClose.into());
+        }
+        self.edit_draft_checked(request)
+    }
+
+    pub(crate) fn edit_draft_checked(
+        &mut self,
+        request: DraftRequest,
+    ) -> Result<DraftResult, DraftError> {
         if let Some(receipt) = self.receipts.get(&request.request_id) {
             return match receipt {
                 Receipt::Draft {
@@ -80,6 +95,12 @@ impl ProjectSession {
                 } if old == &request => outcome.clone(),
                 _ => Err(CommandError::RequestIdReused.into()),
             };
+        }
+        if !self.close_active()
+            && self.protection_identity_exhausted()
+            && !matches!(request.action, DraftAction::Cancel { .. })
+        {
+            return Err(CommandError::ResourceLimit("save_control_identity").into());
         }
         if matches!(request.action, DraftAction::Begin { .. })
             && let Some(draft) = &self.draft

@@ -606,7 +606,12 @@ impl Coordinator {
                     self.facts.files = SaveFileFacts::from(metadata.as_ref());
                     self.facts.covered = Some(coverage);
                     self.facts.installed_metadata = Some(candidate.cost);
-                    let binding = &mut self.resident.config.binding;
+                    let binding = &mut self
+                        .resident
+                        .config
+                        .as_mut()
+                        .expect("qualified target")
+                        .binding;
                     binding.phase = SaveTargetPhase::ExistingVerified;
                     binding.history = Some(ticket.history);
                     binding.expected = ExpectedFileCommit {
@@ -629,17 +634,27 @@ impl Coordinator {
             }
             SaveStorageObservation::NoChange { files, basis, .. } => {
                 let manual = files.manual;
-                let intent = ticket.origin == SaveOrigin::Manual
+                let manual_intent = ticket.origin == SaveOrigin::Manual
                     && ticket.target.phase == SaveTargetPhase::ExistingVerified
                     && manual
                         .is_some_and(|m| m.origin == SaveOrigin::Manual && m.head == ticket.head)
                     && files.latest.is_some()
                     && files.protected.is_some();
-                let basis_valid = basis == SaveNoChangeBasis::CurrentManual
-                    || self
+                let exit_intent = ticket.origin == SaveOrigin::Exit
+                    && ticket.target.phase == SaveTargetPhase::ExistingVerified
+                    && files.latest.is_some()
+                    && files.protected.is_some();
+                let intent = manual_intent || exit_intent;
+                let basis_valid = match basis {
+                    SaveNoChangeBasis::CurrentManual => manual_intent,
+                    SaveNoChangeBasis::CurrentProtection => {
+                        exit_intent && files.protected.is_some_and(|p| p.head == ticket.head)
+                    }
+                    SaveNoChangeBasis::VerifiedOpening => self
                         .facts
                         .opening
-                        .is_some_and(|b| b.coverage == coverage && b.files == files);
+                        .is_some_and(|b| b.coverage == coverage && b.files == files),
+                };
                 if files != task.baseline || !intent || !basis_valid {
                     self.unresolved(SaveDiagnostic::new(SaveDiagnosticCode::AdapterFault), true);
                     return;

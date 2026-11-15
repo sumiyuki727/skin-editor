@@ -232,6 +232,7 @@ impl From<ModelError> for CommandFailure {
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum CommandError {
+    BlockedByClose,
     UnsupportedVersion(u16),
     WrongSession,
     RequestIdReused,
@@ -357,6 +358,7 @@ pub struct HistoryResult {
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum HistoryError {
+    BlockedByClose,
     UnsupportedVersion(u16),
     WrongSession,
     RequestIdReused,

@@ -408,8 +408,14 @@ impl ProjectSession {
     /// ```
     pub fn submit(&mut self, request: CommandRequest) -> Result<CommandResult, CommandError> {
         self.envelope(&request)?;
+        if self.close_active() {
+            return Err(CommandError::BlockedByClose);
+        }
         if let Some(receipt) = self.cached(&request)? {
             return receipt.clone();
+        }
+        if self.protection_identity_exhausted() {
+            return Err(CommandError::ResourceLimit("save_control_identity"));
         }
         if let Some(draft) = &self.draft {
             return Err(CommandError::Busy(draft.state.id));

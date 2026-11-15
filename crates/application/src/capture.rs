@@ -105,6 +105,15 @@ impl ProjectSession {
         request: CaptureRequest,
         identities: &mut dyn HistoryIdentitySource,
     ) -> Result<HistoryCapture, CaptureError> {
+        self.capture_history_owned(request, identities, None)
+    }
+
+    pub(crate) fn capture_history_owned(
+        &mut self,
+        request: CaptureRequest,
+        identities: &mut dyn HistoryIdentitySource,
+        owner: Option<crate::save_coordination::FinalCapturePermit>,
+    ) -> Result<HistoryCapture, CaptureError> {
         if request.version != HISTORY_CAPTURE_VERSION {
             return Err(CaptureError::UnsupportedVersion);
         }
@@ -116,6 +125,13 @@ impl ProjectSession {
                 expected: request.expected,
                 actual: self.state,
             });
+        }
+        if self.close_active()
+            && !owner
+                .as_ref()
+                .is_some_and(|p| self.permits_final_capture(p))
+        {
+            return Err(CaptureError::Closing);
         }
         if self.save_outstanding() {
             return Err(CaptureError::SaveOutstanding);

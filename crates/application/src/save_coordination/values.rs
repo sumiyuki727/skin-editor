@@ -160,7 +160,7 @@ pub enum ClosePurpose {
     Open,
     Reopen,
 }
-/// Reserved value contract only. A1 has no close admission/finish operation.
+/// Runtime close identity, independent of a storage commit and host activation.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct CloseTicket {
     pub key: CloseAdmissionKey,
@@ -172,9 +172,20 @@ pub struct CloseFinishContext {
     pub base: ExpectedState,
     pub draft: DraftState,
 }
+/// Issued only for the actual draft present at close admission.
+///
+/// ```compile_fail
+/// use skin_editor_application::{CloseFinishContext, CloseFinishPermit};
+/// fn forge(context: CloseFinishContext) -> CloseFinishPermit {
+///     CloseFinishPermit(context)
+/// }
+/// ```
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct CloseFinishPermit(CloseFinishContext);
 impl CloseFinishPermit {
+    pub(super) fn issue(context: CloseFinishContext) -> Self {
+        Self(context)
+    }
     pub fn context(self) -> CloseFinishContext {
         self.0
     }
@@ -306,6 +317,7 @@ pub enum SaveBusy {
     SaveOutstanding,
     Draft,
     CaptureConsumers,
+    CloseOutstanding,
 }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum SaveLimit {
@@ -314,6 +326,8 @@ pub enum SaveLimit {
     Control,
     Fixture,
     FinalIdentityReserved,
+    CloseIdentity,
+    SaveIdentity,
 }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum SaveCoordinationError {
@@ -324,6 +338,9 @@ pub enum SaveCoordinationError {
     AlreadyInstalled,
     UnsupportedOrigin,
     NeedsClose,
+    BlockedByClose,
+    NeedsTarget,
+    RecoveryUnavailable,
     WrongSession,
     InvalidIdentity,
     InvalidBinding,
@@ -332,6 +349,7 @@ pub enum SaveCoordinationError {
     Busy(SaveBusy),
     Limit(SaveLimit),
     Capture(SaveDiagnostic),
+    Storage(SaveDiagnostic),
     WrongPort,
     NotPending,
     NotTerminal,

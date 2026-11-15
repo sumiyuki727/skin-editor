@@ -184,6 +184,8 @@ pub enum SaveNoChangeBasis {
     /// The complete file proof includes this exact current Manual state and
     /// navigation, not merely its head or node count.
     CurrentManual,
+    /// Complete proof of the captured protection and navigation, independent of Manual.
+    CurrentProtection,
     /// Independently verified default-open equivalence, including derived Redo.
     VerifiedOpening,
 }

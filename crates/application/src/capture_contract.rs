@@ -125,6 +125,7 @@ pub struct CaptureManifest {
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum CaptureError {
+    Closing,
     UnsupportedVersion,
     WrongSession,
     Conflict {

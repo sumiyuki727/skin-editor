@@ -13,6 +13,9 @@ impl ProjectSession {
         if request.api_version != API_VERSION {
             return Err(HistoryError::UnsupportedVersion(request.api_version));
         }
+        if self.close_active() {
+            return Err(HistoryError::BlockedByClose);
+        }
         if let Some(receipt) = self.receipts.get(&request.request_id) {
             return match receipt {
                 Receipt::History {
@@ -21,6 +24,9 @@ impl ProjectSession {
                 } if old == &request => outcome.clone(),
                 _ => Err(HistoryError::RequestIdReused),
             };
+        }
+        if self.protection_identity_exhausted() {
+            return Err(HistoryError::ResourceLimit("save_control_identity"));
         }
         if let Some(draft) = &self.draft {
             return Err(HistoryError::Busy(draft.state.id));

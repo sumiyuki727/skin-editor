@@ -1,5 +1,7 @@
 # 编辑器开发交接：从 P3-1C 继续
 
+2026-11-16最新停靠点：[P3-2A整体退出审阅](P3_2A_EXIT_REVIEW.md)已逐项对齐PA01–PA38，[证明](P3_2A_EXIT_PROOF.json)记录原78项与4项新补证、源码散列及准确执行身份。应用层SaveCoord-Fixture-v1范围支持签收，最终核对本报告所在提交正常hook、已推送完整SHA及三项CI全部成功；不套用轮前0ae8003的[成功CI](https://github.com/sumiyuki727/skin-editor/actions/runs/43725492883)为新测试。独立审阅未发现生产阻断项，本轮不改生产实现。下一步先定约B：真实证明／只读核对、持久恢复区与配额、发布／发现中断、转正身份关系和共同容量；不直接接文件、GUI或设备。A的保护满足不授权关窗／激活。K1／Reference10000／Tiny4及产品NotEvaluated／stable Unknown保持。PUBLIC源码／PRIVATE历史恢复材料安排不变；本机新日志不自动属于3435405快照。下方日期段和早期章节保留历史时点，以本段与最新Git记录为准。
+
 2026-11-15最新停靠点：[P3-2A A3实现与独立审查](P3_2A_A3_REVIEW.md)已完成纯用例关闭门控、既有草稿Permit收尾、旧任务结清／实际释放、最终q、明确重试和取消归属；26项新增关闭回归通过。保护满足不是关窗／新建／打开／重开许可，生产authority和真实文件端口仍未接。API7／捕获3／协调1及512KiB预算保持，K1／产品／stable结论不变。轮前复用已推送8943286及[同SHA三项CI](https://github.com/sumiyuki727/skin-editor/actions/runs/43627066529)，本增量另按正常hook和同SHA CI收口。后续先按A1–A3证据核对纯用例退出边界；B真实证明／恢复区／配额等须先定约，不自动接文件或GUI。用户已授权接续A3及独立审查，无需重问A3授权。下方日期段保留历史时点。
 
 2026-11-15最新停靠点：[P3-2A A2实现与证明](P3_2A_A2_REVIEW.md)已完成事实投影、PreparedWitness／确认候选、NoChange／Unknown、独立核对及实际释放；28项专项、原A1回归和application既有测试保持通过。生产authority没有签发器，fake只在cfg(test)，不能宣称已接真实保存。API7／捕获3／协调1及文件格式不变，A3／B–D仍欠项。轮前A1提交abd879dc6dd03d6d1ea46ce722ea0592d436b7f9及[同SHA三项CI](https://github.com/sumiyuki727/skin-editor/actions/runs/43615335146)通过；本轮收尾核对包含A2报告的Git提交及其CI，不借用A1结果。旧证据、PRIVATE恢复材料和schema.rs原字节保持，3435405固定快照不自动延伸。后续先审阅A2，不自动进入A3；下方日期段保留历史时点。

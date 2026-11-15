@@ -1,5 +1,7 @@
 # 开发路线与质量门槛
 
+2026-11-16当前停靠点：[P3-2A整体退出](P3_2A_EXIT_REVIEW.md)已完成38组证据核对及独立审查，78项既有专项加4项最小补证支持A的SaveCoord-Fixture-v1应用层签收；最终门槛是本轮正常hook、推送和同SHA三项CI成功。无生产代码扩展。下一步先定约P3-2B的生产证明、恢复区／配额、发布／发现及共同容量，然后B→C完整交接→D产品闭环→可视化V0–V3；不跳过B／C直接接保存按钮。K1、Reference10000／Tiny4、产品NotEvaluated及stable Unknown保持。下方日期段是历史记录。
+
 2026-11-15当前停靠点：[P3-2A A3](P3_2A_A3_REVIEW.md)已完成无窗口关闭门控、草稿收尾、旧任务实际释放后的最终保护、取消隔离及失败重试；26项新增回归通过并经独立代码审查。轮前A2基线8943286及[同SHA三项CI](https://github.com/sumiyuki727/skin-editor/actions/runs/43627066529)成功，本增量另经正常hook／同SHA CI。路线保持A→B→C→D及后续V0–V3；A纯用例证据与B真实文件／恢复区／共同容量、C完整交接、D产品入口分别验收，不因关闭保护满足直接启用保存按钮。K1、Reference10000／Tiny4及产品NotEvaluated／stable Unknown不变。下方日期段是历史记录。
 
 2026-11-15当前停靠点：[P3-2A A2](P3_2A_A2_REVIEW.md)已完成无窗口事实投影、见证／候选保管、NoChange／Unknown及实际释放回归。A1轮前备份abd879d及[同SHA三项CI](https://github.com/sumiyuki727/skin-editor/actions/runs/43615335146)成功；A2新增量独立检查、提交与同SHA CI收口。下一步先审阅A2，再推进A3关闭，之后B–D和可视化V0–V3；本轮不自动进入A3。真实保存端口／产品入口仍未接，K1及Reference10000／Tiny4、产品NotEvaluated／stable Unknown保持。下方日期段是历史记录。

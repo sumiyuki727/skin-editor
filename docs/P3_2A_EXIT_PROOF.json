@@ -1,0 +1,1617 @@
+{
+  "schema": "skin-editor-p3-2a-exit-review-v1",
+  "date": "2026-11-16",
+  "profile": "SaveCoord-Fixture-v1",
+  "conclusion": "A pure application scope is supported; acceptance additionally requires the containing commit normal hook and same-SHA three-job CI success",
+  "production_baseline_commit": "0ae80031e203272b5683695ccb8018546626e220",
+  "containing_commit": "Resolve from Git history of this proof; no self-referential SHA",
+  "versions": {
+    "application_api": 7,
+    "history_capture": 3,
+    "save_coordination": 1,
+    "storage_port": 1,
+    "persistent_formats": "unchanged"
+  },
+  "baseline_ci": {
+    "run": 43725492883,
+    "head_sha": "0ae80031e203272b5683695ccb8018546626e220",
+    "url": "https://github.com/sumiyuki727/skin-editor/actions/runs/43725492883",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 132846410684,
+        "name": "core (ubuntu-24.04)"
+      },
+      {
+        "id": 132846410747,
+        "name": "core (windows-2025)"
+      },
+      {
+        "id": 132846410581,
+        "name": "desktop-windows"
+      }
+    ],
+    "decoded_logs": [
+      {
+        "platform": "ubuntu",
+        "normalized_sha256": "ee5df6c82b9453fc451a8f7ff7e291679ab222c07576fc7fcfd484712bbb0239",
+        "normalized_bytes": 185999,
+        "named_rust_test_pass_lines": 416,
+        "line_count_pattern": "\\btest [\\w:]+ \\.\\.\\. ok\\b"
+      },
+      {
+        "platform": "windows",
+        "normalized_sha256": "e9b274ce60e127b5f4e77fc7e9ab5f409de6d180fb61c507cb0df5bcf6ddf3f8",
+        "normalized_bytes": 187220,
+        "named_rust_test_pass_lines": 416,
+        "line_count_pattern": "\\btest [\\w:]+ \\.\\.\\. ok\\b"
+      },
+      {
+        "platform": "desktop",
+        "normalized_sha256": "9888c4813fcfc303c6bc1b2a655639c93caff4d96556708548c1a4880ec3e4c2",
+        "normalized_bytes": 237998,
+        "named_rust_test_pass_lines": 1084,
+        "line_count_pattern": "\\btest [\\w:]+ \\.\\.\\. ok\\b"
+      }
+    ],
+    "log_hash_representation": "Decoded UTF-8, BOM removed, CRLF to LF, exactly one final LF; not original compressed log bytes",
+    "specialized_tests_matched_once_per_core_log": 78
+  },
+  "supplemental_local": {
+    "platform": "Windows x64",
+    "rust": "1.95.0",
+    "command": "cargo test -p skin-editor-application save_protocol_tests::exit:: --offline --locked",
+    "result": "4 passed; 0 failed; 81 filtered out in application unit target",
+    "log_sha256": "d450f2c359d93fb62053fb7a143cf76cc7ccfe0f3a344e25a62faf3d6e37922e",
+    "log_bytes": 2591,
+    "log_storage": "local ignored artifacts/p3-2a-exit-20261116/exit-tests.log; not part of old private snapshot",
+    "not_in_baseline_ci": true
+  },
+  "final_acceptance_gate": {
+    "normal_hook": [
+      "tools/check_repository.py --staged",
+      "tools/check_core.py",
+      "tools/check_desktop.py"
+    ],
+    "same_sha_ci": [
+      "core (ubuntu-24.04)",
+      "core (windows-2025)",
+      "desktop-windows"
+    ],
+    "do_not_substitute_baseline_ci_for_new_tests": true
+  },
+  "static_control_bytes": {
+    "lanes": [
+      1904,
+      4360,
+      9392,
+      7840,
+      6080,
+      6288,
+      5123,
+      2096
+    ],
+    "ordinary": 23496,
+    "reserved": 19587,
+    "total": 43083,
+    "ceiling": 524288,
+    "platform": "Windows x64, Rust 1.95.0",
+    "not_rss": true
+  },
+  "sources": [
+    {
+      "path": "Cargo.lock",
+      "sha256_lf": "b2a79587a71fbaac650c9a89ecbe41fd2d5ce26fa8d98afc8879044ae1e0cf67",
+      "bytes_lf": 329,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256_lf": "088bddc580a92401f2fe9608b7fb821d5c8a8dc644ce895f54cd8b79baf73377",
+      "bytes_lf": 413,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/Cargo.toml",
+      "sha256_lf": "7613f8f871bb60d0bdfec79d18ac6c2b64bebff403ee3fb3533d2f1a4a35061a",
+      "bytes_lf": 234,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/src/archive.rs",
+      "sha256_lf": "09c9fc4c55ba7bc6d4f9118a43778fbde6e65383e829bcfa30a4b64fece84dcf",
+      "bytes_lf": 4526,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/src/capture.rs",
+      "sha256_lf": "b27b0ccff5dbbce6ea06c483ec6ecb5ad5d4c6eeb150ab3ceb92d2c7019918ee",
+      "bytes_lf": 25175,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/src/capture_contract.rs",
+      "sha256_lf": "62e2c8021ae267b2cdb0b20869a4499bc37c99406c63e21433e6e3c507b0222a",
+      "bytes_lf": 5484,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/src/contract.rs",
+      "sha256_lf": "feb110fb309c42782ae19aba64589e6f891324c85baef87607a8f9401237d207",
+      "bytes_lf": 10942,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/src/draft.rs",
+      "sha256_lf": "b60305d437f2575d1c1f1321997a3bc3f996d57a1c36e2393247334ee74d1b69",
+      "bytes_lf": 13447,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/src/history_control.rs",
+      "sha256_lf": "562f6c75da48b88505cf8529c588ac82132f09ac0596fc001a620a42bc3fc5b8",
+      "bytes_lf": 14348,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/src/lib.rs",
+      "sha256_lf": "921a3b45555eb474ac209ea3e3d2dfa2c8f6500869a7a437823a27934f46b0d5",
+      "bytes_lf": 25626,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/src/resources.rs",
+      "sha256_lf": "b21d2808b96457ea6fd35cdfdc3e45c89c61e4d69fe92f64477105e33c117770",
+      "bytes_lf": 1230,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/src/save_coordination.rs",
+      "sha256_lf": "fb0958da103722809b70df82651b6f7f944ef7af3138e3a8cb90f5cfac4fac11",
+      "bytes_lf": 29500,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/src/save_coordination/budget.rs",
+      "sha256_lf": "f2071b11f057b2a206d3d455eb8bda462156aba6c6d3f13a74f523450745d0eb",
+      "bytes_lf": 7542,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/src/save_coordination/candidate.rs",
+      "sha256_lf": "f87b76935730550b2cb2f8518940313063d81d862cc64d7aa6e0798e57508360",
+      "bytes_lf": 6228,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/src/save_coordination/close.rs",
+      "sha256_lf": "59940314f997c2e941d81ef1949fe70b9d5effcb216366e2d8230363726b6d61",
+      "bytes_lf": 18742,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/src/save_coordination/close_bounds.rs",
+      "sha256_lf": "2b600d158fd0ae6275cd5d335316380fddf7085420e63ab6e8d37ed07777d283",
+      "bytes_lf": 6393,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/src/save_coordination/close_values.rs",
+      "sha256_lf": "4cfcc2a1c899004a0f3b1218f11bcab4a9d33c76b43fd7f139ab3536121c280c",
+      "bytes_lf": 1407,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/src/save_coordination/protocol.rs",
+      "sha256_lf": "ea539f9745008afe78aaee1046c603adbc240cc2fb1fe64587c445618bcb654e",
+      "bytes_lf": 31496,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/src/save_coordination/protocol_values.rs",
+      "sha256_lf": "1c19fde15db4c36b39401632ae9245c47d0bff62bc01a48ba2ce4aa53b3a2c08",
+      "bytes_lf": 6330,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/src/save_coordination/protocol_work.rs",
+      "sha256_lf": "31f4892184c81b337c973306b80564bc58e383455ada9222bd760cac1d4d4d64",
+      "bytes_lf": 9537,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/src/save_coordination/values.rs",
+      "sha256_lf": "a163872a755426c914403eb795b3e76ded61a26c3922027de381b37b9db3977f",
+      "bytes_lf": 12342,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/src/save_coordination/work.rs",
+      "sha256_lf": "4000b2e3e82170dc9e114d7c3e61a4925e49b008023af0d1ba162019193f3729",
+      "bytes_lf": 4191,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "sha256_lf": "26131d241b2bfadb4e260eb52ea7cb49c518433c99da26738996488900a4be7d",
+      "bytes_lf": 67855,
+      "revision": "containing-commit"
+    },
+    {
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "sha256_lf": "97457335079c4502a5f5b5fec44c17cb471648fe0db244b7a5700b7cd0c9cc7a",
+      "bytes_lf": 49652,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "crates/application/src/save_protocol_tests/exit.rs",
+      "sha256_lf": "cfb773a6e6602f1d86c939e425cdf931d5ee9dcf72e35597344845aaf16bf911",
+      "bytes_lf": 13409,
+      "revision": "containing-commit"
+    },
+    {
+      "path": "crates/application/tests/save_coordination.rs",
+      "sha256_lf": "fa8841bd354a0abdb39991676ce94cb6ae3bc5f56be80672c24705da89f21159",
+      "bytes_lf": 43319,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    },
+    {
+      "path": "tools/check_core_architecture.py",
+      "sha256_lf": "7385d931c7b05f521f451588bab3d9e824ef698af8471f13327714f1257fef64",
+      "bytes_lf": 8001,
+      "revision": "0ae80031e203272b5683695ccb8018546626e220"
+    }
+  ],
+  "test_count": 82,
+  "baseline_test_count": 78,
+  "supplemental_test_count": 4,
+  "tests": [
+    {
+      "id": "A1-01",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "versions_unavailable_and_unsupported_origins_do_not_capture_or_consume_commands",
+      "rust_test_name": "versions_unavailable_and_unsupported_origins_do_not_capture_or_consume_commands",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1-02",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "invalid_profiles_and_binding_pairs_reject_before_installation",
+      "rust_test_name": "invalid_profiles_and_binding_pairs_reject_before_installation",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1-03",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "zero_revision_is_legal_but_wrong_source_and_target_are_not",
+      "rust_test_name": "zero_revision_is_legal_but_wrong_source_and_target_are_not",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1-04",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "repeats_match_original_payload_before_live_revision_draft_or_port_liveness",
+      "rust_test_name": "repeats_match_original_payload_before_live_revision_draft_or_port_liveness",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1-05",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "pending_cancel_is_not_saved_and_does_not_require_a_worker_or_new_request_id",
+      "rust_test_name": "pending_cancel_is_not_saved_and_does_not_require_a_worker_or_new_request_id",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1-06",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "ack_waits_for_worker_snapshot_and_node_owners_then_old_keys_cannot_release_new_slot",
+      "rust_test_name": "ack_waits_for_worker_snapshot_and_node_owners_then_old_keys_cannot_release_new_slot",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1-07",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "worker_drop_before_ack_releases_capture_but_keeps_save_outstanding",
+      "rust_test_name": "worker_drop_before_ack_releases_capture_but_keeps_save_outstanding",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1-08",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "working_cancel_abandon_and_invalid_poll_are_finite_not_saved_results",
+      "rust_test_name": "working_cancel_abandon_and_invalid_poll_are_finite_not_saved_results",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1-09",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "wrong_port_ticket_and_session_do_not_change_the_active_task",
+      "rust_test_name": "wrong_port_ticket_and_session_do_not_change_the_active_task",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1-10",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "two_runtime_sessions_with_the_same_project_and_head_reject_each_others_controls",
+      "rust_test_name": "two_runtime_sessions_with_the_same_project_and_head_reject_each_others_controls",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1-11",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "active_draft_and_external_capture_are_busy_without_identity_or_receipt_cost",
+      "rust_test_name": "active_draft_and_external_capture_are_busy_without_identity_or_receipt_cost",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1-12",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "capture_limit_failure_is_atomic_and_does_not_consume_the_admission_key",
+      "rust_test_name": "capture_limit_failure_is_atomic_and_does_not_consume_the_admission_key",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1-13",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "an_unsaved_permanent_map_is_not_mistaken_for_a_published_file",
+      "rust_test_name": "an_unsaved_permanent_map_is_not_mistaken_for_a_published_file",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1-14",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "restored_history_without_commit_metadata_cannot_be_published_as_new",
+      "rust_test_name": "restored_history_without_commit_metadata_cannot_be_published_as_new",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1-15",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "existing_binding_requires_full_restored_scope_and_exact_expected_chain",
+      "rust_test_name": "existing_binding_requires_full_restored_scope_and_exact_expected_chain",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1-16",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "failed_commit_candidate_releases_capture_and_allows_the_same_unconsumed_key",
+      "rust_test_name": "failed_commit_candidate_releases_capture_and_allows_the_same_unconsumed_key",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1-17",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "ordinary_receipt_exhaustion_does_not_disable_cancel_ack_or_change_old_history",
+      "rust_test_name": "ordinary_receipt_exhaustion_does_not_disable_cancel_ack_or_change_old_history",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1-18",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "late_state_limit_failure_is_terminal_but_waits_for_actual_worker_drop",
+      "rust_test_name": "late_state_limit_failure_is_terminal_but_waits_for_actual_worker_drop",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1-19",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "fixture_full_node_capacity_and_one_less_limit_have_atomic_distinct_outcomes",
+      "rust_test_name": "fixture_full_node_capacity_and_one_less_limit_have_atomic_distinct_outcomes",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1-20",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "dropping_session_cancels_detached_work_without_access_to_live_project",
+      "rust_test_name": "dropping_session_cancels_detached_work_without_access_to_live_project",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1-21",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "static_control_layout_accounts_for_all_lanes_and_bounds_public_carriers",
+      "rust_test_name": "static_control_layout_accounts_for_all_lanes_and_bounds_public_carriers",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1-22",
+      "path": "crates/application/tests/save_coordination.rs",
+      "name": "real_frozen_golden_tree_keeps_branches_admissions_originals_and_raw_configuration_after_q",
+      "rust_test_name": "real_frozen_golden_tree_keeps_branches_admissions_originals_and_raw_configuration_after_q",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1B-01",
+      "path": "crates/application/src/save_coordination.rs",
+      "name": "final_save_identity_is_reserved_without_wrap_and_cleanup_needs_no_new_identity",
+      "rust_test_name": "save_coordination::tests::final_save_identity_is_reserved_without_wrap_and_cleanup_needs_no_new_identity",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A1B-02",
+      "path": "crates/application/src/save_coordination.rs",
+      "name": "first_query_token_is_preallocated_and_independent_not_a_reset_cancel_token",
+      "rust_test_name": "save_coordination::tests::first_query_token_is_preallocated_and_independent_not_a_reset_cancel_token",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-01",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "default_manual_opening_no_change_preserves_newer_protection_and_derived_redo",
+      "rust_test_name": "save_protocol_tests::default_manual_opening_no_change_preserves_newer_protection_and_derived_redo",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-02",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "real_navigation_cannot_reuse_the_unchanged_opening_equivalence",
+      "rust_test_name": "save_protocol_tests::real_navigation_cannot_reuse_the_unchanged_opening_equivalence",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-03",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "first_manual_after_latest_without_manual_requires_a_real_new_manual_fact",
+      "rust_test_name": "save_protocol_tests::first_manual_after_latest_without_manual_requires_a_real_new_manual_fact",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-04",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "existing_no_change_survives_candidate_limits_and_generation_exhaustion_without_write_permission",
+      "rust_test_name": "save_protocol_tests::existing_no_change_survives_candidate_limits_and_generation_exhaustion_without_write_permission",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-05",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "verify_only_requires_write_and_read_failure_have_distinct_outcomes",
+      "rust_test_name": "save_protocol_tests::verify_only_requires_write_and_read_failure_have_distinct_outcomes",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-06",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "q_confirmation_keeps_new_branch_navigation_and_new_draft_pending",
+      "rust_test_name": "save_protocol_tests::q_confirmation_keeps_new_branch_navigation_and_new_draft_pending",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-07",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "protocol_is_unavailable_without_qualified_authority_and_no_default_success",
+      "rust_test_name": "save_protocol_tests::protocol_is_unavailable_without_qualified_authority_and_no_default_success",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-08",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "first_manual_commit_installs_prepared_metadata_without_content_or_receipt_changes",
+      "rust_test_name": "save_protocol_tests::first_manual_commit_installs_prepared_metadata_without_content_or_receipt_changes",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-09",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "writer_loss_after_permission_is_unknown_and_query_waits_for_actual_writer_exit",
+      "rust_test_name": "save_protocol_tests::writer_loss_after_permission_is_unknown_and_query_waits_for_actual_writer_exit",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-10",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "late_main_commit_confirms_during_query_but_query_drop_still_gates_reuse",
+      "rust_test_name": "save_protocol_tests::late_main_commit_confirms_during_query_but_query_drop_still_gates_reuse",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-11",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "query_cancellation_retry_and_attempt_exhaustion_preserve_unknown_and_old_context",
+      "rust_test_name": "save_protocol_tests::query_cancellation_retry_and_attempt_exhaustion_preserve_unknown_and_old_context",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-12",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "cancel_before_permission_keeps_candidate_until_actual_owners_exit",
+      "rust_test_name": "save_protocol_tests::cancel_before_permission_keeps_candidate_until_actual_owners_exit",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-13",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "query_read_failures_missing_target_and_absence_without_proof_never_settle_unknown",
+      "rust_test_name": "save_protocol_tests::query_read_failures_missing_target_and_absence_without_proof_never_settle_unknown",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-14",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "query_found_original_commit_and_later_binding_conflict_are_both_retained",
+      "rust_test_name": "save_protocol_tests::query_found_original_commit_and_later_binding_conflict_are_both_retained",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-15",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "query_no_change_keeps_manual_a_and_protected_c_and_drops_unused_candidate",
+      "rust_test_name": "save_protocol_tests::query_no_change_keeps_manual_a_and_protected_c_and_drops_unused_candidate",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-16",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "replay_and_late_main_completion_append_the_manual_mark_only_once",
+      "rust_test_name": "save_protocol_tests::replay_and_late_main_completion_append_the_manual_mark_only_once",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-17",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "prepared_proof_is_immutable_and_all_commitment_fields_are_bound",
+      "rust_test_name": "save_protocol_tests::prepared_proof_is_immutable_and_all_commitment_fields_are_bound",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-18",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "same_head_counts_and_ticket_cannot_substitute_another_frozen_content_proof",
+      "rust_test_name": "save_protocol_tests::same_head_counts_and_ticket_cannot_substitute_another_frozen_content_proof",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-19",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "wrong_generation_or_request_context_cannot_install_a_receipt",
+      "rust_test_name": "save_protocol_tests::wrong_generation_or_request_context_cannot_install_a_receipt",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-20",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "full_resource_golden_confirms_only_q_and_capture_release_does_not_free_history_originals",
+      "rust_test_name": "save_protocol_tests::full_resource_golden_confirms_only_q_and_capture_release_does_not_free_history_originals",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-21",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "golden_verifier_rejects_equal_count_mutations_before_publishing_proof",
+      "rust_test_name": "save_protocol_tests::golden_verifier_rejects_equal_count_mutations_before_publishing_proof",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-22",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "candidate_logical_and_managed_allocation_caps_are_independent_exact_boundaries",
+      "rust_test_name": "save_protocol_tests::candidate_logical_and_managed_allocation_caps_are_independent_exact_boundaries",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-23",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "versions_missing_witness_and_new_empty_root_cannot_manufacture_no_change",
+      "rust_test_name": "save_protocol_tests::versions_missing_witness_and_new_empty_root_cannot_manufacture_no_change",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-24",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "plain_queries_and_exhausted_ordinary_receipts_do_not_block_confirmation_or_cleanup",
+      "rust_test_name": "save_protocol_tests::plain_queries_and_exhausted_ordinary_receipts_do_not_block_confirmation_or_cleanup",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-25",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "undispatched_cancel_drop_before_ack_and_session_drop_keep_real_ownership_rules",
+      "rust_test_name": "save_protocol_tests::undispatched_cancel_drop_before_ack_and_session_drop_keep_real_ownership_rules",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-26",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "foreign_port_and_old_runtime_ticket_cannot_take_current_execution",
+      "rust_test_name": "save_protocol_tests::foreign_port_and_old_runtime_ticket_cannot_take_current_execution",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-27",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "candidate_ceiling_does_not_borrow_the_separate_capture_manifest_budget",
+      "rust_test_name": "save_protocol_tests::candidate_ceiling_does_not_borrow_the_separate_capture_manifest_budget",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A2-28",
+      "path": "crates/application/src/save_protocol_tests.rs",
+      "name": "contradictory_late_query_cannot_erase_confirmed_fact_or_unlock_binding",
+      "rust_test_name": "save_protocol_tests::contradictory_late_query_cannot_erase_confirmed_fact_or_unlock_binding",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-01",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "close_gate_precedes_cached_command_navigation_and_draft_success",
+      "rust_test_name": "save_protocol_tests::close::close_gate_precedes_cached_command_navigation_and_draft_success",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-02",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "exact_close_and_save_repeats_do_not_recapture_or_change_choice",
+      "rust_test_name": "save_protocol_tests::close::exact_close_and_save_repeats_do_not_recapture_or_change_choice",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-03",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "old_draft_commit_and_cancel_receipts_cannot_consume_a_new_close_permit",
+      "rust_test_name": "save_protocol_tests::close::old_draft_commit_and_cancel_receipts_cannot_consume_a_new_close_permit",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-04",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "failed_close_commit_keeps_permit_and_the_last_correct_cancel_receipt",
+      "rust_test_name": "save_protocol_tests::close::failed_close_commit_keeps_permit_and_the_last_correct_cancel_receipt",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-05",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "no_change_close_commit_ends_only_the_existing_draft_without_a_node",
+      "rust_test_name": "save_protocol_tests::close::no_change_close_commit_ends_only_the_existing_draft_without_a_node",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-06",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "existing_save_is_settled_and_released_before_the_final_draft_capture",
+      "rust_test_name": "save_protocol_tests::close::existing_save_is_settled_and_released_before_the_final_draft_capture",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-07",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "cancelling_close_does_not_cancel_an_independent_manual_save",
+      "rust_test_name": "save_protocol_tests::close::cancelling_close_does_not_cancel_an_independent_manual_save",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-08",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "cancelled_close_keeps_unknown_child_and_late_fact_separate_from_new_close",
+      "rust_test_name": "save_protocol_tests::close::cancelled_close_keeps_unknown_child_and_late_fact_separate_from_new_close",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-09",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "cancelled_child_keeps_save_slot_until_the_last_captured_node_is_dropped",
+      "rust_test_name": "save_protocol_tests::close::cancelled_child_keeps_save_slot_until_the_last_captured_node_is_dropped",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-10",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "failed_child_has_no_automatic_retry_and_explicit_retry_waits_for_actual_release",
+      "rust_test_name": "save_protocol_tests::close::failed_child_has_no_automatic_retry_and_explicit_retry_waits_for_actual_release",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-11",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "closing_query_survives_close_cancel_and_late_main_fact_waits_for_query_drop",
+      "rust_test_name": "save_protocol_tests::close::closing_query_survives_close_cancel_and_late_main_fact_waits_for_query_drop",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-12",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "unchanged_opening_exit_confirms_final_q_without_replacing_manual_a_or_protected_c",
+      "rust_test_name": "save_protocol_tests::close::unchanged_opening_exit_confirms_final_q_without_replacing_manual_a_or_protected_c",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-13",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "untouched_empty_exit_needs_no_fake_fact_but_first_manual_really_saves",
+      "rust_test_name": "save_protocol_tests::close::untouched_empty_exit_needs_no_fake_fact_but_first_manual_really_saves",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-14",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "editing_then_undo_to_empty_still_protects_the_complete_tree",
+      "rust_test_name": "save_protocol_tests::close::editing_then_undo_to_empty_still_protects_the_complete_tree",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-15",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "missing_target_keeps_completed_history_open_without_a_recovery_path",
+      "rust_test_name": "save_protocol_tests::close::missing_target_keeps_completed_history_open_without_a_recovery_path",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-16",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "close_tickets_and_permits_never_cross_runtime_sessions",
+      "rust_test_name": "save_protocol_tests::close::close_tickets_and_permits_never_cross_runtime_sessions",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-17",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "an_external_capture_last_owner_holds_final_capture_without_bypassing_closing",
+      "rust_test_name": "save_protocol_tests::close::an_external_capture_last_owner_holds_final_capture_without_bypassing_closing",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-18",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "exact_current_exit_protection_no_change_preserves_the_older_manual_point",
+      "rust_test_name": "save_protocol_tests::close::exact_current_exit_protection_no_change_preserves_the_older_manual_point",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-19",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "another_protected_head_cannot_claim_current_exit_coverage_for_a_new_head",
+      "rust_test_name": "save_protocol_tests::close::another_protected_head_cannot_claim_current_exit_coverage_for_a_new_head",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-20",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "a_late_contradictory_query_retains_real_fact_but_revokes_close_satisfaction",
+      "rust_test_name": "save_protocol_tests::close::a_late_contradictory_query_retains_real_fact_but_revokes_close_satisfaction",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-21",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "the_same_draft_needs_a_new_permit_after_cancelled_close_is_replaced",
+      "rust_test_name": "save_protocol_tests::close::the_same_draft_needs_a_new_permit_after_cancelled_close_is_replaced",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-22",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "an_unsaved_empty_capture_reserves_identity_without_creating_work_to_protect",
+      "rust_test_name": "save_protocol_tests::close::an_unsaved_empty_capture_reserves_identity_without_creating_work_to_protect",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3-23",
+      "path": "crates/application/src/save_protocol_tests/close.rs",
+      "name": "a_really_restored_empty_root_uses_final_no_change_instead_of_creation_baseline",
+      "rust_test_name": "save_protocol_tests::close::a_really_restored_empty_root_uses_final_no_change_instead_of_creation_baseline",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3B-01",
+      "path": "crates/application/src/save_coordination/close_bounds.rs",
+      "name": "final_save_and_close_maximum_are_usable_once_without_wrap_or_lost_cleanup",
+      "rust_test_name": "save_coordination::close_bounds::final_save_and_close_maximum_are_usable_once_without_wrap_or_lost_cleanup",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3B-02",
+      "path": "crates/application/src/save_coordination/close_bounds.rs",
+      "name": "last_close_identity_keeps_real_draft_cancel_and_final_capture_available",
+      "rust_test_name": "save_coordination::close_bounds::last_close_identity_keeps_real_draft_cancel_and_final_capture_available",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "A3B-03",
+      "path": "crates/application/src/save_coordination/close_bounds.rs",
+      "name": "close_only_installation_reserves_the_same_profile_without_a_work_port",
+      "rust_test_name": "save_coordination::close_bounds::close_only_installation_reserves_the_same_profile_without_a_work_port",
+      "ci_passes": {
+        "ubuntu": 1,
+        "windows": 1
+      },
+      "execution": "baseline-core-ci-both"
+    },
+    {
+      "id": "EX-01",
+      "path": "crates/application/src/save_protocol_tests/exit.rs",
+      "name": "confirmed_coverage_survives_atomic_failure_and_empty_or_net_zero_commands",
+      "rust_test_name": "save_protocol_tests::exit::confirmed_coverage_survives_atomic_failure_and_empty_or_net_zero_commands",
+      "execution": "supplemental-local-targeted"
+    },
+    {
+      "id": "EX-02",
+      "path": "crates/application/src/save_protocol_tests/exit.rs",
+      "name": "lower_nonzero_generation_or_old_fact_cannot_confirm_a_new_prepared_request",
+      "rust_test_name": "save_protocol_tests::exit::lower_nonzero_generation_or_old_fact_cannot_confirm_a_new_prepared_request",
+      "execution": "supplemental-local-targeted"
+    },
+    {
+      "id": "EX-03",
+      "path": "crates/application/src/save_protocol_tests/exit.rs",
+      "name": "exact_original_byte_limit_and_one_less_have_atomic_admission_and_real_release",
+      "rust_test_name": "save_protocol_tests::exit::exact_original_byte_limit_and_one_less_have_atomic_admission_and_real_release",
+      "execution": "supplemental-local-targeted"
+    },
+    {
+      "id": "EX-04",
+      "path": "crates/application/src/save_protocol_tests/exit.rs",
+      "name": "equal_project_and_head_unknown_sessions_isolate_reconcile_controls_and_results",
+      "rust_test_name": "save_protocol_tests::exit::equal_project_and_head_unknown_sessions_isolate_reconcile_controls_and_results",
+      "execution": "supplemental-local-targeted"
+    }
+  ],
+  "matrix": [
+    {
+      "pa": "PA01",
+      "tests": [
+        "A1-01",
+        "A2-07"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "版本、无端口、Automatic及无关闭归属Exit在捕获前拒绝；不消费普通请求或永久身份",
+      "boundary": "文件格式版本另按源码未变核对，测试不代表真实文件签发资格"
+    },
+    {
+      "pa": "PA02",
+      "tests": [
+        "A1-03",
+        "A1-22",
+        "A3-15"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "会话、修订、导航、绑定及无目标明确拒绝；合法零修订和q后延迟worker读取原q",
+      "boundary": "目标是注入值，未验证OS路径"
+    },
+    {
+      "pa": "PA03",
+      "tests": [
+        "A1-22",
+        "A2-20",
+        "A2-21"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "5节点／4准入／3原字节黄金树逐项核对分支、状态、父关系、原配置及资源字节；等数量变异拒绝",
+      "boundary": "自制小型黄金负载，不外推产品深宽树或codec"
+    },
+    {
+      "pa": "PA04",
+      "tests": [
+        "A2-20",
+        "A2-06"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "q后新增E、资源、导航及草稿，q确认只覆盖旧范围，活动头／新工作保持",
+      "boundary": "不宣称q实际写入文件"
+    },
+    {
+      "pa": "PA05",
+      "tests": [
+        "A2-06",
+        "A3-12"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "新增分支后回A仍待保护，导航或新分支使旧打开等价失效",
+      "boundary": "相同head／导出不是全树已保存证明"
+    },
+    {
+      "pa": "PA06",
+      "tests": [
+        "EX-01",
+        "A2-08"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "真实确认后失败事务、空／净零命令保持current／covered、历史和快照；事实安装不自致脏",
+      "boundary": "预览分离由无持久写入口及模块边界支持，未运行GUI／preview场景"
+    },
+    {
+      "pa": "PA07",
+      "tests": [
+        "A1-11",
+        "A1-04",
+        "A1-06"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "草稿、第二保存、外部捕获和最后消费者分别Busy，原截面不被替换",
+      "boundary": "保留消费者阻挡新工作是预期行为"
+    },
+    {
+      "pa": "PA08",
+      "tests": [
+        "A2-08",
+        "A2-16",
+        "A3-18"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "Manual／Exit事实分离、标记只追加一次，旧快照不变；Exit保留旧Manual",
+      "boundary": "标记由测试合格端口事实驱动，未接生产文件"
+    },
+    {
+      "pa": "PA09",
+      "tests": [
+        "A2-16",
+        "A1-16",
+        "EX-02"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "重放／重复完成不重复标记；已知CommitId拒绝；有效旧代次2及旧fact不能确认新候选3",
+      "boundary": "文件内请求摘要与ID复用核对仍属B"
+    },
+    {
+      "pa": "PA10",
+      "tests": [
+        "A1-09",
+        "A2-17",
+        "A2-18",
+        "A2-19"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "列明的资格／承诺变异、同head同数量不同内容、错误代次或上下文均不能安装错误事实",
+      "boundary": "测试覆盖16类资格变异及5个承诺域；公共完整值等式由源码审查补证，不声称逐字段穷举"
+    },
+    {
+      "pa": "PA11",
+      "tests": [
+        "A2-01",
+        "A2-02",
+        "A3-12"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "Manual A／保护C／默认A及推导Redo完整基线NoChange保留A／C；真实导航拒绝旧等价",
+      "boundary": "打开基线由受验证恢复候选构造；真实读盘属B"
+    },
+    {
+      "pa": "PA12",
+      "tests": [
+        "A2-03",
+        "A2-23",
+        "A3-13"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "Latest无Manual及首次显式Manual空根须有新Manual事实，不能借全树覆盖或空创建跳过",
+      "boundary": "从未编辑空根的Exit例外不扩大到Manual"
+    },
+    {
+      "pa": "PA13",
+      "tests": [
+        "A2-09",
+        "A2-11",
+        "A2-13",
+        "A2-14",
+        "A2-15",
+        "A2-28"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "原提交、NoChange、VerifiedNotCommitted、证据不足四类观察分开；缺证据／读失败／冲突不盲写，事实与绑定冲突并存",
+      "boundary": "受控观察矩阵，不是真实介质故障注入"
+    },
+    {
+      "pa": "PA14",
+      "tests": [
+        "A2-11",
+        "A2-13",
+        "A2-10"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "查询取消／失败不抹Unknown，旧attempt控制过期，原槽阻挡新写，可再次核对",
+      "boundary": "先等旧查询实际释放才接纳新attempt，不允许仍持有旧owner而复用槽"
+    },
+    {
+      "pa": "PA15",
+      "tests": [
+        "A1-05",
+        "A1-08",
+        "A2-12",
+        "A2-09",
+        "A2-14"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "交付前、写许可前、可能写入后的取消分别处理；取消不抹已提交事实",
+      "boundary": "取消本身不证明未提交"
+    },
+    {
+      "pa": "PA16",
+      "tests": [
+        "A1-06",
+        "A1-07",
+        "A1-20",
+        "A2-08",
+        "A2-10",
+        "A2-25"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "Ack与Drop两种顺序及worker／sender／Snapshot／CapturedNode／query分别保管；最后退出才退槽",
+      "boundary": "capture_in_flight清除不能替代SaveSlot清理"
+    },
+    {
+      "pa": "PA17",
+      "tests": [
+        "A3-01",
+        "A3-17"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "submit／navigate／草稿实际写入口在缓存前门控，新捕获Closing；只读／取消／协调可达",
+      "boundary": "应用层门控不等于GUI输入路由"
+    },
+    {
+      "pa": "PA18",
+      "tests": [
+        "A3-03",
+        "A3-04",
+        "A3-05",
+        "A3-16",
+        "A3-21"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "同Close与真实草稿Permit才可收尾，失败原子保留，NoChange不造节点，旧回执／Permit拒绝",
+      "boundary": "外部不能构造Permit另由compile-fail回归保证"
+    },
+    {
+      "pa": "PA19",
+      "tests": [
+        "A3-07",
+        "A3-08",
+        "A3-09",
+        "A3-20"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "取消仅作用自有子保存，独立Manual和事实保留；Unknown／旧完成／旧Ack不推进后来Close",
+      "boundary": "已确认矛盾保留事实并撤销满足，不伪造未提交"
+    },
+    {
+      "pa": "PA20",
+      "tests": [
+        "A3-06",
+        "A3-17"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "旧保存事实安装、Ack、实际释放之后才捕获最终q；q含草稿收尾，不依赖UI刷新",
+      "boundary": "通过私有所属许可复用完整捕获，没有公开bypass"
+    },
+    {
+      "pa": "PA21",
+      "tests": [
+        "A3-12",
+        "A3-18",
+        "A3-19"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "Exit不推进Manual；VerifiedOpening按完整打开等价保留A／C，新分支／导航使其失效；CurrentProtection另核保护头",
+      "boundary": "不同保护头的错误CurrentProtection保持Unknown"
+    },
+    {
+      "pa": "PA22",
+      "tests": [
+        "A3-13",
+        "A3-14",
+        "A3-15",
+        "A3-22",
+        "A3-23"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "未编辑新空根、编辑Undo空根、恢复空根和仅预留持久身份分别处理；无目标保持打开",
+      "boundary": "不选择临时恢复路径，真实恢复区属B"
+    },
+    {
+      "pa": "PA23",
+      "tests": [
+        "A3-06",
+        "A3-12",
+        "A3-13",
+        "A3-18"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "ProtectionSatisfied与空创建满足仍保持门控、不能终结Ack；显式取消恢复普通编辑",
+      "boundary": "没有OS关闭、新建／打开／重开激活许可"
+    },
+    {
+      "pa": "PA24",
+      "tests": [
+        "A1-17",
+        "A2-24",
+        "A3-04",
+        "A3-11"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "128回执或节点上限拒绝新增，不剪历史；合法草稿Cancel、确认、首次查询和释放仍可达",
+      "boundary": "宿主RequestId预留与设备清理仍属C"
+    },
+    {
+      "pa": "PA25",
+      "tests": [
+        "A1-02",
+        "A1-12",
+        "A1-18",
+        "A1-19",
+        "A1-21",
+        "A2-22",
+        "A2-27",
+        "A3B-03",
+        "EX-03"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "控制512KiB−1、64／63节点、候选逻辑／capacity exact与−1、真实原字节N／N−1及实际Drop分别核对",
+      "boundary": "原字节使用缩小配额N，未测试256KiB满额；限额不是同时可兑现的笛卡尔积，也不是RSS"
+    },
+    {
+      "pa": "PA26",
+      "tests": [
+        "A1B-01",
+        "A3B-01",
+        "A3B-02",
+        "A2-11",
+        "A2-04"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "最终Save／Close最大值可用一次，普通准入保留最终资格；attempt／generation耗尽不回绕，清理不用新控制ID",
+      "boundary": "有限预留不保证无限失败重试"
+    },
+    {
+      "pa": "PA27",
+      "tests": [
+        "A1-10",
+        "A2-26",
+        "A3-16",
+        "EX-04"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "同ProjectId／head两会话的保存、查询、关闭／Permit隔离；交叉实际见证仍Unknown，正确下一attempt各自确认",
+      "boundary": "全局会话新鲜性及导入／音频／GPU旧结果仍属C"
+    },
+    {
+      "pa": "PA28",
+      "tests": [
+        "A2-24",
+        "A1-22",
+        "A2-20"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "重复只读状态不推进工作／消费观察／复制全树或生成历史；旧q及跨分支原字节保持",
+      "boundary": "有界载荷另据静态证明，不等于测得整个Session堆成本"
+    },
+    {
+      "pa": "PA29",
+      "tests": [
+        "A1-01",
+        "A1-02",
+        "A1-03",
+        "A1-11",
+        "A3-01",
+        "A3-17"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "捕获3区分Closing／SaveOutstanding／Busy／InFlight，旧版本拒绝；零修订合法，混合expected拒绝",
+      "boundary": "私有最终许可沿用原捕获校验；不可伪造另有compile-fail"
+    },
+    {
+      "pa": "PA30",
+      "tests": [
+        "A1-13",
+        "A1-14",
+        "A1-15",
+        "A2-08"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "未保存永久映射不冒充发布；新绑定确认后转ExistingVerified且原Ticket仍Ack；恢复来源不可首次发布",
+      "boundary": "A核对绑定／token资格值；真实发布、发现及恢复转正身份仍属B"
+    },
+    {
+      "pa": "PA31",
+      "tests": [
+        "A2-17",
+        "A2-18",
+        "A2-21",
+        "A2-23",
+        "A2-09"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "预先Snapshot和独立Witness保管；实际黄金内容先核对，缺见证不写、丢工作可核对，等计数不同内容拒绝",
+      "boundary": "测试profile承诺不是生产文件摘要／加密证明"
+    },
+    {
+      "pa": "PA32",
+      "tests": [
+        "A2-09",
+        "A2-11",
+        "A2-10",
+        "A3-11"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "保存／关闭取消后独立query token仍可核对，迟到主完成可确认且不倒退，query实际Drop才退槽",
+      "boundary": "未复位原取消token"
+    },
+    {
+      "pa": "PA33",
+      "tests": [
+        "A1-04",
+        "A3-02",
+        "A3-06"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "q+1及真实草稿收尾后精确Save／Close重放返回原Ticket、不新增身份；改载荷Conflict，释放后Stale",
+      "boundary": "重复在当前source重新校验之前识别"
+    },
+    {
+      "pa": "PA34",
+      "tests": [
+        "A3-04",
+        "A3-03",
+        "A3-10",
+        "A3-21",
+        "A3-13"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "失败草稿保留Permit和Cancel，旧取消不消费新Permit；advance不盲重试，显式重试等释放、再校验，失败准入保留关联",
+      "boundary": "Ack第二次消费可能收到迟到确认的再校验另经源码审查；未用线程时序猜竞争"
+    },
+    {
+      "pa": "PA35",
+      "tests": [
+        "A1-21",
+        "A1-07",
+        "A2-12",
+        "A2-20"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "静态容量计同时副本／见证／查询，取消／Ack不提前退候选；AwaitAck阻挡，捕获释放不退历史原字节",
+      "boundary": "43083字节是Windows x64受管布局上界，不是allocator或RSS峰值"
+    },
+    {
+      "pa": "PA36",
+      "tests": [
+        "A2-04",
+        "A2-05",
+        "A2-22",
+        "A2-27",
+        "A2-23"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "VerifyOnly在候选不足或代次耗尽时仅可核对既有NoChange；需写与读失败区分且无写权限，预算不互借",
+      "boundary": "新目标／首次Manual不能借VerifyOnly成功"
+    },
+    {
+      "pa": "PA37",
+      "tests": [
+        "A2-06",
+        "A3-06"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "q确认保留新草稿PendingDraft及基础，取消后新分支仍待保护；最终q在收尾后捕获",
+      "boundary": "尚未进入application草稿的文本／IME属D"
+    },
+    {
+      "pa": "PA38",
+      "tests": [
+        "A1B-02",
+        "A2-09",
+        "A2-11",
+        "A3-11",
+        "A3B-01",
+        "A3B-02"
+      ],
+      "result": "supported-in-A-profile",
+      "assertion": "首次query同一预留对象及独立token在回执满额仍可用；追加attempt耗尽保留Unknown，最终身份与清理可达",
+      "boundary": "不解释为无限重试或无限容量"
+    }
+  ],
+  "excluded": [
+    "B production authority, real-file proof/query/publication/discovery/recovery conversion and common capacity",
+    "C globally fresh runtime session, quiescence, activation, late import/audio/GPU results and final host resource ownership",
+    "D GUI text/IME/input routing, ordinary save/open and OS close",
+    "AP periodic autosave; general SaveAs, migration, settings, export; visual V0-V3; skin-making Skill",
+    "No K1 extension or formal cost remeasurement; Reference10000/Tiny4, product NotEvaluated, stable Unknown unchanged"
+  ],
+  "retained_evidence": "Historical A1/A2/A3 reports and old measurements/binaries/private recovery attachments unchanged; new local logs are not implicitly backed up by snapshot 3435405"
+}

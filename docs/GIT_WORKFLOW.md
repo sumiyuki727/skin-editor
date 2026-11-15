@@ -1,5 +1,7 @@
 # Git 与远端管理
 
+2026-11-16 A整体退出轮前确认：HEAD与PUBLIC origin／codex/p1-bootstrap为0ae80031e203272b5683695ccb8018546626e220，[Actions 43725492883](https://github.com/sumiyuki727/skin-editor/actions/runs/43725492883)同SHA三项成功；实际／暂存差异为空，复用HEAD，不造空提交。新增[A退出审阅](P3_2A_EXIT_REVIEW.md)、证明、4项补证及同步文档另经精确路径审查和正常完整hook提交，推送后只接受该完整SHA三项CI；旧CI不能代替新测试。原始检查／基线在本机忽略目录artifacts/p3-2a-exit-20261116，既存schema.rs原字节／mtime、旧证据和PRIVATE恢复附件保持。3435405固定快照不自动延伸，本轮不读取密钥。以下日期段为历史记录。
+
 2026-11-15 A3轮前确认：当前A2提交894328696d35877823f61db1aa9c8d30edb07ed5已推送PUBLIC origin／codex/p1-bootstrap，[Actions 43627066529](https://github.com/sumiyuki727/skin-editor/actions/runs/43627066529)三项成功。暂存及实际内容差异为空，仅保留schema.rs既存标记，因此复用HEAD，不造空提交。用户直接确认后实施[A3](P3_2A_A3_REVIEW.md)；源码／回归和同步文档经正常hook、实际暂存审查、推送和同SHA CI收口。准确身份为包含A3报告的提交及其远端任务，不借用轮前CI。新日志／基线在本机忽略目录artifacts/p3-2a-a3-20261115，旧PRIVATE附件与3435405固定快照不改、不自动延伸；原文件字节与未改路径mtime逐项核对。以下段落是历史记录。
 
 2026-11-15 A2轮前备份：A1的22个文件经实际差异／暂存审查和正常完整hook，提交abd879dc6dd03d6d1ea46ce722ea0592d436b7f9并推送PUBLIC origin／codex/p1-bootstrap，远端完整SHA一致；[Actions 43615335146](https://github.com/sumiyuki727/skin-editor/actions/runs/43615335146)三项全部成功。用户直接确认开始A2后实施[本轮增量](P3_2A_A2_REVIEW.md)，最终源码／文档另经正常hook提交、推送和同SHA三项CI核对；以包含该报告的提交和远端任务记录为准，不把A1检查套用A2。日志／基线在artifacts/p3-2a-a2-20261115；旧证据、PRIVATE附件、密钥保管及schema.rs原字节保持。以下日期段为历史记录。

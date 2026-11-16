@@ -4,7 +4,9 @@
 
 ## 当前阅读入口
 
-- [P3-2A整体退出审阅](P3_2A_EXIT_REVIEW.md)／[38组证据映射](P3_2A_EXIT_PROOF.json)（82项专项；A限SaveCoord-Fixture-v1应用层签收，最终须本轮同SHA检查；下一步先定约B，真实保存／重开仍待B–D）
+- [P3-2B真实存储衔接开工契约](P3_2B_START_CONTRACT.md)（2026-11-17审阅修订2，BR01–BR09已合入；32组验收待实施，U1–U3仍待决定，B1接口及开工门槛未完成）
+
+- [P3-2A整体退出审阅](P3_2A_EXIT_REVIEW.md)／[38组证据映射](P3_2A_EXIT_PROOF.json)（82项专项；A限SaveCoord-Fixture-v1应用层签收，e1934b8同SHA三项CI已成功；B契约见上，真实保存／重开仍待B–D）
 
 - [P3-2A A3关闭门控与最终保护](P3_2A_A3_REVIEW.md)（26项新增回归、独立审查与固定槽证明；保护满足不授权真实关闭，B–D仍欠项）
 

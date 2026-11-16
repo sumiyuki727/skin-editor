@@ -1,5 +1,11 @@
 # Git 与远端管理
 
+2026-11-17恢复收口：用户明确恢复并指定先合入上轮审阅修订，再正常检查提交。轮初HEAD e1934b881b81832051576909a709722747782eb6，暂存为空，保留的B草案＋7份同步文档未提交；schema.rs仅既存标记。按该具体顺序收口8文档，不先提交未合入审阅项的草案。原草案字节／843文件基线另存本机忽略目录artifacts/p3-2b-resume-20261117，旧证据不覆盖；正常hook、PUBLIC origin推送及新提交同SHA三项CI独立核验，不套用e1934b8成功结果。需要UAC交互的步骤日本时间13:00前暂缓，不改变安全设置。PRIVATE材料／密钥不触及，固定恢复快照不自动延伸。下方停止记录是恢复前状态。
+
+2026-11-16收尾停止：用户因额度耗尽要求结束，B契约及7份同步文档保留本地未提交，暂存区为空；本轮完整hook、提交／推送和新CI均未启动。最后已推送／核对的回退点仍为e1934b8，不能把它的成功CI当成本地B草案验证。待明确恢复后再按正常流程收口，不丢弃修改或擅自启动下一项任务。
+
+2026-11-16 B契约轮前确认：本地HEAD与PUBLIC origin／codex/p1-bootstrap均为e1934b881b81832051576909a709722747782eb6，[Actions 43734186283](https://github.com/sumiyuki727/skin-editor/actions/runs/43734186283)同SHA三项成功。实际／暂存差异为空，复用HEAD、不造空提交；没有重复活动工作。新增[B契约](P3_2B_START_CONTRACT.md)与同步文档另按精确路径、正常完整hook及新提交同SHA CI收口；A检查不充当新文档或未实施PB证据。843文件字节／mtime基线及本轮日志位于本机忽略目录artifacts/p3-2b-contract-20261116，schema.rs、旧证明／冻结程序和PRIVATE附件保持，未读取密钥；3435405固定恢复快照不自动延伸。以下日期段为历史记录。
+
 2026-11-16 A整体退出轮前确认：HEAD与PUBLIC origin／codex/p1-bootstrap为0ae80031e203272b5683695ccb8018546626e220，[Actions 43725492883](https://github.com/sumiyuki727/skin-editor/actions/runs/43725492883)同SHA三项成功；实际／暂存差异为空，复用HEAD，不造空提交。新增[A退出审阅](P3_2A_EXIT_REVIEW.md)、证明、4项补证及同步文档另经精确路径审查和正常完整hook提交，推送后只接受该完整SHA三项CI；旧CI不能代替新测试。原始检查／基线在本机忽略目录artifacts/p3-2a-exit-20261116，既存schema.rs原字节／mtime、旧证据和PRIVATE恢复附件保持。3435405固定快照不自动延伸，本轮不读取密钥。以下日期段为历史记录。
 
 2026-11-15 A3轮前确认：当前A2提交894328696d35877823f61db1aa9c8d30edb07ed5已推送PUBLIC origin／codex/p1-bootstrap，[Actions 43627066529](https://github.com/sumiyuki727/skin-editor/actions/runs/43627066529)三项成功。暂存及实际内容差异为空，仅保留schema.rs既存标记，因此复用HEAD，不造空提交。用户直接确认后实施[A3](P3_2A_A3_REVIEW.md)；源码／回归和同步文档经正常hook、实际暂存审查、推送和同SHA CI收口。准确身份为包含A3报告的提交及其远端任务，不借用轮前CI。新日志／基线在本机忽略目录artifacts/p3-2a-a3-20261115，旧PRIVATE附件与3435405固定快照不改、不自动延伸；原文件字节与未改路径mtime逐项核对。以下段落是历史记录。

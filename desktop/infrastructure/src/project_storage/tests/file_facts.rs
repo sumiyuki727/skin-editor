@@ -6,6 +6,8 @@ mod capture;
 #[cfg(windows)]
 mod historical_content;
 #[cfg(windows)]
+mod historical_metadata;
+#[cfg(windows)]
 mod historical_originals;
 #[cfg(windows)]
 mod historical_save;

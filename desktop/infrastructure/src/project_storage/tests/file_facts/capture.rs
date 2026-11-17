@@ -521,7 +521,7 @@ fn live_observation_and_candidate_use_one_exact_control_pool() {
             assert_eq!(reader.usage().managed_peak_bytes, required);
             assert_eq!(
                 reader.usage().managed_bytes,
-                required - support::original_work_bytes()
+                required - support::inspection_work_bytes()
             );
             assert!(
                 file.compare_capture(&q, context(&file, &q))

@@ -9,6 +9,26 @@ impl ParsedCheckpoint {
     pub(super) fn original_root(&self) -> StateHash {
         self.roots["originals"]
     }
+    pub(super) fn features_root(&self) -> StateHash {
+        self.roots["features"]
+    }
+}
+/// Borrowed only after this checkpoint's metadata has passed the old verifier.
+pub(super) struct MetadataView<'a> {
+    pub receipt: &'a ArchiveReceipt,
+    pub features_root: StateHash,
+    pub metadata: &'a ArchiveMetadata,
+    pub tags: &'a [Value],
+    pub extensions: &'a [Value],
+    pub features: &'a [Value],
+}
+pub(super) trait MetadataObserver {
+    fn checkpoint(
+        &mut self,
+        view: MetadataView<'_>,
+        cancel: &CaptureCancellation,
+        probe: Probe,
+    ) -> Result<(), StorageError>;
 }
 pub(super) fn checkpoint(
     cache: &Cache,
@@ -375,7 +395,18 @@ pub(super) fn full_probe(
     cancel: &CaptureCancellation,
     probe: Probe,
 ) -> Result<(Cache, RestoreCandidate), StorageError> {
-    let result = full_inner(c, store, limits, selection, cancel, probe);
+    full_observed(c, store, limits, selection, cancel, probe, None)
+}
+pub(super) fn full_observed(
+    c: &mut Connection,
+    store: &BlobStore,
+    limits: FileLimits,
+    selection: RestoreSelection,
+    cancel: &CaptureCancellation,
+    probe: Probe,
+    observer: Option<&mut dyn MetadataObserver>,
+) -> Result<(Cache, RestoreCandidate), StorageError> {
+    let result = full_inner(c, store, limits, selection, cancel, probe, observer);
     if cancel.is_cancelled() && result.is_err() {
         Err(StorageError::Cancelled)
     } else {
@@ -389,11 +420,12 @@ fn full_inner(
     selection: RestoreSelection,
     cancel: &CaptureCancellation,
     probe: Probe,
+    observer: Option<&mut dyn MetadataObserver>,
 ) -> Result<(Cache, RestoreCandidate), StorageError> {
     check(cancel)?;
     configure(c, limits, cancel)?;
     let mut tx = Transaction::begin(c, false)?;
-    let result = read_snapshot(tx.conn, store, limits, selection, cancel, probe)?;
+    let result = read_snapshot(tx.conn, store, limits, selection, cancel, probe, observer)?;
     check(cancel)?;
     tx.commit()?;
     Ok(result)
@@ -405,6 +437,7 @@ fn read_snapshot(
     selection: RestoreSelection,
     cancel: &CaptureCancellation,
     probe: Probe,
+    mut observer: Option<&mut dyn MetadataObserver>,
 ) -> Result<(Cache, RestoreCandidate), StorageError> {
     if c.query_row("PRAGMA application_id", [], |r| r.get::<_, u32>(0))? != APP_ID
         || c.query_row("PRAGMA user_version", [], |r| r.get::<_, u32>(0))? != CONTAINER_VERSION
@@ -705,6 +738,20 @@ fn read_snapshot(
         }
         meta.last_commit = Some(cp.receipt.clone());
         meta.protected = Some(cp.receipt.clone());
+        if let Some(observer) = observer.as_deref_mut() {
+            observer.checkpoint(
+                MetadataView {
+                    receipt: &cp.receipt,
+                    features_root: p.features_root(),
+                    metadata: &meta,
+                    tags: &last_tags,
+                    extensions: &last_ext,
+                    features: &last_features,
+                },
+                cancel,
+                probe,
+            )?;
+        }
         cache.checkpoints.push(p.checkpoint);
     }
     if seen_nodes.len() != cache.nodes.len()

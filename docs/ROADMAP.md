@@ -1,5 +1,7 @@
 # 开发路线与质量门槛
 
+2026-11-18 B1-2G：[文件侧历史metadata](P3_2B1_2G_REVIEW.md)完成文件侧历史metadata证据，后续仍需真实q的features来源／完整metadata资格、三类NoChange覆盖、Unknown阶段／目标连续性、物理绑定及共同64MiB／PNG／SQLite／临时盘。完整B1／PB16未退出，不跨B2。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。
+
 2026-11-17 B1-2F：[历史q多域关联](P3_2B1_2F_REVIEW.md)完成已有历史域的同观察／真实q关联；完整历史q仍欠features真实来源／完整metadata，后续还需NoChange三类覆盖、Unknown阶段／目标连续性、物理绑定及共同64MiB／PNG／SQLite／临时盘。完整B1／PB16未退出，不进入B2。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。
 
 2026-11-17 B1-2E：[历史原件摘要与q对照](P3_2B1_2E_REVIEW.md)完成固定只读集合／域2及原票守卫；新增7组存储回归，定向108存储／90app和Clippy通过，新SHA完整检查另收口。下一欠证仍是完整历史q多域关联、features／完整metadata、NoChange三类覆盖、Unknown阶段／目标连续性、物理绑定与共同64MiB／PNG／SQLite／临时盘。完整B1／PB16未退出，不进入B2；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及GUI／设备／Skill限制保持。

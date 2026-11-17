@@ -1,5 +1,7 @@
 # P3-2B：真实存储衔接开工契约
 
+2026-11-18 B1-2G：[文件侧历史metadata](P3_2B1_2G_REVIEW.md)仅补文件侧逐代metadata完整域3。私有80B点／40KiB工作、2Data重叠与D合预留保持Reader512KiB；全部旧聚合与新两观察+q边界保留。q缺features及所有PB／BR／BS退出门槛不因文件证据而升级。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。
+
 2026-11-17 B1-2F：[历史q多域关联](P3_2B1_2F_REVIEW.md)只收口已有历史域与原q的统一只读关联，metadata明确未比；PB／BR／BS编号与完整B1门槛保留，不因域相等升级NoChange、覆盖、Unknown或生产authority。Reader512KiB不变，A控制512KiB独立，共同预算仍欠。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。
 
 2026-11-17 B1-2E实施边界：[历史原件只读域](P3_2B1_2E_REVIEW.md)给出具体选集的SHA／长度、域2摘要及真实q对照，外层完整来源与原Ticket保持，原件相等不升级保存资格。固定Data／编码临时工作共享既定Reader512KiB，完整预算仍欠。完整历史q、features／metadata、NoChange／Unknown／物理绑定等退出条件继续保留，PB／BR／BS编号不变，不签完整B1或跨B2。

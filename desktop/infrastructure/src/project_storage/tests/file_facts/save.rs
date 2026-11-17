@@ -627,7 +627,7 @@ fn save_work_and_live_file_share_exact_control_admission_without_reclaiming_owne
             assert_eq!(reader.usage().managed_peak_bytes, required);
             assert_eq!(
                 reader.usage().managed_bytes,
-                required - support::original_work_bytes()
+                required - support::inspection_work_bytes()
             );
             assert_eq!(
                 file.compare_save(

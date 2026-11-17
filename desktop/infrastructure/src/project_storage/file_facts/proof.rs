@@ -71,10 +71,7 @@ impl Encoder {
     }
 }
 
-pub(super) fn metadata(
-    metadata: &ArchiveMetadata,
-    features: &[Value],
-) -> Result<[u8; 32], StorageError> {
+pub(super) fn metadata_header(metadata: &ArchiveMetadata) -> Encoder {
     let mut h = Encoder::new(3);
     h.optional_receipt(metadata.last_commit.as_ref());
     h.optional_receipt(metadata.manual.as_ref());
@@ -84,36 +81,53 @@ pub(super) fn metadata(
         h.id(commit.get());
         h.id(node.get());
     }
+    h
+}
+pub(super) fn metadata_tag(h: &mut Encoder, node: u128, name: &str, value: &str) {
+    h.id(node);
+    h.bytes(name.as_bytes());
+    h.bytes(value.as_bytes());
+}
+pub(super) fn metadata_extension(h: &mut Encoder, name: &str, bytes: &[u8]) {
+    h.bytes(name.as_bytes());
+    h.bytes(bytes);
+}
+pub(super) fn metadata_feature(h: &mut Encoder, feature: &Value) -> Result<(), StorageError> {
+    h.bytes(
+        feature["name"]
+            .as_str()
+            .ok_or(StorageError::Invalid("feature name"))?
+            .as_bytes(),
+    );
+    h.bytes(
+        feature["version"]
+            .as_str()
+            .ok_or(StorageError::Invalid("feature version"))?
+            .as_bytes(),
+    );
+    h.number(u64::from(
+        feature["required"]
+            .as_bool()
+            .ok_or(StorageError::Invalid("feature required"))?,
+    ));
+    Ok(())
+}
+pub(super) fn metadata(
+    metadata: &ArchiveMetadata,
+    features: &[Value],
+) -> Result<[u8; 32], StorageError> {
+    let mut h = metadata_header(metadata);
     h.number(metadata.tags.len() as u64);
     for tag in &metadata.tags {
-        h.id(tag.node.get());
-        h.bytes(tag.name.as_bytes());
-        h.bytes(tag.value.as_bytes());
+        metadata_tag(&mut h, tag.node.get(), &tag.name, &tag.value);
     }
     h.number(metadata.extensions.len() as u64);
     for ext in &metadata.extensions {
-        h.bytes(ext.name.as_bytes());
-        h.bytes(&ext.bytes);
+        metadata_extension(&mut h, &ext.name, &ext.bytes);
     }
     h.number(features.len() as u64);
     for feature in features {
-        h.bytes(
-            feature["name"]
-                .as_str()
-                .ok_or(StorageError::Invalid("feature name"))?
-                .as_bytes(),
-        );
-        h.bytes(
-            feature["version"]
-                .as_str()
-                .ok_or(StorageError::Invalid("feature version"))?
-                .as_bytes(),
-        );
-        h.number(u64::from(
-            feature["required"]
-                .as_bool()
-                .ok_or(StorageError::Invalid("feature required"))?,
-        ));
+        metadata_feature(&mut h, feature)?;
     }
     h.finish()
 }

@@ -3,6 +3,7 @@ use super::*;
 use crate::byte_budget::{ByteBudget, ByteLease};
 mod capture;
 mod historical_content;
+mod historical_metadata;
 mod historical_originals;
 mod historical_save;
 mod intent_context;
@@ -109,6 +110,7 @@ struct Data {
     commit_navigation: [[u8; 32]; MAX_FILE_FACTS_COMMITS],
     historical: historical_content::HistoricalContentData,
     historical_originals: historical_originals::HistoricalOriginalsData,
+    metadata: historical_metadata::MetadataData,
 }
 // Context workspace exits before the Data producer is constructed.
 const _: () = assert!(
@@ -117,10 +119,13 @@ const _: () = assert!(
             + proof::CONTENT_WORK_BYTES
             + 2 * std::mem::size_of::<historical_content::HistoricalContentData>()
             + 2 * std::mem::size_of::<historical_originals::HistoricalOriginalsData>()
+            + 2 * std::mem::size_of::<historical_metadata::MetadataData>()
             + std::mem::size_of::<(FileIntentFacts, [[u8; 32]; MAX_FILE_FACTS_COMMITS])>()
             + std::mem::size_of::<FileFactsSummary>()
             + std::mem::size_of::<FileReadPreflight>()
 );
+const INSPECT_WORK_BYTES: usize =
+    historical_originals::WORK_BYTES + historical_metadata::WORK_BYTES;
 /// No conversion to a writer, restore candidate or application save authority.
 pub struct InspectedFileFacts {
     data: Box<Data>,
@@ -309,7 +314,7 @@ impl FileFactsReader {
         // frame/roots are constructed; the old full validator stays unproven.
         let work_lease = self
             .control
-            .reserve(historical_originals::WORK_BYTES)
+            .reserve(INSPECT_WORK_BYTES)
             .ok_or(FileFactsError::Limit(FileFactsLimit::Control))?;
         let (scratch, mut file) = snapshot::Scratch::create(&self.root.path, source.bytes)?;
         self.pending = Some(scratch);
@@ -384,9 +389,20 @@ impl FileFactsReader {
         let probe = self.probe;
         #[cfg(not(test))]
         let probe = Probe::default();
-        let (cache, candidate) =
-            read::full_probe(conn, &store, limits, request.selection, cancel, probe)
-                .map_err(storage)?;
+        let mut metadata = historical_metadata::MetadataData::empty();
+        let (cache, candidate) = {
+            let mut collector = historical_metadata::Collector::new(&mut metadata);
+            read::full_observed(
+                conn,
+                &store,
+                limits,
+                request.selection,
+                cancel,
+                probe,
+                Some(&mut collector),
+            )
+            .map_err(storage)?
+        };
         if cache.header.project != request.binding.project
             || request.binding.history != Some((&cache.header.identity).into())
             || cache.metadata.last_commit.as_ref().map(|r| r.commit)
@@ -422,6 +438,9 @@ impl FileFactsReader {
         let (intent, commit_navigation) =
             intent_context::file_context(&cache, candidate.header(), observation)
                 .map_err(storage)?;
+        if !metadata.matches_latest(&cache, summary.proof.metadata) {
+            return Err(FileFactsError::ValidationFailed);
+        }
         let historical = historical_content::build(&cache, cancel, probe).map_err(storage)?;
         let mut result = Data {
             summary,
@@ -432,6 +451,7 @@ impl FileFactsReader {
             commit_navigation,
             historical,
             historical_originals: historical_originals::HistoricalOriginalsData::empty(),
+            metadata,
         };
         let mut original_roots = [StateHash::from_bytes([0; 32]); MAX_FILE_FACTS_COMMITS];
         for (index, p) in cache.checkpoints.iter().enumerate() {
@@ -576,11 +596,18 @@ pub(super) mod test_support {
     }
     #[cfg(windows)]
     pub fn inspect_controls(count: usize) -> usize {
-        aggregate_controls(count) + historical_originals::WORK_BYTES
+        aggregate_controls(count) + INSPECT_WORK_BYTES
     }
     #[cfg(windows)]
-    pub fn original_work_bytes() -> usize {
-        historical_originals::WORK_BYTES
+    pub fn inspection_work_bytes() -> usize {
+        INSPECT_WORK_BYTES
+    }
+    #[cfg(windows)]
+    pub fn metadata_layout() -> (usize, usize) {
+        (
+            std::mem::size_of::<historical_metadata::Point>(),
+            historical_metadata::WORK_BYTES,
+        )
     }
     #[cfg(windows)]
     pub fn aggregate_controls(count: usize) -> usize {

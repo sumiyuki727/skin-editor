@@ -161,6 +161,7 @@ enum Stage {
     ReadHistoricalContent,
     ReadOriginalClosure,
     ReadOriginalSummary,
+    ReadMetadataSummary,
     CopyMain,
     CopyJournal,
     BeforeRecovery,

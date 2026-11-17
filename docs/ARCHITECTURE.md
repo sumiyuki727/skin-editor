@@ -1,5 +1,7 @@
 # 架构：当前实现与后续边界
 
+2026-11-18 B1-2G：[文件侧历史metadata](P3_2B1_2G_REVIEW.md)新增独立FileHistoricalMetadata1；infra在旧full本代验证后借用三列表和更新后的回执，固定128槽编码域3；旧入口None不构造collector。没有新依赖／格式变更，q仍没有features来源。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。
+
 2026-11-17 B1-2F：[历史q多域关联](P3_2B1_2F_REVIEW.md)新增application独立FileHistoricalSave1固定值，infra以真实q关联同观察／同选中提交的C／E及请求字段；不接收外部POD拼接，不新增Data／编码／I/O。metadata明确NotCompared，固定成本不证明宿主聚合。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。
 
 2026-11-17 B1-2E：[历史原件摘要](P3_2B1_2E_REVIEW.md)新增application独立FileHistoricalOriginals1，返回完整来源、密集8项Raw引用及域2摘要／数量／字节；infra在D严格校验后直接填固定槽，不新增图／raw遍历。真实q比较复用完整守卫且恒Insufficient，单Reader512KiB固定／临时成本分列，完整64MiB仍欠证。旧API／格式不变，不进入B2或保存资格。

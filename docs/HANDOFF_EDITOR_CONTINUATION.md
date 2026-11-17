@@ -1,5 +1,7 @@
 # 编辑器开发交接：从 P3-1C 继续
 
+2026-11-17最新停靠点：[B1-2E历史原件摘要](P3_2B1_2E_REVIEW.md)完成独立只读集合／域2摘要与真实q原件对照；明确SHA前移位号变化、空集合／零字节、同量异字节和完整来源隔离，结论恒Insufficient。定向108存储／90app及Clippy通过，仍须正常完整hook／新SHA三项CI。完整历史q多域关联、features／metadata、NoChange／Unknown／物理绑定与共同预算仍欠，不签完整B1／PB16、不进入B2；旧38c0c915作回退点，schema.rs／旧证据／PRIVATE保持，新日志仅本机。UI／Skill及现场步骤仍暂停，K1结论不变。
+
 2026-11-17最新停靠点：[B1-2D严格时序准入](P3_2B1_2D_REVIEW.md)已补实验观察每代状态原件闭包与声明精确相等，入队即去重、原state根、共享／未使用／后删及旧分支均覆盖。定向101项与Clippy通过，仍须本轮正常完整hook／新SHA三项CI。无历史原件公开摘要，完整历史q、features／metadata、NoChange／Unknown／物理绑定与共同预算继续欠证；完整B1／PB16不签收，不进入B2。API7／捕获3／协调1及K1结论保持，旧2e869da6为回退点；schema.rs／旧证据／PRIVATE不动，新日志仅本机，UI／Skill和现场步骤仍暂停。
 
 2026-11-17最新停靠点：[B1-2C历史节点内容域](P3_2B1_2C_REVIEW.md)已实现固定提交前缀的节点／admissions域1查询及真实q的内容／头／导航比较，外层保留完整观察／文件请求／选中提交和原Ticket。新增8组回归、存储定向92项通过，仍须本轮完整hook和新SHA三项CI。明确不含历史originals，旧full的逐代原件声明≠状态闭包缺证已登记；features／完整metadata、NoChange覆盖、Unknown连续性与共同预算仍欠，B1／PB16不签收，不进入B2／产品保存。原3c52757及三CI作轮前回退点；本片源码／文档另收口，旧证据／PRIVATE／schema.rs原字节保留，新日志仅本机。用户离开，现场UAC／截图／交互等待，UI／Skill暂停；其他已授权无窗口工作可接续。

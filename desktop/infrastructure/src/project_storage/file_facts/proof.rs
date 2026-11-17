@@ -206,13 +206,11 @@ pub(super) fn build(
     cancel: &CaptureCancellation,
 ) -> Result<FileFactsProof, StorageError> {
     let (content, _) = content(cache, cache.order.len(), cancel)?;
-    let mut h = Encoder::new(2);
-    h.number(cache.originals.len() as u64);
-    for original in &cache.originals {
-        h.bytes(&original.sha256());
-        h.number(original.byte_len());
-    }
-    let originals = h.finish()?;
+    let (originals, _) = original_set(
+        cache.originals.iter().copied(),
+        cache.originals.len(),
+        cancel,
+    )?;
     let metadata = metadata(&cache.metadata, &cache.features)?;
     let mut h = Encoder::new(4);
     h.number(cache.checkpoints.len() as u64);
@@ -257,4 +255,91 @@ pub(super) fn build(
         request,
         baseline: h.finish()?,
     })
+}
+
+pub(super) const ORIGINAL_WORK_BYTES: usize = 2 * std::mem::size_of::<Encoder>()
+    + 2 * std::mem::size_of::<Option<BlobRef>>()
+    + 2 * std::mem::size_of::<[u8; 32]>()
+    + std::mem::size_of::<[u64; 4]>()
+    + std::mem::size_of::<[usize; 8]>();
+pub(super) fn original_set(
+    originals: impl Iterator<Item = BlobRef>,
+    count: usize,
+    cancel: &CaptureCancellation,
+) -> Result<([u8; 32], u64), StorageError> {
+    check(cancel)?;
+    let mut h = Encoder::new(2);
+    h.number(u64::try_from(count).map_err(|_| StorageError::Limit("original proof count"))?);
+    let mut previous: Option<BlobRef> = None;
+    let mut seen = 0usize;
+    let mut bytes = 0u64;
+    for original in originals {
+        check(cancel)?;
+        if seen == count || previous.is_some_and(|p| p.sha256() >= original.sha256()) {
+            return Err(StorageError::Invalid("original proof order/count"));
+        }
+        bytes = bytes
+            .checked_add(original.byte_len())
+            .ok_or(StorageError::Limit("original proof bytes"))?;
+        h.bytes(&original.sha256());
+        h.number(original.byte_len());
+        seen += 1;
+        previous = Some(original);
+    }
+    if seen != count {
+        return Err(StorageError::Invalid("original proof count"));
+    }
+    Ok((h.finish()?, bytes))
+}
+
+#[cfg(test)]
+mod original_tests {
+    use super::*;
+    #[test]
+    fn independent_original_vectors_and_invalid_streams_keep_exact_domain_two() {
+        let vectors: Value = serde_json::from_str(
+            &std::fs::read_to_string(
+                Path::new(env!("CARGO_MANIFEST_DIR")).join("../../docs/P3_2B1_2E_VECTORS.json"),
+            )
+            .unwrap(),
+        )
+        .unwrap();
+        for case in vectors["cases"].as_array().unwrap() {
+            let refs: Vec<_> = case["entries"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|b| {
+                    BlobRef::new(
+                        hash(b["sha256"].as_str().unwrap()).unwrap().bytes(),
+                        b["byte_len"].as_u64().unwrap(),
+                    )
+                })
+                .collect();
+            let (digest, bytes) = original_set(
+                refs.into_iter(),
+                case["len"].as_u64().unwrap() as usize,
+                &CaptureCancellation::default(),
+            )
+            .unwrap();
+            assert_eq!(hex(&digest), case["sha256"]);
+            assert_eq!(bytes, case["bytes"]);
+        }
+        let a = BlobRef::new([1; 32], u64::MAX);
+        let b = BlobRef::new([2; 32], 1);
+        let cancel = CaptureCancellation::default();
+        assert!(original_set([a, a].into_iter(), 2, &cancel).is_err());
+        assert!(original_set([b, a].into_iter(), 2, &cancel).is_err());
+        assert!(original_set([b].into_iter(), 0, &cancel).is_err());
+        assert!(original_set([b].into_iter(), 2, &cancel).is_err());
+        assert_eq!(
+            original_set([a, b].into_iter(), 2, &cancel),
+            Err(StorageError::Limit("original proof bytes"))
+        );
+        cancel.cancel();
+        assert_eq!(
+            original_set(std::iter::empty(), 0, &cancel),
+            Err(StorageError::Cancelled)
+        );
+    }
 }

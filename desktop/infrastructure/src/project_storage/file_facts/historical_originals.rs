@@ -2,7 +2,30 @@
 use super::*;
 
 const BLOCKS: usize = 8192;
-const ORIGINALS: usize = 8;
+const ORIGINALS: usize = MAX_FILE_HISTORICAL_ORIGINALS;
+
+#[derive(Clone, Copy)]
+pub(super) struct OriginalSummary {
+    pub mask: u8,
+    pub digest: [u8; 32],
+    pub bytes: u64,
+}
+pub(super) struct HistoricalOriginalsData {
+    pub dictionary: [Option<BlobRef>; ORIGINALS],
+    pub points: [OriginalSummary; MAX_FILE_FACTS_COMMITS],
+}
+impl HistoricalOriginalsData {
+    pub const fn empty() -> Self {
+        Self {
+            dictionary: [None; ORIGINALS],
+            points: [OriginalSummary {
+                mask: 0,
+                digest: [0; 32],
+                bytes: 0,
+            }; MAX_FILE_FACTS_COMMITS],
+        }
+    }
+}
 type OriginalRoots = [StateHash; MAX_FILE_FACTS_COMMITS];
 struct Work<'a> {
     rows: [Option<&'a blocks::Row>; BLOCKS],
@@ -22,8 +45,10 @@ struct Work<'a> {
 pub(super) const WORK_BYTES: usize = 2 * std::mem::size_of::<Work<'static>>()
     + 2 * std::mem::size_of::<OriginalRoots>()
     + 2 * std::mem::size_of::<[BlobRef; ORIGINALS]>()
-    + std::mem::size_of::<[usize; 128]>();
-const _: () = assert!(BLOCKS <= u16::MAX as usize && WORK_BYTES <= 192 * 1024);
+    + std::mem::size_of::<[usize; 128]>()
+    + proof::ORIGINAL_WORK_BYTES
+    + 2 * std::mem::size_of::<OriginalSummary>();
+const _: () = assert!(ORIGINALS == 8 && BLOCKS <= u16::MAX as usize && WORK_BYTES <= 192 * 1024);
 
 impl Work<'_> {
     fn index(&self, hash: StateHash) -> Result<usize, StorageError> {
@@ -111,6 +136,7 @@ pub(super) fn validate(
     roots: &[StateHash],
     cancel: &CaptureCancellation,
     probe: Probe,
+    output: &mut HistoricalOriginalsData,
 ) -> Result<(), StorageError> {
     if cache.blocks.len() > BLOCKS
         || cache.originals.len() > ORIGINALS
@@ -142,10 +168,11 @@ pub(super) fn validate(
     for (i, blob) in cache.originals.iter().enumerate() {
         check(cancel)?;
         work.originals[i] = *blob;
+        output.dictionary[i] = Some(*blob);
     }
     let mut nodes = 0;
     let mut declared = 0;
-    for (point, root) in cache.checkpoints.iter().zip(roots) {
+    for (index, (point, root)) in cache.checkpoints.iter().zip(roots).enumerate() {
         check(cancel)?;
         if point.node_count < nodes || point.node_count == 0 || point.node_count > cache.order.len()
         {
@@ -169,6 +196,22 @@ pub(super) fn validate(
         if work.actual != declared {
             return Err(StorageError::Invalid("historical original closure"));
         }
+        let mask = work.actual;
+        let (digest, bytes) = proof::original_set(
+            work.originals[..work.originals_len]
+                .iter()
+                .copied()
+                .enumerate()
+                .filter_map(|(i, b)| (mask & (1u8 << i) != 0).then_some(b)),
+            mask.count_ones() as usize,
+            cancel,
+        )?;
+        output.points[index] = OriginalSummary {
+            mask,
+            digest,
+            bytes,
+        };
+        probe.step(Stage::ReadOriginalSummary, cancel)?;
     }
     Ok(())
 }
@@ -176,6 +219,20 @@ pub(super) fn validate(
 #[cfg(test)]
 mod tests {
     use super::*;
+    fn validate(
+        cache: &Cache,
+        roots: &[StateHash],
+        cancel: &CaptureCancellation,
+        probe: Probe,
+    ) -> Result<(), StorageError> {
+        super::validate(
+            cache,
+            roots,
+            cancel,
+            probe,
+            &mut HistoricalOriginalsData::empty(),
+        )
+    }
     fn key(id: u64) -> StateHash {
         let mut bytes = [0; 32];
         bytes[24..].copy_from_slice(&id.to_be_bytes());

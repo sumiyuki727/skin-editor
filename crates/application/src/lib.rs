@@ -17,6 +17,7 @@ mod execute;
 mod file_capture;
 mod file_facts;
 mod file_historical_content;
+mod file_historical_originals;
 mod file_save;
 mod history;
 mod history_control;
@@ -39,6 +40,7 @@ pub use capture_identity::{
 pub use file_capture::*;
 pub use file_facts::*;
 pub use file_historical_content::*;
+pub use file_historical_originals::*;
 pub use file_save::*;
 pub use preview_port::*;
 pub use restore::{RestoreBuilder, RestoreCandidate};

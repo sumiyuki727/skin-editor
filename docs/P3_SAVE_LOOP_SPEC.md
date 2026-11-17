@@ -1,5 +1,7 @@
 # P3-2：保存、关闭与重开闭环规格
 
+2026-11-17 B1-2E：[历史原件集合与对照](P3_2B1_2E_REVIEW.md)在逐代严格校验后生成域2，保留实际SHA／长度及完整q来源，Missing与旧请求隔离、摘要完成后取消及新布局容量已验收。原件相等仍不代表完整q、features／metadata、NoChange覆盖、Unknown连续性或物理绑定合格；完整B1／PB16与共同预算欠证，B2／生产保存／恢复部署排除。
+
 2026-11-17 B1-2D：[严格时序准入](P3_2B1_2D_REVIEW.md)补齐实验观察逐代声明与全部历史状态原件闭包相等的校验，实际遍历后取消及临时容量单独验收；不把旧standalone读取或现有节点摘要提升为历史原件／完整q资格。features／metadata、NoChange三类覆盖、Unknown连续性、物理绑定与共同预算仍欠，不进入B2／生产保存。
 
 2026-11-17 B1-2C：[历史节点内容域](P3_2B1_2C_REVIEW.md)补各提交已验证节点前缀与admissions的只读摘要，保留原Ticket及独立选中提交，内容／头／导航分别比较；不补造历史原件完整性、CurrentManual／Protection／Opening或NoChange覆盖。B1／PB16继续欠证，B2写资格、产品保存及恢复部署仍排除。

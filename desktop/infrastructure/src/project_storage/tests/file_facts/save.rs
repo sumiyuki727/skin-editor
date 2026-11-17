@@ -48,7 +48,7 @@ pub(super) fn fixture_on(
     let (d, port, work, req) = attach_work(d, req);
     (dir, store, d, port, work, req)
 }
-fn attach_work(
+pub(super) fn attach_work(
     mut d: Driver,
     mut req: FileFactsRequest,
 ) -> (

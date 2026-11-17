@@ -257,6 +257,50 @@ fn unused_shared_deleted_and_old_branch_originals_still_admit_complete_observati
         .unwrap();
     assert_eq!(file.summary().originals, 2);
     assert_eq!(file.summary().original_bytes, shared.byte_len());
+    for (commit, count, bytes) in [
+        (400, 0, 0),
+        (401, 1, shared.byte_len()),
+        (402, 2, shared.byte_len()),
+    ] {
+        let result = file
+            .historical_originals(FileHistoricalOriginalsRequest {
+                version: FILE_HISTORICAL_ORIGINALS_VERSION,
+                observation: file.summary().observation,
+                file: req,
+                commit: CommitId::new(commit).unwrap(),
+            })
+            .unwrap();
+        assert_eq!(result.assurance, FileFactsAssurance::ExperimentalValidation);
+        let facts = result.facts.unwrap();
+        assert_eq!((facts.len, facts.bytes), (count, bytes));
+        assert!(facts.entries[..count].iter().all(Option::is_some));
+        assert!(facts.entries[count..].iter().all(Option::is_none));
+        if commit == 400 {
+            let vectors: Value = serde_json::from_str(
+                &std::fs::read_to_string(
+                    Path::new(env!("CARGO_MANIFEST_DIR")).join("../../docs/P3_2B1_2E_VECTORS.json"),
+                )
+                .unwrap(),
+            )
+            .unwrap();
+            assert_eq!(hex(&facts.digest), vectors["cases"][0]["sha256"]);
+        }
+        if commit == 401 {
+            assert_eq!(facts.entries[0], Some(shared));
+        }
+        if commit == 402 {
+            assert_eq!(facts.digest, file.summary().proof.originals);
+            let mut expected = [shared, BlobRef::new(sha(b""), 0)];
+            expected.sort();
+            assert_eq!(facts.entries[..count], expected.map(Some));
+            assert!(
+                facts.entries[..count]
+                    .iter()
+                    .flatten()
+                    .any(|b| b.byte_len() == 0)
+            );
+        }
+    }
     let old = file
         .historical_content(FileHistoricalContentRequest {
             version: FILE_HISTORICAL_CONTENT_VERSION,

@@ -5,6 +5,7 @@ mod capture;
 mod historical_content;
 mod historical_originals;
 mod intent_context;
+mod original_query;
 mod preflight;
 mod proof;
 mod save;
@@ -106,6 +107,7 @@ struct Data {
     intent: FileIntentFacts,
     commit_navigation: [[u8; 32]; MAX_FILE_FACTS_COMMITS],
     historical: historical_content::HistoricalContentData,
+    historical_originals: historical_originals::HistoricalOriginalsData,
 }
 // Context workspace exits before the Data producer is constructed.
 const _: () = assert!(
@@ -113,6 +115,7 @@ const _: () = assert!(
         >= intent_context::WORK_BYTES
             + proof::CONTENT_WORK_BYTES
             + 2 * std::mem::size_of::<historical_content::HistoricalContentData>()
+            + 2 * std::mem::size_of::<historical_originals::HistoricalOriginalsData>()
             + std::mem::size_of::<(FileIntentFacts, [[u8; 32]; MAX_FILE_FACTS_COMMITS])>()
             + std::mem::size_of::<FileFactsSummary>()
             + std::mem::size_of::<FileReadPreflight>()
@@ -427,6 +430,7 @@ impl FileFactsReader {
             intent,
             commit_navigation,
             historical,
+            historical_originals: historical_originals::HistoricalOriginalsData::empty(),
         };
         let mut original_roots = [StateHash::from_bytes([0; 32]); MAX_FILE_FACTS_COMMITS];
         for (index, p) in cache.checkpoints.iter().enumerate() {
@@ -448,8 +452,16 @@ impl FileFactsReader {
             &original_roots[..cache.checkpoints.len()],
             cancel,
             probe,
+            &mut result.historical_originals,
         )
         .map_err(storage)?;
+        let last = result.historical_originals.points[cache.checkpoints.len() - 1];
+        if last.digest != summary.proof.originals
+            || last.mask.count_ones() as usize != summary.originals
+            || last.bytes != summary.original_bytes
+        {
+            return Err(FileFactsError::ValidationFailed);
+        }
         drop(candidate);
         drop(cache);
         debug_assert_eq!(store.usage().map_err(|_| FileFactsError::Io)?.bytes, 0);

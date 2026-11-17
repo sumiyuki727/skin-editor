@@ -7,6 +7,8 @@ mod capture;
 mod historical_content;
 #[cfg(windows)]
 mod historical_originals;
+#[cfg(windows)]
+mod original_query;
 mod preflight;
 #[cfg(windows)]
 mod save;
@@ -74,10 +76,14 @@ fn golden() -> (Directory, Driver, FileFactsRequest) {
 }
 #[cfg(windows)]
 fn golden_variant(last: &str) -> (Directory, Driver, FileFactsRequest) {
+    golden_bytes(last, b"opaque\0original\r\n")
+}
+#[cfg(windows)]
+fn golden_bytes(last: &str, original: &[u8]) -> (Directory, Driver, FileFactsRequest) {
     let dir = Directory::new();
     let store = BlobStore::default();
     let mut d = Driver::new(store.clone());
-    let raw = store.stage_bytes(b"opaque\0original\r\n".to_vec()).unwrap();
+    let raw = store.stage_bytes(original.to_vec()).unwrap();
     d.command(vec![Command::RegisterAsset {
         asset: Asset::new(
             AssetId::new(1).unwrap(),

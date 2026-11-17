@@ -447,12 +447,14 @@ pub(super) mod test_support {
     pub fn save_controls() -> (usize, usize) {
         (save::extra_bytes(), intent_context::WORK_BYTES)
     }
+    #[cfg(windows)]
     pub fn intent_archive(
         m: &ArchiveMetadata,
         delta: Option<&ArchiveReceipt>,
     ) -> Result<[u8; 32], StorageError> {
         intent_context::archive(m, delta, &mut [0; 4096])
     }
+    #[cfg(windows)]
     pub fn intent_navigation(
         head: PersistentNodeId,
         a: u64,

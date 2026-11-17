@@ -17,7 +17,7 @@
     "crates/application/src/lib.rs": "d74bf40c00ba0bba1cd4e5eae52f52d441211afa603dea49e73d57399f39a568",
     "crates/application/src/file_save.rs": "4b39fcebef162b006fc24331e40e96a790377940deac90d006087f07beb44111",
     "desktop/infrastructure/src/project_storage/mod.rs": "f6776f142e7723b3a0eb660c1a5c53b598aa4c92132cadc7cd366aadb97f22be",
-    "desktop/infrastructure/src/project_storage/file_facts.rs": "38361fb71cd2769938397484eb9583a83e02caf6410585b6894ab15c0fc3d89c",
+    "desktop/infrastructure/src/project_storage/file_facts.rs": "e1dcc6aa85ec8cb3589cb636fdd47cd42bc7281960494199ca274f2034cf75c6",
     "desktop/infrastructure/src/project_storage/file_facts/capture.rs": "1aaa594d4f91c033dfe08b3c0b4481684b8ef8ee0fb4012021ef1569904fd676",
     "desktop/infrastructure/src/project_storage/file_facts/proof.rs": "b504164a41cb2a1ff034d0e617794f75d0e45a5835dda258d0cc67439c06d707",
     "desktop/infrastructure/src/project_storage/file_facts/intent_context.rs": "59145879f1f1c4fb891762b281dbc490aeca9035ff6aa8911cf66c7f8c42d19b",
@@ -142,7 +142,7 @@
     "diagnostics": 2,
     "log_sha256": "85888ad7776e61319d2375a2782eee4be409406e3e4e806546982526058c322c",
     "result": "84 passed; zero failed",
-    "scope": "local Windows storage suite; final hook authoritative after unused test variable removal"
+    "scope": "local Windows storage suite; final normal hook authoritative after test-only unused variable and Windows cfg refinements"
   },
   "clippy": {
     "result": "passed after removing unused test variable",
@@ -191,5 +191,16 @@
     "old_proofs_and_private_materials": "untouched",
     "raw_logs": "new ignored local evidence only"
   },
-  "acceptance": "normal full hook, normal push, new containing full SHA three-job successful CI; parent results not reused"
+  "acceptance": "normal full hook, normal push, new containing full SHA three-job successful CI; parent results not reused",
+  "followup": {
+    "parent": "0cf6ad7d681c3e73085d828f815933bbd4df4651",
+    "paths": [
+      "desktop/infrastructure/src/project_storage/file_facts.rs",
+      "docs/P3_2B1_2B_REVIEW.md",
+      "docs/P3_2B1_2B_PROOF.json"
+    ],
+    "reason": "gate two Windows-only test helpers consistently with their only consumers",
+    "production_or_Windows_runtime_logic_change": false,
+    "non_Windows_infrastructure_build": "not executed; conditional-compilation boundary reviewed statically"
+  }
 }

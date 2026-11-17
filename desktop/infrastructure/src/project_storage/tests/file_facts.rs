@@ -8,6 +8,8 @@ mod historical_content;
 #[cfg(windows)]
 mod historical_originals;
 #[cfg(windows)]
+mod historical_save;
+#[cfg(windows)]
 mod original_query;
 mod preflight;
 #[cfg(windows)]

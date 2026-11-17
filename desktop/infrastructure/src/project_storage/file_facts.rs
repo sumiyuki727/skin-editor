@@ -4,6 +4,7 @@ use crate::byte_budget::{ByteBudget, ByteLease};
 mod capture;
 mod historical_content;
 mod historical_originals;
+mod historical_save;
 mod intent_context;
 mod original_query;
 mod preflight;

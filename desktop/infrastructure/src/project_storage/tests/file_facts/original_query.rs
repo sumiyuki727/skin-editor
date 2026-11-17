@@ -27,7 +27,7 @@ fn original_vectors() -> Value {
     )
     .unwrap()
 }
-fn future_before_old(path: &Path, store: &BlobStore, previous: SaveTicket) -> BlobRef {
+pub(super) fn future_before_old(path: &Path, store: &BlobStore, previous: SaveTicket) -> BlobRef {
     let mut writer = save::load_driver(path, store, 91);
     writer.ids = Ids(4000);
     writer.nav(HistoryAction::Checkout {

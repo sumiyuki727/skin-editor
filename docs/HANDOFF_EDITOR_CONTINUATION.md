@@ -1,5 +1,7 @@
 # 编辑器开发交接：从 P3-1C 继续
 
+2026-11-17 B1-2F：[历史q多域关联](P3_2B1_2F_REVIEW.md)已将历史内容／原件／导航及选中提交请求证据统一关联到同一完整观察和实际q，保原票／expected。十行固定矩阵与四算术边界经独立审阅，不用compare_save原Ticket提交冒充selected证据。features／完整metadata及覆盖／Unknown／物理绑定／共同预算仍欠，不签完整B1。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。
+
 2026-11-17最新停靠点：[B1-2E历史原件摘要](P3_2B1_2E_REVIEW.md)完成独立只读集合／域2摘要与真实q原件对照；明确SHA前移位号变化、空集合／零字节、同量异字节和完整来源隔离，结论恒Insufficient。定向108存储／90app及Clippy通过，仍须正常完整hook／新SHA三项CI。完整历史q多域关联、features／metadata、NoChange／Unknown／物理绑定与共同预算仍欠，不签完整B1／PB16、不进入B2；旧38c0c915作回退点，schema.rs／旧证据／PRIVATE保持，新日志仅本机。UI／Skill及现场步骤仍暂停，K1结论不变。
 
 2026-11-17最新停靠点：[B1-2D严格时序准入](P3_2B1_2D_REVIEW.md)已补实验观察每代状态原件闭包与声明精确相等，入队即去重、原state根、共享／未使用／后删及旧分支均覆盖。定向101项与Clippy通过，仍须本轮正常完整hook／新SHA三项CI。无历史原件公开摘要，完整历史q、features／metadata、NoChange／Unknown／物理绑定与共同预算继续欠证；完整B1／PB16不签收，不进入B2。API7／捕获3／协调1及K1结论保持，旧2e869da6为回退点；schema.rs／旧证据／PRIVATE不动，新日志仅本机，UI／Skill和现场步骤仍暂停。

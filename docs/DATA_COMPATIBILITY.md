@@ -1,5 +1,7 @@
 # 用户数据、完整历史与长期兼容约定
 
+2026-11-17 B1-2F：[历史q多域关联](P3_2B1_2F_REVIEW.md)新增独立FileHistoricalSave1接口；旧API7／捕获3／协调1、端口及文件／记录／黄金字节不变。原Ticket／expected与观察latest分别保留；TicketCommit只表示ID关系，generation不可算与不等分开，metadata未比。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。
+
 2026-11-17 B1-2E：[历史原件只读接口](P3_2B1_2E_REVIEW.md)独立版本1，明确选中提交的SHA／长度集合、域2摘要及完整观察／请求；真实q保留原票expected，Missing也守卫。原件同集不推出节点／类型／metadata或保存覆盖相等；旧域2字节／黄金值、API7／捕获3／协调1和文件／记录格式保持，完整历史q及写资格仍欠。
 
 2026-11-17 B1-2D：[严格观察准入](P3_2B1_2D_REVIEW.md)从原record.state累计含未使用／后删／旧分支的原件集合，逐代对照已验证声明，拒绝早／迟登记的实验观察。旧standalone full仍无此新增资格；不修复文件，不改既有格式／API7／捕获3／协调1。B1-2C接口仍不含历史originals摘要或比较，完整历史q与保存覆盖另待证明。

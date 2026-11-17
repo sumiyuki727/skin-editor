@@ -1,5 +1,7 @@
 # P3-2：保存、关闭与重开闭环规格
 
+2026-11-17 B1-2F：[历史q多域关联](P3_2B1_2F_REVIEW.md)同观察关联C／E域和选中提交自己的请求证据，Missing仍守卫、各域／ID独立，metadata NotCompared，恒Insufficient。未完成features／完整metadata、三类NoChange覆盖、Unknown连续性、物理绑定或共同预算，不进入B2／生产保存／恢复部署。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。
+
 2026-11-17 B1-2E：[历史原件集合与对照](P3_2B1_2E_REVIEW.md)在逐代严格校验后生成域2，保留实际SHA／长度及完整q来源，Missing与旧请求隔离、摘要完成后取消及新布局容量已验收。原件相等仍不代表完整q、features／metadata、NoChange覆盖、Unknown连续性或物理绑定合格；完整B1／PB16与共同预算欠证，B2／生产保存／恢复部署排除。
 
 2026-11-17 B1-2D：[严格时序准入](P3_2B1_2D_REVIEW.md)补齐实验观察逐代声明与全部历史状态原件闭包相等的校验，实际遍历后取消及临时容量单独验收；不把旧standalone读取或现有节点摘要提升为历史原件／完整q资格。features／metadata、NoChange三类覆盖、Unknown连续性、物理绑定与共同预算仍欠，不进入B2／生产保存。

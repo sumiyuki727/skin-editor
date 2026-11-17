@@ -1,0 +1,218 @@
+{
+  "schema": "FileHistoricalSave1-semantic-matrix",
+  "producer": "Fixed fixture analysis before implementation; independently reviewed; not Rust output",
+  "encoding_change": false,
+  "goldens_retained": [
+    "P3_2B1_PROOF_VECTORS.json",
+    "P3_2B1_2B_VECTORS.json",
+    "P3_2B1_2C_VECTORS.json",
+    "P3_2B1_2E_VECTORS.json"
+  ],
+  "columns": [
+    "content",
+    "originals",
+    "head",
+    "navigation",
+    "legacy_fields",
+    "generation",
+    "is_latest"
+  ],
+  "cases": [
+    {
+      "name": "latest_q_before_write_missing",
+      "fixture": "fixture_on(true), selected original ticket commit, before write",
+      "relation": null,
+      "equal": null,
+      "expected_generation": null,
+      "previous_equal": null,
+      "origin_equal": null
+    },
+    {
+      "name": "latest_q_before_write_401",
+      "fixture": "fixture_on(true), selected401, before write",
+      "relation": "OtherCommit",
+      "equal": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ],
+      "expected_generation": 3,
+      "previous_equal": false,
+      "origin_equal": false
+    },
+    {
+      "name": "latest_q_before_write_400",
+      "fixture": "fixture_on(true), selected400, before write",
+      "relation": "OtherCommit",
+      "equal": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "expected_generation": 3,
+      "previous_equal": false,
+      "origin_equal": true
+    },
+    {
+      "name": "latest_q_written",
+      "fixture": "fixture_on(true), committed(original ticket), selected original ticket commit",
+      "relation": "TicketCommit",
+      "equal": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "expected_generation": 3,
+      "previous_equal": true,
+      "origin_equal": true
+    },
+    {
+      "name": "latest_q_after_future",
+      "fixture": "previous row plus future_before_old raw SHA0209 and commit3001/gen4; selected original ticket commit",
+      "relation": "TicketCommit",
+      "equal": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "expected_generation": 3,
+      "previous_equal": true,
+      "origin_equal": true
+    },
+    {
+      "name": "latest_q_select_future",
+      "fixture": "previous row; selected3001",
+      "relation": "OtherCommit",
+      "equal": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "expected_generation": 3,
+      "previous_equal": false,
+      "origin_equal": false
+    },
+    {
+      "name": "latest_q_after_future_select_401",
+      "fixture": "same future file; selected401",
+      "relation": "OtherCommit",
+      "equal": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+      ],
+      "expected_generation": 3,
+      "previous_equal": false,
+      "origin_equal": false
+    },
+    {
+      "name": "manual_q_same_id_wrong_head",
+      "fixture": "fixture_on(false), q head manual3; committed helper writes head4 under original ticket ID",
+      "relation": "TicketCommit",
+      "equal": [
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true
+      ],
+      "expected_generation": 3,
+      "previous_equal": true,
+      "origin_equal": true
+    },
+    {
+      "name": "manual_q_before_write_401",
+      "fixture": "fixture_on(false), selected401, before write",
+      "relation": "OtherCommit",
+      "equal": [
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "expected_generation": 3,
+      "previous_equal": false,
+      "origin_equal": false
+    },
+    {
+      "name": "same_counts_different_raw",
+      "fixture": "Upper ORIGINAL raw file loaded Manual into actual Work; inspect Old original raw file, selected401; both1 raw/17bytes",
+      "relation": "OtherCommit",
+      "equal": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "expected_generation": 3,
+      "previous_equal": false,
+      "origin_equal": false
+    }
+  ],
+  "every_result": {
+    "assurance": "ExperimentalValidation",
+    "metadata": "NotCompared",
+    "conclusion": "InsufficientForSaveReconciliation",
+    "saved": false
+  },
+  "provenance": "golden400 Manual/gen1/head3, golden401 Exit/gen2/head4; q Manual/original expected401/gen2, actual q commit follows gen3; future Exit3001/gen4/head new branch. Historical membership/content comes from C/D/E independently tested fixed goldens.",
+  "generation_boundaries": [
+    {
+      "before": null,
+      "actual": 3,
+      "expected": null,
+      "equal": null
+    },
+    {
+      "before": 18446744073709551615,
+      "actual": 3,
+      "expected": null,
+      "equal": null
+    },
+    {
+      "before": 2,
+      "actual": 3,
+      "expected": 3,
+      "equal": true
+    },
+    {
+      "before": 2,
+      "actual": 4,
+      "expected": 3,
+      "equal": false
+    }
+  ],
+  "boundary_scope": "Pure arithmetic helper tests only; not a claim that real ExistingVerified q/file admits missing or max generation."
+}

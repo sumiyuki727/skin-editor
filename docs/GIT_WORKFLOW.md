@@ -1,5 +1,7 @@
 # Git 与远端管理
 
+2026-11-17 B1-2F：[历史q多域关联](P3_2B1_2F_REVIEW.md)轮前HEAD／PUBLIC origin5a340284f0275e07564fc0daa7a3e2a89e611c7e，run44085058173三项成功，无实际／暂存差异，复用回退点；890文件原字节／mtime基线仅本机。八源码＋十二文档正常完整hook／精确暂存／PUBLIC推送及新SHA三项CI，schema.rs／旧证据／PRIVATE保持，新增原始日志仅本机。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。
+
 2026-11-17 B1-2E轮前确认：HEAD与PUBLIC origin为38c0c915397f44b4bffe9852cb078305bb3e7eb4，run44068675153三项成功；实际／暂存差异为空，复用回退点，883文件字节／mtime基线仅本机。本轮[原件摘要与q对照](P3_2B1_2E_REVIEW.md)先冻结契约／七组独立模型，经两路审阅后实施；十一源码＋十二文档按正常完整hook、精确暂存／PUBLIC推送及新SHA三项CI收尾。schema.rs、旧证据／PRIVATE保留，新原始日志仅本机；用户返回未知，现场步骤等待。
 
 2026-11-17 B1-2D轮前确认：HEAD与PUBLIC origin为2e869da6c3b71120022eb14e3751d6c1611d89e1，run44053396988三项成功；实际／暂存差异为空，复用回退点，877文件字节／mtime基线仅本机。本轮[历史原件时序严格校验](P3_2B1_2D_REVIEW.md)经两路独立设计冻结后实施，九源码＋十二文档另按精确路径／正常完整hook／PUBLIC推送及新完整SHA三项CI收尾。schema.rs、旧证据／PRIVATE材料保留，新原始日志仅本机；用户返回时间未知，现场步骤等待。

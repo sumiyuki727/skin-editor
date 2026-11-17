@@ -108,6 +108,16 @@ pub(super) fn predict(metadata: &ArchiveMetadata, ticket: SaveTicket) -> Option<
         origin: ticket.origin,
     })
 }
+pub(super) fn legacy_fields_equal(q: FileSaveIntentSummary, c: FileCommitFacts) -> bool {
+    c.previous == q.ticket.target.expected.commit
+        && c.fact.origin == q.ticket.origin
+        && c.fact.head == q.ticket.head
+        && c.legacy_request == q.legacy_request
+        && c.prefix == q.prefix
+        && c.nodes == q.capture.nodes
+        && c.next_alias == q.next_alias
+        && c.next_branch == q.next_branch
+}
 pub(super) fn match_commit(
     q: FileSaveIntentSummary,
     c: FileCommitFacts,
@@ -119,14 +129,7 @@ pub(super) fn match_commit(
     FileSaveCommitEvidence {
         fact: c.fact,
         previous: c.previous,
-        legacy_fields_equal: c.previous == q.ticket.target.expected.commit
-            && c.fact.origin == q.ticket.origin
-            && c.fact.head == q.ticket.head
-            && c.legacy_request == q.legacy_request
-            && c.prefix == q.prefix
-            && c.nodes == q.capture.nodes
-            && c.next_alias == q.next_alias
-            && c.next_branch == q.next_branch,
+        legacy_fields_equal: legacy_fields_equal(q, c),
         generation_equal: q
             .ticket
             .target

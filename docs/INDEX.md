@@ -1,5 +1,7 @@
 # 文档索引
 
+2026-11-17 B1-2F：[历史q多域关联](P3_2B1_2F_REVIEW.md)本轮入口为[契约](P3_2B1_2F_CONTRACT.md)、[固定语义矩阵](P3_2B1_2F_MATRIX.json)、[审阅](P3_2B1_2F_REVIEW.md)及[结构化证据](P3_2B1_2F_PROOF.json)。已比历史域只读关联，不授予保存资格。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。
+
 2026-11-17最新增量：[B1-2E契约](P3_2B1_2E_CONTRACT.md)、[实现审阅](P3_2B1_2E_REVIEW.md)、[七组独立域2模型](P3_2B1_2E_VECTORS.json)和[结构化证据](P3_2B1_2E_PROOF.json)记录历史原件集合／摘要与真实q对照，仍仅Experimental／Insufficient／BudgetUnproven，不增加保存资格。完整B1／PB16及共同预算仍欠。
 
 2026-11-17最新增量：[B1-2D契约](P3_2B1_2D_CONTRACT.md)、[实现审阅](P3_2B1_2D_REVIEW.md)、[四组独立模型](P3_2B1_2D_VECTORS.json)及[结构化证据](P3_2B1_2D_PROOF.json)记录实验观察的历史原件时序严格准入，不新增公开摘要或保存资格。完整B1／PB16及共同预算继续欠证，保持Experimental／Insufficient／BudgetUnproven。

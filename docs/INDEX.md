@@ -1,5 +1,7 @@
 # 文档索引
 
+2026-11-18 G夹具事务修订：[CI收尾审阅](P3_2B1_2G_CI_REVIEW.md)记录075b204/run44125234390的两核心成功／桌面cancelled，不能签三项成功；默认和all-features各300项已过，取消根因仍Unknown。仅合并自制metadata输入构造为一次事务，保留所有旧／新用例、黄金、同步等级、预算与时限，另以正常完整hook及新SHA CI核验。G文件侧能力及q features缺口／F NotCompared不变，完整B1／PB16和NoChange／Unknown／物理绑定／共同预算仍欠；保持Experimental／Insufficient／BudgetUnproven，K1、产品NotEvaluated／stable Unknown和UI／设备／Skill限制不变。旧证明／PRIVATE／schema.rs保留，新原始日志仅本机。
+
 2026-11-18 B1-2G：[文件侧历史metadata](P3_2B1_2G_REVIEW.md)本轮入口为[契约](P3_2B1_2G_CONTRACT.md)、[八组独立域3模型](P3_2B1_2G_VECTORS.json)、[审阅](P3_2B1_2G_REVIEW.md)、[结构化证据](P3_2B1_2G_PROOF.json)。文件侧材料补齐不等于真实q或保存资格补齐。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。
 
 2026-11-17 B1-2F：[历史q多域关联](P3_2B1_2F_REVIEW.md)本轮入口为[契约](P3_2B1_2F_CONTRACT.md)、[固定语义矩阵](P3_2B1_2F_MATRIX.json)、[审阅](P3_2B1_2F_REVIEW.md)及[结构化证据](P3_2B1_2F_PROOF.json)。已比历史域只读关联，不授予保存资格。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。

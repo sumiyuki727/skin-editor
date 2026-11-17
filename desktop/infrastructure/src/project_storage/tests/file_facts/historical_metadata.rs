@@ -190,6 +190,10 @@ fn metadata_fixture(bad: Option<&str>) -> (Directory, FileFactsRequest, [[u8; 32
         .collect::<Result<_, _>>()
         .unwrap();
     a.conn.execute_batch("PRAGMA foreign_keys=OFF").unwrap();
+    // Self-authored fixture construction only: retain every mutation and
+    // restore every guard, with one commit instead of per-statement commits.
+    a.conn.execute_batch("BEGIN").unwrap();
+    assert!(!a.conn.is_autocommit());
     for (name, _) in &guards {
         a.conn
             .execute_batch(&format!("DROP TRIGGER {name}"))
@@ -371,7 +375,16 @@ fn metadata_fixture(bad: Option<&str>) -> (Directory, FileFactsRequest, [[u8; 32
     for (_, sql) in guards {
         a.conn.execute_batch(&sql).unwrap();
     }
+    assert!(!a.conn.is_autocommit());
+    a.conn.execute_batch("COMMIT").unwrap();
+    assert!(a.conn.is_autocommit());
     a.conn.execute_batch("PRAGMA foreign_keys=ON").unwrap();
+    assert_eq!(
+        a.conn
+            .query_row("PRAGMA foreign_keys", [], |r| r.get::<_, i64>(0))
+            .unwrap(),
+        1
+    );
     schema::verify(&a.conn).unwrap();
     drop(a);
     (dir, req, roots)

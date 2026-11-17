@@ -1,5 +1,7 @@
 # P3-2：保存、关闭与重开闭环规格
 
+2026-11-18 G夹具事务修订：[CI收尾审阅](P3_2B1_2G_CI_REVIEW.md)记录075b204/run44125234390的两核心成功／桌面cancelled，不能签三项成功；默认和all-features各300项已过，取消根因仍Unknown。仅合并自制metadata输入构造为一次事务，保留所有旧／新用例、黄金、同步等级、预算与时限，另以正常完整hook及新SHA CI核验。G文件侧能力及q features缺口／F NotCompared不变，完整B1／PB16和NoChange／Unknown／物理绑定／共同预算仍欠；保持Experimental／Insufficient／BudgetUnproven，K1、产品NotEvaluated／stable Unknown和UI／设备／Skill限制不变。旧证明／PRIVATE／schema.rs保留，新原始日志仅本机。
+
 2026-11-18 B1-2G：[文件侧历史metadata](P3_2B1_2G_REVIEW.md)文件侧逐代metadata来源和完整域3已可查询，旧值／optional／二进制字节按本代保留。真实q尚缺features版本化来源链，禁止从当前观察或writer默认补造；F.metadata仍NotCompared，不推NoChange或Unknown解除。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。
 
 2026-11-17 B1-2F：[历史q多域关联](P3_2B1_2F_REVIEW.md)同观察关联C／E域和选中提交自己的请求证据，Missing仍守卫、各域／ID独立，metadata NotCompared，恒Insufficient。未完成features／完整metadata、三类NoChange覆盖、Unknown连续性、物理绑定或共同预算，不进入B2／生产保存／恢复部署。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。

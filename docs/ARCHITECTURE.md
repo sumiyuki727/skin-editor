@@ -1,5 +1,7 @@
 # 架构：当前实现与后续边界
 
+2026-11-18 G夹具事务修订：[CI收尾审阅](P3_2B1_2G_CI_REVIEW.md)记录075b204/run44125234390的两核心成功／桌面cancelled，不能签三项成功；默认和all-features各300项已过，取消根因仍Unknown。仅合并自制metadata输入构造为一次事务，保留所有旧／新用例、黄金、同步等级、预算与时限，另以正常完整hook及新SHA CI核验。G文件侧能力及q features缺口／F NotCompared不变，完整B1／PB16和NoChange／Unknown／物理绑定／共同预算仍欠；保持Experimental／Insufficient／BudgetUnproven，K1、产品NotEvaluated／stable Unknown和UI／设备／Skill限制不变。旧证明／PRIVATE／schema.rs保留，新原始日志仅本机。
+
 2026-11-18 B1-2G：[文件侧历史metadata](P3_2B1_2G_REVIEW.md)新增独立FileHistoricalMetadata1；infra在旧full本代验证后借用三列表和更新后的回执，固定128槽编码域3；旧入口None不构造collector。没有新依赖／格式变更，q仍没有features来源。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。
 
 2026-11-17 B1-2F：[历史q多域关联](P3_2B1_2F_REVIEW.md)新增application独立FileHistoricalSave1固定值，infra以真实q关联同观察／同选中提交的C／E及请求字段；不接收外部POD拼接，不新增Data／编码／I/O。metadata明确NotCompared，固定成本不证明宿主聚合。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。

@@ -1,5 +1,7 @@
 # 编辑器开发交接：从 P3-1C 继续
 
+2026-11-18 G夹具事务修订：[CI收尾审阅](P3_2B1_2G_CI_REVIEW.md)记录075b204/run44125234390的两核心成功／桌面cancelled，不能签三项成功；默认和all-features各300项已过，取消根因仍Unknown。仅合并自制metadata输入构造为一次事务，保留所有旧／新用例、黄金、同步等级、预算与时限，另以正常完整hook及新SHA CI核验。G文件侧能力及q features缺口／F NotCompared不变，完整B1／PB16和NoChange／Unknown／物理绑定／共同预算仍欠；保持Experimental／Insufficient／BudgetUnproven，K1、产品NotEvaluated／stable Unknown和UI／设备／Skill限制不变。旧证明／PRIVATE／schema.rs保留，新原始日志仅本机。
+
 2026-11-18 B1-2G：[文件侧历史metadata](P3_2B1_2G_REVIEW.md)已补文件侧历史post-commit域3、真实features根和五计数／扩展字节；八独立模型、124存储／92app及两观察+q512KiB边界已验。q的ArchiveMetadata／RestoreHeader／CaptureManifest无features，F仍NotCompared，完整历史q未完成。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。
 
 2026-11-17 B1-2F：[历史q多域关联](P3_2B1_2F_REVIEW.md)已将历史内容／原件／导航及选中提交请求证据统一关联到同一完整观察和实际q，保原票／expected。十行固定矩阵与四算术边界经独立审阅，不用compare_save原Ticket提交冒充selected证据。features／完整metadata及覆盖／Unknown／物理绑定／共同预算仍欠，不签完整B1。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。

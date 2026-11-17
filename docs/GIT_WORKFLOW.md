@@ -1,5 +1,7 @@
 # Git 与远端管理
 
+2026-11-18 G夹具事务修订：[CI收尾审阅](P3_2B1_2G_CI_REVIEW.md)记录075b204/run44125234390的两核心成功／桌面cancelled，不能签三项成功；默认和all-features各300项已过，取消根因仍Unknown。仅合并自制metadata输入构造为一次事务，保留所有旧／新用例、黄金、同步等级、预算与时限，另以正常完整hook及新SHA CI核验。G文件侧能力及q features缺口／F NotCompared不变，完整B1／PB16和NoChange／Unknown／物理绑定／共同预算仍欠；保持Experimental／Insufficient／BudgetUnproven，K1、产品NotEvaluated／stable Unknown和UI／设备／Skill限制不变。旧证明／PRIVATE／schema.rs保留，新原始日志仅本机。
+
 2026-11-18 B1-2G：[文件侧历史metadata](P3_2B1_2G_REVIEW.md)轮前PUBLIC origin／HEAD=bc0b935bb6700dc0ae04fea029235300cb369f55，run44104073562三项首次成功，无实际／暂存差异，复用HEAD；897文件原字节／mtime基线仅本机。十一源码＋十二文档正常完整hook／精确暂存／推送及新SHA三项CI，旧证明／PRIVATE／schema.rs保留，新原始日志仅本机。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。
 
 2026-11-17 B1-2F：[历史q多域关联](P3_2B1_2F_REVIEW.md)轮前HEAD／PUBLIC origin5a340284f0275e07564fc0daa7a3e2a89e611c7e，run44085058173三项成功，无实际／暂存差异，复用回退点；890文件原字节／mtime基线仅本机。八源码＋十二文档正常完整hook／精确暂存／PUBLIC推送及新SHA三项CI，schema.rs／旧证据／PRIVATE保持，新增原始日志仅本机。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。

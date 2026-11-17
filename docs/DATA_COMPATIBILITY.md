@@ -1,5 +1,7 @@
 # 用户数据、完整历史与长期兼容约定
 
+2026-11-17 B1-2A：[冻结捕获投影与原始量预检](P3_2B1_2A_REVIEW.md)完成真实q的content／originals两域规范化、同观察完整来源比较、UTF-8及固定17项原始量预检。原18＋新增24专项通过，结果始终ExperimentalValidation／Insufficient；原Ticket、metadata／导航／完整Unknown与64MiB／SQLite／临时盘仍欠证，完整B1／PB16未签收。下一步继续B1证据收口，不进入B2写入或产品保存。API7／捕获3／协调1及旧格式保持，U1–U3可调默认和K1／Reference10000／Tiny4／产品NotEvaluated／stable Unknown不变。以下日期段保留历史时点。
+
 2026-11-17 B1-1：[文件侧只读事实与规范](P3_2B1_FILE_FACTS.md)读取完整历史／原记录／实际原字节并生成独立五域文件摘要，逐提交保留旧request_hash映射；FileFactsProof不是PreparedWitness，不自动确认q或NoChange。当前文件／DDL／记录版本和API7／捕获3／协调1不变；U1–U3已确认可调整默认，连续命名保留身份与完整历史，覆盖与清理另约。真实设置／迁移／命名未在本片实施，结果仅内部实验，旧证明不回写。
 
 2026-11-17 B契约修订2：[BR01–BR09](P3_2B_START_CONTRACT.md#10-审阅开工与保管门槛)补清恢复盘C／当前q=E的真实Manual、跨重启转交冻结、新副本独立发现资格、已确认事实不回退及旧深／宽历史回归分栏。只修契约，原记录／schema／旧证明及全部持久格式保持；连续命名身份仍为待用户决定的U3建议，PB01–PB32全部未实施。以下日期记录保留原时点。

@@ -4,6 +4,8 @@
 
 ## 当前阅读入口
 
+- [B1-2A冻结捕获两域比较与资源预检](P3_2B1_2A_REVIEW.md)／[开工契约及预算台账](P3_2B1_2A_READONLY_CONTRACT.md)／[独立投影向量](P3_2B1_2A_CAPTURE_VECTORS.json)（新增24项＋原18项；仍Experimental／Insufficient，完整B1／PB16与生产保存未签收）
+
 - [B1-1健康既有文件的实验性只读事实](P3_2B1_REVIEW.md)／[接口与proof规范](P3_2B1_FILE_FACTS.md)／[独立向量](P3_2B1_PROOF_VECTORS.json)（18项Windows专项；政策可调默认已确认，完整B1／生产共同预算／q对照仍欠项，无写入／UI）
 
 - [P3-2B真实存储衔接开工契约](P3_2B_START_CONTRACT.md)（2026-11-17审阅修订2，BR01–BR09已合入；政策已确认，当前B1-1实验见上；32组整体验收仍未签收，真实写入／恢复部署后置）

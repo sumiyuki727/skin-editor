@@ -10,7 +10,9 @@ use crate::project_format::{
     CodecError, FormatLimits, StateBlock, StateBundle, StateHash, decode_project, encode_project,
 };
 use crate::{BlobStore, RawBlob};
-pub use file_facts::{FileFactsLimits, FileFactsReader, FileFactsUsage, InspectedFileFacts};
+pub use file_facts::{
+    FileCaptureCandidate, FileFactsLimits, FileFactsReader, FileFactsUsage, InspectedFileFacts,
+};
 pub use recovery::{
     RECOVERY_VERSION, RecoveredArchive, RecoveryDigest, RecoveryMode, RecoveryReport,
 };

@@ -14,6 +14,7 @@ mod contract;
 mod draft;
 mod draft_contract;
 mod execute;
+mod file_capture;
 mod file_facts;
 mod history;
 mod history_control;
@@ -33,6 +34,7 @@ pub use capture_identity::{
     AddressEpoch, CommitId, HistoryIdentitySource, IdentityError, LineageId, PersistentHistoryId,
     PersistentHistoryIdentity, PersistentNodeId, PersistentNodeReference,
 };
+pub use file_capture::*;
 pub use file_facts::*;
 pub use preview_port::*;
 pub use restore::{RestoreBuilder, RestoreCandidate};

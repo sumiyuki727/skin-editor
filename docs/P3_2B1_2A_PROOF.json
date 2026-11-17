@@ -1,0 +1,124 @@
+{
+  "schema": "P3-2B1-2A-review-evidence-v1",
+  "kind": "partial experimental evidence; not a file qualification or save witness",
+  "parent": "77ec779676555b40c4323811806d555af38a09ef",
+  "containing_commit": "resolve through Git; no self-SHA",
+  "versions": {
+    "API": 7,
+    "capture": 3,
+    "coordination": 1,
+    "archive": 1,
+    "FileFactsPort": 1,
+    "FileCoordProof": 1,
+    "FileCaptureProjection": 1,
+    "FileReadPreflight": 1
+  },
+  "sources_lf_sha256": {
+    "crates/application/src/lib.rs": "61d4006c5b13980f9ee514c25a5e1d9258fd6e77ce45362a779b207521f401ea",
+    "crates/application/src/file_capture.rs": "fcfefaafe5256585ca93a4531862113355f7746b0ae776b9768a9a05ebc3b1ca",
+    "desktop/infrastructure/src/project_storage/mod.rs": "228229d1e29f427b3a4893e823b28c0bac22ea7d8da54e415e973f1c10f88651",
+    "desktop/infrastructure/src/project_storage/file_facts.rs": "c77839f04289a6b65df13244b6a30d1178dd42d96969ac1e24e8827fd5958228",
+    "desktop/infrastructure/src/project_storage/file_facts/capture.rs": "78e6da35a6b86dd3f7d13a475584dcfc1e85ed8e6eb3bf7a38ddc0a42470af22",
+    "desktop/infrastructure/src/project_storage/file_facts/preflight.rs": "a226f113855f20bbafb6947c9d5b227babe174c1bf3cb3074821cffe87c71da6",
+    "desktop/infrastructure/src/project_storage/tests/file_facts.rs": "9fc931147bc0f3663ed4036a80cfb54a4fd3bf8bb934fd903e46ce6fe8396fea",
+    "desktop/infrastructure/src/project_storage/tests/file_facts/capture.rs": "490e804383bb33cb0ddb76435b76f75bcf177ecf12bb48e60ba8277bd99d276b",
+    "desktop/infrastructure/src/project_storage/tests/file_facts/preflight.rs": "d701cc45b0c8550a074ddcc97e930abedd47c913e3304e5682adc14d39175ff7"
+  },
+  "vectors": {
+    "path": "docs/P3_2B1_2A_CAPTURE_VECTORS.json",
+    "sha256": "c9353fe347d762825c26491085fae85238f5ff6474ec52f4defabfdf44963d7c",
+    "independent_python_cases": 2,
+    "field_counts": [
+      18,
+      18
+    ],
+    "some_scope": "serialization/capture projection only, no legal file migration assertion"
+  },
+  "targeted": {
+    "tests": [
+      "project_storage::tests::file_facts::capture::independent_none_and_some_vectors_preserve_original_action_and_original_state",
+      "project_storage::tests::file_facts::capture::some_record_semantic_or_checksum_conflict_rejects_the_whole_projection",
+      "project_storage::tests::file_facts::capture::partial_producers_and_missing_actual_originals_never_publish_a_candidate",
+      "project_storage::tests::file_facts::all_sidecars_including_empty_files_are_refused_without_recovery_or_mutation",
+      "project_storage::tests::file_facts::capture::retained_node_consumer_keeps_capture_ownership_after_partial_entry_rejection",
+      "project_storage::tests::file_facts::capture::candidate_and_external_snapshot_keep_the_real_capture_slot_until_last_drop",
+      "project_storage::tests::file_facts::capture::both_cancellation_tokens_fail_without_partial_candidates_or_premature_release",
+      "project_storage::tests::file_facts::capture::frozen_q_survives_later_commands_and_does_not_claim_current_session_state",
+      "project_storage::tests::file_facts::capture::equal_counts_with_different_actual_originals_do_not_compare_equal",
+      "project_storage::tests::file_facts::independent_framing_and_complete_field_vectors_do_not_use_runtime_generation",
+      "project_storage::tests::file_facts::capture::wrong_expected_is_preserved_and_cannot_be_rewritten_to_match_the_observation",
+      "project_storage::tests::file_facts::metadata_encoder_matches_the_independent_none_and_extension_field_case",
+      "project_storage::tests::file_facts::cancellation_after_copy_or_inside_full_validation_releases_source_and_owned_scratch",
+      "project_storage::tests::file_facts::capture::real_none_capture_matches_independent_full_file_domains_without_saving_or_resolving",
+      "project_storage::tests::file_facts::capture::branched_dfs_emission_is_reordered_by_persistent_manifest_identity",
+      "project_storage::tests::file_facts::preflight::declared_blob_columns_still_count_actual_utf8_text_and_nul_bytes",
+      "project_storage::tests::file_facts::preflight::large_catalog_is_rejected_before_full_catalog_copy",
+      "project_storage::tests::file_facts::preflight::non_utf8_encoding_is_explicitly_unsupported_without_changing_the_database",
+      "project_storage::tests::file_facts::preflight::oversized_text_and_actual_lowered_count_limits_cannot_pass_preflight",
+      "project_storage::tests::file_facts::preflight::raw_preflight_counts_utf8_and_embedded_nul_bytes",
+      "project_storage::tests::file_facts::preflight::raw_preflight_has_fixed_order_and_empty_aggregates_without_claiming_a_valid_file",
+      "project_storage::tests::file_facts::capture::full_source_request_observation_and_reader_namespaces_are_all_required",
+      "project_storage::tests::file_facts::preflight::raw_size_limit_boundary_overflow_and_non_integer_declarations_fail_closed",
+      "project_storage::tests::file_facts::preflight::sqlite_interrupts_at_early_and_later_steps_report_cancellation",
+      "project_storage::tests::file_facts::cleanup_retry_and_reader_drop_never_delete_a_replacement_at_the_old_scratch_path",
+      "project_storage::tests::file_facts::cleanup_failure_retains_disk_ownership_and_blocks_reuse_until_actual_removal",
+      "project_storage::tests::file_facts::complete_file_proof_matches_independent_model_and_keeps_original_read_only",
+      "project_storage::tests::file_facts::full_branch_default_manual_proof_includes_the_independently_expected_derived_redo",
+      "project_storage::tests::file_facts::capture::a_second_candidate_is_aggregated_without_reclaiming_the_first_owner",
+      "project_storage::tests::file_facts::full_page_binding_limits_and_observation_sequence_do_not_silently_wrap",
+      "project_storage::tests::file_facts::manual_absence_requires_explicit_latest_and_does_not_manufacture_manual_facts",
+      "project_storage::tests::file_facts::capture::live_observation_and_candidate_use_one_exact_control_pool",
+      "project_storage::tests::file_facts::exact_file_scratch_and_new_wrapper_capacity_boundaries_are_independent",
+      "project_storage::tests::file_facts::original_byte_limit_accepts_the_actual_total_and_rejects_one_less",
+      "project_storage::tests::file_facts::source_and_parent_guard_survive_until_the_last_observation_owner_exits",
+      "project_storage::tests::file_facts::parent_junction_is_rejected_without_following_it_or_mutating_the_source",
+      "project_storage::tests::file_facts::wrong_versions_binding_and_pre_cancel_do_not_create_scratch_or_a_qualification",
+      "project_storage::tests::file_facts::stale_observation_pages_are_rejected_even_when_the_caller_reuses_its_request",
+      "project_storage::tests::file_facts::capture::same_counts_different_states_and_later_file_history_only_yield_partial_differences",
+      "project_storage::tests::file_facts::preflight::rejected_real_file_preflight_keeps_source_and_cleans_only_its_owned_scratch",
+      "project_storage::tests::file_facts::multiple_observations_share_one_control_budget_and_survive_reader_drop",
+      "project_storage::tests::file_facts::bad_unselected_branch_original_or_commit_chain_never_yields_partial_facts"
+    ],
+    "old": 18,
+    "capture": 15,
+    "preflight": 9,
+    "log_sha256": "c653878f1d4536385b95fff02bd5067fe16c37fc9fb9d7c70d1142ea00648c3e",
+    "result": "42 passed; zero failed",
+    "platform": "local Windows; Linux desktop/infrastructure not executed"
+  },
+  "clippy": {
+    "result": "passed",
+    "log_sha256": "f17609f70d1deade0db0aebe36f46420bfc43d4b823c9bd27f3de708a9a3e9a0",
+    "scope": "before final fixture path and cancellation-test naming refinement; final normal hook authoritative"
+  },
+  "independent_reviews": {
+    "design": 2,
+    "code_and_tests": 2,
+    "vectors_independently_recomputed": true,
+    "remaining_experimental_blockers": 0,
+    "build_owner": "main only"
+  },
+  "closed_findings": [
+    "complete producer entry check moved before snapshot",
+    "true DFS/alias divergent fixture",
+    "all declared BLOB byte formulas CAST before length",
+    "scan-level cancellation normalization",
+    "SQLite cancellation test named by observed positions, not unproven schema-stage claim"
+  ],
+  "qualification": "ExperimentalValidation; InsufficientForSaveReconciliation only",
+  "unproved": [
+    "original SaveTicket and historical expected relation",
+    "full navigation/metadata/features/request comparison",
+    "NoChange coverage and four-way Unknown classification",
+    "registered physical target and product authority",
+    "64 MiB aggregate managed allocations",
+    "SQLite memory/VFS temporary disk",
+    "PNG and full common edit/prepare admission"
+  ],
+  "preservation": {
+    "schema_raw_sha256": "713f3850740db024c4b861327de560f4eb81f5820980d1f89672dcdcfd499125",
+    "old_proofs_and_private_materials": "untouched",
+    "raw_logs": "new ignored local evidence only"
+  },
+  "acceptance": "normal full hook, push, new containing SHA three-job successful CI; never reuse parent CI"
+}

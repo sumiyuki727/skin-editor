@@ -1,8 +1,11 @@
 //! Experimental healthy-file observations, never save or activation authority.
 use super::*;
 use crate::byte_budget::{ByteBudget, ByteLease};
+mod capture;
+mod preflight;
 mod proof;
 mod snapshot;
+pub use capture::FileCaptureCandidate;
 
 #[derive(Clone, Copy, Debug)]
 pub struct FileFactsLimits {
@@ -92,6 +95,8 @@ pub struct FileFactsUsage {
 }
 struct Data {
     summary: FileFactsSummary,
+    root: PersistentNodeId,
+    preflight: FileReadPreflight,
     commits: [Option<FileCommitFacts>; MAX_FILE_FACTS_COMMITS],
 }
 /// No conversion to a writer, restore candidate or application save authority.
@@ -136,6 +141,11 @@ impl FileFactsPort for InspectedFileFacts {
         Ok(page)
     }
 }
+impl InspectedFileFacts {
+    pub fn preflight(&self) -> FileReadPreflight {
+        self.data.preflight
+    }
+}
 pub struct FileFactsReader {
     _root_lock: snapshot::RootLock,
     // Residual handles/paths exit before the root's managed reservation.
@@ -164,6 +174,23 @@ fn storage(error: StorageError) -> FileFactsError {
         StorageError::Io => FileFactsError::Io,
         _ => FileFactsError::ValidationFailed,
     }
+}
+fn validate_request(request: FileFactsRequest) -> Result<(), FileFactsError> {
+    if request.version != FILE_FACTS_PORT_VERSION
+        || request.binding.version != SAVE_COORDINATION_VERSION
+    {
+        return Err(FileFactsError::UnsupportedVersion);
+    }
+    if request.key.sequence == 0
+        || request.binding.key.generation == 0
+        || request.binding.phase != SaveTargetPhase::ExistingVerified
+        || request.binding.history.is_none()
+        || request.binding.expected.commit.is_none()
+        || !matches!(request.binding.expected.generation, Some(1..))
+    {
+        return Err(FileFactsError::InvalidRequest);
+    }
+    Ok(())
 }
 impl FileFactsReader {
     pub fn open(scratch_root: &Path, limits: FileFactsLimits) -> Result<Self, FileFactsError> {
@@ -224,20 +251,7 @@ impl FileFactsReader {
         request: FileFactsRequest,
         cancel: CaptureCancellation,
     ) -> Result<InspectedFileFacts, FileFactsError> {
-        if request.version != FILE_FACTS_PORT_VERSION
-            || request.binding.version != SAVE_COORDINATION_VERSION
-        {
-            return Err(FileFactsError::UnsupportedVersion);
-        }
-        if request.key.sequence == 0
-            || request.binding.key.generation == 0
-            || request.binding.phase != SaveTargetPhase::ExistingVerified
-            || request.binding.history.is_none()
-            || request.binding.expected.commit.is_none()
-            || !matches!(request.binding.expected.generation, Some(1..))
-        {
-            return Err(FileFactsError::InvalidRequest);
-        }
+        validate_request(request)?;
         if cancel.is_cancelled() {
             return Err(FileFactsError::Cancelled);
         }
@@ -309,7 +323,7 @@ impl FileFactsReader {
     ) -> Result<Data, FileFactsError> {
         let limits = self.limits.file();
         configure(conn, limits, cancel).map_err(storage)?;
-        schema::verify(conn).map_err(storage)?;
+        let preflight = preflight::scan(conn, self.limits, observation, cancel)?;
         for (table, limit) in [
             ("commits", self.limits.commits),
             ("nodes", self.limits.nodes),
@@ -368,6 +382,8 @@ impl FileFactsReader {
         };
         let mut result = Data {
             summary,
+            root: cache.header.root,
+            preflight,
             commits: [None; MAX_FILE_FACTS_COMMITS],
         };
         for (index, p) in cache.checkpoints.iter().enumerate() {
@@ -398,6 +414,42 @@ impl Drop for FileFactsReader {
 #[cfg(test)]
 pub(super) mod test_support {
     use super::*;
+    #[cfg(windows)]
+    pub fn capture_controls() -> (usize, usize) {
+        (capture::retained_bytes(), capture::work_bytes())
+    }
+    #[cfg(windows)]
+    pub fn control_observation(reader: &FileFactsReader) -> crate::byte_budget::ByteObservation {
+        reader.control.observation()
+    }
+    pub fn preflight(
+        conn: &Connection,
+        limits: FileFactsLimits,
+    ) -> Result<FileReadPreflight, FileFactsError> {
+        super::preflight::scan(
+            conn,
+            limits,
+            FileObservationId {
+                instance: 1,
+                sequence: 1,
+            },
+            &CaptureCancellation::default(),
+        )
+    }
+    pub fn preflight_cancel(
+        conn: &Connection,
+        cancel: &CaptureCancellation,
+    ) -> Result<FileReadPreflight, FileFactsError> {
+        super::preflight::scan(
+            conn,
+            FileFactsLimits::default(),
+            FileObservationId {
+                instance: 1,
+                sequence: 1,
+            },
+            cancel,
+        )
+    }
     #[cfg(windows)]
     pub fn controls() -> usize {
         aggregate_controls(1)

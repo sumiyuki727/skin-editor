@@ -1,6 +1,10 @@
 use super::super::file_facts::test_support as support;
 use super::*;
 
+#[cfg(windows)]
+mod capture;
+mod preflight;
+
 fn vectors() -> Value {
     let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("../../docs/P3_2B1_PROOF_VECTORS.json");

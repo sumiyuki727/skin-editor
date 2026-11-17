@@ -1,5 +1,7 @@
 # 架构：当前实现与后续边界
 
+2026-11-17 B1-2A：[冻结捕获投影与原始量预检](P3_2B1_2A_REVIEW.md)完成真实q的content／originals两域规范化、同观察完整来源比较、UTF-8及固定17项原始量预检。原18＋新增24专项通过，结果始终ExperimentalValidation／Insufficient；原Ticket、metadata／导航／完整Unknown与64MiB／SQLite／临时盘仍欠证，完整B1／PB16未签收。下一步继续B1证据收口，不进入B2写入或产品保存。API7／捕获3／协调1及旧格式保持，U1–U3可调默认和K1／Reference10000／Tiny4／产品NotEvaluated／stable Unknown不变。以下日期段保留历史时点。
+
 2026-11-17 B1-1内部实验：[只读事实实现](P3_2B1_REVIEW.md)新增application的独立FileFactsPort1纯值及infra稳定源／私有副本完整验证、五域proof、固定页与残留保管。API7／捕获3／协调1／旧存储1及依赖保持；API8／协调2推迟到真正接线。结果只有ExperimentalValidation，不安装生产authority，不返回激活候选；64MiB／SQLite临时磁盘与q对照仍欠证，不能签收完整B1。政策可调默认已确认，B2写入／恢复部署／UI仍未接。下方日期段按原时点阅读。
 
 2026-11-17 B契约审阅修订2：[真实存储衔接](P3_2B_START_CONTRACT.md)合入B1只读／B2写资格分离、固定槽发现、未决Transfer跨重启冻结及最终保护保留。恢复文件事实与Ready、Transfer内部许可与活动目标写资格分别建模；本轮仅文档，API8／协调2仍为拟议，当前运行API7／捕获3／协调1及持久格式不变。U1–U3政策与B1接口资料仍待冻结，不启动实现。以下日期段保留历史时点。

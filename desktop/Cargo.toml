@@ -19,3 +19,23 @@ unsafe_code = "forbid"
 
 [workspace.lints.clippy]
 all = "warn"
+
+# Reduce dependency debug metadata in desktop dev/test builds. Keep project
+# code fully debuggable, including the two local non-workspace packages.
+[profile.dev.package."*"]
+debug = 0
+
+[profile.dev.package.skin-editor-domain]
+debug = 2
+
+[profile.dev.package.skin-editor-application]
+debug = 2
+
+[profile.test.package."*"]
+debug = 0
+
+[profile.test.package.skin-editor-domain]
+debug = 2
+
+[profile.test.package.skin-editor-application]
+debug = 2

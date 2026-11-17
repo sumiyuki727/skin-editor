@@ -40,4 +40,7 @@ jobs:
       - name: Fetch locked desktop dependencies
         run: cargo fetch --manifest-path desktop/Cargo.toml --locked
       - name: Check desktop without GPU or windows
+        env:
+          TEMP: ${{ runner.temp }}
+          TMP: ${{ runner.temp }}
         run: python tools/check_desktop.py

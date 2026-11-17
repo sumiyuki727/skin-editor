@@ -202,5 +202,75 @@
     "reason": "gate two Windows-only test helpers consistently with their only consumers",
     "production_or_Windows_runtime_logic_change": false,
     "non_Windows_infrastructure_build": "not executed; conditional-compilation boundary reviewed statically"
+  },
+  "configuration_lf_sha256": {
+    ".github/workflows/core.yml": "29308945e33c02ccc6a29d7cdf8585c7386e75e827416f8174308177e82d0a87",
+    "desktop/Cargo.toml": "7acbf478a0a11c6ce00f2c436a727346411083413fcbf647658735829e05f951"
+  },
+  "ci_capacity_followup": {
+    "parent": "48444801ddbe50c0c1f813365539864d24951245",
+    "paths": [
+      ".github/workflows/core.yml",
+      "desktop/Cargo.toml",
+      "docs/GIT_WORKFLOW.md",
+      "docs/P3_2B1_2B_REVIEW.md",
+      "docs/P3_2B1_2B_PROOF.json"
+    ],
+    "before": [
+      {
+        "head": "0cf6ad7d681c3e73085d828f815933bbd4df4651",
+        "run": 44020691259,
+        "desktop": "cancelled; all-feature suite incomplete; no assertion failure in emitted log",
+        "tool_result_sha256": "c7ef406b9d4aa0d3b2eb4c0c33e4b8dcc1776f82d2f3936c676b6e0166da6856",
+        "derived_lf_log_sha256": "325b20ab89d4c4be285f22d08798e0c730a3d8eea09812181edda017cd025767"
+      },
+      {
+        "head": "48444801ddbe50c0c1f813365539864d24951245",
+        "run": 44024475913,
+        "desktop": "cancelled; all-feature suite incomplete; no assertion failure in emitted log",
+        "tool_result_sha256": "e220134b22e5aa4c5349775cd631e495e8b11cb2c315f53874a747af52a0cf18",
+        "derived_lf_log_sha256": "19b0b04f34931f0f37a6c32491f78142b1a191f59e83a2a1f100a06985c9d65a"
+      }
+    ],
+    "both_core_platforms": "success in both preceding runs",
+    "job_minutes": 25,
+    "gate_seconds": 30,
+    "reruns": 0,
+    "reason_for_slow_execution": "Unknown; no disk or single build cause established",
+    "profiles": {
+      "scope": "desktop dev/test third-party debug=0, all project packages debug=2; release and independent cost workspaces unchanged",
+      "compiler_artifact_probe_sha256": "138683ebf5f5db48a7ee51a230fe741c5023b2f414624d1d58dd7e5cb7b529b0",
+      "phases": [
+        {
+          "phase": "dev",
+          "package_ids": 183,
+          "package_names": 178,
+          "all_project_debug": 2,
+          "all_external_debug": 0,
+          "opt_level": 0,
+          "assertions": true,
+          "overflow_checks": true
+        },
+        {
+          "phase": "test",
+          "package_ids": 183,
+          "package_names": 178,
+          "all_project_debug": 2,
+          "all_external_debug": 0,
+          "opt_level": 0,
+          "assertions": true,
+          "overflow_checks": true
+        }
+      ],
+      "optimization_assertions_overflow_panic": "unchanged",
+      "raw_jsonl_sha256": {
+        "dev": "6df6e5aa371b2bbe98d1a52194fe9676482168e1bd635667d68703b49370c75c",
+        "test": "66de5bc75b6b98f1821fc0fa73a4957c6b7be3b636d0ea3d8358407719d22ddc"
+      },
+      "native_review": "Locked current Windows/MSVC libsqlite3-sys/cc debug branch affects symbols, not NDEBUG/SQLITE_DEBUG/optimization; wgpu/naga/cpal related build entries do not read DEBUG. GCC/Clang frame pointer preservation may change; not an exhaustive transitive build-script or non-Windows runtime proof."
+    },
+    "temporary_directory": "TEMP/TMP=runner.temp only in desktop CI check step; inherited by Cargo/build scripts/tests/children and may affect SQLite; old effective values unknown; no whole-directory cleanup",
+    "acceptance": "normal full hook and new exact-SHA all-three CI; previous cancellations never treated as passing",
+    "user_presence": "onsite UAC/screenshots/interaction wait; none required here"
   }
 }

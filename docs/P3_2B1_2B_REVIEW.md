@@ -56,4 +56,18 @@ Clippy首轮指出一个未使用测试变量，移除后通过。正常完整ho
 
 完整B1仍欠features／完整metadata、历史q完整内容截面、CurrentManual／CurrentProtection／VerifiedOpening与NoChange覆盖证明、Unknown阶段／目标连续性、注册物理目标及完整预算。后续只在已授权B1范围继续分片收口；B2写资格和生产保存另有准入。K1、Reference10000／Tiny4、产品NotEvaluated与stable Unknown保持，不重测或扩展。
 
-轮前复用已推送且最终三项CI通过的1a35784，无实际差异而未造空提交。本轮23条源码／文档精确路径另经正常完整hook、PUBLIC origin推送和新完整SHA CI；以包含本报告的提交为准。schema.rs原字节SHA256保持713f3850740db024c4b861327de560f4eb81f5820980d1f89672dcdcfd499125，未改路径原字节／mtime逐项核对；旧证明及PRIVATE恢复材料不改。新增原始日志仅本机忽略目录，不擅自上传或自动延伸固定恢复快照。未调用UAC或更改系统安全设置。
+轮前复用已推送且最终三项CI通过的1a35784，无实际差异而未造空提交。本轮累计25条源码／构建配置／文档精确路径仍须经正常完整hook、PUBLIC origin推送和新完整SHA CI；以包含本报告的提交为准。schema.rs原字节SHA256保持713f3850740db024c4b861327de560f4eb81f5820980d1f89672dcdcfd499125，未改路径原字节／mtime逐项核对；旧证明及PRIVATE恢复材料不改。新增原始日志仅本机忽略目录，不擅自上传或自动延伸固定恢复快照。未调用UAC或更改系统安全设置。
+
+## 7. CI容量补救与未完成记录
+
+[0cf6ad7运行44020691259](https://github.com/sumiyuki727/skin-editor/actions/runs/44020691259)和[4844480运行44024475913](https://github.com/sumiyuki727/skin-editor/actions/runs/44024475913)均为两平台核心成功、桌面cancelled。两次桌面作业在既定25分钟边界终止，全feature基础设施尚无完整汇总，后续构建也未完成；日志已输出部分没有断言失败，不能记为三项通过。两次均未重跑，原工具解码结果及可读派生日志各自保留。旧first-before失败与本次取消的根因都未因此确认或解决。
+
+首次日志中编译／检查累计约9分钟，默认完整测试及文档测试约8分19秒，全feature测试至取消约6分35秒仍未完成；这些是CI日志分段，不是产品成本计量，也不能归因到某个磁盘或单一构建项。两次旧日志都没有记录有效TEMP／TMP，不能倒推出临时盘是原因。
+
+经独立只读审阅，采用两项明确配置：[桌面manifest](../desktop/Cargo.toml)仅将dev/test第三方依赖debug设为0；六个桌面成员保持默认完整调试信息，两个非成员本地包domain／application显式debug=2。Cargo的星号会覆盖所有非当前workspace成员，因此这两个例外必要；代价是第三方代码的变量／类型调试信息减少。[Cargo规则](https://doc.rust-lang.org/cargo/reference/profiles.html#overrides)
+
+本机编译器artifact核对dev/test各183个含版本package_id（178种包名）的实际debug级别、opt_level=0、debug_assertions及overflow_checks=true。已锁libsqlite3-sys0.39.1／cc1.8.0的Windows/MSVC链没有Cargo DEBUG到NDEBUG、SQLITE_DEBUG或优化级别的映射，MSVC调试分支仅增减符号参数；wgpu／naga／cpal相关入口未读取DEBUG。cc的GCC／Clang分支可能随DEBUG改变栈帧保留，因此不宣称各平台机器码完全相同，不把本次核对扩大为非Windows基础设施构建已通过。
+
+[桌面CI检查step](../.github/workflows/core.yml)显式设TEMP／TMP为runner.temp，统一该步骤的临时目录；影响继承环境的Cargo、构建脚本、测试及其子进程，也可能影响SQLite Windows临时文件位置，不能叫仅改变测试根。本机hook和系统环境不改，不新增对runner.temp的整体清理；既有测试及恢复子进程仍以各自std::env::temp_dir核对canonical parent。[GitHub上下文](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#runner-context)、[SQLite临时文件规则](https://sqlite.org/tempfiles.html#temporary_file_storage_locations)
+
+优化级别、断言、溢出检查、panic策略、并发2、默认／全feature完整检查、测试与资源预算、25分钟作业及30秒门控均保持。根核心及独立成本工具workspace、全部release配置和冻结证据不改。编译器artifact投影核对实际debug级别与断言／溢出设置，再运行正常完整hook；新配置是否足以让CI完整结束须由后续新SHA运行确认，不承诺时限内完成，不追认前两次取消，不升级B1、产品性能或stable结论。

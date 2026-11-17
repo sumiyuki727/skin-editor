@@ -1,5 +1,6 @@
 //! Rust archive profile. No UI or active project write access.
 mod blocks;
+mod file_facts;
 mod read;
 mod recovery;
 mod schema;
@@ -9,6 +10,7 @@ use crate::project_format::{
     CodecError, FormatLimits, StateBlock, StateBundle, StateHash, decode_project, encode_project,
 };
 use crate::{BlobStore, RawBlob};
+pub use file_facts::{FileFactsLimits, FileFactsReader, FileFactsUsage, InspectedFileFacts};
 pub use recovery::{
     RECOVERY_VERSION, RecoveredArchive, RecoveryDigest, RecoveryMode, RecoveryReport,
 };

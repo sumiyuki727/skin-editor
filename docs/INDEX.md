@@ -4,7 +4,9 @@
 
 ## 当前阅读入口
 
-- [P3-2B真实存储衔接开工契约](P3_2B_START_CONTRACT.md)（2026-11-17审阅修订2，BR01–BR09已合入；32组验收待实施，U1–U3仍待决定，B1接口及开工门槛未完成）
+- [B1-1健康既有文件的实验性只读事实](P3_2B1_REVIEW.md)／[接口与proof规范](P3_2B1_FILE_FACTS.md)／[独立向量](P3_2B1_PROOF_VECTORS.json)（18项Windows专项；政策可调默认已确认，完整B1／生产共同预算／q对照仍欠项，无写入／UI）
+
+- [P3-2B真实存储衔接开工契约](P3_2B_START_CONTRACT.md)（2026-11-17审阅修订2，BR01–BR09已合入；政策已确认，当前B1-1实验见上；32组整体验收仍未签收，真实写入／恢复部署后置）
 
 - [P3-2A整体退出审阅](P3_2A_EXIT_REVIEW.md)／[38组证据映射](P3_2A_EXIT_PROOF.json)（82项专项；A限SaveCoord-Fixture-v1应用层签收，e1934b8同SHA三项CI已成功；B契约见上，真实保存／重开仍待B–D）
 

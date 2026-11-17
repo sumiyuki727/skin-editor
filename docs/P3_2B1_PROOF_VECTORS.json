@@ -1,0 +1,1057 @@
+{
+  "schema": "FileCoord-Proof-v1-vectors",
+  "source": "Independent Python hashlib/structural byte assembly; runtime tests do not run the generator",
+  "encoding": "prefix + domain:u16be + ordered TLV(tag:u16be,len:u64be,payload)",
+  "prefix_hex": "736b696e2d656469746f722f46696c65436f6f72642d50726f6f662f763100",
+  "fields": [
+    {
+      "tag": 1,
+      "payload_hex": "0000000000000011"
+    },
+    {
+      "tag": 2,
+      "payload_hex": "00780d0ae99baa"
+    }
+  ],
+  "tlv_hex": "0001000000000000000800000000000000110002000000000000000700780d0ae99baa",
+  "envelope_vectors": [
+    {
+      "domain": 1,
+      "name": "content",
+      "input_hex": "736b696e2d656469746f722f46696c65436f6f72642d50726f6f662f76310000010001000000000000000800000000000000110002000000000000000700780d0ae99baa",
+      "sha256": "a96558e0c863b42b8812719db670b03324d9738e93899615d946601093fa0eee"
+    },
+    {
+      "domain": 2,
+      "name": "originals",
+      "input_hex": "736b696e2d656469746f722f46696c65436f6f72642d50726f6f662f76310000020001000000000000000800000000000000110002000000000000000700780d0ae99baa",
+      "sha256": "28e6dccdf6434c4ac825b320e93eb18a1653a8048e12ea7b877e8a69a9241df9"
+    },
+    {
+      "domain": 3,
+      "name": "metadata",
+      "input_hex": "736b696e2d656469746f722f46696c65436f6f72642d50726f6f662f76310000030001000000000000000800000000000000110002000000000000000700780d0ae99baa",
+      "sha256": "f7d5a283b45a88ca2e04863acb3eba9844d549067971b38d93e439a984746c50"
+    },
+    {
+      "domain": 4,
+      "name": "request",
+      "input_hex": "736b696e2d656469746f722f46696c65436f6f72642d50726f6f662f76310000040001000000000000000800000000000000110002000000000000000700780d0ae99baa",
+      "sha256": "b1d65585f50f76677a7a59b7f10b99652b512ee30dd126b1716fc001a753a938"
+    },
+    {
+      "domain": 5,
+      "name": "baseline",
+      "input_hex": "736b696e2d656469746f722f46696c65436f6f72642d50726f6f662f76310000050001000000000000000800000000000000110002000000000000000700780d0ae99baa",
+      "sha256": "d1995ed6df9272117820fabd7e32c1abf72b7f1daf107ee43e6205ce9967f8f8"
+    }
+  ],
+  "envelope_scope": "Only TLV framing and domain separation; not the full field mapping",
+  "file_case": {
+    "origin": "Self-authored pre-existing writer fixture; independently decoded and encoded by Python sqlite3/hashlib, not the future proof implementation",
+    "source_sha256": "552a336007cc73eaf71a9db50ad0da98830708ea558eb5ba43c777138835c839",
+    "model": {
+      "project": 7,
+      "history": 1001,
+      "lineage": 1002,
+      "epoch": 1003,
+      "root": 1004,
+      "nodes": [
+        {
+          "id": 1004,
+          "parent": null,
+          "alias": 1,
+          "branch": 1,
+          "ordinal": 0,
+          "depth": 0,
+          "record_version": 2,
+          "state": "ff6a1996413281c916112fc863d4a5c0f8a2be6c6cedba641ebfa3344d8eaf63",
+          "action": "7b226f726967696e223a22726f6f74222c227374657073223a5b5d2c2276657273696f6e223a317d",
+          "checksum": "a175126fa59e62f4c65ced67a23e6629193c78820844513368968d3943229b21",
+          "canonical": "ff6a1996413281c916112fc863d4a5c0f8a2be6c6cedba641ebfa3344d8eaf63"
+        },
+        {
+          "id": 1005,
+          "parent": 1004,
+          "alias": 2,
+          "branch": 1,
+          "ordinal": 1,
+          "depth": 1,
+          "record_version": 2,
+          "state": "9fbcbdedaf290844876cdb0b61b59e30a74bd209fa6b93e7326ad59908f39b7e",
+          "action": "7b226f726967696e223a22636f6d6d616e64222c227374657073223a5b2261737365742e7265676973746572225d2c2276657273696f6e223a317d",
+          "checksum": "fc2b891f00f80d8f6ef2a459d358d037bc139338f6646b67df6768850c478643",
+          "canonical": "9fbcbdedaf290844876cdb0b61b59e30a74bd209fa6b93e7326ad59908f39b7e"
+        },
+        {
+          "id": 1006,
+          "parent": 1005,
+          "alias": 3,
+          "branch": 1,
+          "ordinal": 2,
+          "depth": 2,
+          "record_version": 2,
+          "state": "bccf8c62f218526ce0bfd3f1c0678e3fd1a3457fb3bcb0eb11079607ba45dd81",
+          "action": "7b226f726967696e223a22636f6d6d616e64222c227374657073223a5b22636f6e6669672e696e73657274225d2c2276657273696f6e223a317d",
+          "checksum": "77687b384c60bf1cc6e3f0db7f6f03fea2292387a919fa2f40182d9142a57a62",
+          "canonical": "bccf8c62f218526ce0bfd3f1c0678e3fd1a3457fb3bcb0eb11079607ba45dd81"
+        },
+        {
+          "id": 1007,
+          "parent": 1006,
+          "alias": 4,
+          "branch": 1,
+          "ordinal": 3,
+          "depth": 3,
+          "record_version": 2,
+          "state": "6f254cee9b08e5eaa4b98ca2e731e43eafb9dd94d83a1cf628d383e741262470",
+          "action": "7b226f726967696e223a22636f6d6d616e64222c227374657073223a5b22636f6e6669672e736574225d2c2276657273696f6e223a317d",
+          "checksum": "5b338270c9ff5c9c71cd85818c6229e6ae557a0728b89600d1f57b38dad5853b",
+          "canonical": "6f254cee9b08e5eaa4b98ca2e731e43eafb9dd94d83a1cf628d383e741262470"
+        }
+      ],
+      "admissions": [
+        {
+          "kind": "asset",
+          "id": 1,
+          "first": 1005
+        }
+      ],
+      "originals": [
+        {
+          "sha": "222d81bfaf5f30c09b37187c1402a85d01576bc3b5e620fe5e3c9501c0d887df",
+          "bytes": 17,
+          "raw_hex": "6f7061717565006f726967696e616c0d0a"
+        }
+      ],
+      "latest": {
+        "commit": 401,
+        "generation": 2,
+        "origin": 3,
+        "head": 1007
+      },
+      "manual": {
+        "commit": 400,
+        "generation": 1,
+        "origin": 1,
+        "head": 1006
+      },
+      "protected": {
+        "commit": 401,
+        "generation": 2,
+        "origin": 3,
+        "head": 1007
+      },
+      "marks": [
+        {
+          "commit": 400,
+          "node": 1006
+        }
+      ],
+      "tags": [],
+      "extensions": [],
+      "features": [
+        {
+          "name": "history.delta-index",
+          "version": "1",
+          "required": 1
+        },
+        {
+          "name": "history.summary",
+          "version": "1",
+          "required": 1
+        },
+        {
+          "name": "state.editor",
+          "version": "1",
+          "required": 1
+        },
+        {
+          "name": "storage.core",
+          "version": "2",
+          "required": 1
+        }
+      ],
+      "commits": [
+        {
+          "commit": 400,
+          "generation": 1,
+          "origin": 1,
+          "head": 1006,
+          "previous": null,
+          "request": "1a200e93c248ec17e87ebe909a2e1fa17623ce86a8e8e18659b4e7a79253c541",
+          "navigation": "a60b5588e71397c57e443bb42ac028a4f40f2137d6b0bcf4b523b023620f64af",
+          "prefix": "c9b86062f322693052e72bdca5b7f41ee68e8d39468b37d8b60787ba03603367",
+          "nodes": 3,
+          "next_alias": 4,
+          "next_branch": 2,
+          "redo": []
+        },
+        {
+          "commit": 401,
+          "generation": 2,
+          "origin": 3,
+          "head": 1007,
+          "previous": 400,
+          "request": "c5765c1a4c05a7196d128f4a4e0b841c43b4e36c7b35beba075964e21b5285e7",
+          "navigation": "7b2cd709329568b701dc82a871b5596eb155742f3ffac329326e26eca03d9d44",
+          "prefix": "1bc096c0511f1368a75244207f69d2c92726d458cdb12d2f331556fb6412aafa",
+          "nodes": 4,
+          "next_alias": 5,
+          "next_branch": 2,
+          "redo": []
+        }
+      ],
+      "selection": 1,
+      "selected_head": 1006,
+      "derived_redo": []
+    },
+    "domains": [
+      {
+        "domain": 1,
+        "fields": [
+          {
+            "tag": 1,
+            "field": "project",
+            "payload_hex": "00000000000000000000000000000007"
+          },
+          {
+            "tag": 2,
+            "field": "history",
+            "payload_hex": "000000000000000000000000000003e9"
+          },
+          {
+            "tag": 3,
+            "field": "lineage",
+            "payload_hex": "000000000000000000000000000003ea"
+          },
+          {
+            "tag": 4,
+            "field": "epoch",
+            "payload_hex": "000000000000000000000000000003eb"
+          },
+          {
+            "tag": 5,
+            "field": "root",
+            "payload_hex": "000000000000000000000000000003ec"
+          },
+          {
+            "tag": 6,
+            "field": "nodes.count",
+            "payload_hex": "0000000000000004"
+          },
+          {
+            "tag": 7,
+            "field": "node0.id",
+            "payload_hex": "000000000000000000000000000003ec"
+          },
+          {
+            "tag": 8,
+            "field": "node0.parent",
+            "payload_hex": "00"
+          },
+          {
+            "tag": 9,
+            "field": "node0.alias",
+            "payload_hex": "0000000000000001"
+          },
+          {
+            "tag": 10,
+            "field": "node0.branch",
+            "payload_hex": "0000000000000001"
+          },
+          {
+            "tag": 11,
+            "field": "node0.ordinal",
+            "payload_hex": "0000000000000000"
+          },
+          {
+            "tag": 12,
+            "field": "node0.depth",
+            "payload_hex": "0000000000000000"
+          },
+          {
+            "tag": 13,
+            "field": "node0.record_version",
+            "payload_hex": "0000000000000002"
+          },
+          {
+            "tag": 14,
+            "field": "node0.state",
+            "payload_hex": "ff6a1996413281c916112fc863d4a5c0f8a2be6c6cedba641ebfa3344d8eaf63"
+          },
+          {
+            "tag": 15,
+            "field": "node0.action",
+            "payload_hex": "7b226f726967696e223a22726f6f74222c227374657073223a5b5d2c2276657273696f6e223a317d"
+          },
+          {
+            "tag": 16,
+            "field": "node0.checksum",
+            "payload_hex": "a175126fa59e62f4c65ced67a23e6629193c78820844513368968d3943229b21"
+          },
+          {
+            "tag": 17,
+            "field": "node0.canonical",
+            "payload_hex": "ff6a1996413281c916112fc863d4a5c0f8a2be6c6cedba641ebfa3344d8eaf63"
+          },
+          {
+            "tag": 18,
+            "field": "node1.id",
+            "payload_hex": "000000000000000000000000000003ed"
+          },
+          {
+            "tag": 19,
+            "field": "node1.parent",
+            "payload_hex": "01000000000000000000000000000003ec"
+          },
+          {
+            "tag": 20,
+            "field": "node1.alias",
+            "payload_hex": "0000000000000002"
+          },
+          {
+            "tag": 21,
+            "field": "node1.branch",
+            "payload_hex": "0000000000000001"
+          },
+          {
+            "tag": 22,
+            "field": "node1.ordinal",
+            "payload_hex": "0000000000000001"
+          },
+          {
+            "tag": 23,
+            "field": "node1.depth",
+            "payload_hex": "0000000000000001"
+          },
+          {
+            "tag": 24,
+            "field": "node1.record_version",
+            "payload_hex": "0000000000000002"
+          },
+          {
+            "tag": 25,
+            "field": "node1.state",
+            "payload_hex": "9fbcbdedaf290844876cdb0b61b59e30a74bd209fa6b93e7326ad59908f39b7e"
+          },
+          {
+            "tag": 26,
+            "field": "node1.action",
+            "payload_hex": "7b226f726967696e223a22636f6d6d616e64222c227374657073223a5b2261737365742e7265676973746572225d2c2276657273696f6e223a317d"
+          },
+          {
+            "tag": 27,
+            "field": "node1.checksum",
+            "payload_hex": "fc2b891f00f80d8f6ef2a459d358d037bc139338f6646b67df6768850c478643"
+          },
+          {
+            "tag": 28,
+            "field": "node1.canonical",
+            "payload_hex": "9fbcbdedaf290844876cdb0b61b59e30a74bd209fa6b93e7326ad59908f39b7e"
+          },
+          {
+            "tag": 29,
+            "field": "node2.id",
+            "payload_hex": "000000000000000000000000000003ee"
+          },
+          {
+            "tag": 30,
+            "field": "node2.parent",
+            "payload_hex": "01000000000000000000000000000003ed"
+          },
+          {
+            "tag": 31,
+            "field": "node2.alias",
+            "payload_hex": "0000000000000003"
+          },
+          {
+            "tag": 32,
+            "field": "node2.branch",
+            "payload_hex": "0000000000000001"
+          },
+          {
+            "tag": 33,
+            "field": "node2.ordinal",
+            "payload_hex": "0000000000000002"
+          },
+          {
+            "tag": 34,
+            "field": "node2.depth",
+            "payload_hex": "0000000000000002"
+          },
+          {
+            "tag": 35,
+            "field": "node2.record_version",
+            "payload_hex": "0000000000000002"
+          },
+          {
+            "tag": 36,
+            "field": "node2.state",
+            "payload_hex": "bccf8c62f218526ce0bfd3f1c0678e3fd1a3457fb3bcb0eb11079607ba45dd81"
+          },
+          {
+            "tag": 37,
+            "field": "node2.action",
+            "payload_hex": "7b226f726967696e223a22636f6d6d616e64222c227374657073223a5b22636f6e6669672e696e73657274225d2c2276657273696f6e223a317d"
+          },
+          {
+            "tag": 38,
+            "field": "node2.checksum",
+            "payload_hex": "77687b384c60bf1cc6e3f0db7f6f03fea2292387a919fa2f40182d9142a57a62"
+          },
+          {
+            "tag": 39,
+            "field": "node2.canonical",
+            "payload_hex": "bccf8c62f218526ce0bfd3f1c0678e3fd1a3457fb3bcb0eb11079607ba45dd81"
+          },
+          {
+            "tag": 40,
+            "field": "node3.id",
+            "payload_hex": "000000000000000000000000000003ef"
+          },
+          {
+            "tag": 41,
+            "field": "node3.parent",
+            "payload_hex": "01000000000000000000000000000003ee"
+          },
+          {
+            "tag": 42,
+            "field": "node3.alias",
+            "payload_hex": "0000000000000004"
+          },
+          {
+            "tag": 43,
+            "field": "node3.branch",
+            "payload_hex": "0000000000000001"
+          },
+          {
+            "tag": 44,
+            "field": "node3.ordinal",
+            "payload_hex": "0000000000000003"
+          },
+          {
+            "tag": 45,
+            "field": "node3.depth",
+            "payload_hex": "0000000000000003"
+          },
+          {
+            "tag": 46,
+            "field": "node3.record_version",
+            "payload_hex": "0000000000000002"
+          },
+          {
+            "tag": 47,
+            "field": "node3.state",
+            "payload_hex": "6f254cee9b08e5eaa4b98ca2e731e43eafb9dd94d83a1cf628d383e741262470"
+          },
+          {
+            "tag": 48,
+            "field": "node3.action",
+            "payload_hex": "7b226f726967696e223a22636f6d6d616e64222c227374657073223a5b22636f6e6669672e736574225d2c2276657273696f6e223a317d"
+          },
+          {
+            "tag": 49,
+            "field": "node3.checksum",
+            "payload_hex": "5b338270c9ff5c9c71cd85818c6229e6ae557a0728b89600d1f57b38dad5853b"
+          },
+          {
+            "tag": 50,
+            "field": "node3.canonical",
+            "payload_hex": "6f254cee9b08e5eaa4b98ca2e731e43eafb9dd94d83a1cf628d383e741262470"
+          },
+          {
+            "tag": 51,
+            "field": "admissions.count",
+            "payload_hex": "0000000000000001"
+          },
+          {
+            "tag": 52,
+            "field": "kind",
+            "payload_hex": "6173736574"
+          },
+          {
+            "tag": 53,
+            "field": "id",
+            "payload_hex": "00000000000000000000000000000001"
+          },
+          {
+            "tag": 54,
+            "field": "first",
+            "payload_hex": "000000000000000000000000000003ed"
+          }
+        ],
+        "input_hex": "736b696e2d656469746f722f46696c65436f6f72642d50726f6f662f7631000001000100000000000000100000000000000000000000000000000700020000000000000010000000000000000000000000000003e900030000000000000010000000000000000000000000000003ea00040000000000000010000000000000000000000000000003eb00050000000000000010000000000000000000000000000003ec00060000000000000008000000000000000400070000000000000010000000000000000000000000000003ec0008000000000000000100000900000000000000080000000000000001000a00000000000000080000000000000001000b00000000000000080000000000000000000c00000000000000080000000000000000000d00000000000000080000000000000002000e0000000000000020ff6a1996413281c916112fc863d4a5c0f8a2be6c6cedba641ebfa3344d8eaf63000f00000000000000287b226f726967696e223a22726f6f74222c227374657073223a5b5d2c2276657273696f6e223a317d00100000000000000020a175126fa59e62f4c65ced67a23e6629193c78820844513368968d3943229b2100110000000000000020ff6a1996413281c916112fc863d4a5c0f8a2be6c6cedba641ebfa3344d8eaf6300120000000000000010000000000000000000000000000003ed0013000000000000001101000000000000000000000000000003ec001400000000000000080000000000000002001500000000000000080000000000000001001600000000000000080000000000000001001700000000000000080000000000000001001800000000000000080000000000000002001900000000000000209fbcbdedaf290844876cdb0b61b59e30a74bd209fa6b93e7326ad59908f39b7e001a000000000000003b7b226f726967696e223a22636f6d6d616e64222c227374657073223a5b2261737365742e7265676973746572225d2c2276657273696f6e223a317d001b0000000000000020fc2b891f00f80d8f6ef2a459d358d037bc139338f6646b67df6768850c478643001c00000000000000209fbcbdedaf290844876cdb0b61b59e30a74bd209fa6b93e7326ad59908f39b7e001d0000000000000010000000000000000000000000000003ee001e000000000000001101000000000000000000000000000003ed001f0000000000000008000000000000000300200000000000000008000000000000000100210000000000000008000000000000000200220000000000000008000000000000000200230000000000000008000000000000000200240000000000000020bccf8c62f218526ce0bfd3f1c0678e3fd1a3457fb3bcb0eb11079607ba45dd810025000000000000003a7b226f726967696e223a22636f6d6d616e64222c227374657073223a5b22636f6e6669672e696e73657274225d2c2276657273696f6e223a317d0026000000000000002077687b384c60bf1cc6e3f0db7f6f03fea2292387a919fa2f40182d9142a57a6200270000000000000020bccf8c62f218526ce0bfd3f1c0678e3fd1a3457fb3bcb0eb11079607ba45dd8100280000000000000010000000000000000000000000000003ef0029000000000000001101000000000000000000000000000003ee002a00000000000000080000000000000004002b00000000000000080000000000000001002c00000000000000080000000000000003002d00000000000000080000000000000003002e00000000000000080000000000000002002f00000000000000206f254cee9b08e5eaa4b98ca2e731e43eafb9dd94d83a1cf628d383e741262470003000000000000000377b226f726967696e223a22636f6d6d616e64222c227374657073223a5b22636f6e6669672e736574225d2c2276657273696f6e223a317d003100000000000000205b338270c9ff5c9c71cd85818c6229e6ae557a0728b89600d1f57b38dad5853b003200000000000000206f254cee9b08e5eaa4b98ca2e731e43eafb9dd94d83a1cf628d383e741262470003300000000000000080000000000000001003400000000000000056173736574003500000000000000100000000000000000000000000000000100360000000000000010000000000000000000000000000003ed",
+        "sha256": "48365b8c08d781efd42f5277ca670b5ab383a61b8545493f51cf93edfea99c77"
+      },
+      {
+        "domain": 2,
+        "fields": [
+          {
+            "tag": 1,
+            "field": "count",
+            "payload_hex": "0000000000000001"
+          },
+          {
+            "tag": 2,
+            "field": "sha",
+            "payload_hex": "222d81bfaf5f30c09b37187c1402a85d01576bc3b5e620fe5e3c9501c0d887df"
+          },
+          {
+            "tag": 3,
+            "field": "bytes",
+            "payload_hex": "0000000000000011"
+          }
+        ],
+        "input_hex": "736b696e2d656469746f722f46696c65436f6f72642d50726f6f662f763100000200010000000000000008000000000000000100020000000000000020222d81bfaf5f30c09b37187c1402a85d01576bc3b5e620fe5e3c9501c0d887df000300000000000000080000000000000011",
+        "sha256": "ad4e5d58db30dbf64acb7c26bc41b0c4308895fedf460adbdc8856a773c83741"
+      },
+      {
+        "domain": 3,
+        "fields": [
+          {
+            "tag": 1,
+            "field": "latest.present",
+            "payload_hex": "0000000000000001"
+          },
+          {
+            "tag": 2,
+            "field": "latest.commit",
+            "payload_hex": "00000000000000000000000000000191"
+          },
+          {
+            "tag": 3,
+            "field": "latest.generation",
+            "payload_hex": "0000000000000002"
+          },
+          {
+            "tag": 4,
+            "field": "latest.origin",
+            "payload_hex": "0000000000000003"
+          },
+          {
+            "tag": 5,
+            "field": "latest.head",
+            "payload_hex": "000000000000000000000000000003ef"
+          },
+          {
+            "tag": 6,
+            "field": "manual.present",
+            "payload_hex": "0000000000000001"
+          },
+          {
+            "tag": 7,
+            "field": "manual.commit",
+            "payload_hex": "00000000000000000000000000000190"
+          },
+          {
+            "tag": 8,
+            "field": "manual.generation",
+            "payload_hex": "0000000000000001"
+          },
+          {
+            "tag": 9,
+            "field": "manual.origin",
+            "payload_hex": "0000000000000001"
+          },
+          {
+            "tag": 10,
+            "field": "manual.head",
+            "payload_hex": "000000000000000000000000000003ee"
+          },
+          {
+            "tag": 11,
+            "field": "protected.present",
+            "payload_hex": "0000000000000001"
+          },
+          {
+            "tag": 12,
+            "field": "protected.commit",
+            "payload_hex": "00000000000000000000000000000191"
+          },
+          {
+            "tag": 13,
+            "field": "protected.generation",
+            "payload_hex": "0000000000000002"
+          },
+          {
+            "tag": 14,
+            "field": "protected.origin",
+            "payload_hex": "0000000000000003"
+          },
+          {
+            "tag": 15,
+            "field": "protected.head",
+            "payload_hex": "000000000000000000000000000003ef"
+          },
+          {
+            "tag": 16,
+            "field": "marks.count",
+            "payload_hex": "0000000000000001"
+          },
+          {
+            "tag": 17,
+            "field": "commit",
+            "payload_hex": "00000000000000000000000000000190"
+          },
+          {
+            "tag": 18,
+            "field": "node",
+            "payload_hex": "000000000000000000000000000003ee"
+          },
+          {
+            "tag": 19,
+            "field": "tags.count",
+            "payload_hex": "0000000000000000"
+          },
+          {
+            "tag": 20,
+            "field": "extensions.count",
+            "payload_hex": "0000000000000000"
+          },
+          {
+            "tag": 21,
+            "field": "features.count",
+            "payload_hex": "0000000000000004"
+          },
+          {
+            "tag": 22,
+            "field": "name",
+            "payload_hex": "686973746f72792e64656c74612d696e646578"
+          },
+          {
+            "tag": 23,
+            "field": "version",
+            "payload_hex": "31"
+          },
+          {
+            "tag": 24,
+            "field": "required",
+            "payload_hex": "0000000000000001"
+          },
+          {
+            "tag": 25,
+            "field": "name",
+            "payload_hex": "686973746f72792e73756d6d617279"
+          },
+          {
+            "tag": 26,
+            "field": "version",
+            "payload_hex": "31"
+          },
+          {
+            "tag": 27,
+            "field": "required",
+            "payload_hex": "0000000000000001"
+          },
+          {
+            "tag": 28,
+            "field": "name",
+            "payload_hex": "73746174652e656469746f72"
+          },
+          {
+            "tag": 29,
+            "field": "version",
+            "payload_hex": "31"
+          },
+          {
+            "tag": 30,
+            "field": "required",
+            "payload_hex": "0000000000000001"
+          },
+          {
+            "tag": 31,
+            "field": "name",
+            "payload_hex": "73746f726167652e636f7265"
+          },
+          {
+            "tag": 32,
+            "field": "version",
+            "payload_hex": "32"
+          },
+          {
+            "tag": 33,
+            "field": "required",
+            "payload_hex": "0000000000000001"
+          }
+        ],
+        "input_hex": "736b696e2d656469746f722f46696c65436f6f72642d50726f6f662f7631000003000100000000000000080000000000000001000200000000000000100000000000000000000000000000019100030000000000000008000000000000000200040000000000000008000000000000000300050000000000000010000000000000000000000000000003ef0006000000000000000800000000000000010007000000000000001000000000000000000000000000000190000800000000000000080000000000000001000900000000000000080000000000000001000a0000000000000010000000000000000000000000000003ee000b00000000000000080000000000000001000c000000000000001000000000000000000000000000000191000d00000000000000080000000000000002000e00000000000000080000000000000003000f0000000000000010000000000000000000000000000003ef001000000000000000080000000000000001001100000000000000100000000000000000000000000000019000120000000000000010000000000000000000000000000003ee00130000000000000008000000000000000000140000000000000008000000000000000000150000000000000008000000000000000400160000000000000013686973746f72792e64656c74612d696e64657800170000000000000001310018000000000000000800000000000000010019000000000000000f686973746f72792e73756d6d617279001a000000000000000131001b00000000000000080000000000000001001c000000000000000c73746174652e656469746f72001d000000000000000131001e00000000000000080000000000000001001f000000000000000c73746f726167652e636f72650020000000000000000132002100000000000000080000000000000001",
+        "sha256": "a4eb2fc27b273dca0c0188b22eb49adbcf4fcf0adb094cbcf18705c9e3495b63"
+      },
+      {
+        "domain": 4,
+        "fields": [
+          {
+            "tag": 1,
+            "field": "commits.count",
+            "payload_hex": "0000000000000002"
+          },
+          {
+            "tag": 2,
+            "field": "receipt.commit",
+            "payload_hex": "00000000000000000000000000000190"
+          },
+          {
+            "tag": 3,
+            "field": "receipt.generation",
+            "payload_hex": "0000000000000001"
+          },
+          {
+            "tag": 4,
+            "field": "receipt.origin",
+            "payload_hex": "0000000000000001"
+          },
+          {
+            "tag": 5,
+            "field": "receipt.head",
+            "payload_hex": "000000000000000000000000000003ee"
+          },
+          {
+            "tag": 6,
+            "field": "previous",
+            "payload_hex": "00"
+          },
+          {
+            "tag": 7,
+            "field": "request",
+            "payload_hex": "1a200e93c248ec17e87ebe909a2e1fa17623ce86a8e8e18659b4e7a79253c541"
+          },
+          {
+            "tag": 8,
+            "field": "navigation",
+            "payload_hex": "a60b5588e71397c57e443bb42ac028a4f40f2137d6b0bcf4b523b023620f64af"
+          },
+          {
+            "tag": 9,
+            "field": "prefix",
+            "payload_hex": "c9b86062f322693052e72bdca5b7f41ee68e8d39468b37d8b60787ba03603367"
+          },
+          {
+            "tag": 10,
+            "field": "nodes",
+            "payload_hex": "0000000000000003"
+          },
+          {
+            "tag": 11,
+            "field": "next_alias",
+            "payload_hex": "0000000000000004"
+          },
+          {
+            "tag": 12,
+            "field": "next_branch",
+            "payload_hex": "0000000000000002"
+          },
+          {
+            "tag": 13,
+            "field": "redo.count",
+            "payload_hex": "0000000000000000"
+          },
+          {
+            "tag": 14,
+            "field": "receipt.commit",
+            "payload_hex": "00000000000000000000000000000191"
+          },
+          {
+            "tag": 15,
+            "field": "receipt.generation",
+            "payload_hex": "0000000000000002"
+          },
+          {
+            "tag": 16,
+            "field": "receipt.origin",
+            "payload_hex": "0000000000000003"
+          },
+          {
+            "tag": 17,
+            "field": "receipt.head",
+            "payload_hex": "000000000000000000000000000003ef"
+          },
+          {
+            "tag": 18,
+            "field": "previous",
+            "payload_hex": "0100000000000000000000000000000190"
+          },
+          {
+            "tag": 19,
+            "field": "request",
+            "payload_hex": "c5765c1a4c05a7196d128f4a4e0b841c43b4e36c7b35beba075964e21b5285e7"
+          },
+          {
+            "tag": 20,
+            "field": "navigation",
+            "payload_hex": "7b2cd709329568b701dc82a871b5596eb155742f3ffac329326e26eca03d9d44"
+          },
+          {
+            "tag": 21,
+            "field": "prefix",
+            "payload_hex": "1bc096c0511f1368a75244207f69d2c92726d458cdb12d2f331556fb6412aafa"
+          },
+          {
+            "tag": 22,
+            "field": "nodes",
+            "payload_hex": "0000000000000004"
+          },
+          {
+            "tag": 23,
+            "field": "next_alias",
+            "payload_hex": "0000000000000005"
+          },
+          {
+            "tag": 24,
+            "field": "next_branch",
+            "payload_hex": "0000000000000002"
+          },
+          {
+            "tag": 25,
+            "field": "redo.count",
+            "payload_hex": "0000000000000000"
+          }
+        ],
+        "input_hex": "736b696e2d656469746f722f46696c65436f6f72642d50726f6f662f7631000004000100000000000000080000000000000002000200000000000000100000000000000000000000000000019000030000000000000008000000000000000100040000000000000008000000000000000100050000000000000010000000000000000000000000000003ee0006000000000000000100000700000000000000201a200e93c248ec17e87ebe909a2e1fa17623ce86a8e8e18659b4e7a79253c54100080000000000000020a60b5588e71397c57e443bb42ac028a4f40f2137d6b0bcf4b523b023620f64af00090000000000000020c9b86062f322693052e72bdca5b7f41ee68e8d39468b37d8b60787ba03603367000a00000000000000080000000000000003000b00000000000000080000000000000004000c00000000000000080000000000000002000d00000000000000080000000000000000000e000000000000001000000000000000000000000000000191000f0000000000000008000000000000000200100000000000000008000000000000000300110000000000000010000000000000000000000000000003ef00120000000000000011010000000000000000000000000000019000130000000000000020c5765c1a4c05a7196d128f4a4e0b841c43b4e36c7b35beba075964e21b5285e7001400000000000000207b2cd709329568b701dc82a871b5596eb155742f3ffac329326e26eca03d9d44001500000000000000201bc096c0511f1368a75244207f69d2c92726d458cdb12d2f331556fb6412aafa001600000000000000080000000000000004001700000000000000080000000000000005001800000000000000080000000000000002001900000000000000080000000000000000",
+        "sha256": "894bd943d3b0cfa3e3728f1857aae2b1c9c7bd841a3de7f52c57c4a909875033"
+      },
+      {
+        "domain": 5,
+        "fields": [
+          {
+            "tag": 1,
+            "field": "domain1",
+            "payload_hex": "48365b8c08d781efd42f5277ca670b5ab383a61b8545493f51cf93edfea99c77"
+          },
+          {
+            "tag": 2,
+            "field": "domain2",
+            "payload_hex": "ad4e5d58db30dbf64acb7c26bc41b0c4308895fedf460adbdc8856a773c83741"
+          },
+          {
+            "tag": 3,
+            "field": "domain3",
+            "payload_hex": "a4eb2fc27b273dca0c0188b22eb49adbcf4fcf0adb094cbcf18705c9e3495b63"
+          },
+          {
+            "tag": 4,
+            "field": "domain4",
+            "payload_hex": "894bd943d3b0cfa3e3728f1857aae2b1c9c7bd841a3de7f52c57c4a909875033"
+          },
+          {
+            "tag": 5,
+            "field": "selection",
+            "payload_hex": "0000000000000001"
+          },
+          {
+            "tag": 6,
+            "field": "selected_head",
+            "payload_hex": "000000000000000000000000000003ee"
+          },
+          {
+            "tag": 7,
+            "field": "derived_redo.count",
+            "payload_hex": "0000000000000000"
+          }
+        ],
+        "input_hex": "736b696e2d656469746f722f46696c65436f6f72642d50726f6f662f76310000050001000000000000002048365b8c08d781efd42f5277ca670b5ab383a61b8545493f51cf93edfea99c7700020000000000000020ad4e5d58db30dbf64acb7c26bc41b0c4308895fedf460adbdc8856a773c8374100030000000000000020a4eb2fc27b273dca0c0188b22eb49adbcf4fcf0adb094cbcf18705c9e3495b6300040000000000000020894bd943d3b0cfa3e3728f1857aae2b1c9c7bd841a3de7f52c57c4a90987503300050000000000000008000000000000000100060000000000000010000000000000000000000000000003ee000700000000000000080000000000000000",
+        "sha256": "a046db2a997b06af1b0c661d4c89b3f37fc87bcfdbb824e1076b4edb6d80dc70"
+      }
+    ]
+  },
+  "metadata_field_case": {
+    "scope": "Serialization-only extension/None variant; not represented as a separately validated file",
+    "model": {
+      "latest": {
+        "commit": 401,
+        "generation": 2,
+        "origin": 3,
+        "head": 1007
+      },
+      "manual": null,
+      "protected": {
+        "commit": 401,
+        "generation": 2,
+        "origin": 3,
+        "head": 1007
+      },
+      "marks": [],
+      "tags": [],
+      "extensions": [
+        {
+          "name": "test:雪",
+          "bytes": "00780d0a"
+        }
+      ],
+      "features": [
+        {
+          "name": "history.delta-index",
+          "version": "1",
+          "required": 1
+        },
+        {
+          "name": "history.summary",
+          "version": "1",
+          "required": 1
+        },
+        {
+          "name": "state.editor",
+          "version": "1",
+          "required": 1
+        },
+        {
+          "name": "storage.core",
+          "version": "2",
+          "required": 1
+        }
+      ]
+    },
+    "domain": {
+      "domain": 3,
+      "fields": [
+        {
+          "tag": 1,
+          "field": "latest.present",
+          "payload_hex": "0000000000000001"
+        },
+        {
+          "tag": 2,
+          "field": "latest.commit",
+          "payload_hex": "00000000000000000000000000000191"
+        },
+        {
+          "tag": 3,
+          "field": "latest.generation",
+          "payload_hex": "0000000000000002"
+        },
+        {
+          "tag": 4,
+          "field": "latest.origin",
+          "payload_hex": "0000000000000003"
+        },
+        {
+          "tag": 5,
+          "field": "latest.head",
+          "payload_hex": "000000000000000000000000000003ef"
+        },
+        {
+          "tag": 6,
+          "field": "manual.present",
+          "payload_hex": "0000000000000000"
+        },
+        {
+          "tag": 7,
+          "field": "protected.present",
+          "payload_hex": "0000000000000001"
+        },
+        {
+          "tag": 8,
+          "field": "protected.commit",
+          "payload_hex": "00000000000000000000000000000191"
+        },
+        {
+          "tag": 9,
+          "field": "protected.generation",
+          "payload_hex": "0000000000000002"
+        },
+        {
+          "tag": 10,
+          "field": "protected.origin",
+          "payload_hex": "0000000000000003"
+        },
+        {
+          "tag": 11,
+          "field": "protected.head",
+          "payload_hex": "000000000000000000000000000003ef"
+        },
+        {
+          "tag": 12,
+          "field": "marks.count",
+          "payload_hex": "0000000000000000"
+        },
+        {
+          "tag": 13,
+          "field": "tags.count",
+          "payload_hex": "0000000000000000"
+        },
+        {
+          "tag": 14,
+          "field": "extensions.count",
+          "payload_hex": "0000000000000001"
+        },
+        {
+          "tag": 15,
+          "field": "name",
+          "payload_hex": "746573743ae99baa"
+        },
+        {
+          "tag": 16,
+          "field": "bytes",
+          "payload_hex": "00780d0a"
+        },
+        {
+          "tag": 17,
+          "field": "features.count",
+          "payload_hex": "0000000000000004"
+        },
+        {
+          "tag": 18,
+          "field": "name",
+          "payload_hex": "686973746f72792e64656c74612d696e646578"
+        },
+        {
+          "tag": 19,
+          "field": "version",
+          "payload_hex": "31"
+        },
+        {
+          "tag": 20,
+          "field": "required",
+          "payload_hex": "0000000000000001"
+        },
+        {
+          "tag": 21,
+          "field": "name",
+          "payload_hex": "686973746f72792e73756d6d617279"
+        },
+        {
+          "tag": 22,
+          "field": "version",
+          "payload_hex": "31"
+        },
+        {
+          "tag": 23,
+          "field": "required",
+          "payload_hex": "0000000000000001"
+        },
+        {
+          "tag": 24,
+          "field": "name",
+          "payload_hex": "73746174652e656469746f72"
+        },
+        {
+          "tag": 25,
+          "field": "version",
+          "payload_hex": "31"
+        },
+        {
+          "tag": 26,
+          "field": "required",
+          "payload_hex": "0000000000000001"
+        },
+        {
+          "tag": 27,
+          "field": "name",
+          "payload_hex": "73746f726167652e636f7265"
+        },
+        {
+          "tag": 28,
+          "field": "version",
+          "payload_hex": "32"
+        },
+        {
+          "tag": 29,
+          "field": "required",
+          "payload_hex": "0000000000000001"
+        }
+      ],
+      "input_hex": "736b696e2d656469746f722f46696c65436f6f72642d50726f6f662f7631000003000100000000000000080000000000000001000200000000000000100000000000000000000000000000019100030000000000000008000000000000000200040000000000000008000000000000000300050000000000000010000000000000000000000000000003ef0006000000000000000800000000000000000007000000000000000800000000000000010008000000000000001000000000000000000000000000000191000900000000000000080000000000000002000a00000000000000080000000000000003000b0000000000000010000000000000000000000000000003ef000c00000000000000080000000000000000000d00000000000000080000000000000000000e00000000000000080000000000000001000f0000000000000008746573743ae99baa0010000000000000000400780d0a00110000000000000008000000000000000400120000000000000013686973746f72792e64656c74612d696e64657800130000000000000001310014000000000000000800000000000000010015000000000000000f686973746f72792e73756d6d61727900160000000000000001310017000000000000000800000000000000010018000000000000000c73746174652e656469746f720019000000000000000131001a00000000000000080000000000000001001b000000000000000c73746f726167652e636f7265001c000000000000000132001d00000000000000080000000000000001",
+      "sha256": "ffbe59c32a7a5a3f686379e0b139df9a2875a3c60ed60fa8bf07a7be5fa413e5"
+    }
+  }
+}

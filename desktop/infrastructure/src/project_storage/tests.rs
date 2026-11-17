@@ -777,3 +777,5 @@ fn unsupported_metadata_edits_are_rejected_instead_of_silently_discarded() {
 
 #[cfg(windows)]
 mod recovery_process;
+
+mod file_facts;

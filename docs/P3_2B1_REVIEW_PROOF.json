@@ -1,0 +1,106 @@
+{
+  "schema": "P3-2B1-1-review-evidence-v1",
+  "kind": "review catalog, not FileFactsProof or production qualification",
+  "parent": "00492b1972ba1d02b1c986e6f222fdd4c325f0cf",
+  "containing_commit": "resolve through Git; no circular self-SHA",
+  "policies": {
+    "U1": "confirmed adjustable user persistent recovery subdirectory; deployment and migration later",
+    "U2": "confirmed adjustable initial 4 GiB / 32 entries; reject new work and warn when full; no cleanup",
+    "U3": "confirmed same complete project/history identity; user-chosen first path; no overwrite authority"
+  },
+  "versions": {
+    "API": 7,
+    "capture": 3,
+    "coordination": 1,
+    "archive": 1,
+    "FileFactsPort": 1,
+    "FileCoordProof": 1
+  },
+  "assurance": "ExperimentalValidation only",
+  "sources_lf_sha256": {
+    "crates/application/src/lib.rs": "df416942824179416b225e09940c1d58632f1ca5498d9ba76ffe8e4729a5cc6a",
+    "crates/application/src/file_facts.rs": "23bf92fc2ccf59bb8488fd120e2639c79ad524b05a060e3939e87e82a726856f",
+    "desktop/infrastructure/src/project_storage/mod.rs": "ac38359a6bf7253486bb9dcc80ba4d2082f76aa5d4166c09d3a8538fdb8964e4",
+    "desktop/infrastructure/src/project_storage/tests.rs": "01ab5f58589c3326f9cd87d53ac0767ca680f7b675071ab0e7eecc13630357c3",
+    "desktop/infrastructure/src/project_storage/file_facts.rs": "2ee58e858f416360c5ba64d8c567bc19fe698548e76ddc46bf3cf327cd2e1f3e",
+    "desktop/infrastructure/src/project_storage/file_facts/proof.rs": "ea2ffbb90e165646987c6a30e74b574725e2ba1b644c88e54a780c1359e26da3",
+    "desktop/infrastructure/src/project_storage/file_facts/snapshot.rs": "46672407bf6a63121e562e7aaa7e911360136a11e58a1a1d62577b5cde9da68c",
+    "desktop/infrastructure/src/project_storage/tests/file_facts.rs": "822b42da487e20021a79d8cdf3b71bd871b1007f740a7ed315f62504c7e2eefc"
+  },
+  "vectors": {
+    "path": "docs/P3_2B1_PROOF_VECTORS.json",
+    "sha256": "f8829008dc3850b9172f9e26ea185c35add1d529bf411b4d54fae787e5be2c5e",
+    "independent_python": true,
+    "envelope_count": 5,
+    "complete_file_field_counts": [
+      54,
+      3,
+      33,
+      25,
+      7
+    ],
+    "metadata_variant_count": 1
+  },
+  "tests": {
+    "windows_final_targeted": [
+      "metadata_encoder_matches_the_independent_none_and_extension_field_case",
+      "independent_framing_and_complete_field_vectors_do_not_use_runtime_generation",
+      "cleanup_retry_and_reader_drop_never_delete_a_replacement_at_the_old_scratch_path",
+      "all_sidecars_including_empty_files_are_refused_without_recovery_or_mutation",
+      "complete_file_proof_matches_independent_model_and_keeps_original_read_only",
+      "full_page_binding_limits_and_observation_sequence_do_not_silently_wrap",
+      "manual_absence_requires_explicit_latest_and_does_not_manufacture_manual_facts",
+      "wrong_versions_binding_and_pre_cancel_do_not_create_scratch_or_a_qualification",
+      "source_and_parent_guard_survive_until_the_last_observation_owner_exits",
+      "stale_observation_pages_are_rejected_even_when_the_caller_reuses_its_request",
+      "full_branch_default_manual_proof_includes_the_independently_expected_derived_redo",
+      "original_byte_limit_accepts_the_actual_total_and_rejects_one_less",
+      "cancellation_after_copy_or_inside_full_validation_releases_source_and_owned_scratch",
+      "parent_junction_is_rejected_without_following_it_or_mutating_the_source",
+      "cleanup_failure_retains_disk_ownership_and_blocks_reuse_until_actual_removal",
+      "exact_file_scratch_and_new_wrapper_capacity_boundaries_are_independent",
+      "multiple_observations_share_one_control_budget_and_survive_reader_drop",
+      "bad_unselected_branch_original_or_commit_chain_never_yields_partial_facts"
+    ],
+    "targeted_log_sha256": "020ab5c02fc91f4f65c20b4356ee23f0267bc92ed26977d6abde3c03c6c8ff02",
+    "targeted_result": "18 passed, zero failed",
+    "non_windows_adapter": "Unsupported test defined; not executed locally or by Linux core CI",
+    "application": "fixed carrier test and no PreparedWitness conversion compile-fail; final normal hook required",
+    "intermediate_clippy_log_sha256": "f210c14e1b2b48d59017d87d244fa3d7082a948175ebb3d4c79fd5496a76a027",
+    "intermediate_clippy_scope": "passed before final field-drop ordering and application carrier test; final hook authoritative",
+    "first_full_hook": {
+      "result": "core and both canaries passed; desktop source boundary rejected compile-time fixture inclusion; no commit",
+      "log_sha256": "8da728cd2f40ade5676af783e19e6376de4b0dbb2997d7a0dcb8f18eb56fd9c5",
+      "fix": "runtime read of self-authored repository JSON fixture; check rules unchanged"
+    }
+  },
+  "independent_reviews": {
+    "design": 2,
+    "code_and_tests": 2,
+    "remaining_B1_1_experimental_blockers": 0,
+    "build_owner": "main only"
+  },
+  "partial_contract_evidence": {
+    "PB01_PB02_PB03_PB04_PB07": "healthy-file validation and proof field portions; q and registered target comparison absent",
+    "PB15_PB16": "only new wrapper and own main-copy reservation; full validator and SQLite aggregate unknown",
+    "PB25_PB27_PB29_PB30_PB31_PB32": "covered cancellation, stale pages, sidecars, source locking and owned cleanup portions; not full PB acceptance"
+  },
+  "unqualified": [
+    "complete B1",
+    "PB16",
+    "q comparison and four-way Unknown resolution",
+    "registered target binding and production authority",
+    "64 MiB managed full validator aggregate",
+    "SQLite temporary disk aggregate",
+    "full Small edit/prepare profile",
+    "other VFS identity guarantees",
+    "product save/recovery-root deployment/UI/devices",
+    "actual costs or stable compatibility"
+  ],
+  "preservation": {
+    "schema_raw_sha256": "713f3850740db024c4b861327de560f4eb81f5820980d1f89672dcdcfd499125",
+    "old_proofs_and_private_recovery": "unchanged",
+    "new_raw_logs": "ignored local evidence; not included in historical private snapshot"
+  },
+  "acceptance": "normal complete hook plus pushed containing SHA three-job CI, never reuse parent CI"
+}

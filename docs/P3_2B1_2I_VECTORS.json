@@ -1,0 +1,102 @@
+{
+  "domain": "FileCoord-Proof-v1/3",
+  "source_models": "P3_2B1_2H_VECTORS.json",
+  "cases": [
+    {
+      "name": "manual_opening",
+      "baseline": "latest_exit_opening_manual",
+      "receipt": {
+        "commit": 2001,
+        "generation": 3,
+        "origin": 1,
+        "head": 1005
+      },
+      "fields": 50,
+      "sha256": "ed03d53c570cad61f0bba60834df4ea5c5fb206003959f8cb98d9a8101ef8a34"
+    },
+    {
+      "name": "manual_latest",
+      "baseline": "latest_exit_opening_manual",
+      "receipt": {
+        "commit": 2001,
+        "generation": 3,
+        "origin": 1,
+        "head": 1006
+      },
+      "fields": 50,
+      "sha256": "f9c72e7b9767a76afae543b9039219a829026040c14c85ff631f9d0613fc7373"
+    },
+    {
+      "name": "exit",
+      "baseline": "latest_exit_opening_manual",
+      "receipt": {
+        "commit": 2001,
+        "generation": 3,
+        "origin": 3,
+        "head": 1006
+      },
+      "fields": 48,
+      "sha256": "9276a35c9309c4398035018a2e2ceb80d216b85c25fd99240bc2326681e7a34a"
+    },
+    {
+      "name": "automatic",
+      "baseline": "latest_exit_opening_manual",
+      "receipt": {
+        "commit": 2001,
+        "generation": 3,
+        "origin": 2,
+        "head": 1006
+      },
+      "fields": 48,
+      "sha256": "4a3017aeb28aed5d66cc14af335e4385dbaa3b071bbb7821ec599958c2e4a4a6"
+    },
+    {
+      "name": "mark_order",
+      "baseline": "captured_latest",
+      "receipt": {
+        "commit": 2001,
+        "generation": 3,
+        "origin": 1,
+        "head": 1006
+      },
+      "fields": 52,
+      "sha256": "2dbd3449ad50c036366667dfd79048dea41b43d5a4ef4fd4bf17bf1b78ea2790"
+    },
+    {
+      "name": "optional_version",
+      "baseline": "same_count_version",
+      "receipt": {
+        "commit": 2001,
+        "generation": 3,
+        "origin": 1,
+        "head": 1006
+      },
+      "fields": 52,
+      "sha256": "ed99976ed131d95114790375d515246d190365834a4d97a44c3a4333330eabbf"
+    },
+    {
+      "name": "raw_names",
+      "baseline": "nul_and_empty_version",
+      "receipt": {
+        "commit": 2001,
+        "generation": 3,
+        "origin": 1,
+        "head": 1006
+      },
+      "fields": 52,
+      "sha256": "344b7d533e3837d62402e795e463076734771bd3b8ef59100da0f1125f971d4b"
+    },
+    {
+      "name": "writer_defaults",
+      "baseline": "wrong_writer_defaults",
+      "receipt": {
+        "commit": 2001,
+        "generation": 3,
+        "origin": 1,
+        "head": 1006
+      },
+      "fields": 49,
+      "sha256": "42525c473fbb84e6353856645e42f132df4f9f96ebe40a05417ddc3cbb839bb1"
+    }
+  ]
+}

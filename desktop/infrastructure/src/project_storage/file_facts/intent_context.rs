@@ -62,23 +62,7 @@ pub(super) fn archive(
         return Err(StorageError::Limit("intent metadata"));
     }
     let mut h = encoder(2);
-    h.optional_receipt(delta.or(metadata.last_commit.as_ref()));
-    h.optional_receipt(
-        delta
-            .filter(|r| r.origin == SaveOrigin::Manual)
-            .or(metadata.manual.as_ref()),
-    );
-    h.optional_receipt(delta.or(metadata.protected.as_ref()));
-    let manual = delta.filter(|r| r.origin == SaveOrigin::Manual);
-    h.number((metadata.manual_marks.len() + usize::from(manual.is_some())) as u64);
-    for (commit, node) in &metadata.manual_marks {
-        h.id(commit.get());
-        h.id(node.get());
-    }
-    if let Some(receipt) = manual {
-        h.id(receipt.commit.get());
-        h.id(receipt.head.get());
-    }
+    proof::metadata_receipts(&mut h, metadata, delta);
     for (i, slot) in work[..metadata.tags.len()].iter_mut().enumerate() {
         *slot = i;
     }

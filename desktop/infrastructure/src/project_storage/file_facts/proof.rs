@@ -73,15 +73,27 @@ impl Encoder {
 
 pub(super) fn metadata_header(metadata: &ArchiveMetadata) -> Encoder {
     let mut h = Encoder::new(3);
-    h.optional_receipt(metadata.last_commit.as_ref());
-    h.optional_receipt(metadata.manual.as_ref());
-    h.optional_receipt(metadata.protected.as_ref());
-    h.number(metadata.manual_marks.len() as u64);
+    metadata_receipts(&mut h, metadata, None);
+    h
+}
+pub(super) fn metadata_receipts(
+    h: &mut Encoder,
+    metadata: &ArchiveMetadata,
+    append: Option<&ArchiveReceipt>,
+) {
+    let manual = append.filter(|receipt| receipt.origin == SaveOrigin::Manual);
+    h.optional_receipt(append.or(metadata.last_commit.as_ref()));
+    h.optional_receipt(manual.or(metadata.manual.as_ref()));
+    h.optional_receipt(append.or(metadata.protected.as_ref()));
+    h.number((metadata.manual_marks.len() + usize::from(manual.is_some())) as u64);
     for (commit, node) in &metadata.manual_marks {
         h.id(commit.get());
         h.id(node.get());
     }
-    h
+    if let Some(receipt) = manual {
+        h.id(receipt.commit.get());
+        h.id(receipt.head.get());
+    }
 }
 pub(super) fn metadata_tag(h: &mut Encoder, node: u128, name: &str, value: &str) {
     h.id(node);

@@ -109,3 +109,24 @@ pub struct FileCapturedMetadataComparison {
     pub conclusion: FileCaptureConclusion,
 }
 const _: () = assert!(std::mem::size_of::<FileCapturedMetadataComparison>() <= 4096);
+
+pub const FILE_FRESH_APPEND_VERSION: u16 = 1;
+
+/// Conditional domain-3 bytes for an ordinary append to the observed baseline.
+/// The legacy writer can still take its NoChange branch.
+/// ```compile_fail
+/// use skin_editor_application::{FileFreshAppendMetadata, PreparedWitness};
+/// fn elevate(value: FileFreshAppendMetadata) -> PreparedWitness { value.into() }
+/// ```
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct FileFreshAppendMetadata {
+    pub context: FileCapturedMetadataContext,
+    pub origin: FileProfileOrigin,
+    pub proof_version: u16,
+    pub before: [u8; 32],
+    pub receipt: SaveCommitFact,
+    pub metadata: [u8; 32],
+    pub assurance: FileFactsAssurance,
+    pub conclusion: FileCaptureConclusion,
+}
+const _: () = assert!(std::mem::size_of::<FileFreshAppendMetadata>() <= 4096);

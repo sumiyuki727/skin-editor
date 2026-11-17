@@ -1,4 +1,5 @@
 use super::*;
+mod append;
 
 fn models() -> Value {
     serde_json::from_str(
@@ -430,6 +431,17 @@ fn legal_maximum_profile_has_exact_text_charge_and_retains_q_when_next_view_is_l
     ));
     assert_eq!(reader.usage().managed_bytes, kept);
     assert_eq!(q.captured_metadata(), before);
+    let projection = reader
+        .project_fresh_append_metadata(
+            &view,
+            &q,
+            context(&view, &q, 2),
+            CaptureCancellation::default(),
+        )
+        .unwrap()
+        .unwrap();
+    assert_eq!(projection.origin, before.unwrap().origin);
+    assert_eq!(reader.usage().managed_bytes, kept);
     assert_eq!(
         view.compare_captured_metadata(&q, context(&view, &q, 2))
             .unwrap()
@@ -559,6 +571,13 @@ fn absent_forged_and_foreign_profiles_cannot_qualify_or_bypass_missing_guards() 
             result.captured.is_none()
                 && result.selected.is_none()
                 && result.metadata_equal.is_none()
+        );
+        let parent = context(&view, &q, req.binding.expected.commit.unwrap().get());
+        assert!(
+            reader
+                .project_fresh_append_metadata(&view, &q, parent, CaptureCancellation::default())
+                .unwrap()
+                .is_none()
         );
         let mut bad = c;
         bad.ticket.capture.0 += 1;

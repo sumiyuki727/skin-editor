@@ -164,6 +164,8 @@ enum Stage {
     ReadMetadataSummary,
     ReadProfileSource,
     ReadCapturedMetadata,
+    #[cfg(test)]
+    ReadFreshAppendMetadata,
     CopyMain,
     CopyJournal,
     BeforeRecovery,

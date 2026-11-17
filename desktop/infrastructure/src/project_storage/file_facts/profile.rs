@@ -2,6 +2,7 @@
 use super::*;
 use std::any::Any;
 use std::mem::{align_of, size_of};
+mod append;
 
 const ITEMS: usize = 256;
 const TEXT_BYTES: usize = ITEMS * (256 + 64);
@@ -199,6 +200,26 @@ fn encode(
     cancel: &CaptureCancellation,
     probe: Probe,
 ) -> Result<FileCapturedMetadataFacts, FileFactsError> {
+    let (metadata, required_features) = encode_metadata(meta, source, work, cancel, None)?;
+    probe
+        .step(Stage::ReadCapturedMetadata, cancel)
+        .map_err(storage)?;
+    Ok(FileCapturedMetadataFacts {
+        origin: source.origin,
+        proof_version: FILE_COORD_PROOF_VERSION,
+        metadata,
+        features: source.len,
+        required_features,
+    })
+}
+
+fn encode_metadata(
+    meta: &ArchiveMetadata,
+    source: &Payload,
+    work: &mut intent_context::Workspace,
+    cancel: &CaptureCancellation,
+    append: Option<&ArchiveReceipt>,
+) -> Result<([u8; 32], usize), FileFactsError> {
     if meta.tags.len() > work.len()
         || meta.extensions.len() > 1024
         || meta.manual_marks.len() > MAX_FILE_FACTS_COMMITS
@@ -206,7 +227,8 @@ fn encode(
         return Err(FileFactsError::Limit(FileFactsLimit::Control));
     }
     check(cancel).map_err(storage)?;
-    let mut h = proof::metadata_header(meta);
+    let mut h = proof::Encoder::new(3);
+    proof::metadata_receipts(&mut h, meta, append);
     for (i, slot) in work[..meta.tags.len()].iter_mut().enumerate() {
         *slot = i;
     }
@@ -239,17 +261,7 @@ fn encode(
         h.number(u64::from(e.required));
         required += usize::from(e.required);
     }
-    let metadata = h.finish().map_err(storage)?;
-    probe
-        .step(Stage::ReadCapturedMetadata, cancel)
-        .map_err(storage)?;
-    Ok(FileCapturedMetadataFacts {
-        origin: source.origin,
-        proof_version: FILE_COORD_PROOF_VERSION,
-        metadata,
-        features: source.len,
-        required_features: required,
-    })
+    Ok((h.finish().map_err(storage)?, required))
 }
 impl InspectedFileFacts {
     pub fn compare_captured_metadata(

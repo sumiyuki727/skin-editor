@@ -39,6 +39,9 @@ impl std::fmt::Debug for FileSaveCandidate {
     }
 }
 impl FileSaveCandidate {
+    pub(super) fn snapshot(&self) -> &CaptureSnapshot {
+        &self.capture._snapshot
+    }
     pub fn captured_metadata(&self) -> Option<FileCapturedMetadataFacts> {
         self.metadata
     }

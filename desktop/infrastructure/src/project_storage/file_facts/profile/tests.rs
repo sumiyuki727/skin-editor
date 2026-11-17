@@ -64,6 +64,10 @@ fn packed_fields_encode_all_eight_independent_before_models_including_required_c
         .unwrap(),
     )
     .unwrap();
+    let path = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../docs/P3_2B1_2I_VECTORS.json");
+    let append_vectors: Value =
+        serde_json::from_str(&std::fs::read_to_string(path).unwrap()).unwrap();
+    let mut projected_cases = 0;
     for v in models["cases"].as_array().unwrap() {
         let m = &v["model"];
         let mut features: Vec<Value> = m["features"]
@@ -145,6 +149,25 @@ fn packed_fields_encode_all_eight_independent_before_models_including_required_c
         .unwrap();
         assert_eq!(hex(&facts.metadata), v["sha256"].as_str().unwrap());
         assert_eq!(facts.features, features.len());
+        for case in append_vectors["cases"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .filter(|case| case["baseline"] == v["name"])
+        {
+            let delta = receipt(&case["receipt"]).unwrap();
+            let (digest, required) = encode_metadata(
+                &meta,
+                &p.payload,
+                &mut [0; 4096],
+                &CaptureCancellation::default(),
+                Some(&delta),
+            )
+            .unwrap();
+            assert_eq!(hex(&digest), case["sha256"].as_str().unwrap());
+            assert_eq!(required, facts.required_features);
+            projected_cases += 1;
+        }
         assert_eq!(budget.used(), fixed_bytes() + text);
         drop(source);
         assert_eq!(budget.used(), 0);
@@ -161,6 +184,7 @@ fn packed_fields_encode_all_eight_independent_before_models_including_required_c
         ));
         assert_eq!(short.used(), 0);
     }
+    assert_eq!(projected_cases, 8);
 }
 #[test]
 fn packed_container_boundaries_and_exact_last_owner_release_do_not_claim_real_maximum_admission() {

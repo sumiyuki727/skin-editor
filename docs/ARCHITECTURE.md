@@ -1,5 +1,7 @@
 # 架构：当前实现与后续边界
 
+2026-11-18 H远端收尾：[取消证据审阅](P3_2B1_2H_CI_REVIEW.md)记录2f4a525/run44167366330首次两核心成功／桌面cancelled；桌面两配置各310项、后续集成及文档通过，最后默认宿主build未完成，不能签三项CI成功。取消完整根因及旧各次原因仍Unknown；本次只补文档，不改源码／断言／构建步骤／预算／25分钟或30秒时限，不重跑旧SHA或宣称修复。新文档备份按正常完整hook和新SHA首次CI另验，旧证据／PRIVATE／schema.rs保持，原始新日志仅本机；H before能力及完整B1／PB16未退出、产品／stable结论不变。以下保留历史时点。
+
 2026-11-18 B1-2H：[真实恢复来源与捕获已有metadata](P3_2B1_2H_REVIEW.md)已按[冻结契约](P3_2B1_2H_CONTRACT.md)及[独立向量](P3_2B1_2H_VECTORS.json)接通只读恢复→Session→Snapshot→真实Work/q来源链和before完整域3比较；无源／错绑／expected前进不补默认值，Missing与Unavailable先过完整守卫。旧F仍NotCompared，fresh-append／would_commit及保存资格不升级。Reader与A各512KiB独立，完整B1／PB16、NoChange／Unknown／物理连续性／共同64MiB仍欠；保持Experimental／Insufficient／BudgetUnproven及产品NotEvaluated／stable Unknown。旧证据、PRIVATE与schema.rs保留，原始新日志仅本机；UI／设备／Skill及现场步骤暂停。以下记录保留各自时点。
 
 2026-11-18 G夹具事务修订：[CI收尾审阅](P3_2B1_2G_CI_REVIEW.md)记录075b204/run44125234390的两核心成功／桌面cancelled，不能签三项成功；默认和all-features各300项已过，取消根因仍Unknown。仅合并自制metadata输入构造为一次事务，保留所有旧／新用例、黄金、同步等级、预算与时限，另以正常完整hook及新SHA CI核验。G文件侧能力及q features缺口／F NotCompared不变，完整B1／PB16和NoChange／Unknown／物理绑定／共同预算仍欠；保持Experimental／Insufficient／BudgetUnproven，K1、产品NotEvaluated／stable Unknown和UI／设备／Skill限制不变。旧证明／PRIVATE／schema.rs保留，新原始日志仅本机。

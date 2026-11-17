@@ -31,3 +31,11 @@ expected前进证据分两部分：核心synthetic A真实确认使expected更�
 完整B1／PB16、fresh-append metadata、三类NoChange覆盖、Unknown阶段与目标连续性、注册／物理绑定、共同64MiB、旧full／PNG no_limits／SQLite／VFS及宿主聚合仍欠。不得把before相等解释为已写入或可保存。本片不进入B2、首次保存／迁移策略、GUI／设备或皮肤制作Skill。
 
 旧first-before、旧各次取消原因仍Unknown；旧证据／冻结程序／PRIVATE备份及schema.rs原字节／mtime保留，25分钟CI与30秒进程门控不变。仅自制fixture和显式测试根，用户归期未知，现场UAC／截图等待。新增原始忽略日志仅本机，不扩充旧私有恢复快照；PUBLIC备份覆盖受控源码和文档。K1／Reference10000／Tiny4、产品NotEvaluated及stable Unknown保持。
+
+## 5. 平台辅助函数收尾
+
+前述H实现及结构化证据对应57738b9fb323e3bc1e67c8dd910f78ff24ba1661：正常完整hook已通过516项Python、核心／协议贯通，以及桌面默认和all-features各310项基础设施测试。原PROOF、冻结契约／向量及其日志摘要保留；尚未以该中间SHA发布或套用远端CI。
+
+补充静态审阅发现source_bytes测试helper只在Windows有调用，其自身cfg(test)会在非Windows测试目标留下未用私有函数的警告风险。唯一源码修订是改为cfg(all(test, windows))，与唯一调用方一致；生产代码、全部测试函数／断言、预算、接口及语义不变。未运行Linux桌面构建，不能称为已实测Linux失败或宣称整个平台通过。此修订后profile.rs归一化LF SHA256为f2772c456661cf57db62e8e103076c2b1470edee984b3fec9db622ab66c4aa13；原H PROOF内该源散列仍表示中间提交，其余15个源及全部旧证据原字节保持。
+
+这一行修订与本追加说明构成独立小提交，须另经正常完整hook、最终SHA首次三项CI及915个远端受控文件逐项核对；保留两个提交，不amend。最终PUBLIC备份覆盖源码／文档，新增原始日志仍仅本机；保存资格及其余未关闭门槛不变。

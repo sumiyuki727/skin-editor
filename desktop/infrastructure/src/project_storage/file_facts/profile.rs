@@ -291,7 +291,7 @@ impl InspectedFileFacts {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, windows))]
 pub(super) fn source_bytes(text: usize) -> usize {
     fixed_bytes() + text
 }

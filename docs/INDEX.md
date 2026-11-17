@@ -1,5 +1,7 @@
 # 文档索引
 
+2026-11-17最新增量：[B1-2D契约](P3_2B1_2D_CONTRACT.md)、[实现审阅](P3_2B1_2D_REVIEW.md)、[四组独立模型](P3_2B1_2D_VECTORS.json)及[结构化证据](P3_2B1_2D_PROOF.json)记录实验观察的历史原件时序严格准入，不新增公开摘要或保存资格。完整B1／PB16及共同预算继续欠证，保持Experimental／Insufficient／BudgetUnproven。
+
 2026-11-17最新增量：[B1-2C契约](P3_2B1_2C_CONTRACT.md)、[实现审阅](P3_2B1_2C_REVIEW.md)、[三组独立向量](P3_2B1_2C_VECTORS.json)及[结构化证据](P3_2B1_2C_PROOF.json)记录历史节点／admissions单域只读查询与真实q比较，不含历史原件或保存资格。完整B1／PB16及共同预算仍欠证，保持Experimental／Insufficient／BudgetUnproven。
 
 2026-11-17最新增量：[B1-2B契约](P3_2B1_2B_CONTRACT.md)、[实现审阅](P3_2B1_2B_REVIEW.md)、[独立向量](P3_2B1_2B_VECTORS.json)和[结构化证据](P3_2B1_2B_PROOF.json)记录真实Work／原Ticket与只读请求、导航和ArchiveMetadata-only对照；保持Experimental／Insufficient／BudgetUnproven。完整B1／PB16仍欠证，不进入B2或产品保存。

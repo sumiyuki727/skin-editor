@@ -1,5 +1,7 @@
 # 开发路线与质量门槛
 
+2026-11-17 B1-2D：[历史原件时序严格校验](P3_2B1_2D_REVIEW.md)补实验观察准入，新增8组，定向101项及Clippy通过；新SHA完整检查另收口。下一欠证为历史原件公开摘要／真实q完整关联、features／完整metadata、NoChange覆盖、Unknown阶段／目标连续性及共同64MiB／PNG／SQLite／临时盘。完整B1／PB16未退出，不进入B2或生产保存；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown保持，GUI／设备／Skill不接。
+
 2026-11-17 B1-2C：[历史节点内容域](P3_2B1_2C_REVIEW.md)完成固定128槽只读查询与真实q比较，新增8组存储回归，定向92项通过。下一缺证仍为历史原件时序闭包／完整历史q、features／完整metadata、NoChange三类覆盖、Unknown阶段／目标连续性和64MiB／PNG／SQLite／临时盘。完整B1／PB16未退出，不进入B2或产品保存；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown保持，GUI／设备／Skill不接。
 
 2026-11-17 B1-2B：[真实Work与只读意图对照](P3_2B1_2B_REVIEW.md)完成原Ticket／expected及请求、导航、ArchiveMetadata-only证据增量，新增12项Work与2项诊断回归。完整B1／PB16仍未退出：features／历史q完整截面、NoChange三类覆盖、Unknown阶段／目标连续性及64MiB／SQLite／临时盘继续欠证；后续按已授权B1分片推进，不进入B2写入或产品保存。K1、Reference10000／Tiny4、产品NotEvaluated／stable Unknown不变，不接GUI／设备／Skill。

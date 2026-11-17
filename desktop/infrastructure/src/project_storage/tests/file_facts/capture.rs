@@ -499,8 +499,8 @@ fn wrong_expected_is_preserved_and_cannot_be_rewritten_to_match_the_observation(
 fn live_observation_and_candidate_use_one_exact_control_pool() {
     for exact in [true, false] {
         let (dir, mut d, req) = golden();
-        let (retained, work) = support::capture_controls();
-        let required = support::controls() + retained + work;
+        let (retained, _) = support::capture_controls();
+        let required = support::inspect_controls(1) + retained;
         let scratch = Directory::new();
         let mut reader = FileFactsReader::open(
             &scratch.path,
@@ -510,27 +510,91 @@ fn live_observation_and_candidate_use_one_exact_control_pool() {
             },
         )
         .unwrap();
-        let file = reader
-            .inspect(&dir.file(), req, CaptureCancellation::default())
+        let (store, _raw) = source();
+        let q = reader
+            .prepare_capture(req, d.capture(), &store, CaptureCancellation::default())
             .unwrap();
         let before = reader.usage().managed_bytes;
-        let (store, _raw) = source();
-        let result =
-            reader.prepare_capture(req, d.capture(), &store, CaptureCancellation::default());
+        let result = reader.inspect(&dir.file(), req, CaptureCancellation::default());
         if exact {
-            let q = result.unwrap();
+            let file = result.unwrap();
             assert_eq!(reader.usage().managed_peak_bytes, required);
-            assert_eq!(reader.usage().managed_bytes, before + retained);
-            drop(q);
+            assert_eq!(
+                reader.usage().managed_bytes,
+                required - support::original_work_bytes()
+            );
+            assert!(
+                file.compare_capture(&q, context(&file, &q))
+                    .unwrap()
+                    .content_equal
+            );
+            drop(file);
         } else {
             assert_eq!(
                 result.err(),
                 Some(FileFactsError::Limit(FileFactsLimit::Control))
             );
+            assert_eq!(q.summary().request, req);
         }
         assert_eq!(reader.usage().managed_bytes, before);
-        drop(file);
+        drop(q);
+        drop(
+            reader
+                .inspect(&dir.file(), req, CaptureCancellation::default())
+                .unwrap(),
+        );
         drop(d.capture());
+    }
+}
+#[test]
+fn capture_preparation_and_second_owner_keep_their_own_exact_boundary() {
+    for owners in [1, 2] {
+        for exact in [true, false] {
+            let (mut first, store) = restored_root(0);
+            let req = root_request(&mut first);
+            let (mut second, other) = restored_root(0);
+            let next = root_request(&mut second);
+            let (retained, work) = support::capture_controls();
+            let scratch = Directory::new();
+            let required = 16 * 1024 + owners * retained + work;
+            let reader = FileFactsReader::open(
+                &scratch.path,
+                FileFactsLimits {
+                    control_bytes: required - usize::from(!exact),
+                    ..FileFactsLimits::default()
+                },
+            )
+            .unwrap();
+            let old = (owners == 2).then(|| {
+                reader
+                    .prepare_capture(req, first.capture(), &store, CaptureCancellation::default())
+                    .unwrap()
+            });
+            let before = reader.usage().managed_bytes;
+            let result = reader.prepare_capture(
+                next,
+                second.capture(),
+                &other,
+                CaptureCancellation::default(),
+            );
+            if exact {
+                let q = result.unwrap();
+                assert_eq!(reader.usage().managed_peak_bytes, required);
+                assert_eq!(reader.usage().managed_bytes, before + retained);
+                drop(q);
+            } else {
+                assert_eq!(
+                    result.err(),
+                    Some(FileFactsError::Limit(FileFactsLimit::Control))
+                );
+            }
+            assert_eq!(reader.usage().managed_bytes, before);
+            if let Some(q) = &old {
+                assert_eq!(q.summary().request, req);
+            }
+            drop(old);
+            assert_eq!(reader.usage().managed_bytes, 16 * 1024);
+        }
     }
 }
 #[test]
@@ -664,8 +728,8 @@ fn a_second_candidate_is_aggregated_without_reclaiming_the_first_owner() {
         let (dir, mut d, req) = golden();
         let (mut second, second_store) = restored_root(0);
         let second_req = root_request(&mut second);
-        let (retained, work) = support::capture_controls();
-        let required = support::controls() + 2 * retained + work;
+        let (retained, _) = support::capture_controls();
+        let required = support::inspect_controls(1) + 2 * retained;
         let scratch = Directory::new();
         let mut reader = FileFactsReader::open(
             &scratch.path,
@@ -675,24 +739,29 @@ fn a_second_candidate_is_aggregated_without_reclaiming_the_first_owner() {
             },
         )
         .unwrap();
-        let file = reader
-            .inspect(&dir.file(), req, CaptureCancellation::default())
-            .unwrap();
         let (store, _raw) = source();
         let first = reader
             .prepare_capture(req, d.capture(), &store, CaptureCancellation::default())
             .unwrap();
+        let next = reader
+            .prepare_capture(
+                second_req,
+                second.capture(),
+                &second_store,
+                CaptureCancellation::default(),
+            )
+            .unwrap();
         let before = reader.usage().managed_bytes;
-        let result = reader.prepare_capture(
-            second_req,
-            second.capture(),
-            &second_store,
-            CaptureCancellation::default(),
-        );
+        let result = reader.inspect(&dir.file(), req, CaptureCancellation::default());
         if exact {
-            let second = result.unwrap();
-            assert_eq!(reader.usage().managed_bytes, before + retained);
-            drop(second);
+            let file = result.unwrap();
+            assert_eq!(reader.usage().managed_peak_bytes, required);
+            assert!(
+                file.compare_capture(&first, context(&file, &first))
+                    .unwrap()
+                    .content_equal
+            );
+            drop(file);
         } else {
             assert_eq!(
                 result.err(),
@@ -700,6 +769,12 @@ fn a_second_candidate_is_aggregated_without_reclaiming_the_first_owner() {
             );
         }
         assert_eq!(reader.usage().managed_bytes, before);
+        assert_eq!(first.summary().request, req);
+        assert_eq!(next.summary().request, second_req);
+        drop(next);
+        let file = reader
+            .inspect(&dir.file(), req, CaptureCancellation::default())
+            .unwrap();
         assert!(
             file.compare_capture(&first, context(&file, &first))
                 .unwrap()

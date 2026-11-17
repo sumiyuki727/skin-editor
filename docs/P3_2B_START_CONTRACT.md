@@ -1,5 +1,7 @@
 # P3-2B：真实存储衔接开工契约
 
+2026-11-17 B1-2D实施边界：[严格时序准入](P3_2B1_2D_REVIEW.md)只在实验FileFactsReader完整验证后，精确核对每代全部节点状态原件闭包与累计声明；新增固定工作区共享既定Reader512KiB临时预留并实际退出后退额。历史原件摘要／完整q、features／metadata、NoChange／Unknown／物理绑定及完整预算仍欠，不改变PB／BR／BS编号，不签完整B1或跨B2。
+
 2026-11-17 B1-2C实施边界：[历史节点内容域](P3_2B1_2C_REVIEW.md)只复用FileCoord域1核对已验证提交的节点／admissions前缀；固定输出保留完整来源，真实q比较恒Insufficient。历史originals声明与状态闭包对应仍未证明，不把当前全局原件或头相同叫完整历史q／NoChange覆盖。其余features／metadata／Unknown／预算欠项与PB／BR／BS编号保持，不签完整B1或进入B2。
 
 2026-11-17 B1-2B实施边界：[真实Work增量](P3_2B1_2B_REVIEW.md)补实际Work／Ticket、原expected、legacy字段与独立generation、q／打开／latest导航及ArchiveMetadata-only。只读结果恒Insufficient；features、历史q完整截面、NoChange／Unknown连续性及完整预算未补齐，PB16／完整B1继续欠项，不能进入B2或签发production authority。旧PB／BR／BS编号与既定策略保持。

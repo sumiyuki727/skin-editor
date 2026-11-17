@@ -1,5 +1,7 @@
 # 架构：当前实现与后续边界
 
+2026-11-17 B1-2D：[历史原件时序校验](P3_2B1_2D_REVIEW.md)仅加强实验FileFactsReader完整观察准入，复用已验证块图及既有checkpoint解析，固定借用索引／入队位图／队列逐代精确核对全部历史节点原件与声明。新增临时工作在构造前从同Reader512KiB预留，实际退出后退额；无新公开接口、Cache字段或writer变化。历史原件公开摘要／完整q与共同64MiB继续欠证，不进入B2或保存资格。
+
 2026-11-17 B1-2C：[历史节点内容域](P3_2B1_2C_REVIEW.md)新增application定义的FileHistoricalContent1只读端口及infra固定128槽；与当前完整域共用节点／admissions编码，真实q的内容／头／导航分别比较。历史原件、完整metadata／features及保存资格不在本片，结果恒Insufficient，完整64MiB继续BudgetUnproven。既有API7／捕获3／协调1及文件格式不变，不进入B2／GUI／设备。
 
 2026-11-17 B1-2B：[真实Work与只读意图对照](P3_2B1_2B_REVIEW.md)保管实际SavePreparationWork／完整Ticket及原expected，补legacy请求、独立generation、q／打开／latest导航及ArchiveMetadata-only投影。结果恒ExperimentalValidation／Insufficient，完整B1／PB16及64MiB／SQLite／临时盘仍欠证。WorkOwner覆盖错误路径实际释放，固定新工作量单列计费。API7／捕获3／协调1及旧文件格式不变，不进入B2／产品保存／恢复部署或GUI／设备；K1与性能／stable结论保持。

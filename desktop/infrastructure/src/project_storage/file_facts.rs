@@ -3,6 +3,7 @@ use super::*;
 use crate::byte_budget::{ByteBudget, ByteLease};
 mod capture;
 mod historical_content;
+mod historical_originals;
 mod intent_context;
 mod preflight;
 mod proof;
@@ -300,6 +301,12 @@ impl FileFactsReader {
             .control
             .reserve(2 * std::mem::size_of::<Data>())
             .ok_or(FileFactsError::Limit(FileFactsLimit::Control))?;
+        // Covers only the new fixed traversal workspace, before validate's
+        // frame/roots are constructed; the old full validator stays unproven.
+        let work_lease = self
+            .control
+            .reserve(historical_originals::WORK_BYTES)
+            .ok_or(FileFactsError::Limit(FileFactsLimit::Control))?;
         let (scratch, mut file) = snapshot::Scratch::create(&self.root.path, source.bytes)?;
         self.pending = Some(scratch);
         let result = (|| {
@@ -328,6 +335,8 @@ impl FileFactsReader {
         // Failed validation does not make scratch bytes or cleanup ownership vanish.
         self.retry_cleanup()?;
         let data = result?;
+        // validate and every borrowed workspace have actually exited.
+        drop(work_lease);
         Ok(InspectedFileFacts {
             data: Box::new(data),
             _source: source,
@@ -419,13 +428,14 @@ impl FileFactsReader {
             commit_navigation,
             historical,
         };
+        let mut original_roots = [StateHash::from_bytes([0; 32]); MAX_FILE_FACTS_COMMITS];
         for (index, p) in cache.checkpoints.iter().enumerate() {
+            let parsed = read::checkpoint(&cache, p.navigation, limits).map_err(storage)?;
+            original_roots[index] = parsed.original_root();
             result.commits[index] = Some(FileCommitFacts {
                 fact: (&p.receipt).into(),
                 previous: p.previous,
-                legacy_request: read::checkpoint(&cache, p.navigation, limits)
-                    .map_err(storage)?
-                    .request,
+                legacy_request: parsed.request,
                 navigation: p.navigation.bytes(),
                 prefix: p.prefix,
                 nodes: p.node_count,
@@ -433,6 +443,13 @@ impl FileFactsReader {
                 next_branch: p.next_branch,
             });
         }
+        historical_originals::validate(
+            &cache,
+            &original_roots[..cache.checkpoints.len()],
+            cancel,
+            probe,
+        )
+        .map_err(storage)?;
         drop(candidate);
         drop(cache);
         debug_assert_eq!(store.usage().map_err(|_| FileFactsError::Io)?.bytes, 0);
@@ -543,6 +560,14 @@ pub(super) mod test_support {
     #[cfg(windows)]
     pub fn controls() -> usize {
         aggregate_controls(1)
+    }
+    #[cfg(windows)]
+    pub fn inspect_controls(count: usize) -> usize {
+        aggregate_controls(count) + historical_originals::WORK_BYTES
+    }
+    #[cfg(windows)]
+    pub fn original_work_bytes() -> usize {
+        historical_originals::WORK_BYTES
     }
     #[cfg(windows)]
     pub fn aggregate_controls(count: usize) -> usize {

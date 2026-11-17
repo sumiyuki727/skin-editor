@@ -1,5 +1,7 @@
 # P3-2：保存、关闭与重开闭环规格
 
+2026-11-17 B1-2D：[严格时序准入](P3_2B1_2D_REVIEW.md)补齐实验观察逐代声明与全部历史状态原件闭包相等的校验，实际遍历后取消及临时容量单独验收；不把旧standalone读取或现有节点摘要提升为历史原件／完整q资格。features／metadata、NoChange三类覆盖、Unknown连续性、物理绑定与共同预算仍欠，不进入B2／生产保存。
+
 2026-11-17 B1-2C：[历史节点内容域](P3_2B1_2C_REVIEW.md)补各提交已验证节点前缀与admissions的只读摘要，保留原Ticket及独立选中提交，内容／头／导航分别比较；不补造历史原件完整性、CurrentManual／Protection／Opening或NoChange覆盖。B1／PB16继续欠证，B2写资格、产品保存及恢复部署仍排除。
 
 2026-11-17 B1-2B：[真实Work只读对照](P3_2B1_2B_REVIEW.md)已补原SaveTicket／expected、完整旧请求字段与独立generation、分离导航及ArchiveMetadata-only；不改A协调状态或保存事实，不把假设新提交投影套用NoChange。完整features／历史q／覆盖证明／Unknown连续性及预算仍欠项，B1／PB16不签收，B2–D／产品保存仍排除。

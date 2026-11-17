@@ -1,0 +1,342 @@
+{
+  "schema": "P3-2B1-2D-independent-graph-model-v1",
+  "producer": "Python set union and hashlib; no Rust traversal or runtime generation",
+  "cases": [
+    {
+      "name": "all_nodes_shared_unused_then_deleted",
+      "scope": "synthetic graph only, not a valid archive or migration proof",
+      "catalog": [
+        {
+          "name": "A",
+          "sha256": "93c16b70501df3ea95852d09f70ed4c64cff5f6c2c232cfed9524d4a27ed649b",
+          "byte_len": 21,
+          "raw_hex": "7368617265642d756e757365642d66697874757265"
+        }
+      ],
+      "graph": [
+        {
+          "id": 1,
+          "refs": [],
+          "blobs": []
+        },
+        {
+          "id": 2,
+          "refs": [],
+          "blobs": [
+            "A"
+          ]
+        },
+        {
+          "id": 3,
+          "refs": [
+            2
+          ],
+          "blobs": []
+        },
+        {
+          "id": 4,
+          "refs": [],
+          "blobs": []
+        }
+      ],
+      "node_roots": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "canonical_absent": 999999,
+      "node_counts": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "declarations": [
+        [],
+        [
+          "A"
+        ],
+        [],
+        []
+      ],
+      "expected": [
+        {
+          "actual_names": [],
+          "declared_names": [],
+          "mask": 0,
+          "declared_mask": 0,
+          "count": 0,
+          "bytes": 0,
+          "equal": true
+        },
+        {
+          "actual_names": [
+            "A"
+          ],
+          "declared_names": [
+            "A"
+          ],
+          "mask": 1,
+          "declared_mask": 1,
+          "count": 1,
+          "bytes": 21,
+          "equal": true
+        },
+        {
+          "actual_names": [
+            "A"
+          ],
+          "declared_names": [
+            "A"
+          ],
+          "mask": 1,
+          "declared_mask": 1,
+          "count": 1,
+          "bytes": 21,
+          "equal": true
+        },
+        {
+          "actual_names": [
+            "A"
+          ],
+          "declared_names": [
+            "A"
+          ],
+          "mask": 1,
+          "declared_mask": 1,
+          "count": 1,
+          "bytes": 21,
+          "equal": true
+        }
+      ],
+      "admitted": true
+    },
+    {
+      "name": "zero_length_member",
+      "scope": "synthetic graph only, not a valid archive or migration proof",
+      "catalog": [
+        {
+          "name": "Z",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "byte_len": 0,
+          "raw_hex": ""
+        }
+      ],
+      "graph": [
+        {
+          "id": 1,
+          "refs": [],
+          "blobs": []
+        },
+        {
+          "id": 3,
+          "refs": [
+            2
+          ],
+          "blobs": []
+        },
+        {
+          "id": 4,
+          "refs": [],
+          "blobs": []
+        },
+        {
+          "id": 5,
+          "refs": [],
+          "blobs": [
+            "Z"
+          ]
+        }
+      ],
+      "node_roots": [
+        5
+      ],
+      "canonical_absent": 999999,
+      "node_counts": [
+        1
+      ],
+      "declarations": [
+        [
+          "Z"
+        ]
+      ],
+      "expected": [
+        {
+          "actual_names": [
+            "Z"
+          ],
+          "declared_names": [
+            "Z"
+          ],
+          "mask": 1,
+          "declared_mask": 1,
+          "count": 1,
+          "bytes": 0,
+          "equal": true
+        }
+      ],
+      "admitted": true
+    },
+    {
+      "name": "declared_early",
+      "scope": "synthetic graph only, not a valid archive or migration proof",
+      "catalog": [
+        {
+          "name": "A",
+          "sha256": "93c16b70501df3ea95852d09f70ed4c64cff5f6c2c232cfed9524d4a27ed649b",
+          "byte_len": 21,
+          "raw_hex": "7368617265642d756e757365642d66697874757265"
+        }
+      ],
+      "graph": [
+        {
+          "id": 1,
+          "refs": [],
+          "blobs": []
+        },
+        {
+          "id": 2,
+          "refs": [],
+          "blobs": [
+            "A"
+          ]
+        },
+        {
+          "id": 3,
+          "refs": [
+            2
+          ],
+          "blobs": []
+        },
+        {
+          "id": 4,
+          "refs": [],
+          "blobs": []
+        }
+      ],
+      "node_roots": [
+        1,
+        2
+      ],
+      "canonical_absent": 999999,
+      "node_counts": [
+        1,
+        2
+      ],
+      "declarations": [
+        [
+          "A"
+        ],
+        []
+      ],
+      "expected": [
+        {
+          "actual_names": [],
+          "declared_names": [
+            "A"
+          ],
+          "mask": 0,
+          "declared_mask": 1,
+          "count": 0,
+          "bytes": 0,
+          "equal": false
+        },
+        {
+          "actual_names": [
+            "A"
+          ],
+          "declared_names": [
+            "A"
+          ],
+          "mask": 1,
+          "declared_mask": 1,
+          "count": 1,
+          "bytes": 21,
+          "equal": true
+        }
+      ],
+      "admitted": false
+    },
+    {
+      "name": "declared_late",
+      "scope": "synthetic graph only, not a valid archive or migration proof",
+      "catalog": [
+        {
+          "name": "A",
+          "sha256": "93c16b70501df3ea95852d09f70ed4c64cff5f6c2c232cfed9524d4a27ed649b",
+          "byte_len": 21,
+          "raw_hex": "7368617265642d756e757365642d66697874757265"
+        }
+      ],
+      "graph": [
+        {
+          "id": 1,
+          "refs": [],
+          "blobs": []
+        },
+        {
+          "id": 2,
+          "refs": [],
+          "blobs": [
+            "A"
+          ]
+        },
+        {
+          "id": 3,
+          "refs": [
+            2
+          ],
+          "blobs": []
+        },
+        {
+          "id": 4,
+          "refs": [],
+          "blobs": []
+        }
+      ],
+      "node_roots": [
+        2,
+        4
+      ],
+      "canonical_absent": 999999,
+      "node_counts": [
+        1,
+        2
+      ],
+      "declarations": [
+        [],
+        [
+          "A"
+        ]
+      ],
+      "expected": [
+        {
+          "actual_names": [
+            "A"
+          ],
+          "declared_names": [],
+          "mask": 1,
+          "declared_mask": 0,
+          "count": 1,
+          "bytes": 21,
+          "equal": false
+        },
+        {
+          "actual_names": [
+            "A"
+          ],
+          "declared_names": [
+            "A"
+          ],
+          "mask": 1,
+          "declared_mask": 1,
+          "count": 1,
+          "bytes": 21,
+          "equal": true
+        }
+      ],
+      "admitted": false
+    }
+  ]
+}

@@ -391,7 +391,7 @@ fn historical_payload_has_exact_shared_control_admission_and_queries_keep_manage
     let (dir, _d, req) = golden();
     for less in [false, true] {
         let scratch = Directory::new();
-        let required = support::controls();
+        let required = support::inspect_controls(1);
         let mut reader = FileFactsReader::open(
             &scratch.path,
             FileFactsLimits {
@@ -411,6 +411,7 @@ fn historical_payload_has_exact_shared_control_admission_and_queries_keep_manage
             let file = result.unwrap();
             assert_eq!(reader.usage().managed_peak_bytes, required);
             let current = reader.usage().managed_bytes;
+            assert_eq!(current, support::controls());
             let facts = file.historical_content(query(&file, 400)).unwrap();
             assert!(facts.facts.is_some());
             assert_eq!(reader.usage().managed_bytes, current);

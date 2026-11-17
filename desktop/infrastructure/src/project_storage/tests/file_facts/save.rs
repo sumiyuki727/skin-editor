@@ -605,9 +605,9 @@ fn save_work_and_live_file_share_exact_control_admission_without_reclaiming_owne
     for exact in [true, false] {
         let (dir, store, mut d, _port, work, req) = fixture();
         let ticket = work.ticket();
-        let (retained, work_bytes) = support::capture_controls();
-        let (extra, context_work) = support::save_controls();
-        let required = support::controls() + retained + work_bytes + extra + context_work;
+        let (retained, _) = support::capture_controls();
+        let (extra, _) = support::save_controls();
+        let required = support::inspect_controls(1) + retained + extra;
         let scratch = Directory::new();
         let mut reader = FileFactsReader::open(
             &scratch.path,
@@ -617,27 +617,57 @@ fn save_work_and_live_file_share_exact_control_admission_without_reclaiming_owne
             },
         )
         .unwrap();
-        let file = reader
-            .inspect(&dir.file(), req, CaptureCancellation::default())
+        let q = reader
+            .prepare_save(work, req.selection, &store, CaptureCancellation::default())
             .unwrap();
         let before = reader.usage().managed_bytes;
-        let result =
-            reader.prepare_save(work, req.selection, &store, CaptureCancellation::default());
+        let result = reader.inspect(&dir.file(), req, CaptureCancellation::default());
         if exact {
-            let q = result.unwrap();
+            let file = result.unwrap();
             assert_eq!(reader.usage().managed_peak_bytes, required);
-            assert_eq!(reader.usage().managed_bytes, before + retained + extra);
-            drop(q);
+            assert_eq!(
+                reader.usage().managed_bytes,
+                required - support::original_work_bytes()
+            );
+            assert_eq!(
+                file.compare_save(
+                    &q,
+                    FileSaveCompareContext {
+                        version: FILE_SAVE_INTENT_VERSION,
+                        observation: file.summary().observation,
+                        ticket
+                    }
+                )
+                .unwrap()
+                .intent
+                .ticket,
+                ticket
+            );
+            drop(file);
         } else {
             assert_eq!(
-                result
-                    .err()
-                    .map(|e| matches!(e, FileFactsError::Limit(FileFactsLimit::Control))),
-                Some(true)
+                result.err(),
+                Some(FileFactsError::Limit(FileFactsLimit::Control))
             );
         }
         assert_eq!(reader.usage().managed_bytes, before);
-        drop(file);
+        assert!(
+            !d.session
+                .save_coordination_status(1)
+                .unwrap()
+                .active
+                .unwrap()
+                .work_released
+        );
+        drop(q);
+        assert!(
+            d.session
+                .save_coordination_status(1)
+                .unwrap()
+                .active
+                .unwrap()
+                .work_released
+        );
         assert_eq!(
             d.session.acknowledge_save(ticket),
             Ok(SaveAcknowledgement::Released)
@@ -685,6 +715,67 @@ fn metadata_projection_preserves_bytes_order_and_only_predicts_new_commits() {
     exhausted.target.expected.generation = Some(u64::MAX);
     assert_eq!(support::intent_prediction(&metadata, exhausted), None);
     assert_eq!(metadata, raw);
+}
+
+#[test]
+fn complete_save_preparation_peak_keeps_exact_boundary_and_real_work_release() {
+    for exact in [true, false] {
+        let (_dir, store, mut d, _port, work, req) = fixture();
+        let ticket = work.ticket();
+        let (retained, capture_work) = support::capture_controls();
+        let (extra, context_work) = support::save_controls();
+        let baseline = 16 * 1024;
+        let required = baseline + extra + context_work + retained + capture_work;
+        let scratch = Directory::new();
+        let reader = FileFactsReader::open(
+            &scratch.path,
+            FileFactsLimits {
+                control_bytes: required - usize::from(!exact),
+                ..FileFactsLimits::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(reader.usage().managed_bytes, baseline);
+        let result =
+            reader.prepare_save(work, req.selection, &store, CaptureCancellation::default());
+        if exact {
+            let q = result.unwrap();
+            assert_eq!(reader.usage().managed_peak_bytes, required);
+            assert_eq!(reader.usage().managed_bytes, baseline + extra + retained);
+            assert_eq!(q.summary().ticket, ticket);
+            assert_eq!(
+                d.session.acknowledge_save(ticket),
+                Ok(SaveAcknowledgement::WaitingResources)
+            );
+            assert!(
+                !d.session
+                    .save_coordination_status(1)
+                    .unwrap()
+                    .active
+                    .unwrap()
+                    .work_released
+            );
+            drop(q);
+        } else {
+            assert_eq!(
+                result.err(),
+                Some(FileFactsError::Limit(FileFactsLimit::Control))
+            );
+        }
+        assert_eq!(reader.usage().managed_bytes, baseline);
+        assert!(
+            d.session
+                .save_coordination_status(1)
+                .unwrap()
+                .active
+                .unwrap()
+                .work_released
+        );
+        assert_eq!(
+            d.session.acknowledge_save(ticket),
+            Ok(SaveAcknowledgement::Released)
+        );
+    }
 }
 #[test]
 fn context_length_gates_and_duplicate_redo_reject_before_fixed_indexing() {

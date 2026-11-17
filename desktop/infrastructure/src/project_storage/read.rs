@@ -5,6 +5,11 @@ pub(super) struct ParsedCheckpoint {
     pub request: [u8; 32],
     roots: BTreeMap<String, StateHash>,
 }
+impl ParsedCheckpoint {
+    pub(super) fn original_root(&self) -> StateHash {
+        self.roots["originals"]
+    }
+}
 pub(super) fn checkpoint(
     cache: &Cache,
     root: StateHash,

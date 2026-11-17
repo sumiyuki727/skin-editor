@@ -5,6 +5,8 @@ use super::*;
 mod capture;
 #[cfg(windows)]
 mod historical_content;
+#[cfg(windows)]
+mod historical_originals;
 mod preflight;
 #[cfg(windows)]
 mod save;
@@ -355,7 +357,7 @@ fn exact_file_scratch_and_new_wrapper_capacity_boundaries_are_independent() {
             match field {
                 0 => limits.file_bytes = file_bytes - u64::from(less),
                 1 => limits.scratch_bytes = file_bytes - u64::from(less),
-                _ => limits.control_bytes = support::controls() - usize::from(less),
+                _ => limits.control_bytes = support::inspect_controls(1) - usize::from(less),
             }
             let mut reader = FileFactsReader::open(&scratch.path, limits).unwrap();
             let before = reader.usage().managed_bytes;
@@ -516,7 +518,7 @@ fn multiple_observations_share_one_control_budget_and_survive_reader_drop() {
     for less in [false, true] {
         let scratch = Directory::new();
         let limits = FileFactsLimits {
-            control_bytes: support::aggregate_controls(2) - usize::from(less),
+            control_bytes: support::inspect_controls(2) - usize::from(less),
             ..FileFactsLimits::default()
         };
         let mut reader = FileFactsReader::open(&scratch.path, limits).unwrap();

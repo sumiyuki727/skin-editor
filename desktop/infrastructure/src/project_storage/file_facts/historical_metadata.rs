@@ -14,6 +14,9 @@ pub(super) struct MetadataData {
     len: usize,
 }
 impl MetadataData {
+    pub fn latest_features_root(&self) -> [u8; 32] {
+        self.points[self.len - 1].features_root
+    }
     pub const fn empty() -> Self {
         Self {
             points: [Point {

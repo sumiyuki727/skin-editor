@@ -20,6 +20,7 @@ mod file_historical_content;
 mod file_historical_metadata;
 mod file_historical_originals;
 mod file_historical_save;
+mod file_profile;
 mod file_save;
 mod history;
 mod history_control;
@@ -45,6 +46,7 @@ pub use file_historical_content::*;
 pub use file_historical_metadata::*;
 pub use file_historical_originals::*;
 pub use file_historical_save::*;
+pub use file_profile::*;
 pub use file_save::*;
 pub use preview_port::*;
 pub use restore::{RestoreBuilder, RestoreCandidate};
@@ -188,6 +190,7 @@ pub struct ProjectSession {
     persistence: Option<capture_identity::PersistenceMap>,
     capture_in_flight: Arc<std::sync::atomic::AtomicBool>,
     archive_metadata: Arc<ArchiveMetadata>,
+    file_profile: Option<file_profile::ProfileAttachment>,
     restored_history: bool,
     save_coordination: Option<Box<save_coordination::Coordinator>>,
     /// Cancellation tombstones are bounded by the admitted Begin requests.
@@ -246,6 +249,7 @@ impl ProjectSession {
             persistence: None,
             capture_in_flight: Arc::default(),
             archive_metadata: Arc::default(),
+            file_profile: None,
             restored_history: false,
             save_coordination: None,
             cancelled_drafts: BTreeSet::new(),

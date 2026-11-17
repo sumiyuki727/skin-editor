@@ -162,6 +162,8 @@ enum Stage {
     ReadOriginalClosure,
     ReadOriginalSummary,
     ReadMetadataSummary,
+    ReadProfileSource,
+    ReadCapturedMetadata,
     CopyMain,
     CopyJournal,
     BeforeRecovery,

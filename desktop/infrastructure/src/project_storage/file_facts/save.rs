@@ -28,6 +28,7 @@ pub(super) fn release_work_observed(
 pub struct FileSaveCandidate {
     capture: FileCaptureCandidate,
     summary: FileSaveIntentSummary,
+    metadata: Option<FileCapturedMetadataFacts>,
     _owner: WorkOwner,
 }
 impl std::fmt::Debug for FileSaveCandidate {
@@ -38,12 +39,16 @@ impl std::fmt::Debug for FileSaveCandidate {
     }
 }
 impl FileSaveCandidate {
+    pub fn captured_metadata(&self) -> Option<FileCapturedMetadataFacts> {
+        self.metadata
+    }
     pub fn summary(&self) -> FileSaveIntentSummary {
         self.summary
     }
 }
 pub(super) fn extra_bytes() -> usize {
     2 * (std::mem::size_of::<FileSaveIntentSummary>()
+        + std::mem::size_of::<Option<FileCapturedMetadataFacts>>()
         + std::mem::size_of::<SavePreparationWork>()
         + std::mem::size_of::<ByteLease>())
 }
@@ -57,24 +62,23 @@ fn cancelled(c: &CaptureCancellation) -> Result<(), FileFactsError> {
 fn build_intent(
     capture: &FileCaptureCandidate,
     ticket: SaveTicket,
+    scratch: &mut ctx::Workspace,
 ) -> Result<FileSaveIntentSummary, FileFactsError> {
     let m = capture._snapshot.manifest();
-    let mut scratch = [0; 4096];
     let navigation = ctx::navigation(
         m.head,
         m.next_alias,
         m.next_branch,
         &m.redo_preferences,
-        &mut scratch,
+        scratch,
     )
     .map_err(storage)?;
-    let archive_before = ctx::archive(&m.archive_metadata, None, &mut scratch).map_err(storage)?;
-    let legacy_request = ctx::legacy(ticket, m, capture.prefix, &mut scratch).map_err(storage)?;
+    let archive_before = ctx::archive(&m.archive_metadata, None, scratch).map_err(storage)?;
+    let legacy_request = ctx::legacy(ticket, m, capture.prefix, scratch).map_err(storage)?;
     let would_commit = if let Some(receipt) = predict(&m.archive_metadata, ticket) {
         Some(FileArchivePrediction {
             fact: (&receipt).into(),
-            archive: ctx::archive(&m.archive_metadata, Some(&receipt), &mut scratch)
-                .map_err(storage)?,
+            archive: ctx::archive(&m.archive_metadata, Some(&receipt), scratch).map_err(storage)?,
         })
     } else {
         None
@@ -200,12 +204,29 @@ impl FileFactsReader {
             .reserve(ctx::WORK_BYTES)
             .ok_or(FileFactsError::Limit(FileFactsLimit::Control))?;
         let capture = self.prepare_stream(request, &mut owner.work, originals, cancel.clone())?;
-        let summary = build_intent(&capture, ticket)?;
+        let (summary, metadata) = {
+            let mut scratch = [0; 4096];
+            let summary = build_intent(&capture, ticket, &mut scratch)?;
+            #[cfg(test)]
+            let probe = self.probe;
+            #[cfg(not(test))]
+            let probe = Probe::default();
+            let metadata = profile::captured(
+                &capture._snapshot,
+                ticket,
+                self.instance,
+                &mut scratch,
+                &cancel,
+                probe,
+            )?;
+            (summary, metadata)
+        }; // Both projections and their shared workspace have left scope.
         cancelled(&cancel)?;
         drop(temporary);
         Ok(FileSaveCandidate {
             capture,
             summary,
+            metadata,
             _owner: owner,
         })
     }

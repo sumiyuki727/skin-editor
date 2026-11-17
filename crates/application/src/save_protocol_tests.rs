@@ -2,6 +2,7 @@
 //! device, thread, global test allocator or fabricated file-format proof.
 mod close;
 mod exit;
+mod profile;
 use crate::save_coordination::{
     synthetic_authority, test_candidate_weak, test_query_allocation, test_query_attempt,
 };

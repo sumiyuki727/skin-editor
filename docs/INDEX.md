@@ -1,5 +1,7 @@
 # 文档索引
 
+2026-11-18 B1-2H：[真实恢复来源与捕获已有metadata](P3_2B1_2H_REVIEW.md)已按[冻结契约](P3_2B1_2H_CONTRACT.md)及[独立向量](P3_2B1_2H_VECTORS.json)接通只读恢复→Session→Snapshot→真实Work/q来源链和before完整域3比较；无源／错绑／expected前进不补默认值，Missing与Unavailable先过完整守卫。旧F仍NotCompared，fresh-append／would_commit及保存资格不升级。Reader与A各512KiB独立，完整B1／PB16、NoChange／Unknown／物理连续性／共同64MiB仍欠；保持Experimental／Insufficient／BudgetUnproven及产品NotEvaluated／stable Unknown。旧证据、PRIVATE与schema.rs保留，原始新日志仅本机；UI／设备／Skill及现场步骤暂停。以下记录保留各自时点。
+
 2026-11-18 G夹具事务修订：[CI收尾审阅](P3_2B1_2G_CI_REVIEW.md)记录075b204/run44125234390的两核心成功／桌面cancelled，不能签三项成功；默认和all-features各300项已过，取消根因仍Unknown。仅合并自制metadata输入构造为一次事务，保留所有旧／新用例、黄金、同步等级、预算与时限，另以正常完整hook及新SHA CI核验。G文件侧能力及q features缺口／F NotCompared不变，完整B1／PB16和NoChange／Unknown／物理绑定／共同预算仍欠；保持Experimental／Insufficient／BudgetUnproven，K1、产品NotEvaluated／stable Unknown和UI／设备／Skill限制不变。旧证明／PRIVATE／schema.rs保留，新原始日志仅本机。
 
 2026-11-18 B1-2G：[文件侧历史metadata](P3_2B1_2G_REVIEW.md)本轮入口为[契约](P3_2B1_2G_CONTRACT.md)、[八组独立域3模型](P3_2B1_2G_VECTORS.json)、[审阅](P3_2B1_2G_REVIEW.md)、[结构化证据](P3_2B1_2G_PROOF.json)。文件侧材料补齐不等于真实q或保存资格补齐。 保持Experimental／Insufficient／BudgetUnproven；K1／Reference10000／Tiny4、产品NotEvaluated／stable Unknown及UI／设备／Skill限制不变。

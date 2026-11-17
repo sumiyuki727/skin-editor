@@ -26,6 +26,8 @@ pub struct RestoreCandidate {
     header: RestoreHeader,
     nodes: Vec<RestoreNode>,
     pins: BTreeMap<BlobRef, Arc<dyn BlobLease>>,
+    profile: Option<crate::file_profile::ProfileAttachment>,
+    profile_room: usize,
 }
 impl std::fmt::Debug for RestoreCandidate {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -280,6 +282,8 @@ impl RestoreBuilder {
             header: self.header,
             nodes: self.nodes,
             pins,
+            profile: None,
+            profile_room: self.limits.metadata_bytes - self.bytes,
         })
     }
 }
@@ -291,6 +295,46 @@ fn counter(next: u64, last: u64) -> bool {
     }
 }
 impl RestoreCandidate {
+    /// Detached-only, single attachment. This does not authenticate a provider
+    /// for any adapter or make observed bytes a desired future save profile.
+    pub fn attach_file_profile(
+        &mut self,
+        version: u16,
+        source: Arc<dyn crate::FileProfileSource>,
+    ) -> Result<(), RestoreError> {
+        if version != crate::FILE_PROFILE_VERSION || self.profile.is_some() {
+            return Err(RestoreError::Invalid("profile attachment"));
+        }
+        let profile = crate::file_profile::ProfileAttachment::new(source)?;
+        let o = profile.origin;
+        let b = o.file.binding;
+        if b.project != self.header.project
+            || b.history != Some((&self.header.identity).into())
+            || o.root != self.header.root
+            || o.opened_head != self.header.head
+            || b.expected.commit != self.header.metadata.last_commit.as_ref().map(|r| r.commit)
+            || b.expected.generation
+                != self
+                    .header
+                    .metadata
+                    .last_commit
+                    .as_ref()
+                    .map(|r| r.generation)
+        {
+            return Err(RestoreError::Invalid("profile scope"));
+        }
+        if profile.logical_cost().is_none_or(|n| n > self.profile_room) {
+            return Err(RestoreError::Limit("profile metadata"));
+        }
+        self.profile = Some(profile);
+        Ok(())
+    }
+    pub fn file_profile(
+        &self,
+        version: u16,
+    ) -> Result<Option<&dyn crate::FileProfileSource>, crate::FileFactsError> {
+        crate::file_profile::profile_ref(self.profile.as_ref(), version)
+    }
     pub fn header(&self) -> &RestoreHeader {
         &self.header
     }
@@ -304,6 +348,13 @@ impl RestoreCandidate {
         limits: SessionLimits,
         cancel: CaptureCancellation,
     ) -> Result<ProjectSession, RestoreError> {
+        if self
+            .profile
+            .as_ref()
+            .is_some_and(|p| p.origin.file.key.session != epoch)
+        {
+            return Err(RestoreError::Invalid("profile session"));
+        }
         if !session_limits(limits) || self.nodes.len() > limits.history_nodes {
             return Err(RestoreError::Limit("session"));
         }
@@ -406,6 +457,7 @@ impl RestoreCandidate {
             nodes: local.into_iter().map(|(p, l)| (l, p)).collect(),
         });
         session.archive_metadata = self.header.metadata;
+        session.file_profile = self.profile;
         session.restored_history = true;
         restore_cancel(&cancel)?;
         Ok(session)

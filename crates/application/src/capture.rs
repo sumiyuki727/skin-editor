@@ -21,6 +21,7 @@ struct Resources {
     complete: AtomicBool,
     // Drop real pins before allowing another capture, including on rejection.
     _pins: Vec<Arc<dyn BlobLease>>,
+    profile: Option<crate::file_profile::ProfileAttachment>,
     _permit: Permit,
 }
 
@@ -32,6 +33,12 @@ pub struct CaptureSnapshot {
     _resources: Arc<Resources>,
 }
 impl CaptureSnapshot {
+    pub fn file_profile(
+        &self,
+        version: u16,
+    ) -> Result<Option<&dyn crate::FileProfileSource>, crate::FileFactsError> {
+        crate::file_profile::profile_ref(self._resources.profile.as_ref(), version)
+    }
     pub fn manifest(&self) -> &CaptureManifest {
         &self.manifest
     }
@@ -163,6 +170,13 @@ impl ProjectSession {
         cost.count(self.used_ids.len(), 128)?;
         cost.count(self.redo_preferences.len(), 64)?;
         cost.add(self.archive_metadata.logical_bytes()?)?;
+        if let Some(profile) = &self.file_profile {
+            cost.add(
+                profile
+                    .logical_cost()
+                    .ok_or(CaptureError::ResourceLimit("profile metadata"))?,
+            )?;
+        }
         cost.count(3, crate::capture_cost::project(&self.history.root)?)?;
         let mut originals = BTreeSet::new();
         for a in self.history.root.assets().iter() {
@@ -336,6 +350,7 @@ impl ProjectSession {
             _resources: Arc::new(Resources {
                 complete: AtomicBool::new(false),
                 _pins: pins,
+                profile: self.file_profile.clone(),
                 _permit: permit,
             }),
         };

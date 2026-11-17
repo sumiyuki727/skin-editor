@@ -92,6 +92,13 @@ fn extension_values(model: &Value) -> Vec<Value> {
 // indexes/checkpoints, prune only fixture-construction orphans and restore all
 // original guards before inspection. No product migration/cleanup capability.
 fn metadata_fixture(bad: Option<&str>) -> (Directory, FileFactsRequest, [[u8; 32]; 2]) {
+    profile_fixture(bad, None, false)
+}
+pub(super) fn profile_fixture(
+    bad: Option<&str>,
+    current_features: Option<Vec<Value>>,
+    exit: bool,
+) -> (Directory, FileFactsRequest, [[u8; 32]; 2]) {
     let dir = Directory::new();
     let store = BlobStore::default();
     let mut d = Driver::new(store.clone());
@@ -110,7 +117,7 @@ fn metadata_fixture(bad: Option<&str>) -> (Directory, FileFactsRequest, [[u8; 32
         request(
             2,
             Some(900),
-            if bad == Some("future-feature") {
+            if bad == Some("future-feature") || exit {
                 SaveOrigin::Exit
             } else {
                 SaveOrigin::Manual
@@ -148,6 +155,16 @@ fn metadata_fixture(bad: Option<&str>) -> (Directory, FileFactsRequest, [[u8; 32
     let mut ext = [extension_values(old), extension_values(latest)];
     let mut features = [feature_values(old), feature_values(latest)];
     let mut global_features = features[1].clone();
+    if let Some(mut values) = current_features {
+        values.sort_unstable_by_key(|v| {
+            (
+                v["name"].as_str().unwrap().to_owned(),
+                v["version"].as_str().unwrap().to_owned(),
+            )
+        });
+        features[1] = values.clone();
+        global_features = values;
+    }
     match bad {
         Some("required") => {
             let f = global_features

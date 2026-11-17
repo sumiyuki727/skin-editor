@@ -1,4 +1,4 @@
-//! File-side post-commit metadata only; actual q still has no features source.
+//! File-side post-commit metadata; captured-before comparison has its own port.
 use crate::*;
 pub const FILE_HISTORICAL_METADATA_VERSION: u16 = 1;
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]

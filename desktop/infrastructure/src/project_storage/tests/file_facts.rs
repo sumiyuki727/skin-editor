@@ -15,6 +15,8 @@ mod historical_save;
 mod original_query;
 mod preflight;
 #[cfg(windows)]
+mod profile;
+#[cfg(windows)]
 mod save;
 
 fn vectors() -> Value {

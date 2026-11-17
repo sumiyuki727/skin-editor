@@ -9,6 +9,7 @@ mod historical_save;
 mod intent_context;
 mod original_query;
 mod preflight;
+mod profile;
 mod proof;
 mod save;
 mod snapshot;
@@ -123,6 +124,7 @@ const _: () = assert!(
             + std::mem::size_of::<(FileIntentFacts, [[u8; 32]; MAX_FILE_FACTS_COMMITS])>()
             + std::mem::size_of::<FileFactsSummary>()
             + std::mem::size_of::<FileReadPreflight>()
+            + 2 * std::mem::size_of::<Restoration>()
 );
 const INSPECT_WORK_BYTES: usize =
     historical_originals::WORK_BYTES + historical_metadata::WORK_BYTES;
@@ -131,6 +133,10 @@ pub struct InspectedFileFacts {
     data: Box<Data>,
     _source: snapshot::Source,
     _lease: ByteLease,
+}
+struct Restoration {
+    candidate: RestoreCandidate,
+    features: Vec<Value>,
 }
 impl FileFactsPort for InspectedFileFacts {
     fn summary(&self) -> FileFactsSummary {
@@ -281,6 +287,22 @@ impl FileFactsReader {
         request: FileFactsRequest,
         cancel: CaptureCancellation,
     ) -> Result<InspectedFileFacts, FileFactsError> {
+        let (data, restoration, source, lease) =
+            self.read_observation(source, request, cancel, None)?;
+        debug_assert!(restoration.is_none());
+        Ok(InspectedFileFacts {
+            data: Box::new(data),
+            _source: source,
+            _lease: lease,
+        })
+    }
+    fn read_observation(
+        &mut self,
+        source: &Path,
+        request: FileFactsRequest,
+        cancel: CaptureCancellation,
+        restore_store: Option<&BlobStore>,
+    ) -> Result<(Data, Option<Restoration>, snapshot::Source, ByteLease), FileFactsError> {
         validate_request(request)?;
         if cancel.is_cancelled() {
             return Err(FileFactsError::Cancelled);
@@ -331,7 +353,7 @@ impl FileFactsReader {
                 Connection::open_with_flags(path, rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY)
                     .map_err(StorageError::from)
                     .map_err(storage)?;
-            let data = self.validate(&mut conn, request, observation, &cancel)?;
+            let data = self.validate(&mut conn, request, observation, &cancel, restore_store)?;
             conn.close().map_err(|_| FileFactsError::Io)?;
             snapshot::healthy(path)?;
             if snapshot::hash(&mut file, source.bytes, &cancel)? != source.digest {
@@ -343,14 +365,10 @@ impl FileFactsReader {
         drop(file);
         // Failed validation does not make scratch bytes or cleanup ownership vanish.
         self.retry_cleanup()?;
-        let data = result?;
+        let (data, restoration) = result?;
         // validate and every borrowed workspace have actually exited.
         drop(work_lease);
-        Ok(InspectedFileFacts {
-            data: Box::new(data),
-            _source: source,
-            _lease: lease,
-        })
+        Ok((data, restoration, source, lease))
     }
     fn validate(
         &self,
@@ -358,7 +376,8 @@ impl FileFactsReader {
         request: FileFactsRequest,
         observation: FileObservationId,
         cancel: &CaptureCancellation,
-    ) -> Result<Data, FileFactsError> {
+        restore_store: Option<&BlobStore>,
+    ) -> Result<(Data, Option<Restoration>), FileFactsError> {
         let limits = self.limits.file();
         configure(conn, limits, cancel).map_err(storage)?;
         let preflight = preflight::scan(conn, self.limits, observation, cancel)?;
@@ -383,8 +402,14 @@ impl FileFactsReader {
             }
         }
         let total = self.limits.original_bytes as usize;
-        let store = BlobStore::with_limits(total, total.min(64 * 1024))
-            .map_err(|_| FileFactsError::InvalidLimits)?;
+        let private_store;
+        let store = if let Some(store) = restore_store {
+            store
+        } else {
+            private_store = BlobStore::with_limits(total, total.min(64 * 1024))
+                .map_err(|_| FileFactsError::InvalidLimits)?;
+            &private_store
+        };
         #[cfg(test)]
         let probe = self.probe;
         #[cfg(not(test))]
@@ -394,7 +419,7 @@ impl FileFactsReader {
             let mut collector = historical_metadata::Collector::new(&mut metadata);
             read::full_observed(
                 conn,
-                &store,
+                store,
                 limits,
                 request.selection,
                 cancel,
@@ -483,10 +508,18 @@ impl FileFactsReader {
         {
             return Err(FileFactsError::ValidationFailed);
         }
-        drop(candidate);
-        drop(cache);
-        debug_assert_eq!(store.usage().map_err(|_| FileFactsError::Io)?.bytes, 0);
-        Ok(result)
+        let restoration = if restore_store.is_some() {
+            Some(Restoration {
+                candidate,
+                features: cache.features,
+            })
+        } else {
+            drop(candidate);
+            drop(cache);
+            debug_assert_eq!(store.usage().map_err(|_| FileFactsError::Io)?.bytes, 0);
+            None
+        };
+        Ok((result, restoration))
     }
 }
 impl Drop for FileFactsReader {
@@ -608,6 +641,26 @@ pub(super) mod test_support {
             std::mem::size_of::<historical_metadata::Point>(),
             historical_metadata::WORK_BYTES,
         )
+    }
+    #[cfg(windows)]
+    pub fn profile_controls(text: usize) -> usize {
+        profile::source_bytes(text)
+    }
+    #[cfg(windows)]
+    pub fn profile_work_scope(
+        reader: &FileFactsReader,
+        work: &SavePreparationWork,
+        ticket: SaveTicket,
+    ) -> Option<FileCapturedMetadataFacts> {
+        profile::captured(
+            work.snapshot(),
+            ticket,
+            reader.instance,
+            &mut [0; 4096],
+            &CaptureCancellation::default(),
+            Probe::default(),
+        )
+        .unwrap()
     }
     #[cfg(windows)]
     pub fn aggregate_controls(count: usize) -> usize {

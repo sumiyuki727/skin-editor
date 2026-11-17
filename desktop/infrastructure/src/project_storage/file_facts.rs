@@ -2,6 +2,7 @@
 use super::*;
 use crate::byte_budget::{ByteBudget, ByteLease};
 mod capture;
+mod historical_content;
 mod intent_context;
 mod preflight;
 mod proof;
@@ -103,11 +104,14 @@ struct Data {
     commits: [Option<FileCommitFacts>; MAX_FILE_FACTS_COMMITS],
     intent: FileIntentFacts,
     commit_navigation: [[u8; 32]; MAX_FILE_FACTS_COMMITS],
+    historical: historical_content::HistoricalContentData,
 }
 // Context workspace exits before the Data producer is constructed.
 const _: () = assert!(
     2 * std::mem::size_of::<Data>()
         >= intent_context::WORK_BYTES
+            + proof::CONTENT_WORK_BYTES
+            + 2 * std::mem::size_of::<historical_content::HistoricalContentData>()
             + std::mem::size_of::<(FileIntentFacts, [[u8; 32]; MAX_FILE_FACTS_COMMITS])>()
             + std::mem::size_of::<FileFactsSummary>()
             + std::mem::size_of::<FileReadPreflight>()
@@ -393,12 +397,19 @@ impl FileFactsReader {
             originals: cache.originals.len(),
             original_bytes: cache.originals.iter().map(|b| b.byte_len()).sum(),
             commits: cache.checkpoints.len(),
-            proof: proof::build(&cache, candidate.header(), request.selection, limits)
-                .map_err(storage)?,
+            proof: proof::build(
+                &cache,
+                candidate.header(),
+                request.selection,
+                limits,
+                cancel,
+            )
+            .map_err(storage)?,
         };
         let (intent, commit_navigation) =
             intent_context::file_context(&cache, candidate.header(), observation)
                 .map_err(storage)?;
+        let historical = historical_content::build(&cache, cancel, probe).map_err(storage)?;
         let mut result = Data {
             summary,
             root: cache.header.root,
@@ -406,6 +417,7 @@ impl FileFactsReader {
             commits: [None; MAX_FILE_FACTS_COMMITS],
             intent,
             commit_navigation,
+            historical,
         };
         for (index, p) in cache.checkpoints.iter().enumerate() {
             result.commits[index] = Some(FileCommitFacts {
@@ -435,6 +447,21 @@ impl Drop for FileFactsReader {
 #[cfg(test)]
 pub(super) mod test_support {
     use super::*;
+    #[cfg(windows)]
+    pub fn single_node_content(
+        header: [u128; 5],
+        node: &CapturedNodeInfo,
+        canonical: StateHash,
+    ) -> [u8; 32] {
+        let mut h = proof::Encoder::new(1);
+        for id in header {
+            h.id(id);
+        }
+        h.number(1);
+        proof::content_node(&mut h, node, canonical).unwrap();
+        h.number(0);
+        h.finish().unwrap()
+    }
     #[cfg(windows)]
     pub fn release_work_observed(
         reader: &FileFactsReader,

@@ -158,6 +158,7 @@ enum Stage {
     AfterPublish,
     ReadOriginal,
     ReadNodes,
+    ReadHistoricalContent,
     CopyMain,
     CopyJournal,
     BeforeRecovery,

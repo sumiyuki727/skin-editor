@@ -118,12 +118,55 @@ pub(super) fn metadata(
     h.finish()
 }
 
-pub(super) fn build(
+pub(super) const CONTENT_WORK_BYTES: usize = 2 * std::mem::size_of::<Encoder>()
+    + std::mem::size_of::<[u128; 5]>()
+    + std::mem::size_of::<[u64; 5]>()
+    + std::mem::size_of::<[u8; 17]>()
+    + 3 * std::mem::size_of::<[u8; 32]>();
+
+pub(super) fn content_node(
+    h: &mut Encoder,
+    n: &CapturedNodeInfo,
+    canonical: StateHash,
+) -> Result<(), StorageError> {
+    let record = n.origin.as_ref().ok_or(StorageError::Invalid("record"))?;
+    h.id(n.id.get());
+    h.optional_id(n.parent.map(PersistentNodeId::get));
+    for value in [
+        n.alias,
+        n.coordinate.branch(),
+        n.coordinate.ordinal(),
+        n.depth,
+        u64::from(record.record_version),
+    ] {
+        h.number(value);
+    }
+    h.bytes(&record.state);
+    h.bytes(&record.action);
+    h.bytes(&record.checksum);
+    h.bytes(&canonical.bytes());
+    Ok(())
+}
+pub(super) fn content(
     cache: &Cache,
-    selected: &RestoreHeader,
-    selection: RestoreSelection,
-    limits: FileLimits,
-) -> Result<FileFactsProof, StorageError> {
+    nodes: usize,
+    cancel: &CaptureCancellation,
+) -> Result<([u8; 32], usize), StorageError> {
+    check(cancel)?;
+    let prefix = cache
+        .order
+        .get(..nodes)
+        .filter(|p| !p.is_empty())
+        .ok_or(StorageError::Invalid("content prefix"))?;
+    let mut admissions = 0usize;
+    for first in cache.admissions.values() {
+        check(cancel)?;
+        if prefix.contains(first) {
+            admissions = admissions
+                .checked_add(1)
+                .ok_or(StorageError::Limit("content admissions"))?;
+        }
+    }
     let mut h = Encoder::new(1);
     for id in [
         cache.header.project.get(),
@@ -134,39 +177,35 @@ pub(super) fn build(
     ] {
         h.id(id);
     }
-    h.number(cache.order.len() as u64);
-    for id in &cache.order {
+    h.number(u64::try_from(nodes).map_err(|_| StorageError::Limit("content nodes"))?);
+    for id in prefix {
+        check(cancel)?;
         let node = &cache.nodes[id];
-        let n = &node.info;
-        let record = n.origin.as_ref().ok_or(StorageError::Invalid("record"))?;
-        h.id(n.id.get());
-        h.optional_id(n.parent.map(PersistentNodeId::get));
-        for value in [
-            n.alias,
-            n.coordinate.branch(),
-            n.coordinate.ordinal(),
-            n.depth,
-            u64::from(record.record_version),
-        ] {
-            h.number(value);
-        }
-        h.bytes(&record.state);
-        h.bytes(&record.action);
-        h.bytes(&record.checksum);
-        h.bytes(&node.canonical.bytes());
+        content_node(&mut h, &node.info, node.canonical)?;
     }
-    h.number(cache.admissions.len() as u64);
+    h.number(u64::try_from(admissions).map_err(|_| StorageError::Limit("content admissions"))?);
     for kind in ["asset", "component", "document", "layer", "output", "sound"] {
         for (value, first) in &cache.admissions {
+            check(cancel)?;
             let (found, id) = object(*value);
-            if found == kind {
+            if found == kind && prefix.contains(first) {
                 h.bytes(kind.as_bytes());
                 h.id(id);
                 h.id(first.get());
             }
         }
     }
-    let content = h.finish()?;
+    Ok((h.finish()?, admissions))
+}
+
+pub(super) fn build(
+    cache: &Cache,
+    selected: &RestoreHeader,
+    selection: RestoreSelection,
+    limits: FileLimits,
+    cancel: &CaptureCancellation,
+) -> Result<FileFactsProof, StorageError> {
+    let (content, _) = content(cache, cache.order.len(), cancel)?;
     let mut h = Encoder::new(2);
     h.number(cache.originals.len() as u64);
     for original in &cache.originals {

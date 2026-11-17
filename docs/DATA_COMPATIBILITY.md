@@ -1,5 +1,7 @@
 # 用户数据、完整历史与长期兼容约定
 
+2026-11-17 B1-2C：[历史内容接口](P3_2B1_2C_REVIEW.md)以独立FileHistoricalContent1保留完整观察／文件请求／选中提交及实际q Ticket，复用FileCoord域1原封套；现有接口、文件／记录格式和原字节不变。新结果不含历史originals：旧full尚未逐代证明原件声明与历史状态闭包相等，不能据摘要或CI推出完整历史q、NoChange或保存资格。
+
 2026-11-17 B1-2B：[真实Work意图投影](P3_2B1_2B_REVIEW.md)增加FileSaveIntent1纯值及独立SaveIntent-Proof/v1两域，既有FileCoord五域、API7／捕获3／协调1和文件格式不变。原Ticket.expected不重写；旧legacy缺generation的证据单列核对。ArchiveMetadata-only明确不含features，新提交预测不适用于NoChange／重放。结果始终Insufficient，不能授予保存资格或解除Unknown。
 
 2026-11-17 B1-2A：[冻结捕获投影与原始量预检](P3_2B1_2A_REVIEW.md)完成真实q的content／originals两域规范化、同观察完整来源比较、UTF-8及固定17项原始量预检。原18＋新增24专项通过，结果始终ExperimentalValidation／Insufficient；原Ticket、metadata／导航／完整Unknown与64MiB／SQLite／临时盘仍欠证，完整B1／PB16未签收。下一步继续B1证据收口，不进入B2写入或产品保存。API7／捕获3／协调1及旧格式保持，U1–U3可调默认和K1／Reference10000／Tiny4／产品NotEvaluated／stable Unknown不变。以下日期段保留历史时点。

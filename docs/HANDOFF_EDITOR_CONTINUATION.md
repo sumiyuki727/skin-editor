@@ -1,5 +1,7 @@
 # 编辑器开发交接：从 P3-1C 继续
 
+2026-11-17最新停靠点：[B1-2C历史节点内容域](P3_2B1_2C_REVIEW.md)已实现固定提交前缀的节点／admissions域1查询及真实q的内容／头／导航比较，外层保留完整观察／文件请求／选中提交和原Ticket。新增8组回归、存储定向92项通过，仍须本轮完整hook和新SHA三项CI。明确不含历史originals，旧full的逐代原件声明≠状态闭包缺证已登记；features／完整metadata、NoChange覆盖、Unknown连续性与共同预算仍欠，B1／PB16不签收，不进入B2／产品保存。原3c52757及三CI作轮前回退点；本片源码／文档另收口，旧证据／PRIVATE／schema.rs原字节保留，新日志仅本机。用户离开，现场UAC／截图／交互等待，UI／Skill暂停；其他已授权无窗口工作可接续。
+
 2026-11-17最新停靠点：[B1-2B真实Work与只读意图对照](P3_2B1_2B_REVIEW.md)已实现原SaveTicket／expected保留、legacy与独立generation、q／打开／latest导航及ArchiveMetadata-only前／假设提交后投影；新增Work回归12项与门控诊断2项，存储定向84项通过。结果仍ExperimentalValidation／Insufficient／BudgetUnproven，B1／PB16未签收。后续继续已授权B1分片补features／历史完整q／NoChange／Unknown连续性与完整预算，不进入B2写入、产品保存或恢复部署。API7／捕获3／协调1、K1／Reference10000／Tiny4及性能／stable结论保持。轮前1a35784最终三项CI通过但首desktop尝试失败根因未明；新诊断不放宽30秒或精确READY。本片另经正常hook、新提交推送及同SHA三项CI；旧证据／PRIVATE材料／schema.rs原字节保留，新增日志仅本机，不自动纳入旧恢复快照。
 
 2026-11-17 B1-2A：[冻结捕获投影与原始量预检](P3_2B1_2A_REVIEW.md)完成真实q的content／originals两域规范化、同观察完整来源比较、UTF-8及固定17项原始量预检。原18＋新增24专项通过，结果始终ExperimentalValidation／Insufficient；原Ticket、metadata／导航／完整Unknown与64MiB／SQLite／临时盘仍欠证，完整B1／PB16未签收。下一步继续B1证据收口，不进入B2写入或产品保存。API7／捕获3／协调1及旧格式保持，U1–U3可调默认和K1／Reference10000／Tiny4／产品NotEvaluated／stable Unknown不变。以下日期段保留历史时点。

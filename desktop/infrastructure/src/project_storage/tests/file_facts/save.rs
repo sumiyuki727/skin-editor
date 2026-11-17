@@ -1,6 +1,6 @@
 use super::*;
 
-fn load_driver(path: &Path, store: &BlobStore, epoch: u128) -> Driver {
+pub(super) fn load_driver(path: &Path, store: &BlobStore, epoch: u128) -> Driver {
     let (file, candidate) = open(path, store.clone(), RestoreSelection::Manual);
     drop(file);
     let session = candidate
@@ -27,7 +27,7 @@ fn fixture() -> (
 ) {
     fixture_on(false)
 }
-fn fixture_on(
+pub(super) fn fixture_on(
     latest: bool,
 ) -> (
     Directory,
@@ -106,7 +106,7 @@ fn vectors() -> Value {
     )
     .unwrap()
 }
-fn committed(path: &Path, store: &BlobStore, ticket: SaveTicket) {
+pub(super) fn committed(path: &Path, store: &BlobStore, ticket: SaveTicket) {
     let mut writer = load_driver(path, store, 90);
     writer.nav(HistoryAction::Checkout {
         node: NodeId::new(4).unwrap(),

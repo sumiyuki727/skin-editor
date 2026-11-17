@@ -3,6 +3,8 @@ use super::*;
 
 #[cfg(windows)]
 mod capture;
+#[cfg(windows)]
+mod historical_content;
 mod preflight;
 #[cfg(windows)]
 mod save;

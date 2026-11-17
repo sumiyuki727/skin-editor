@@ -578,8 +578,7 @@ fn multiple_observations_share_one_control_budget_and_survive_reader_drop() {
 }
 
 #[cfg(windows)]
-#[test]
-fn manual_absence_requires_explicit_latest_and_does_not_manufacture_manual_facts() {
+fn exit_only_file() -> (Directory, FileFactsRequest) {
     let dir = Directory::new();
     let store = BlobStore::default();
     let mut d = Driver::new(store.clone());
@@ -592,7 +591,7 @@ fn manual_absence_requires_explicit_latest_and_does_not_manufacture_manual_facts
         request(400, None, SaveOrigin::Exit),
     )
     .unwrap();
-    let mut req = FileFactsRequest {
+    let req = FileFactsRequest {
         version: FILE_FACTS_PORT_VERSION,
         key: FileFactsKey {
             session: d.session.project_info().session_id,
@@ -616,6 +615,13 @@ fn manual_absence_requires_explicit_latest_and_does_not_manufacture_manual_facts
         selection: RestoreSelection::Manual,
     };
     drop(file);
+    (dir, req)
+}
+
+#[cfg(windows)]
+#[test]
+fn manual_absence_requires_explicit_latest_and_does_not_manufacture_manual_facts() {
+    let (dir, mut req) = exit_only_file();
     let before = std::fs::read(dir.file()).unwrap();
     let scratch = Directory::new();
     let mut reader = FileFactsReader::open(&scratch.path, FileFactsLimits::default()).unwrap();

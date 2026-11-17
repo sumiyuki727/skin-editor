@@ -130,3 +130,61 @@ pub struct FileFreshAppendMetadata {
     pub conclusion: FileCaptureConclusion,
 }
 const _: () = assert!(std::mem::size_of::<FileFreshAppendMetadata>() <= 4096);
+
+pub const FILE_NO_CHANGE_COVERAGE_VERSION: u16 = 1;
+
+/// Frozen request compared to one complete, existing file baseline.
+/// ```compile_fail
+/// use skin_editor_application::{FileNoChangeCoverage, SaveStorageObservation};
+/// fn install(v: FileNoChangeCoverage) -> SaveStorageObservation { v.into() }
+/// ```
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct FileNoChangeCoverage {
+    pub context: FileCapturedMetadataContext,
+    pub origin: FileProfileOrigin,
+    pub files: SaveFileFacts,
+    pub history_equal: bool,
+    pub originals_equal: bool,
+    pub metadata_equal: bool,
+    pub counters_equal: bool,
+    /// Head and raw Redo of each checkpoint, using that checkpoint's counters.
+    pub manual_navigation_equal: Option<bool>,
+    pub protection_navigation_equal: bool,
+    /// Includes the derived opening Redo and unchanged session revisions.
+    pub unchanged_opening: bool,
+    pub assurance: FileFactsAssurance,
+    pub conclusion: FileCaptureConclusion,
+}
+impl FileNoChangeCoverage {
+    /// None means this basis does not apply to the ticket's intent.
+    /// A match describes logical coverage of q only.
+    pub fn matches_basis(&self, basis: SaveNoChangeBasis) -> Option<bool> {
+        let ticket = self.context.ticket;
+        let covered = self.history_equal
+            && self.originals_equal
+            && self.metadata_equal
+            && self.counters_equal;
+        let manual_head = self
+            .files
+            .manual
+            .is_some_and(|f| f.origin == SaveOrigin::Manual && f.head == ticket.head);
+        let matched = match (ticket.origin, basis) {
+            (SaveOrigin::Manual, SaveNoChangeBasis::CurrentManual) => {
+                manual_head && self.manual_navigation_equal == Some(true)
+            }
+            (SaveOrigin::Exit, SaveNoChangeBasis::CurrentProtection) => {
+                self.files.protected.is_some_and(|f| f.head == ticket.head)
+                    && self.protection_navigation_equal
+            }
+            (SaveOrigin::Manual, SaveNoChangeBasis::VerifiedOpening) => {
+                manual_head && self.unchanged_opening
+            }
+            (SaveOrigin::Exit, SaveNoChangeBasis::VerifiedOpening) => {
+                self.files.protected.is_some() && self.unchanged_opening
+            }
+            _ => return None,
+        };
+        Some(covered && matched)
+    }
+}
+const _: () = assert!(std::mem::size_of::<FileNoChangeCoverage>() <= 4096);

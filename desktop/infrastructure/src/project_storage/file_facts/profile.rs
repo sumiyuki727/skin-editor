@@ -3,6 +3,7 @@ use super::*;
 use std::any::Any;
 use std::mem::{align_of, size_of};
 mod append;
+mod coverage;
 
 const ITEMS: usize = 256;
 const TEXT_BYTES: usize = ITEMS * (256 + 64);
@@ -264,6 +265,44 @@ fn encode_metadata(
     Ok((h.finish().map_err(storage)?, required))
 }
 impl InspectedFileFacts {
+    /// Both append and coverage queries require the original file and a fresh
+    /// ticket ID. The callers independently check metadata and write capacity.
+    fn original_metadata_baseline(
+        &self,
+        q: &FileSaveCandidate,
+        context: FileCapturedMetadataContext,
+    ) -> Result<Option<(FileCapturedMetadataFacts, FileHistoricalMetadataFacts)>, FileFactsError>
+    {
+        let before = self.compare_captured_metadata(
+            q,
+            FileCapturedMetadataContext {
+                version: FILE_PROFILE_VERSION,
+                ..context
+            },
+        )?;
+        let target = context.ticket.target;
+        if Some(context.commit) != target.expected.commit {
+            return Err(FileFactsError::InvalidRequest);
+        }
+        let (Some(captured), Some(parent)) = (before.captured, before.selected) else {
+            return Ok(None);
+        };
+        let summary = self.summary();
+        if context.file.binding != target
+            || summary.files.latest != Some(parent.commit.fact)
+            || Some(parent.commit.fact.generation) != target.expected.generation
+            || captured.origin.features_root != parent.features_root
+            || captured.origin.source_sha256 != self._source.digest
+            || self.data.commits[..summary.commits]
+                .iter()
+                .flatten()
+                .any(|c| c.fact.commit == context.ticket.commit)
+        {
+            return Ok(None);
+        }
+        Ok(Some((captured, parent)))
+    }
+
     pub fn compare_captured_metadata(
         &self,
         q: &FileSaveCandidate,

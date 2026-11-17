@@ -1,5 +1,7 @@
 # P3-2B：真实存储衔接开工契约
 
+2026-11-18 B1-2J 对原基线上的真实 Manual Work 核对 CurrentManual 和 VerifiedOpening，并单列 CurrentProtection 的文件事实与 Exit 判据。生产确认仍需写入或核对协议资格。[契约及回归](P3_2B1_2J_NO_CHANGE.md)
+
 2026-11-18 B1-2I 已实现健康旧文件的普通追加条件摘要；提交 ID 查重及元数据透传仅对原基线提供证据。真实保存回执、NoChange／Unknown 资格及 B2 另行验收。[查询与验收边界](P3_2B1_2I_FRESH_APPEND.md)
 
 2026-11-18 H远端收尾：[取消证据审阅](P3_2B1_2H_CI_REVIEW.md)记录2f4a525/run44167366330首次两核心成功／桌面cancelled；桌面两配置各310项、后续集成及文档通过，最后默认宿主build未完成，不能签三项CI成功。取消完整根因及旧各次原因仍Unknown；本次只补文档，不改源码／断言／构建步骤／预算／25分钟或30秒时限，不重跑旧SHA或宣称修复。新文档备份按正常完整hook和新SHA首次CI另验，旧证据／PRIVATE／schema.rs保持，原始新日志仅本机；H before能力及完整B1／PB16未退出、产品／stable结论不变。以下保留历史时点。

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "columns": ["fixture", "intent", "whole", "manual_head_and_raw_redo", "protected_head_and_raw_redo", "unchanged_opening", "current_manual", "current_protection", "verified_opening"],
+  "cases": [
+    ["linear_manual_A_exit_C", "Manual", true, true, false, true, true, null, true],
+    ["branch_derived_redo", "Manual", true, false, false, true, false, null, true],
+    ["linear_checkout_C_then_A", "Manual", true, true, false, false, true, null, false],
+    ["new_branch_then_A", "Manual", false, true, false, false, false, null, false],
+    ["explicit_latest_C_no_manual", "Manual", true, false, true, true, false, null, false],
+    ["protection_C", "Exit", true, false, true, false, null, true, false],
+    ["default_A_protected_C", "Exit", true, true, false, true, null, false, true],
+    ["navigation_returned_to_A", "Exit", true, true, false, false, null, false, false],
+    ["automatic_not_admitted", "Automatic", true, true, true, true, null, null, null]
+  ]
+}

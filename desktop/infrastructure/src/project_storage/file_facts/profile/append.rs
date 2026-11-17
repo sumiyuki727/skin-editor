@@ -38,32 +38,12 @@ impl FileFactsReader {
             .control
             .reserve(WORK_BYTES)
             .ok_or(FileFactsError::Limit(FileFactsLimit::Control))?;
-        let before = baseline.compare_captured_metadata(
-            q,
-            FileCapturedMetadataContext {
-                version: FILE_PROFILE_VERSION,
-                ..context
-            },
-        )?;
         let ticket = context.ticket;
-        if Some(context.commit) != ticket.target.expected.commit {
-            return Err(FileFactsError::InvalidRequest);
-        }
-        let (Some(captured), Some(parent)) = (before.captured, before.selected) else {
+        let Some((captured, parent)) = baseline.original_metadata_baseline(q, context)? else {
             return Ok(None);
         };
         let summary = baseline.summary();
-        if before.metadata_equal != Some(true)
-            || context.file.binding != ticket.target
-            || summary.files.latest != Some(parent.commit.fact)
-            || Some(parent.commit.fact.generation) != ticket.target.expected.generation
-            || captured.origin.features_root != parent.features_root
-            || captured.origin.source_sha256 != baseline._source.digest
-            || baseline.data.commits[..summary.commits]
-                .iter()
-                .flatten()
-                .any(|c| c.fact.commit == ticket.commit)
-        {
+        if captured.metadata != parent.metadata {
             return Ok(None);
         }
         if summary.commits >= self.limits.commits {
@@ -94,8 +74,8 @@ impl FileFactsReader {
             before: captured.metadata,
             receipt: (&receipt).into(),
             metadata: digest,
-            assurance: before.assurance,
-            conclusion: before.conclusion,
+            assurance: summary.assurance,
+            conclusion: FileCaptureConclusion::InsufficientForSaveReconciliation,
         }))
     }
 }

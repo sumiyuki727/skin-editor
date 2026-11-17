@@ -222,6 +222,17 @@ fn older_exit_id_is_occupied_even_after_manual_and_protected_pointers_advance() 
             .unwrap()
             .is_none()
     );
+    assert!(
+        reader
+            .compare_no_change_coverage(
+                &view,
+                &q,
+                context(&view, &q, 600),
+                CaptureCancellation::default()
+            )
+            .unwrap()
+            .is_none()
+    );
     drop(view);
     let (mut file, _) = open(&dir.file(), store, req.selection);
     assert!(matches!(
@@ -350,6 +361,12 @@ fn reader_limits_and_same_logical_metadata_with_different_source_bytes() {
             Some(true)
         );
         let retained = reader.usage().managed_bytes;
+        assert!(
+            reader
+                .compare_no_change_coverage(&view, &q, c, CaptureCancellation::default())
+                .unwrap()
+                .is_none()
+        );
         assert!(
             reader
                 .project_fresh_append_metadata(&view, &q, c, CaptureCancellation::default())

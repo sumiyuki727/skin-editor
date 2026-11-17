@@ -4,6 +4,8 @@ use super::*;
 #[cfg(windows)]
 mod capture;
 mod preflight;
+#[cfg(windows)]
+mod save;
 
 fn vectors() -> Value {
     let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))

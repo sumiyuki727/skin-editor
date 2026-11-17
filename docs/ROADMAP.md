@@ -1,5 +1,7 @@
 # 开发路线与质量门槛
 
+2026-11-17 B1-2B：[真实Work与只读意图对照](P3_2B1_2B_REVIEW.md)完成原Ticket／expected及请求、导航、ArchiveMetadata-only证据增量，新增12项Work与2项诊断回归。完整B1／PB16仍未退出：features／历史q完整截面、NoChange三类覆盖、Unknown阶段／目标连续性及64MiB／SQLite／临时盘继续欠证；后续按已授权B1分片推进，不进入B2写入或产品保存。K1、Reference10000／Tiny4、产品NotEvaluated／stable Unknown不变，不接GUI／设备／Skill。
+
 2026-11-17 B1-2A：[冻结捕获投影与原始量预检](P3_2B1_2A_REVIEW.md)完成真实q的content／originals两域规范化、同观察完整来源比较、UTF-8及固定17项原始量预检。原18＋新增24专项通过，结果始终ExperimentalValidation／Insufficient；原Ticket、metadata／导航／完整Unknown与64MiB／SQLite／临时盘仍欠证，完整B1／PB16未签收。下一步继续B1证据收口，不进入B2写入或产品保存。API7／捕获3／协调1及旧格式保持，U1–U3可调默认和K1／Reference10000／Tiny4／产品NotEvaluated／stable Unknown不变。以下日期段保留历史时点。
 
 2026-11-17当前停靠点：[B1-1文件侧只读实验](P3_2B1_REVIEW.md)已完成首个可测试增量：独立窄端口／规范、健康文件稳定验证、固定事实页与真实清理保管。结果仍实验性，完整B1未签收，下一步补B1-2原q对照和完整验证器／SQLite共同预算及生产资格证据，再按B2a／B2b→B3→B4→C→D推进。U1–U3可调默认已确认，覆盖／清理另约；本片不部署恢复目录或产品设置，不进入写端口／UI／设备。K1、Reference10000／Tiny4、产品NotEvaluated／stable Unknown保持。以下日期段保留历史时点。

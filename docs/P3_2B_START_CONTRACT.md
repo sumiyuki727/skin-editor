@@ -1,5 +1,7 @@
 # P3-2B：真实存储衔接开工契约
 
+2026-11-17 B1-2B实施边界：[真实Work增量](P3_2B1_2B_REVIEW.md)补实际Work／Ticket、原expected、legacy字段与独立generation、q／打开／latest导航及ArchiveMetadata-only。只读结果恒Insufficient；features、历史q完整截面、NoChange／Unknown连续性及完整预算未补齐，PB16／完整B1继续欠项，不能进入B2或签发production authority。旧PB／BR／BS编号与既定策略保持。
+
 2026-11-17 B1-2A：[冻结捕获投影与原始量预检](P3_2B1_2A_REVIEW.md)完成真实q的content／originals两域规范化、同观察完整来源比较、UTF-8及固定17项原始量预检。原18＋新增24专项通过，结果始终ExperimentalValidation／Insufficient；原Ticket、metadata／导航／完整Unknown与64MiB／SQLite／临时盘仍欠证，完整B1／PB16未签收。下一步继续B1证据收口，不进入B2写入或产品保存。API7／捕获3／协调1及旧格式保持，U1–U3可调默认和K1／Reference10000／Tiny4／产品NotEvaluated／stable Unknown不变。以下日期段保留历史时点。
 
 2026-11-17 B1接续：用户已确认第9节可调整默认政策，并授权在设计／独立审阅后实施ExistingVerified健康文件只读片。当前先分B1-1文件侧观察、B1-2完整q对照与共同预算资格，详见[B1附录](P3_2B1_FILE_FACTS.md)。B1-1不签发生产保存或共同profile合格资格，不能据此签收完整B1／PB；B2写入、B3恢复部署、B4命名／覆盖和清理协议继续后置。以下2026-11-17修订2及早期日期段按其时点保留，当前政策以第9节为准。

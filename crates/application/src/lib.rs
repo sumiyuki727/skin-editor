@@ -16,6 +16,7 @@ mod draft_contract;
 mod execute;
 mod file_capture;
 mod file_facts;
+mod file_save;
 mod history;
 mod history_control;
 mod history_queries;
@@ -36,6 +37,7 @@ pub use capture_identity::{
 };
 pub use file_capture::*;
 pub use file_facts::*;
+pub use file_save::*;
 pub use preview_port::*;
 pub use restore::{RestoreBuilder, RestoreCandidate};
 pub use save_coordination::*;

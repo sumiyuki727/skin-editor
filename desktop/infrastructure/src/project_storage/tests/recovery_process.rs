@@ -1,10 +1,87 @@
 use super::*;
 use std::io::{BufRead, Write};
 use std::process::{Child, Command as ProcessCommand, Stdio};
-use std::sync::mpsc;
+use std::sync::{Mutex, mpsc};
 use std::time::Duration;
 const ENTRY: &str = "project_storage::tests::recovery_process::child_entry";
 const MAGIC: [u8; 8] = [0xd9, 0xd5, 0x05, 0xf9, 0x20, 0xa1, 0x63, 0xd7];
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum GateEnd {
+    Eof,
+    ReadError(std::io::ErrorKind),
+}
+#[derive(Clone, Copy)]
+struct GateTrace {
+    lines: u64,
+    last: [u8; 256],
+    len: usize,
+    truncated: bool,
+    end: Option<GateEnd>,
+}
+impl Default for GateTrace {
+    fn default() -> Self {
+        Self {
+            lines: 0,
+            last: [0; 256],
+            len: 0,
+            truncated: false,
+            end: None,
+        }
+    }
+}
+impl GateTrace {
+    fn record(&mut self, line: &str) {
+        self.lines = self.lines.saturating_add(1);
+        let bytes = line.as_bytes();
+        self.len = bytes.len().min(self.last.len());
+        self.truncated = bytes.len() > self.last.len();
+        self.last[..self.len].copy_from_slice(&bytes[bytes.len() - self.len..]);
+    }
+}
+impl std::fmt::Debug for GateTrace {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("GateTrace")
+            .field("lines", &self.lines)
+            .field("end", &self.end)
+            .field("truncated", &self.truncated)
+            .field(
+                "last_suffix",
+                &String::from_utf8_lossy(&self.last[..self.len]),
+            )
+            .finish()
+    }
+}
+fn drain_gate(
+    reader: impl BufRead,
+    expected: &str,
+    sender: mpsc::Sender<bool>,
+    trace: &Mutex<GateTrace>,
+) {
+    let mut found = false;
+    for line in reader.lines() {
+        let line = match line {
+            Ok(line) => line,
+            Err(error) => {
+                trace.lock().unwrap().end = Some(GateEnd::ReadError(error.kind()));
+                break;
+            }
+        };
+        trace.lock().unwrap().record(&line);
+        if line == expected && !found {
+            found = true;
+            let _ = sender.send(true);
+        }
+    }
+    let mut state = trace.lock().unwrap();
+    if state.end.is_none() {
+        state.end = Some(GateEnd::Eof);
+    }
+    drop(state);
+    if !found {
+        let _ = sender.send(false);
+    }
+}
 
 struct GatedChild {
     child: Child,
@@ -30,26 +107,28 @@ impl GatedChild {
         let stdout = child.stdout.take().unwrap();
         let (sender, receiver) = mpsc::channel();
         let expected = format!("READY:{token}");
+        let trace = Arc::new(Mutex::new(GateTrace::default()));
+        let observed = trace.clone();
         let drain = std::thread::spawn(move || {
-            let mut found = false;
-            for line in std::io::BufReader::new(stdout).lines() {
-                let Ok(line) = line else { break };
-                if line == expected && !found {
-                    found = true;
-                    let _ = sender.send(true);
-                }
-            }
-            if !found {
-                let _ = sender.send(false);
-            }
+            drain_gate(
+                std::io::BufReader::new(stdout),
+                &expected,
+                sender,
+                &observed,
+            );
         });
         let mut owned = Self {
             child,
             drain: Some(drain),
         };
-        if receiver.recv_timeout(Duration::from_secs(30)) != Ok(true) {
+        let wait = receiver.recv_timeout(Duration::from_secs(30));
+        if wait != Ok(true) {
+            let before_stop = owned.child.try_wait().map_err(|e| e.kind());
+            let diagnostic = *trace.lock().unwrap();
             owned.stop();
-            panic!("owned storage child did not reach the explicit gate: {mode}");
+            panic!(
+                "owned storage child did not reach the explicit gate: {mode}; wait={wait:?}; before_stop={before_stop:?}; trace={diagnostic:?}"
+            );
         }
         owned
     }
@@ -75,6 +154,55 @@ impl GatedChild {
             d.join().unwrap();
         }
     }
+}
+
+#[test]
+fn gate_diagnostic_keeps_only_a_bounded_suffix_without_relaxing_nonce_matching() {
+    let (tx, rx) = mpsc::channel();
+    let trace = Mutex::new(GateTrace::default());
+    let input = format!(
+        "{}\nREADY:wrong\nREADY:correct\r\nREADY:correct\n",
+        "雪".repeat(1000)
+    );
+    drain_gate(std::io::Cursor::new(input), "READY:correct", tx, &trace);
+    assert!(rx.recv().unwrap());
+    assert!(rx.try_recv().is_err());
+    let state = trace.lock().unwrap();
+    assert_eq!(state.end, Some(GateEnd::Eof));
+    assert_eq!(state.lines, 4);
+    assert_eq!(&state.last[..state.len], b"READY:correct");
+    drop(state);
+    let mut state = GateTrace::default();
+    state.record(&"雪".repeat(1000));
+    assert_eq!(state.len, 256);
+    assert!(state.truncated);
+    assert!(format!("{state:?}").len() < 1024);
+}
+#[test]
+fn gate_diagnostic_distinguishes_eof_read_failure_and_receive_timeout() {
+    let (tx, rx) = mpsc::channel();
+    let trace = Mutex::new(GateTrace::default());
+    drain_gate(
+        std::io::Cursor::new(b"READY:wrong\n"),
+        "READY:correct",
+        tx,
+        &trace,
+    );
+    assert_eq!(rx.recv(), Ok(false));
+    assert_eq!(trace.lock().unwrap().end, Some(GateEnd::Eof));
+    let (tx, rx) = mpsc::channel();
+    let trace = Mutex::new(GateTrace::default());
+    drain_gate(std::io::Cursor::new([255u8]), "READY:correct", tx, &trace);
+    assert_eq!(rx.recv(), Ok(false));
+    assert_eq!(
+        trace.lock().unwrap().end,
+        Some(GateEnd::ReadError(std::io::ErrorKind::InvalidData))
+    );
+    let (_tx, rx) = mpsc::channel::<bool>();
+    assert_eq!(
+        rx.recv_timeout(Duration::ZERO),
+        Err(mpsc::RecvTimeoutError::Timeout)
+    );
 }
 impl Drop for GatedChild {
     fn drop(&mut self) {

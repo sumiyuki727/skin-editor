@@ -2,10 +2,13 @@
 use super::*;
 use crate::byte_budget::{ByteBudget, ByteLease};
 mod capture;
+mod intent_context;
 mod preflight;
 mod proof;
+mod save;
 mod snapshot;
 pub use capture::FileCaptureCandidate;
+pub use save::FileSaveCandidate;
 
 #[derive(Clone, Copy, Debug)]
 pub struct FileFactsLimits {
@@ -98,7 +101,17 @@ struct Data {
     root: PersistentNodeId,
     preflight: FileReadPreflight,
     commits: [Option<FileCommitFacts>; MAX_FILE_FACTS_COMMITS],
+    intent: FileIntentFacts,
+    commit_navigation: [[u8; 32]; MAX_FILE_FACTS_COMMITS],
 }
+// Context workspace exits before the Data producer is constructed.
+const _: () = assert!(
+    2 * std::mem::size_of::<Data>()
+        >= intent_context::WORK_BYTES
+            + std::mem::size_of::<(FileIntentFacts, [[u8; 32]; MAX_FILE_FACTS_COMMITS])>()
+            + std::mem::size_of::<FileFactsSummary>()
+            + std::mem::size_of::<FileReadPreflight>()
+);
 /// No conversion to a writer, restore candidate or application save authority.
 pub struct InspectedFileFacts {
     data: Box<Data>,
@@ -144,6 +157,9 @@ impl FileFactsPort for InspectedFileFacts {
 impl InspectedFileFacts {
     pub fn preflight(&self) -> FileReadPreflight {
         self.data.preflight
+    }
+    pub fn intent_facts(&self) -> FileIntentFacts {
+        self.data.intent
     }
 }
 pub struct FileFactsReader {
@@ -380,11 +396,16 @@ impl FileFactsReader {
             proof: proof::build(&cache, candidate.header(), request.selection, limits)
                 .map_err(storage)?,
         };
+        let (intent, commit_navigation) =
+            intent_context::file_context(&cache, candidate.header(), observation)
+                .map_err(storage)?;
         let mut result = Data {
             summary,
             root: cache.header.root,
             preflight,
             commits: [None; MAX_FILE_FACTS_COMMITS],
+            intent,
+            commit_navigation,
         };
         for (index, p) in cache.checkpoints.iter().enumerate() {
             result.commits[index] = Some(FileCommitFacts {
@@ -414,6 +435,46 @@ impl Drop for FileFactsReader {
 #[cfg(test)]
 pub(super) mod test_support {
     use super::*;
+    #[cfg(windows)]
+    pub fn release_work_observed(
+        reader: &FileFactsReader,
+        work: SavePreparationWork,
+        observe: impl FnOnce(),
+    ) {
+        save::release_work_observed(reader, work, observe);
+    }
+    #[cfg(windows)]
+    pub fn save_controls() -> (usize, usize) {
+        (save::extra_bytes(), intent_context::WORK_BYTES)
+    }
+    pub fn intent_archive(
+        m: &ArchiveMetadata,
+        delta: Option<&ArchiveReceipt>,
+    ) -> Result<[u8; 32], StorageError> {
+        intent_context::archive(m, delta, &mut [0; 4096])
+    }
+    pub fn intent_navigation(
+        head: PersistentNodeId,
+        a: u64,
+        b: u64,
+        redo: &[(PersistentNodeId, PersistentNodeId)],
+    ) -> Result<[u8; 32], StorageError> {
+        intent_context::navigation(head, a, b, redo, &mut [0; 4096])
+    }
+    #[cfg(windows)]
+    pub fn intent_prediction(m: &ArchiveMetadata, ticket: SaveTicket) -> Option<ArchiveReceipt> {
+        save::predict(m, ticket)
+    }
+    #[cfg(windows)]
+    pub fn commit_match(
+        q: FileSaveIntentSummary,
+        c: FileCommitFacts,
+        nav: [u8; 32],
+        archive: [u8; 32],
+        latest: Option<SaveCommitFact>,
+    ) -> FileSaveCommitEvidence {
+        save::match_commit(q, c, nav, archive, latest)
+    }
     #[cfg(windows)]
     pub fn capture_controls() -> (usize, usize) {
         (capture::retained_bytes(), capture::work_bytes())

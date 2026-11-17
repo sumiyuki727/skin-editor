@@ -8,8 +8,11 @@ pub(super) struct Encoder {
 }
 impl Encoder {
     pub fn new(domain: u16) -> Self {
+        Self::scoped(b"skin-editor/FileCoord-Proof/v1\0", domain)
+    }
+    pub fn scoped(prefix: &[u8], domain: u16) -> Self {
         let mut hash = Sha256::new();
-        hash.update(b"skin-editor/FileCoord-Proof/v1\0");
+        hash.update(prefix);
         hash.update(domain.to_be_bytes());
         Self {
             hash,

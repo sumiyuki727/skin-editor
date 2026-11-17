@@ -1,5 +1,7 @@
 # 编辑器开发交接：从 P3-1C 继续
 
+2026-11-17最新停靠点：[B1-2B真实Work与只读意图对照](P3_2B1_2B_REVIEW.md)已实现原SaveTicket／expected保留、legacy与独立generation、q／打开／latest导航及ArchiveMetadata-only前／假设提交后投影；新增Work回归12项与门控诊断2项，存储定向84项通过。结果仍ExperimentalValidation／Insufficient／BudgetUnproven，B1／PB16未签收。后续继续已授权B1分片补features／历史完整q／NoChange／Unknown连续性与完整预算，不进入B2写入、产品保存或恢复部署。API7／捕获3／协调1、K1／Reference10000／Tiny4及性能／stable结论保持。轮前1a35784最终三项CI通过但首desktop尝试失败根因未明；新诊断不放宽30秒或精确READY。本片另经正常hook、新提交推送及同SHA三项CI；旧证据／PRIVATE材料／schema.rs原字节保留，新增日志仅本机，不自动纳入旧恢复快照。
+
 2026-11-17 B1-2A：[冻结捕获投影与原始量预检](P3_2B1_2A_REVIEW.md)完成真实q的content／originals两域规范化、同观察完整来源比较、UTF-8及固定17项原始量预检。原18＋新增24专项通过，结果始终ExperimentalValidation／Insufficient；原Ticket、metadata／导航／完整Unknown与64MiB／SQLite／临时盘仍欠证，完整B1／PB16未签收。下一步继续B1证据收口，不进入B2写入或产品保存。API7／捕获3／协调1及旧格式保持，U1–U3可调默认和K1／Reference10000／Tiny4／产品NotEvaluated／stable Unknown不变。以下日期段保留历史时点。
 
 2026-11-17当前停靠点：[B1-1内部实验增量](P3_2B1_REVIEW.md)完成FileFactsPort1、独立FileCoord-Proof-v1规范向量和Windows健康既有文件只读验证；18项专项、两路独立审查及新提交正常hook／同SHA CI分别记录。结果不授保存／激活资格，q对照、完整64MiB聚合与SQLite临时磁盘仍待B1-2，完整B1／PB16未签收。U1系统持久恢复子目录可调整迁移、U2初始4GiB／32条可调整满额拒绝并警告且不清理、U3同身份完整历史首次命名用户选位已获确认；覆盖／迁移／清理协议后续另约，B1不部署目录／设置UI。API7／捕获3／协调1及旧文件版本保持。轮前00492b1三CI通过，新源码以本报告所在提交的新CI为准；schema.rs、旧证明及PRIVATE材料保全。后续先补B1-2证据，不提前B2写入、GUI／设备／Skill或升级K1／产品／stable结论。以下“U1–U3待决定”等是此前时点记录，以总契约第9节及本段为准。

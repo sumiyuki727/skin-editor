@@ -11,7 +11,8 @@ use crate::project_format::{
 };
 use crate::{BlobStore, RawBlob};
 pub use file_facts::{
-    FileCaptureCandidate, FileFactsLimits, FileFactsReader, FileFactsUsage, InspectedFileFacts,
+    FileCaptureCandidate, FileFactsLimits, FileFactsReader, FileFactsUsage, FileSaveCandidate,
+    InspectedFileFacts,
 };
 pub use recovery::{
     RECOVERY_VERSION, RecoveredArchive, RecoveryDigest, RecoveryMode, RecoveryReport,

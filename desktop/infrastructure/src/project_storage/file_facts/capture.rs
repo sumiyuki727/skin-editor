@@ -3,11 +3,39 @@ use super::*;
 use proof::Encoder;
 
 type Roots = [Option<StateHash>; MAX_FILE_CAPTURE_NODES];
+pub(super) trait CaptureStream {
+    fn snapshot(&self) -> Result<CaptureSnapshot, CaptureError>;
+    fn statistics(&self) -> CaptureStatistics;
+    fn poll(&mut self, edges: usize) -> Result<CapturePoll, CaptureError>;
+}
+impl CaptureStream for HistoryCapture {
+    fn snapshot(&self) -> Result<CaptureSnapshot, CaptureError> {
+        HistoryCapture::snapshot(self)
+    }
+    fn statistics(&self) -> CaptureStatistics {
+        HistoryCapture::statistics(self)
+    }
+    fn poll(&mut self, n: usize) -> Result<CapturePoll, CaptureError> {
+        HistoryCapture::poll(self, n)
+    }
+}
+impl CaptureStream for SavePreparationWork {
+    fn snapshot(&self) -> Result<CaptureSnapshot, CaptureError> {
+        Ok(SavePreparationWork::snapshot(self).clone())
+    }
+    fn statistics(&self) -> CaptureStatistics {
+        SavePreparationWork::statistics(self)
+    }
+    fn poll(&mut self, n: usize) -> Result<CapturePoll, CaptureError> {
+        SavePreparationWork::poll(self, n)
+    }
+}
 pub struct FileCaptureCandidate {
-    summary: FileCaptureSummary,
-    reader_instance: u128,
+    pub(super) summary: FileCaptureSummary,
+    pub(super) reader_instance: u128,
+    pub(super) prefix: [u8; 32],
     // Real capture pins exit before the new fixed-control reservation.
-    _snapshot: CaptureSnapshot,
+    pub(super) _snapshot: CaptureSnapshot,
     _lease: ByteLease,
 }
 impl std::fmt::Debug for FileCaptureCandidate {
@@ -26,7 +54,9 @@ pub(super) fn retained_bytes() -> usize {
     2 * std::mem::size_of::<FileCaptureCandidate>()
 }
 pub(super) fn work_bytes() -> usize {
-    std::mem::size_of::<Roots>() + 2 * std::mem::size_of::<Encoder>()
+    std::mem::size_of::<Roots>()
+        + 2 * std::mem::size_of::<Encoder>()
+        + intent_context::PREFIX_WORK_BYTES
 }
 fn check_cancel(cancel: &CaptureCancellation) -> Result<(), FileFactsError> {
     if cancel.is_cancelled() {
@@ -40,7 +70,7 @@ fn normalized_node(
     info: &CapturedNodeInfo,
     canonical: StateHash,
     limits: FileLimits,
-) -> Result<(), StorageError> {
+) -> Result<[u8; 32], StorageError> {
     let generated;
     let record = if let Some(original) = &info.origin {
         original.as_ref()
@@ -82,13 +112,22 @@ fn normalized_node(
     h.bytes(&record.action);
     h.bytes(&record.checksum);
     h.bytes(&canonical.bytes());
-    Ok(())
+    Ok(record.checksum)
 }
 impl FileFactsReader {
     pub fn prepare_capture(
         &self,
         request: FileFactsRequest,
         mut capture: HistoryCapture,
+        originals: &BlobStore,
+        cancel: CaptureCancellation,
+    ) -> Result<FileCaptureCandidate, FileFactsError> {
+        self.prepare_stream(request, &mut capture, originals, cancel)
+    }
+    pub(super) fn prepare_stream(
+        &self,
+        request: FileFactsRequest,
+        capture: &mut impl CaptureStream,
         originals: &BlobStore,
         cancel: CaptureCancellation,
     ) -> Result<FileCaptureCandidate, FileFactsError> {
@@ -195,15 +234,17 @@ impl FileFactsReader {
             content.id(id);
         }
         content.number(m.nodes.len() as u64);
+        let mut prefix = initial_prefix();
         for (i, info) in m.nodes.iter().enumerate() {
             check_cancel(&cancel)?;
-            normalized_node(
+            let checksum = normalized_node(
                 &mut content,
                 info,
                 roots[i].ok_or(FileFactsError::ValidationFailed)?,
                 self.limits.file(),
             )
             .map_err(storage)?;
+            prefix = super::intent_context::prefix(prefix, info, checksum, &m.admissions);
         }
         content.number(m.admissions.len() as u64);
         for kind in ["asset", "component", "document", "layer", "output", "sound"] {
@@ -276,6 +317,7 @@ impl FileFactsReader {
         Ok(FileCaptureCandidate {
             summary,
             reader_instance: self.instance,
+            prefix,
             _snapshot: snapshot,
             _lease: lease,
         })

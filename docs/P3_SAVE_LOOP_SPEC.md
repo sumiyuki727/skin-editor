@@ -1,5 +1,7 @@
 # P3-2：保存、关闭与重开闭环规格
 
+2026-11-17 B1-2B：[真实Work只读对照](P3_2B1_2B_REVIEW.md)已补原SaveTicket／expected、完整旧请求字段与独立generation、分离导航及ArchiveMetadata-only；不改A协调状态或保存事实，不把假设新提交投影套用NoChange。完整features／历史q／覆盖证明／Unknown连续性及预算仍欠项，B1／PB16不签收，B2–D／产品保存仍排除。
+
 2026-11-17 B1-2A：[冻结捕获投影与原始量预检](P3_2B1_2A_REVIEW.md)完成真实q的content／originals两域规范化、同观察完整来源比较、UTF-8及固定17项原始量预检。原18＋新增24专项通过，结果始终ExperimentalValidation／Insufficient；原Ticket、metadata／导航／完整Unknown与64MiB／SQLite／临时盘仍欠证，完整B1／PB16未签收。下一步继续B1证据收口，不进入B2写入或产品保存。API7／捕获3／协调1及旧格式保持，U1–U3可调默认和K1／Reference10000／Tiny4／产品NotEvaluated／stable Unknown不变。以下日期段保留历史时点。
 
 2026-11-17当前B1：[接口／规范附录](P3_2B1_FILE_FACTS.md)与[内部实验实现](P3_2B1_REVIEW.md)新增FileFactsPort1健康文件只读观察。U1–U3可调整默认政策已确认，B1细分文件侧观察及后续q对照／共同预算资格；API8／协调2接线尚未实施，当前运行／持久版本保持。B1-1不能登记完整B1、PB16或SL整项通过；B2写入、恢复区部署／发现／命名、C／D产品闭环仍欠项。下方带日期及“待定政策”是早期记录，当前以总契约第9节为准。

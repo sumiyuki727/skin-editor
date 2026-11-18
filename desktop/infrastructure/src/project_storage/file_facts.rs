@@ -95,7 +95,7 @@ impl FileFactsLimits {
                 total_bytes: 1024 * 1024,
                 decoded_bytes: 2 * 1024 * 1024,
                 blocks: crate::project_format::SORTED_INDEX_BLOCKS,
-                items: 8192,
+                items: read::METADATA_ITEMS,
                 json_values: 8192,
                 json_depth: 32,
             },
@@ -140,6 +140,9 @@ const INSPECT_WORK_BYTES: usize =
 // even while the decoder borrows the space later used by original-graph work.
 const _: () = assert!(
     crate::project_format::SORTED_INDEX_BLOCKS == 8192
+        && read::METADATA_ITEMS == 8192
+        && read::METADATA_WORK_BYTES <= 34 * 1024
+        && read::METADATA_WORK_BYTES <= historical_originals::WORK_BYTES
         && crate::project_format::SORTED_INDEX_WORK_BYTES <= historical_originals::WORK_BYTES
         && crate::project_format::SORTED_INDEX_WORK_BYTES <= 146 * 1024
         && snapshot::IO_WORK_BYTES <= INSPECT_WORK_BYTES

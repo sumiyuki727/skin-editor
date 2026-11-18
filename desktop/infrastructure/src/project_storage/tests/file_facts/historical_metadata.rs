@@ -195,6 +195,22 @@ pub(super) fn profile_fixture(
             let duplicate = tags[0][0].clone();
             tags[0].push(duplicate);
         }
+        Some("historical-reorder") => {
+            tags[0].reverse();
+            ext[0].reverse();
+            features[0].reverse();
+        }
+        Some("latest-feature-order") => features[1].reverse(),
+        Some("paged-history") | Some("paged-history-duplicate") => {
+            let node = tags[0][0]["node"].clone();
+            tags[0] = (0..257)
+                .rev()
+                .map(|i| json!({"node":node,"name":format!("user:{i}"),"value":"過去\u{0000}\r\n"}))
+                .collect();
+            if bad == Some("paged-history-duplicate") {
+                tags[0][256] = tags[0][0].clone();
+            }
+        }
         None => {}
         _ => panic!("unknown self-authored variant"),
     }
@@ -500,6 +516,66 @@ fn historical_metadata_uses_old_lists_actual_extension_bytes_and_generation_orde
     assert_eq!(reader.usage().managed_peak_bytes, held.managed_peak_bytes);
     drop(file);
     assert_eq!(std::fs::read(dir.file()).unwrap(), source);
+}
+#[test]
+fn historical_metadata_permutations_and_cross_page_tags_keep_their_generation() {
+    for variant in [
+        "historical-reorder",
+        "paged-history",
+        "paged-history-duplicate",
+        "latest-feature-order",
+    ] {
+        let (dir, req, _) = profile_fixture(Some(variant), None, true);
+        let source = dir.closed_main_bytes();
+        let scratch = Directory::new();
+        let mut reader = FileFactsReader::open(&scratch.path, FileFactsLimits::default()).unwrap();
+        let idle = reader.usage().managed_bytes;
+        let result = reader.inspect(&dir.file(), req, CaptureCancellation::default());
+        if matches!(variant, "paged-history-duplicate" | "latest-feature-order") {
+            assert_eq!(result.err(), Some(FileFactsError::ValidationFailed));
+            let err = SqliteProjectFile::load(
+                dir.file(),
+                BlobStore::default(),
+                FileLimits::default(),
+                RestoreSelection::Manual,
+                CaptureCancellation::default(),
+            )
+            .err();
+            assert_eq!(
+                err,
+                Some(StorageError::Invalid(
+                    if variant == "latest-feature-order" {
+                        "metadata indexes"
+                    } else {
+                        "historical tags"
+                    }
+                ))
+            );
+        } else {
+            let file = result.unwrap();
+            let old = file
+                .historical_metadata(query(&file, 900))
+                .unwrap()
+                .facts
+                .unwrap();
+            let latest = file
+                .historical_metadata(query(&file, 2))
+                .unwrap()
+                .facts
+                .unwrap();
+            assert_eq!(latest.metadata, file.summary().proof.metadata);
+            assert_ne!(old.metadata, latest.metadata);
+            if variant == "historical-reorder" {
+                check(&file, 900, "custom_900");
+            } else {
+                assert_eq!(old.tags, 257);
+                assert!(latest.tags < old.tags);
+            }
+        }
+        assert_eq!(reader.usage().managed_bytes, idle);
+        assert_eq!(reader.usage().scratch_reserved_bytes, 0);
+        assert_eq!(dir.closed_main_bytes(), source);
+    }
 }
 #[test]
 fn unsupported_or_unbound_past_and_future_metadata_rejects_the_whole_file() {

@@ -1,12 +1,16 @@
 use super::*;
 
+pub(super) const REQUIRED_FEATURES: [(&str, &str); 4] = [
+    ("history.delta-index", "1"),
+    ("history.summary", "1"),
+    ("state.editor", "1"),
+    ("storage.core", "2"),
+];
 pub(super) fn features() -> Vec<Value> {
-    vec![
-        json!({"name":"history.delta-index","version":"1","required":true}),
-        json!({"name":"history.summary","version":"1","required":true}),
-        json!({"name":"state.editor","version":"1","required":true}),
-        json!({"name":"storage.core","version":"2","required":true}),
-    ]
+    REQUIRED_FEATURES
+        .iter()
+        .map(|(name, version)| json!({"name":name,"version":version,"required":true}))
+        .collect()
 }
 pub(super) fn cost(cache: &Cache) -> Result<usize, StorageError> {
     let mut n = 256usize;

@@ -1,5 +1,8 @@
 use super::*;
 use std::io::{Read, Seek, SeekFrom};
+mod metadata;
+pub(super) use metadata::{METADATA_ITEMS, METADATA_WORK_BYTES};
+use metadata::{bounded_feature, validate_past_metadata};
 pub(super) struct ParsedCheckpoint {
     pub checkpoint: Checkpoint,
     pub request: [u8; 32],
@@ -304,23 +307,6 @@ fn load_blocks(
     }
     metadata_refs(c, cache, cancel)
 }
-fn bounded_feature(v: &Value) -> Result<(), StorageError> {
-    let mut f = Fields::new(v.clone())?;
-    let name = f.text("name")?;
-    let version = f.text("version")?;
-    let needed = f
-        .take("required")?
-        .as_bool()
-        .ok_or(StorageError::Invalid("feature required"))?;
-    f.finish()?;
-    if name.len() > 256 || version.len() > 64 || name.is_empty() {
-        return Err(StorageError::Limit("feature"));
-    }
-    if needed && !write::features().contains(v) {
-        return Err(StorageError::Unsupported("required feature"));
-    }
-    Ok(())
-}
 fn node_info(
     c: &Connection,
     cache: &mut Cache,
@@ -494,23 +480,24 @@ fn read_snapshot(
     table_count(c, "features", 256)?;
     let mut q = c.prepare("SELECT name,version,required FROM features ORDER BY name,version")?;
     let mut rows = q.query([])?;
+    let mut required_present = [false; write::REQUIRED_FEATURES.len()];
     while let Some(r) = rows.next()? {
         let required = r.get::<_, i64>(2)?;
         if !matches!(required, 0 | 1) {
             return Err(StorageError::Invalid("feature"));
         }
         let v = json!({"name":r.get::<_,String>(0)?,"version":r.get::<_,String>(1)?,"required":required==1});
-        bounded_feature(&v)?;
+        if let Some(required) = bounded_feature(&v)? {
+            required_present[required] = true;
+        }
         cache.features.push(v);
     }
     // Finish each statement before the next phase opens queries or builds
     // the restored models. Shadowing the bindings retains their owners.
     drop(rows);
     drop(q);
-    for required in write::features() {
-        if !cache.features.contains(&required) {
-            return Err(StorageError::Unsupported("missing required feature"));
-        }
+    if required_present.contains(&false) {
+        return Err(StorageError::Unsupported("missing required feature"));
     }
     table_count(c, "blobs", limits.originals)?;
     let mut q = c.prepare("SELECT sha,byte_len FROM blobs ORDER BY sha")?;
@@ -598,16 +585,14 @@ fn read_snapshot(
         extensions,
         ..Default::default()
     };
-    table_count(c, "commits", 65536)?;
+    let commit_count = table_count(c, "commits", 65536)?;
     let mut q=c.prepare("SELECT id,previous,generation,origin,head,navigation,request_hash,address_epoch FROM commits ORDER BY generation")?;
     let mut rows = q.query([])?;
     let mut seen_nodes = BTreeSet::new();
     let mut seen_admissions = BTreeMap::new();
     let mut seen_originals = BTreeSet::new();
     let mut prefix = initial_prefix();
-    let mut last_tags = Vec::new();
-    let mut last_ext = Vec::new();
-    let mut last_features = Vec::new();
+    let mut latest_indexes_match = false;
     let mut max_alias = 0;
     let mut max_branch = 0;
     while let Some(r) = rows.next()? {
@@ -729,16 +714,19 @@ fn read_snapshot(
             return Err(StorageError::Invalid("snapshot attestation"));
         }
         blocks::mark(&cache, root, &mut reachable)?;
-        last_tags = blocks::read_paged(&cache, p.roots["tags"], "tags", limits)?;
-        last_ext = blocks::read_paged(&cache, p.roots["extensions"], "extensions", limits)?;
-        last_features = blocks::read_paged(&cache, p.roots["features"], "features", limits)?;
-        validate_past_metadata(
+        // These three owners expire at the end of this iteration, including
+        // the final checkpoint. Only its comparison result crosses the loop.
+        let tags = blocks::read_paged(&cache, p.roots["tags"], "tags", limits)?;
+        let extensions = blocks::read_paged(&cache, p.roots["extensions"], "extensions", limits)?;
+        let features = blocks::read_paged(&cache, p.roots["features"], "features", limits)?;
+        latest_indexes_match = validate_past_metadata(
             &seen_nodes,
             &meta,
             &cache.features,
-            &last_tags,
-            &last_ext,
-            &last_features,
+            &tags,
+            &extensions,
+            &features,
+            cache.checkpoints.len() + 1 == commit_count,
         )?;
         if cp.receipt.origin == SaveOrigin::Manual {
             meta.manual = Some(cp.receipt.clone());
@@ -752,9 +740,9 @@ fn read_snapshot(
                     receipt: &cp.receipt,
                     features_root: p.features_root(),
                     metadata: &meta,
-                    tags: &last_tags,
-                    extensions: &last_ext,
-                    features: &last_features,
+                    tags: &tags,
+                    extensions: &extensions,
+                    features: &features,
                 },
                 cancel,
                 probe,
@@ -772,7 +760,9 @@ fn read_snapshot(
         return Err(StorageError::Invalid("complete closure"));
     }
     drop((seen_nodes, seen_admissions, seen_originals));
-    verify_metadata_indexes(&cache, &meta, last_tags, last_ext, last_features)?;
+    if !latest_indexes_match {
+        return Err(StorageError::Invalid("metadata indexes"));
+    }
     let mut actual_marks = BTreeMap::new();
     let mut q = c.prepare("SELECT commit_id,node_id FROM manual_marks")?;
     let mut rows = q.query([])?;
@@ -947,89 +937,19 @@ fn metadata_rows(
     }
     Ok((tags, ext))
 }
-fn verify_metadata_indexes(
-    cache: &Cache,
-    meta: &ArchiveMetadata,
-    tags: Vec<Value>,
-    ext: Vec<Value>,
-    features: Vec<Value>,
-) -> Result<(), StorageError> {
-    let expected_tags: Vec<_> = meta
-        .tags
-        .iter()
-        .map(|t| json!({"node":ptext(t.node),"name":t.name,"value":t.value}))
-        .collect();
-    let expected_ext: Vec<_> = meta
-        .extensions
-        .iter()
-        .map(|e| json!({"name":e.name,"sha":hex(&sha(&e.bytes)),"bytes":e.bytes.len().to_string()}))
-        .collect();
-    if tags != expected_tags || ext != expected_ext || features != cache.features {
-        return Err(StorageError::Invalid("metadata indexes"));
-    }
-    Ok(())
-}
-
-fn validate_past_metadata(
-    nodes: &BTreeSet<PersistentNodeId>,
-    meta: &ArchiveMetadata,
-    known_features: &[Value],
-    tags: &[Value],
-    extensions: &[Value],
-    features: &[Value],
-) -> Result<(), StorageError> {
-    let mut keys = BTreeSet::new();
-    for v in tags {
-        let mut f = Fields::new(v.clone())?;
-        let node = f.id("node")?;
-        let name = f.text("name")?;
-        let value = f.text("value")?;
-        f.finish()?;
-        if !nodes.contains(&node)
-            || !name.starts_with("user:")
-            || name.len() > 256
-            || value.len() > 4096
-            || !keys.insert((node, name))
-        {
-            return Err(StorageError::Invalid("historical tags"));
-        }
-    }
-    let by_name: BTreeMap<_, _> = meta
-        .extensions
-        .iter()
-        .map(|e| (e.name.as_str(), e))
-        .collect();
-    let mut names = BTreeSet::new();
-    for v in extensions {
-        let mut f = Fields::new(v.clone())?;
-        let name = f.text("name")?;
-        let digest = f.hash("sha")?.bytes();
-        let len = f.num("bytes")?;
-        f.finish()?;
-        let e = by_name
-            .get(name.as_str())
-            .ok_or(StorageError::Invalid("historical extension"))?;
-        if !names.insert(name) || sha(&e.bytes) != digest || e.bytes.len() as u64 != len {
-            return Err(StorageError::Invalid("historical extension binding"));
-        }
-    }
-    let mut keys = BTreeSet::new();
-    for v in features {
-        bounded_feature(v)?;
-        if !known_features.contains(v) || !keys.insert((v["name"].as_str(), v["version"].as_str()))
-        {
-            return Err(StorageError::Invalid("historical features"));
-        }
-    }
-    if write::features().iter().any(|v| !features.contains(v)) {
-        return Err(StorageError::Unsupported("historical required feature"));
-    }
-    Ok(())
-}
-
 #[cfg(test)]
 mod metadata_tests {
     use super::*;
+    fn historical(
+        nodes: &BTreeSet<PersistentNodeId>,
+        meta: &ArchiveMetadata,
+        known: &[Value],
+        tags: &[Value],
+        extensions: &[Value],
+        features: &[Value],
+    ) -> Result<bool, StorageError> {
+        validate_past_metadata(nodes, meta, known, tags, extensions, features, false)
+    }
     #[test]
     fn historical_metadata_is_validated_even_when_latest_records_are_valid() {
         let node = PersistentNodeId::new(100).unwrap();
@@ -1037,13 +957,10 @@ mod metadata_tests {
         let meta = ArchiveMetadata::default();
         let features = write::features();
         let tags = vec![json!({"node":ptext(node),"name":"user:note","value":"old"})];
-        assert!(validate_past_metadata(&nodes, &meta, &features, &tags, &[], &features).is_ok());
+        assert!(historical(&nodes, &meta, &features, &tags, &[], &features).is_ok());
+        assert!(historical(&BTreeSet::new(), &meta, &features, &tags, &[], &features).is_err());
         assert!(
-            validate_past_metadata(&BTreeSet::new(), &meta, &features, &tags, &[], &features)
-                .is_err()
-        );
-        assert!(
-            validate_past_metadata(
+            historical(
                 &nodes,
                 &meta,
                 &features,
@@ -1053,9 +970,9 @@ mod metadata_tests {
             )
             .is_err()
         );
-        assert!(validate_past_metadata(&nodes, &meta, &features, &[], &[], &[]).is_err());
+        assert!(historical(&nodes, &meta, &features, &[], &[], &[]).is_err());
         assert!(
-            validate_past_metadata(
+            historical(
                 &nodes,
                 &meta,
                 &features,

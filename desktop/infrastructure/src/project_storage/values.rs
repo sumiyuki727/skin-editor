@@ -6,7 +6,7 @@ pub(super) fn sha(bytes: &[u8]) -> [u8; 32] {
 pub(super) fn hex(bytes: &[u8]) -> String {
     bytes.iter().map(|b| format!("{b:02x}")).collect()
 }
-pub(super) fn unhex(s: &str) -> Result<Vec<u8>, StorageError> {
+fn check_hex(s: &str) -> Result<(), StorageError> {
     if !s.len().is_multiple_of(2)
         || !s
             .bytes()
@@ -14,10 +14,27 @@ pub(super) fn unhex(s: &str) -> Result<Vec<u8>, StorageError> {
     {
         return Err(StorageError::Invalid("hex"));
     }
+    Ok(())
+}
+#[cfg(test)]
+pub(super) fn unhex(s: &str) -> Result<Vec<u8>, StorageError> {
+    check_hex(s)?;
     (0..s.len())
         .step_by(2)
         .map(|i| u8::from_str_radix(&s[i..i + 2], 16).map_err(|_| StorageError::Invalid("hex")))
         .collect()
+}
+fn fixed_hex<const N: usize>(s: &str) -> Result<[u8; N], StorageError> {
+    check_hex(s)?;
+    if s.len() / 2 != N {
+        return Err(StorageError::Invalid("fixed bytes"));
+    }
+    let mut output = [0; N];
+    for (i, b) in output.iter_mut().enumerate() {
+        *b = u8::from_str_radix(&s[2 * i..2 * i + 2], 16)
+            .map_err(|_| StorageError::Invalid("hex"))?;
+    }
+    Ok(output)
 }
 pub(super) fn fixed<const N: usize>(bytes: Vec<u8>) -> Result<[u8; N], StorageError> {
     bytes
@@ -25,10 +42,10 @@ pub(super) fn fixed<const N: usize>(bytes: Vec<u8>) -> Result<[u8; N], StorageEr
         .map_err(|_| StorageError::Invalid("fixed bytes"))
 }
 pub(super) fn hash(s: &str) -> Result<StateHash, StorageError> {
-    Ok(StateHash::from_bytes(fixed(unhex(s)?)?))
+    Ok(StateHash::from_bytes(fixed_hex(s)?))
 }
 pub(super) fn ident(s: &str) -> Result<u128, StorageError> {
-    let b: [u8; 16] = fixed(unhex(s)?)?;
+    let b = fixed_hex(s)?;
     let n = u128::from_be_bytes(b);
     if n == 0 {
         Err(StorageError::Invalid("identity"))
@@ -62,9 +79,10 @@ pub(super) fn commitblob(v: Vec<u8>) -> Result<CommitId, StorageError> {
     CommitId::new(u128::from_be_bytes(fixed(v)?)).ok_or(StorageError::Invalid("commit id"))
 }
 pub(super) fn text(v: Value) -> Result<String, StorageError> {
-    v.as_str()
-        .map(str::to_owned)
-        .ok_or(StorageError::Invalid("text"))
+    match v {
+        Value::String(s) => Ok(s),
+        _ => Err(StorageError::Invalid("text")),
+    }
 }
 pub(super) fn array(v: Value) -> Result<Vec<Value>, StorageError> {
     match v {

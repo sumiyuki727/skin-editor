@@ -11,8 +11,10 @@ use crate::project_format::{
 };
 use crate::{BlobStore, RawBlob};
 pub use file_facts::{
-    FILE_TARGET_REGISTRY_VERSION, FileCaptureCandidate, FileFactsLimits, FileFactsReader,
-    FileFactsUsage, FileSaveCandidate, FileTargetRegistry, FileTargetStamp, InspectedFileFacts,
+    FILE_REGISTERED_COVERAGE_VERSION, FILE_TARGET_REGISTRY_VERSION, FileCaptureCandidate,
+    FileFactsLimits, FileFactsReader, FileFactsUsage, FileRegisteredCoverage,
+    FileRegisteredCoverageRequest, FileSaveCandidate, FileTargetRegistry, FileTargetStamp,
+    InspectedFileFacts,
 };
 pub use recovery::{
     RECOVERY_VERSION, RecoveredArchive, RecoveryDigest, RecoveryMode, RecoveryReport,

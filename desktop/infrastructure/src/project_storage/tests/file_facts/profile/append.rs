@@ -234,6 +234,8 @@ fn older_exit_id_is_occupied_even_after_manual_and_protected_pointers_advance() 
             .is_none()
     );
     drop(view);
+    drop(q);
+    registered_coverage::check_historical_collision(&mut reader, &dir, req, &store);
     let (mut file, _) = open(&dir.file(), store, req.selection);
     assert!(matches!(
         file.write_capture(

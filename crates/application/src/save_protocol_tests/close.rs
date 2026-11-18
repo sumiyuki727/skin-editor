@@ -585,7 +585,17 @@ fn exit_capture_cursor_reads_the_frozen_tree_without_confirming_close() {
         Some(SaveCoordinationError::UnsupportedVersion)
     );
     assert_eq!(work.statistics(), initial);
-    let cursor = work.capture_cursor(SAVE_CAPTURE_CURSOR_VERSION).unwrap();
+    let mut stale = close.key;
+    stale.sequence += 1;
+    assert_eq!(
+        work.exit_capture_cursor(SAVE_CAPTURE_CURSOR_VERSION, stale)
+            .err(),
+        Some(SaveCoordinationError::Conflict)
+    );
+    assert_eq!(work.statistics(), initial);
+    let cursor = work
+        .exit_capture_cursor(SAVE_CAPTURE_CURSOR_VERSION, close.key)
+        .unwrap();
     assert_eq!(cursor.ticket(), ticket);
     let snapshot = cursor.snapshot().clone();
     let checked = check_capture(cursor, &d.golden(), &d.pool).unwrap();
@@ -612,6 +622,12 @@ fn exit_capture_cursor_reads_the_frozen_tree_without_confirming_close() {
     assert_eq!(d.status().facts, facts);
 
     d.session.cancel_close(close).unwrap();
+    {
+        let cursor = work
+            .exit_capture_cursor(SAVE_CAPTURE_CURSOR_VERSION, close.key)
+            .unwrap();
+        assert!(cursor.snapshot().is_complete() && cursor.is_cancelled());
+    }
     drop(work);
     d.advance();
     assert!(d.active().writer_released);
@@ -721,6 +737,11 @@ fn failed_child_has_no_automatic_retry_and_explicit_retry_waits_for_actual_relea
     let failed = active_close(&d).child.unwrap();
     let golden = d.golden();
     let mut work = d.session.take_save_execution(&port, failed).unwrap();
+    assert_eq!(
+        work.exit_capture_cursor(SAVE_CAPTURE_CURSOR_VERSION, close.key)
+            .err(),
+        Some(SaveCoordinationError::Conflict)
+    );
     let snapshot = work.snapshot().clone();
     let witness = prepare(&mut work, &golden, &d.pool).unwrap();
     let sender = work.take_completion().unwrap();

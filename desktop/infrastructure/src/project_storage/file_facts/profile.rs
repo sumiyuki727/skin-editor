@@ -5,8 +5,12 @@ use std::mem::{align_of, size_of};
 mod append;
 mod coverage;
 mod opening;
+mod registered_coverage;
 #[cfg(all(test, windows))]
 pub(super) use opening::OPENING_QUERY_BYTES;
+pub use registered_coverage::{
+    FILE_REGISTERED_COVERAGE_VERSION, FileRegisteredCoverage, FileRegisteredCoverageRequest,
+};
 
 const ITEMS: usize = 256;
 const TEXT_BYTES: usize = ITEMS * (256 + 64);
@@ -339,11 +343,21 @@ impl InspectedFileFacts {
                 ..context
             },
         )?;
+        self.check_original_metadata(context, before.captured, before.selected)
+    }
+
+    fn check_original_metadata(
+        &self,
+        context: FileCapturedMetadataContext,
+        captured: Option<FileCapturedMetadataFacts>,
+        parent: Option<FileHistoricalMetadataFacts>,
+    ) -> Result<Option<(FileCapturedMetadataFacts, FileHistoricalMetadataFacts)>, FileFactsError>
+    {
         let target = context.ticket.target;
         if Some(context.commit) != target.expected.commit {
             return Err(FileFactsError::InvalidRequest);
         }
-        let (Some(captured), Some(parent)) = (before.captured, before.selected) else {
+        let (Some(captured), Some(parent)) = (captured, parent) else {
             return Ok(None);
         };
         let summary = self.summary();

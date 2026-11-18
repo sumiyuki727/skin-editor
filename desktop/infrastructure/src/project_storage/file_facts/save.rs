@@ -210,7 +210,7 @@ impl FileFactsReader {
     /// after polling starts the owner's traversal position persists on every exit.
     pub fn compare_save_cursor(
         &self,
-        cursor: SaveCaptureCursor<'_>,
+        mut cursor: SaveCaptureCursor<'_>,
         selection: RestoreSelection,
         originals: &BlobStore,
         view: &InspectedFileFacts,
@@ -234,7 +234,7 @@ impl FileFactsReader {
             cursor.snapshot().manifest().root,
             context,
         )?;
-        let capture = self.prepare_stream(request, cursor, originals, cancel.clone())?;
+        let capture = self.prepare_stream(request, &mut cursor, originals, cancel.clone())?;
         let intent = build_intent(&capture, ticket, &mut [0; 4096])?;
         let result = view.compare_intent(intent);
         cancelled(&cancel)?;
@@ -263,11 +263,11 @@ impl FileFactsReader {
             .control
             .reserve(ctx::WORK_BYTES)
             .ok_or(FileFactsError::Limit(FileFactsLimit::Control))?;
-        let cursor = owner
+        let mut cursor = owner
             .work
             .capture_cursor(SAVE_CAPTURE_CURSOR_VERSION)
             .map_err(|_| FileFactsError::UnsupportedVersion)?;
-        let capture = self.prepare_stream(request, cursor, originals, cancel.clone())?;
+        let capture = self.prepare_stream(request, &mut cursor, originals, cancel.clone())?;
         let (summary, metadata) = {
             let mut scratch = [0; 4096];
             let summary = build_intent(&capture, ticket, &mut scratch)?;

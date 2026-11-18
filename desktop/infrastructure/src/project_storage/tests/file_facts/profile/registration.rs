@@ -1,6 +1,6 @@
 use super::*;
 
-fn opening(mut file: FileFactsRequest) -> FileProfileRestoreRequest {
+pub(super) fn opening(mut file: FileFactsRequest) -> FileProfileRestoreRequest {
     file.key = FileFactsKey {
         session: HistorySessionId::new(88).unwrap(),
         sequence: 9,
@@ -39,22 +39,7 @@ fn work(
     SavePreparationWork,
     FileFactsRequest,
 ) {
-    let session = candidate
-        .into_session(
-            req.file.key.session,
-            Box::new(store.clone()),
-            SessionLimits::default(),
-            CaptureCancellation::default(),
-        )
-        .unwrap();
-    save::attach_work(
-        Driver {
-            session,
-            request: 0,
-            ids: Ids(2000),
-        },
-        req.file,
-    )
+    save::attach_work(activate(candidate, req.file, store), req.file)
 }
 
 fn observe(

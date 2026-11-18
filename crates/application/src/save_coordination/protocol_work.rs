@@ -109,6 +109,20 @@ impl SaveExecution {
     ) -> Result<SaveCaptureCursor<'_>, SaveCoordinationError> {
         self.work.capture_cursor(version)
     }
+    /// Borrow an Exit child's original traversal for its expected close owner.
+    /// This scope check does not prepare a witness or change the writer's permission.
+    pub fn exit_capture_cursor(
+        &mut self,
+        version: u16,
+        parent: CloseAdmissionKey,
+    ) -> Result<SaveCaptureCursor<'_>, SaveCoordinationError> {
+        let cursor = self.capture_cursor(version)?;
+        let ticket = cursor.ticket();
+        if ticket.origin != SaveOrigin::Exit || ticket.parent_close != Some(parent) {
+            return Err(SaveCoordinationError::Conflict);
+        }
+        Ok(cursor)
+    }
     pub fn ticket(&self) -> SaveTicket {
         self.work.ticket()
     }

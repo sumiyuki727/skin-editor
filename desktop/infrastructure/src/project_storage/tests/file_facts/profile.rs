@@ -4,6 +4,7 @@ mod close;
 mod coverage;
 mod cursor;
 mod opening;
+mod registered_coverage;
 mod registration;
 
 fn models() -> Value {
@@ -69,6 +70,9 @@ fn restore(
         sha(&std::fs::read(dir.file()).unwrap())
     );
     assert_eq!(origin.opened_head, candidate.header().head);
+    (activate(candidate, req, store), req)
+}
+fn activate(candidate: RestoreCandidate, req: FileFactsRequest, store: &BlobStore) -> Driver {
     let session = candidate
         .into_session(
             req.key.session,
@@ -77,14 +81,11 @@ fn restore(
             CaptureCancellation::default(),
         )
         .unwrap();
-    (
-        Driver {
-            session,
-            request: 0,
-            ids: Ids(2000),
-        },
-        req,
-    )
+    Driver {
+        session,
+        request: 0,
+        ids: Ids(2000),
+    }
 }
 fn context(
     view: &InspectedFileFacts,

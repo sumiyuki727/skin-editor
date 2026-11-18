@@ -8,7 +8,7 @@ pub(super) trait CaptureStream {
     fn statistics(&self) -> CaptureStatistics;
     fn poll(&mut self, edges: usize) -> Result<CapturePoll, CaptureError>;
 }
-impl CaptureStream for &mut HistoryCapture {
+impl CaptureStream for HistoryCapture {
     fn snapshot(&self) -> Result<CaptureSnapshot, CaptureError> {
         HistoryCapture::snapshot(self)
     }
@@ -19,8 +19,8 @@ impl CaptureStream for &mut HistoryCapture {
         HistoryCapture::poll(self, n)
     }
 }
-// The stream parameter takes the cursor by value, replacing the previous
-// mutable work reference in the fixed traversal workspace.
+// The traversal borrows one stream. A caller can still inspect the original
+// cursor's cancellation flag after Complete, without acquiring another capture.
 const _: () = assert!(size_of::<SaveCaptureCursor<'_>>() == size_of::<&mut SavePreparationWork>());
 const _: () =
     assert!(align_of::<SaveCaptureCursor<'_>>() == align_of::<&mut SavePreparationWork>());
@@ -132,7 +132,7 @@ impl FileFactsReader {
     pub(super) fn prepare_stream(
         &self,
         request: FileFactsRequest,
-        mut capture: impl CaptureStream,
+        capture: &mut impl CaptureStream,
         originals: &BlobStore,
         cancel: CaptureCancellation,
     ) -> Result<FileCaptureCandidate, FileFactsError> {

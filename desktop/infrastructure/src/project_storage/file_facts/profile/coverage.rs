@@ -64,39 +64,64 @@ impl FileFactsReader {
             .control
             .reserve(WORK_BYTES)
             .ok_or(FileFactsError::Limit(FileFactsLimit::Control))?;
-        let Some((captured, parent)) = baseline.original_metadata_baseline(q, context)? else {
+        let Some(metadata) = baseline.original_metadata_baseline(q, context)? else {
             return Ok(None);
         };
-        let s = baseline.summary();
         let intent = q.summary();
-        let capture = intent.capture;
+        let result = baseline.coverage_facts(
+            context,
+            intent.capture,
+            q.snapshot().manifest(),
+            intent.navigation,
+            metadata,
+            &mut [0; 4096],
+        )?;
+        self.finish_coverage(&cancel)?;
+        Ok(Some(result))
+    }
+
+    pub(super) fn finish_coverage(
+        &self,
+        cancel: &CaptureCancellation,
+    ) -> Result<(), FileFactsError> {
+        #[cfg(test)]
+        self.probe
+            .step(Stage::ReadNoChangeCoverage, cancel)
+            .map_err(storage)?;
+        check(cancel).map_err(storage)
+    }
+}
+
+impl InspectedFileFacts {
+    // Callers prove their own observation/request association before using the
+    // same checkpoint semantics. The registered observation keeps its opening key.
+    pub(super) fn coverage_facts(
+        &self,
+        context: FileCapturedMetadataContext,
+        capture: FileCaptureSummary,
+        manifest: &CaptureManifest,
+        navigation: [u8; 32],
+        (captured, parent): (FileCapturedMetadataFacts, FileHistoricalMetadataFacts),
+        scratch: &mut intent_context::Workspace,
+    ) -> Result<FileNoChangeCoverage, FileFactsError> {
+        let s = self.summary();
         let protected = s.files.protected.ok_or(FileFactsError::ValidationFailed)?;
         let ticket = context.ticket;
         let origin = captured.origin;
-        let (manual_navigation_equal, protection_navigation_equal) = {
-            let mut scratch = [0; 4096];
-            let manifest = q.snapshot().manifest();
-            let manual = s
-                .files
-                .manual
-                .map(|f| baseline.checkpoint_navigation_matches(f, manifest, &mut scratch))
-                .transpose()?;
-            let protection =
-                baseline.checkpoint_navigation_matches(protected, manifest, &mut scratch)?;
-            (manual, protection)
-        };
+        let manual_navigation_equal = s
+            .files
+            .manual
+            .map(|f| self.checkpoint_navigation_matches(f, manifest, scratch))
+            .transpose()?;
+        let protection_navigation_equal =
+            self.checkpoint_navigation_matches(protected, manifest, scratch)?;
         let unchanged_opening = origin.file.selection == context.file.selection
             && origin.opened_head == ticket.head
             && s.selected_head == ticket.head
             && ticket.source.state.revision == 0
             && ticket.source.navigation_revision == 0
-            && intent.navigation == baseline.data.intent.opening_navigation;
-        #[cfg(test)]
-        self.probe
-            .step(Stage::ReadNoChangeCoverage, &cancel)
-            .map_err(storage)?;
-        check(&cancel).map_err(storage)?;
-        Ok(Some(FileNoChangeCoverage {
+            && navigation == self.data.intent.opening_navigation;
+        Ok(FileNoChangeCoverage {
             context,
             origin,
             files: s.files,
@@ -107,13 +132,13 @@ impl FileFactsReader {
                 && capture.originals == s.originals
                 && capture.original_bytes == s.original_bytes,
             metadata_equal: captured.metadata == parent.metadata,
-            counters_equal: intent.next_alias == parent.commit.next_alias
-                && intent.next_branch == parent.commit.next_branch,
+            counters_equal: manifest.next_alias == parent.commit.next_alias
+                && manifest.next_branch == parent.commit.next_branch,
             manual_navigation_equal,
             protection_navigation_equal,
             unchanged_opening,
             assurance: s.assurance,
             conclusion: FileCaptureConclusion::InsufficientForSaveReconciliation,
-        }))
+        })
     }
 }

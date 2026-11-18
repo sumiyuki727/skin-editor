@@ -1,6 +1,6 @@
 use super::*;
 
-fn check_case(name: &str, evidence: FileNoChangeCoverage) {
+pub(super) fn check_case(name: &str, evidence: FileNoChangeCoverage) {
     let path = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../docs/P3_2B1_2J_CASES.json");
     let matrix: Value = serde_json::from_str(&std::fs::read_to_string(path).unwrap()).unwrap();
     let row = matrix["cases"]
@@ -441,6 +441,8 @@ fn full_commit_table_and_exact_workspace_still_allow_read_only_manual_coverage()
         Ok(SaveAcknowledgement::Released)
     );
     drop(d);
+    assert_eq!(reader.usage().managed_bytes, 16384);
+    registered_coverage::check_full_table(&mut reader, &dir, req, &store);
     assert_eq!(reader.usage().managed_bytes, 16384);
     assert_eq!(std::fs::read(dir.file()).unwrap(), bytes);
 }

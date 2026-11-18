@@ -14,7 +14,7 @@ pub use file_facts::{
     FILE_REGISTERED_COVERAGE_VERSION, FILE_TARGET_REGISTRY_VERSION, FileCaptureCandidate,
     FileFactsLimits, FileFactsReader, FileFactsUsage, FileRegisteredCoverage,
     FileRegisteredCoverageRequest, FileSaveCandidate, FileTargetRegistry, FileTargetStamp,
-    InspectedFileFacts,
+    InspectedFileFacts, RegisteredSessionOpening,
 };
 pub use recovery::{
     RECOVERY_VERSION, RecoveredArchive, RecoveryDigest, RecoveryMode, RecoveryReport,

@@ -1,6 +1,6 @@
 use super::*;
 
-fn registered(
+pub(super) fn registered(
     reader: &mut FileFactsReader,
     dir: &Directory,
     req: FileFactsRequest,

@@ -5,6 +5,7 @@ use std::sync::Arc;
 
 pub const FILE_PROFILE_VERSION: u16 = 1;
 pub const FILE_OPENING_TARGET_VERSION: u16 = 1;
+pub const FILE_SESSION_OPENING_VERSION: u16 = 1;
 pub const MAX_FILE_PROFILE_BYTES: usize = 128 * 1024;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -57,6 +58,90 @@ pub struct FileProfileOrigin {
 pub trait FileProfileSource: Any + Send + Sync {
     fn origin(&self) -> FileProfileOrigin;
     fn logical_bytes(&self) -> usize;
+}
+
+/// Describes a freshly restored, idle session before coordinator installation.
+/// The adapter must independently authenticate the concrete provider and the
+/// registered file. Public origin values alone do not authenticate either one.
+pub struct RestoredSessionOpening<'s> {
+    profile: &'s dyn FileProfileSource,
+    metadata: &'s ArchiveMetadata,
+    coverage: SaveCoverageStamp,
+    originals: usize,
+}
+impl RestoredSessionOpening<'_> {
+    pub fn profile(&self) -> &dyn FileProfileSource {
+        self.profile
+    }
+    pub fn metadata(&self) -> &ArchiveMetadata {
+        self.metadata
+    }
+    pub fn coverage(&self) -> SaveCoverageStamp {
+        self.coverage
+    }
+    pub fn originals(&self) -> usize {
+        self.originals
+    }
+}
+
+impl ProjectSession {
+    /// Borrow the activated source and live metadata without reserving any
+    /// capture, identity, save or close slot. This only applies at initial open.
+    pub fn restored_opening(
+        &self,
+        version: u16,
+        file: FileFactsRequest,
+    ) -> Result<RestoredSessionOpening<'_>, FileFactsError> {
+        if version != FILE_SESSION_OPENING_VERSION
+            || file.version != FILE_FACTS_PORT_VERSION
+            || file.binding.version != SAVE_COORDINATION_VERSION
+        {
+            return Err(FileFactsError::UnsupportedVersion);
+        }
+        if self.save_coordination.is_some()
+            || self.draft.is_some()
+            || self
+                .capture_in_flight
+                .load(std::sync::atomic::Ordering::Acquire)
+        {
+            return Err(FileFactsError::Busy);
+        }
+        let attachment = self
+            .file_profile
+            .as_ref()
+            .ok_or(FileFactsError::TargetConflict)?;
+        let origin = attachment.origin;
+        let source = self.save_source();
+        if !self.restored_history
+            || origin.file != file
+            || source.session_id != file.key.session
+            || source.state.revision != 0
+            || source.navigation_revision != 0
+        {
+            return Err(FileFactsError::TargetConflict);
+        }
+        self.validate_save_binding(file.binding)
+            .map_err(|_| FileFactsError::TargetConflict)?;
+        let map = self
+            .persistence
+            .as_ref()
+            .ok_or(FileFactsError::TargetConflict)?;
+        if map.nodes.get(&NodeId::new(1).expect("root")) != Some(&origin.root)
+            || map.nodes.get(&source.state.head) != Some(&origin.opened_head)
+        {
+            return Err(FileFactsError::TargetConflict);
+        }
+        Ok(RestoredSessionOpening {
+            profile: attachment.source(),
+            metadata: &self.archive_metadata,
+            coverage: SaveCoverageStamp {
+                source,
+                nodes: self.history.nodes.len(),
+                admissions: self.used_ids.len(),
+            },
+            originals: self.pins.len(),
+        })
+    }
 }
 #[derive(Clone)]
 pub(crate) struct ProfileAttachment {

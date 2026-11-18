@@ -6,6 +6,7 @@ mod cursor;
 mod opening;
 mod registered_coverage;
 mod registration;
+mod session_preflight;
 
 fn models() -> Value {
     serde_json::from_str(

@@ -334,7 +334,19 @@ fn copied_public_origin_on_another_restore_cannot_borrow_the_registered_handle()
                 .attach_file_profile(1, Arc::new(Fake { origin, bytes: 1 }))
                 .unwrap();
         }
-        let (_d, _p, mut w, _) = work(clone, req, &store);
+        let d = activate(clone, req.file, &store);
+        assert_eq!(
+            r.preflight_session(
+                &reader,
+                FILE_SESSION_OPENING_VERSION,
+                stamp,
+                &d.session,
+                &CaptureCancellation::default()
+            )
+            .err(),
+            Some(FileFactsError::TargetConflict)
+        );
+        let (_d, _p, mut w, _) = save::attach_work(d, req.file);
         let ticket = w.ticket();
         assert_eq!(
             observe(&mut r, stamp, &mut w, ticket),

@@ -208,7 +208,26 @@ impl FileFactsReader {
 }
 fn provider(snapshot: &CaptureSnapshot) -> Option<&Provider> {
     let source = snapshot.file_profile(FILE_PROFILE_VERSION).ok()??;
+    authentic_provider(source)
+}
+fn authentic_provider(source: &dyn FileProfileSource) -> Option<&Provider> {
     (source as &dyn Any).downcast_ref::<Provider>()
+}
+
+pub(super) fn session_opening_metadata(
+    opening: &RestoredSessionOpening<'_>,
+    view: &InspectedFileFacts,
+    work: &mut intent_context::Workspace,
+    cancel: &CaptureCancellation,
+    probe: Probe,
+) -> Result<FileCapturedMetadataFacts, FileFactsError> {
+    let p = authentic_provider(opening.profile()).ok_or(FileFactsError::TargetConflict)?;
+    let origin = p.origin();
+    view.check_opening_origin(&origin)?;
+    if origin.features_root != view.data.metadata.latest_features_root() {
+        return Err(FileFactsError::TargetConflict);
+    }
+    encode(opening.metadata(), &p.payload, work, cancel, probe)
 }
 fn scoped_provider(
     snapshot: &CaptureSnapshot,

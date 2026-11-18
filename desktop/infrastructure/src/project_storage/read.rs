@@ -851,16 +851,20 @@ fn read_snapshot(
         metadata: cache.metadata.clone(),
     };
     let mut builder = RestoreBuilder::new(header, limits.restore, cancel.clone())?;
-    let mut decoded = 0usize;
+    let mut remaining_decode_bytes = limits.decoded_bytes;
     for (info, root) in infos {
         check(cancel)?;
-        let bundle = blocks::closure(&cache, root, &mut reachable, limits)?;
-        decoded = decoded
-            .checked_add(bundle.blocks.iter().map(|b| b.bytes.len()).sum::<usize>())
-            .ok_or(StorageError::Limit("decoded bytes"))?;
-        if decoded > limits.decoded_bytes {
-            return Err(StorageError::Limit("decoded bytes"));
-        }
+        let admitted = blocks::decoded_state_blocks(
+            &cache,
+            root,
+            &mut reachable,
+            limits,
+            &mut remaining_decode_bytes,
+        )?;
+        let bundle = StateBundle {
+            root,
+            blocks: admitted.cloned().collect(),
+        };
         let project = decode_project(&bundle, limits.codec)?;
         metadata_probe(&project, store)?;
         let canonical = encode_project(&project, limits.codec)?.root;

@@ -1,5 +1,7 @@
 //! Single-slot host ownership of a validated opening for read-only use.
 use super::*;
+mod session;
+pub use session::RegisteredSessionOpening;
 
 pub const FILE_TARGET_REGISTRY_VERSION: u16 = 1;
 
@@ -142,14 +144,26 @@ impl FileTargetRegistry {
         save::capture_request(ticket, snapshot, summary.request.selection)?;
         let origin = profile::captured_origin(snapshot, ticket, self.reader)
             .ok_or(FileFactsError::TargetConflict)?;
-        if origin.observation != summary.observation
-            || origin.file != summary.request
-            || origin.root != view.data.root
-            || origin.opened_head != summary.selected_head
-            || origin.source_sha256 != view._source.digest
-        {
-            return Err(FileFactsError::TargetConflict);
-        }
+        view.check_opening_origin(&origin)?;
         Ok(view)
+    }
+}
+
+impl InspectedFileFacts {
+    pub(super) fn check_opening_origin(
+        &self,
+        origin: &FileProfileOrigin,
+    ) -> Result<(), FileFactsError> {
+        let summary = &self.data.summary;
+        if origin.observation == summary.observation
+            && origin.file == summary.request
+            && origin.root == self.data.root
+            && origin.opened_head == summary.selected_head
+            && origin.source_sha256 == self._source.digest
+        {
+            Ok(())
+        } else {
+            Err(FileFactsError::TargetConflict)
+        }
     }
 }

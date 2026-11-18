@@ -95,6 +95,68 @@ fn copy_golden_file() -> (Directory, FileFactsRequest) {
     (Directory::from_main_bytes(bytes), *request)
 }
 
+#[test]
+fn restored_block_copies_require_remaining_bytes_for_the_whole_node() {
+    let (dir, author, writer) = fixture();
+    drop((author, writer));
+    let bytes = digest(&dir.file());
+    let (file, candidate) = open(&dir.file(), BlobStore::default(), RestoreSelection::Manual);
+    let cache = &file.cache;
+    let limits = FileLimits::default();
+    let mut total = 0;
+    for id in &cache.order {
+        let root = StateHash::from_bytes(cache.nodes[id].info.origin.as_ref().unwrap().state);
+        // Compute the quota independently from the actual distinct stored rows for this node.
+        let mut hashes = BTreeSet::new();
+        blocks::mark(cache, root, &mut hashes).unwrap();
+        let size: usize = hashes
+            .iter()
+            .map(|h| cache.blocks[h].block.bytes.len())
+            .sum();
+        total += size;
+        let mut seen = BTreeSet::new();
+        let mut short = size - 1;
+        assert!(matches!(
+            blocks::decoded_state_blocks(cache, root, &mut seen, limits, &mut short),
+            Err(StorageError::Limit("decoded bytes"))
+        ));
+        assert_eq!(short, size - 1);
+        assert!(seen.is_empty());
+        let mut exact = size;
+        let admitted =
+            blocks::decoded_state_blocks(cache, root, &mut seen, limits, &mut exact).unwrap();
+        assert_eq!(admitted.len(), hashes.len());
+        for block in admitted {
+            assert!(std::ptr::eq(block, &cache.blocks[&block.hash].block));
+        }
+        assert_eq!(seen, hashes);
+        assert_eq!(exact, 0);
+    }
+    assert!(cache.order.len() > 1);
+    drop((file, candidate));
+    let store = BlobStore::default();
+    let load = |decoded_bytes| {
+        SqliteProjectFile::load(
+            dir.file(),
+            store.clone(),
+            FileLimits {
+                decoded_bytes,
+                ..limits
+            },
+            RestoreSelection::Manual,
+            CaptureCancellation::default(),
+        )
+    };
+    assert!(matches!(
+        load(total - 1),
+        Err(StorageError::Limit("decoded bytes"))
+    ));
+    assert_eq!(store.usage().unwrap().bytes, 0);
+    drop(load(total).unwrap());
+    assert_eq!(store.usage().unwrap().bytes, 0);
+    assert_eq!(digest(&dir.file()), bytes);
+}
+
 #[cfg(windows)]
 #[test]
 fn closed_golden_copies_match_a_fresh_publication_and_isolate_file_changes() {

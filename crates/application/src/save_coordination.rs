@@ -201,7 +201,7 @@ impl ProjectSession {
             .as_ref()
             .is_some_and(|c| c.save.slot.is_some())
     }
-    fn validate_save_binding(
+    pub(crate) fn validate_save_binding(
         &self,
         binding: SaveTargetBinding,
     ) -> Result<(), SaveCoordinationError> {

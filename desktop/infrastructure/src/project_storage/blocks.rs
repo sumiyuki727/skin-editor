@@ -252,12 +252,13 @@ pub(super) fn read_paged(
     }
     Ok(out)
 }
-pub(super) fn closure(
-    cache: &Cache,
+pub(super) fn decoded_state_blocks<'a>(
+    cache: &'a Cache,
     root: StateHash,
     seen: &mut BTreeSet<StateHash>,
     limits: FileLimits,
-) -> Result<StateBundle, StorageError> {
+    remaining_decode_bytes: &mut usize,
+) -> Result<impl ExactSizeIterator<Item = &'a StateBlock> + use<'a>, StorageError> {
     let mut local = BTreeSet::new();
     let mut todo = vec![root];
     let mut bytes = 0usize;
@@ -275,16 +276,15 @@ pub(super) fn closure(
         if bytes > limits.codec.total_bytes {
             return Err(StorageError::Limit("closure"));
         }
+        if bytes > *remaining_decode_bytes {
+            return Err(StorageError::Limit("decoded bytes"));
+        }
         todo.extend(&r.refs);
     }
+    // All distinct payload lengths are known before copying the first block.
+    *remaining_decode_bytes -= bytes;
     seen.extend(&local);
-    Ok(StateBundle {
-        root,
-        blocks: local
-            .into_iter()
-            .map(|h| cache.blocks[&h].block.clone())
-            .collect(),
-    })
+    Ok(local.into_iter().map(|h| &cache.blocks[&h].block))
 }
 
 pub(super) fn mark(

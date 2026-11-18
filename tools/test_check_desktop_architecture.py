@@ -14,6 +14,7 @@ def fixture():
             deps.append(dict(name=edge, path=str(ROOT / PACKAGES[edge][0]) if edge in PACKAGES else None,
                              source=None if edge in PACKAGES else "registry+https://github.com/rust-lang/crates.io-index",
                              req=VERSIONS.get(edge, "*"), features=list(FEATURES.get(edge, set())), uses_default_features=False,
+                             target="cfg(windows)" if edge == "winapi-util" else None,
                              optional=name=='skin-editor-desktop' and edge in {'profiling','tracing','winit'}))
         packages.append(dict(name=name, id=name, source=None, manifest_path=str(ROOT / directory / "Cargo.toml"),
                              publish=[], features=copy.deepcopy(HOST_FEATURES) if name=='skin-editor-desktop' else {}, targets=[], dependencies=deps))
@@ -51,7 +52,7 @@ class Boundaries(unittest.TestCase):
 
     def test_project_storage_dependencies_are_adapter_only_and_pinned(self):
         for name in ["skin-editor-application", "skin-editor-domain", "skin-editor-ui", "skin-editor-preview", "skin-editor-audio", "skin-editor-rendering"]:
-            for edge in ["serde", "serde_json", "getrandom", "rusqlite", "same-file"]:
+            for edge in ["serde", "serde_json", "getrandom", "rusqlite", "same-file", "winapi-util"]:
                 data=fixture();package=next(p for p in data['packages'] if p['name']==name)
                 package['dependencies'].append(dict(name=edge,req=VERSIONS[edge],features=list(FEATURES[edge]),source='registry+https://github.com/rust-lang/crates.io-index'))
                 self.assertTrue(validate_metadata(data,ROOT))
@@ -59,10 +60,16 @@ class Boundaries(unittest.TestCase):
             data=fixture();dep=next(d for p in data['packages'] for d in p['dependencies'] if d['name']=='serde_json')
             dep[field]=value;self.assertTrue(validate_metadata(data,ROOT))
     def test_sqlite_and_file_identity_features_are_bounded_and_explicit(self):
-        for edge in ['rusqlite', 'same-file']:
+        for edge in ['rusqlite', 'same-file', 'winapi-util']:
             for field,value in [('req','*'),('uses_default_features',True),('features',['load_extension'])]:
                 data=fixture();dep=next(d for p in data['packages'] for d in p['dependencies'] if d['name']==edge)
                 dep[field]=value;self.assertTrue(validate_metadata(data,ROOT))
+    def test_handle_information_is_windows_only(self):
+        for target in [None, "cfg(unix)"]:
+            data = fixture()
+            next(d for p in data["packages"] for d in p["dependencies"] if d["name"] == "winapi-util")["target"] = target
+            self.assertTrue(validate_metadata(data, ROOT))
+
     def test_framework_trace_is_explicit_host_only_and_default_off(self):
         for change in [lambda p:p['features'].update(default=['framework-trace']),lambda p:p['features']['framework-trace'].append('eframe/accesskit'),
             lambda p:next(d for d in p['dependencies'] if d['name']=='tracing').update(optional=False),

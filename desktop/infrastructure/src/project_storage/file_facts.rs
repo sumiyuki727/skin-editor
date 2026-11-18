@@ -566,6 +566,16 @@ pub(super) mod test_support {
             .unwrap()
     }
     #[cfg(windows)]
+    pub fn hold_opening_margin(reader: &FileFactsReader, short_by: usize) -> ByteLease {
+        reader
+            .control
+            .reserve(
+                reader.limits.control_bytes - reader.control.used() - profile::OPENING_QUERY_BYTES
+                    + short_by,
+            )
+            .unwrap()
+    }
+    #[cfg(windows)]
     pub fn intent_archive(
         m: &ArchiveMetadata,
         delta: Option<&ArchiveReceipt>,

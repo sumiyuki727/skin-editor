@@ -4,7 +4,43 @@ use std::any::Any;
 use std::sync::Arc;
 
 pub const FILE_PROFILE_VERSION: u16 = 1;
+pub const FILE_OPENING_TARGET_VERSION: u16 = 1;
 pub const MAX_FILE_PROFILE_BYTES: usize = 128 * 1024;
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct FileOpeningTargetContext {
+    pub version: u16,
+    pub ticket: SaveTicket,
+    pub observation: FileObservationId,
+    pub observed_request: FileFactsRequest,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct FileOpeningTargetFacts {
+    pub origin: FileProfileOrigin,
+    pub name_digest_equal: bool,
+    /// Equality of the reported volume serial and 64-bit file index at two instants.
+    /// None means at least one observation lacked usable fields.
+    pub file_id_fields_equal: Option<bool>,
+    pub source_digest_equal: bool,
+    pub expected_equal: bool,
+    pub selected_head_equal: bool,
+}
+
+/// Read-only comparison. Matching fields cannot prove continuity across a closed handle.
+/// ```compile_fail
+/// use skin_editor_application::{FileOpeningTargetComparison, PreparedWitness};
+/// fn elevate(v: FileOpeningTargetComparison) -> PreparedWitness { v.into() }
+/// ```
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct FileOpeningTargetComparison {
+    pub context: FileOpeningTargetContext,
+    /// Absent if the capture has no authenticated, in-scope original opening.
+    pub facts: Option<FileOpeningTargetFacts>,
+    pub assurance: FileFactsAssurance,
+    pub conclusion: FileCaptureConclusion,
+}
+const _: () = assert!(std::mem::size_of::<FileOpeningTargetComparison>() <= 4096);
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct FileProfileOrigin {

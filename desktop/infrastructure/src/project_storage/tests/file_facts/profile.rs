@@ -3,6 +3,7 @@ mod append;
 mod close;
 mod coverage;
 mod cursor;
+mod opening;
 
 fn models() -> Value {
     serde_json::from_str(
@@ -571,15 +572,16 @@ fn absent_forged_and_foreign_profiles_cannot_qualify_or_bypass_missing_guards() 
             request: 0,
             ids: Ids(2000),
         };
-        let (mut d, _port, work, qreq) = save::attach_work(d, req);
+        let (mut d, _port, mut work, qreq) = save::attach_work(d, req);
         let ticket = work.ticket();
+        let view = reader
+            .inspect(&dir.file(), qreq, CaptureCancellation::default())
+            .unwrap();
+        assert!(opening::compare(&reader, &view, &mut work).facts.is_none());
         let q = reader
             .prepare_save(work, qreq.selection, &store, CaptureCancellation::default())
             .unwrap();
         assert!(q.captured_metadata().is_none());
-        let view = reader
-            .inspect(&dir.file(), qreq, CaptureCancellation::default())
-            .unwrap();
         let c = context(&view, &q, 999);
         let result = view.compare_captured_metadata(&q, c).unwrap();
         assert!(

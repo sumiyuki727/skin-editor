@@ -4,6 +4,9 @@ use std::any::Any;
 use std::mem::{align_of, size_of};
 mod append;
 mod coverage;
+mod opening;
+#[cfg(all(test, windows))]
+pub(super) use opening::OPENING_QUERY_BYTES;
 
 const ITEMS: usize = 256;
 const TEXT_BYTES: usize = ITEMS * (256 + 64);
@@ -23,6 +26,7 @@ struct Payload {
 // Actual payload (including its text allocation) drops before the reservation.
 struct Provider {
     payload: Box<Payload>,
+    location: Option<opening::Location>,
     bytes: usize,
     _lease: ByteLease,
 }
@@ -39,6 +43,7 @@ fn fixed_bytes() -> usize {
         + 2 * size_of::<Provider>()
         + 2 * size_of::<std::sync::atomic::AtomicUsize>()
         + align_of::<Provider>()
+        + opening::LOCATION_WORK_BYTES
 }
 const _: () = assert!(size_of::<Entry>() == 8);
 fn fields(v: &Value) -> Result<(&str, &str, bool), FileFactsError> {
@@ -57,6 +62,7 @@ fn fields(v: &Value) -> Result<(&str, &str, bool), FileFactsError> {
 fn create(
     control: &Arc<ByteBudget>,
     origin: FileProfileOrigin,
+    source: Option<&snapshot::Source>,
     features: &[Value],
     cancel: &CaptureCancellation,
     probe: Probe,
@@ -114,6 +120,7 @@ fn create(
         .map_err(storage)?;
     Ok(Arc::new(Provider {
         payload,
+        location: source.and_then(opening::Location::observe),
         bytes,
         _lease: lease,
     }))
@@ -151,7 +158,14 @@ impl FileFactsReader {
             let probe = self.probe;
             #[cfg(not(test))]
             let probe = Probe::default();
-            let profile = create(&self.control, origin, &features, &cancel, probe)?;
+            let profile = create(
+                &self.control,
+                origin,
+                Some(&source),
+                &features,
+                &cancel,
+                probe,
+            )?;
             candidate
                 .attach_file_profile(FILE_PROFILE_VERSION, profile)
                 .map_err(|_| FileFactsError::ValidationFailed)?;
@@ -168,19 +182,13 @@ fn provider(snapshot: &CaptureSnapshot) -> Option<&Provider> {
     let source = snapshot.file_profile(FILE_PROFILE_VERSION).ok()??;
     (source as &dyn Any).downcast_ref::<Provider>()
 }
-pub(super) fn captured(
+fn scoped_provider(
     snapshot: &CaptureSnapshot,
     ticket: SaveTicket,
     reader: u128,
-    work: &mut intent_context::Workspace,
-    cancel: &CaptureCancellation,
-    probe: Probe,
-) -> Result<Option<FileCapturedMetadataFacts>, FileFactsError> {
-    let Some(p) = provider(snapshot) else {
-        return Ok(None);
-    };
-    let source = &p.payload;
-    let o = source.origin;
+) -> Option<&Provider> {
+    let p = provider(snapshot)?;
+    let o = p.origin();
     let m = snapshot.manifest();
     if o.version != FILE_PROFILE_VERSION
         || o.observation.instance != reader
@@ -190,9 +198,29 @@ pub(super) fn captured(
         || o.file.binding.history != Some((&m.identity).into())
         || o.file.binding.project != m.project_id
     {
-        return Ok(None);
+        return None;
     }
-    encode(&m.archive_metadata, source, work, cancel, probe).map(Some)
+    Some(p)
+}
+pub(super) fn captured(
+    snapshot: &CaptureSnapshot,
+    ticket: SaveTicket,
+    reader: u128,
+    work: &mut intent_context::Workspace,
+    cancel: &CaptureCancellation,
+    probe: Probe,
+) -> Result<Option<FileCapturedMetadataFacts>, FileFactsError> {
+    let Some(p) = scoped_provider(snapshot, ticket, reader) else {
+        return Ok(None);
+    };
+    encode(
+        &snapshot.manifest().archive_metadata,
+        &p.payload,
+        work,
+        cancel,
+        probe,
+    )
+    .map(Some)
 }
 fn encode(
     meta: &ArchiveMetadata,

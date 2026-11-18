@@ -2547,6 +2547,7 @@ dependencies = [
  "skin-editor-application",
  "skin-editor-audio",
  "skin-editor-rendering",
+ "winapi-util",
 ]
 
 [[package]]

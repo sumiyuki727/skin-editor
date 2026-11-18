@@ -153,7 +153,7 @@ pub(super) fn match_commit(
         },
     }
 }
-fn capture_request(
+pub(super) fn capture_request(
     ticket: SaveTicket,
     snapshot: &CaptureSnapshot,
     selection: RestoreSelection,
@@ -315,7 +315,7 @@ impl InspectedFileFacts {
         Ok(self.compare_intent(q))
     }
 
-    fn check_save_context(
+    pub(super) fn check_save_context(
         &self,
         reader: u128,
         original: FileFactsRequest,

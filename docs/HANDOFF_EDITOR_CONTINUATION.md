@@ -1,5 +1,13 @@
 # 编辑器开发交接：从 P3-1C 继续
 
+## B1-2K 关闭资格
+
+自制工程从手动保存点 A 打开，文件另有保护点 C。实际 Manual 捕获匹配 CurrentManual 和 VerifiedOpening。同一会话另行请求 Exit 关闭时，协调器先确认旧准备任务，再依次等待候选持有的工作和独立快照释放。最后一个所有者退出后，关闭返回 `Failed(Unavailable)`，未生成子保存或消耗下一保存身份。重复推进维持失败，普通编辑仍受门控。显式取消并确认后，下一次 Manual 获准，同一编辑请求也能成功。前后捕获的持久元数据和原文件字节相同。[关闭回归](../desktop/infrastructure/src/project_storage/tests/file_facts/profile/close.rs)
+
+当前公开接口有两处待接通。关闭协调器创建 Exit 子任务前需要已安装的协议资格；现有合成签发器仅供 application 内部测试。即使有协议资格，执行端交付的是封装了捕获的 `SaveExecution`，文件读取器接收的是 `SavePreparationWork`。下一步应先冻结目标、打开基线和预算绑定的只读资格及执行端如何借用该捕获，再以关闭创建的原票核对 CurrentProtection、VerifiedOpening 和条件追加。共同 64 MiB、物理目标连续性和 Unknown 的事务阶段仍待验证。[B 开工契约](P3_2B_START_CONTRACT.md)
+
+J 的分叉样例继续单独核对加载时推导的 Redo。只读判据可以匹配，而既有 writer 在自制副本上实际追加一代。生产保存事实仍须由获准的任务确认。本轮源码及文档随 Git 备份，新测试原始日志仅在本机保管。[J 回归记录](P3_2B1_2J_NO_CHANGE.md)
+
 2026-11-18 B1-2J 验证了原基线的整树覆盖、历史检查点原始 Redo 与默认打开时推导 Redo 的区别。继续 B1 时应保留实际 writer 可能给出不同结果的回归，以及真实 Exit 协调和 Unknown 未闭合的边界。[交接记录](P3_2B1_2J_NO_CHANGE.md)
 
 2026-11-18 B1-2I 接续 H 的真实来源，新增原基线全提交查重及普通追加条件摘要。实际 Manual Work 与旧 writer 的后验历史域 3 已分别核对。完整 B1／PB16 仍待收口，K1、产品性能与 stable 结论沿用原审阅。[交接细节](P3_2B1_2I_FRESH_APPEND.md)

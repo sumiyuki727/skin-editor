@@ -1,5 +1,7 @@
 # P3-2B：真实存储衔接开工契约
 
+2026-11-18 B1-2K 验证实际 Exit 关闭请求遇到仅有准备资格的恢复会话时，会等待旧工作和外部捕获释放，随后保留工程及既有保存位置。真实 Exit 捕获仍需独立的只读资格和执行端接线。[资格边界与后续次序](HANDOFF_EDITOR_CONTINUATION.md#b1-2k-关闭资格)
+
 2026-11-18 B1-2J 对原基线上的真实 Manual Work 核对 CurrentManual 和 VerifiedOpening，并单列 CurrentProtection 的文件事实与 Exit 判据。生产确认仍需写入或核对协议资格。[契约及回归](P3_2B1_2J_NO_CHANGE.md)
 
 2026-11-18 B1-2I 已实现健康旧文件的普通追加条件摘要；提交 ID 查重及元数据透传仅对原基线提供证据。真实保存回执、NoChange／Unknown 资格及 B2 另行验收。[查询与验收边界](P3_2B1_2I_FRESH_APPEND.md)

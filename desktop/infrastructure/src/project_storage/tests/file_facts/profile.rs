@@ -1,5 +1,6 @@
 use super::*;
 mod append;
+mod close;
 mod coverage;
 
 fn models() -> Value {

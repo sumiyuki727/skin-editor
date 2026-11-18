@@ -370,7 +370,9 @@ fn sidecar(path: &Path, suffix: &str) -> PathBuf {
     name.push(suffix);
     PathBuf::from(name)
 }
-fn bundle(path: &Path) -> (Vec<u8>, Option<Vec<u8>>) {
+type SourceBundle = (Vec<u8>, Option<Vec<u8>>);
+
+fn bundle(path: &Path) -> SourceBundle {
     (
         std::fs::read(path).unwrap(),
         std::fs::read(sidecar(path, "-journal")).ok(),
@@ -809,10 +811,44 @@ fn closed_fixture() -> (Directory, Vec<u8>) {
     let data = std::fs::read(dir.file()).unwrap();
     (dir, data)
 }
+
+fn closed_matrix_baseline() -> Vec<u8> {
+    use std::os::windows::fs::OpenOptionsExt;
+
+    let (dir, main) = closed_fixture();
+    // Copying only the main file is valid for a closed, self-contained database.
+    let mut entries = std::fs::read_dir(&dir.path).unwrap();
+    assert_eq!(entries.next().unwrap().unwrap().path(), dir.file());
+    assert!(entries.next().is_none());
+    drop(
+        std::fs::OpenOptions::new()
+            .read(true)
+            .write(true)
+            .share_mode(0)
+            .open(dir.file())
+            .unwrap(),
+    );
+    main
+}
+
+fn isolated_journal_case(main: &[u8], journal: &[u8]) -> (Directory, SourceBundle) {
+    let dir = Directory::new();
+    let path = dir.file();
+    let mut file = std::fs::File::create_new(&path).unwrap();
+    file.write_all(main).unwrap();
+    file.sync_all().unwrap();
+    drop(file);
+    std::fs::write(sidecar(&path, "-journal"), journal).unwrap();
+    let before = bundle(&path);
+    assert_eq!(before.0, main);
+    assert_eq!(before.1.as_deref(), Some(journal));
+    (dir, before)
+}
+
 #[test]
 fn malformed_journals_and_super_journals_are_preserved_and_never_salvaged_by_pruning() {
+    let main = closed_matrix_baseline();
     for case in 0..8 {
-        let (dir, main) = closed_fixture();
         let mut j = synthetic(&main);
         match case {
             0 => j.truncate(1000),
@@ -843,8 +879,7 @@ fn malformed_journals_and_super_journals_are_preserved_and_never_salvaged_by_pru
             }
             _ => unreachable!(),
         }
-        std::fs::write(sidecar(&dir.file(), "-journal"), j).unwrap();
-        let before = bundle(&dir.file());
+        let (dir, before) = isolated_journal_case(&main, &j);
         let store = BlobStore::default();
         let target = dir.path.join("refused.oskproj");
         assert!(
@@ -859,6 +894,7 @@ fn malformed_journals_and_super_journals_are_preserved_and_never_salvaged_by_pru
 }
 #[test]
 fn copy_engine_validation_faults_and_cancellation_release_all_resources() {
+    let main = closed_matrix_baseline();
     for stage in [
         Stage::CopyMain,
         Stage::CopyJournal,
@@ -870,9 +906,7 @@ fn copy_engine_validation_faults_and_cancellation_release_all_resources() {
         Stage::BeforePublish,
     ] {
         for cancel in [false, true] {
-            let (dir, main) = closed_fixture();
-            std::fs::write(sidecar(&dir.file(), "-journal"), synthetic(&main)).unwrap();
-            let before = bundle(&dir.file());
+            let (dir, before) = isolated_journal_case(&main, &synthetic(&main));
             let store = BlobStore::default();
             let target = dir.path.join("failed.oskproj");
             let probe = if cancel {

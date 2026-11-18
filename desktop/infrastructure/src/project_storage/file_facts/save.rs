@@ -153,7 +153,94 @@ pub(super) fn match_commit(
         },
     }
 }
+fn capture_request(
+    ticket: SaveTicket,
+    snapshot: &CaptureSnapshot,
+    selection: RestoreSelection,
+) -> Result<FileFactsRequest, FileFactsError> {
+    if ticket.key.version != SAVE_COORDINATION_VERSION
+        || ticket.capture_version != HISTORY_CAPTURE_VERSION
+    {
+        return Err(FileFactsError::UnsupportedVersion);
+    }
+    let request = FileFactsRequest {
+        version: FILE_FACTS_PORT_VERSION,
+        key: FileFactsKey {
+            session: ticket.key.session,
+            sequence: ticket.key.sequence,
+        },
+        binding: ticket.target,
+        selection,
+    };
+    validate_request(request)?;
+    let m = snapshot.manifest();
+    if ticket.source != m.source
+        || ticket.head != m.head
+        || ticket.history != SaveHistoryScope::from(&m.identity)
+        || ticket.capture.0 == 0
+        || ticket.coverage.0 == 0
+        || m.archive_metadata.last_commit.as_ref().map(|r| r.commit)
+            != ticket.target.expected.commit
+        || m.archive_metadata
+            .last_commit
+            .as_ref()
+            .map(|r| r.generation)
+            != ticket.target.expected.generation
+    {
+        return Err(FileFactsError::TargetConflict);
+    }
+    Ok(request)
+}
+
+// Fixed comparison values can overlap the encoder and the charged capture.
+// Only the caller's detached result survives the query.
+pub(super) const CURSOR_WORK_BYTES: usize = ctx::WORK_BYTES
+    + 2 * (size_of::<FileSaveComparison>()
+        + size_of::<FileSaveIntentSummary>()
+        + size_of::<FileFactsSummary>()
+        + size_of::<FileFactsRequest>()
+        + size_of::<FileSaveCompareContext>()
+        + size_of::<SaveCaptureCursor<'static>>());
+
 impl FileFactsReader {
+    /// Traverse an unconsumed save capture and compare it against one held observation.
+    /// The owner retains the execution and any protocol capabilities. The returned
+    /// values describe this observation only. The observation's expected commit may
+    /// have advanced. Readers can retry a preflight rejection on the same owner;
+    /// after polling starts the owner's traversal position persists on every exit.
+    pub fn compare_save_cursor(
+        &self,
+        cursor: SaveCaptureCursor<'_>,
+        selection: RestoreSelection,
+        originals: &BlobStore,
+        view: &InspectedFileFacts,
+        context: FileSaveCompareContext,
+        cancel: CaptureCancellation,
+    ) -> Result<FileSaveComparison, FileFactsError> {
+        cancelled(&cancel)?;
+        if context.version != FILE_SAVE_INTENT_VERSION {
+            return Err(FileFactsError::UnsupportedVersion);
+        }
+        let _workspace = self
+            .control
+            .reserve(CURSOR_WORK_BYTES)
+            .ok_or(FileFactsError::Limit(FileFactsLimit::Control))?;
+        let ticket = cursor.ticket();
+        let request = capture_request(ticket, cursor.snapshot(), selection)?;
+        view.check_save_context(
+            self.instance,
+            request,
+            ticket,
+            cursor.snapshot().manifest().root,
+            context,
+        )?;
+        let capture = self.prepare_stream(request, cursor, originals, cancel.clone())?;
+        let intent = build_intent(&capture, ticket, &mut [0; 4096])?;
+        let result = view.compare_intent(intent);
+        cancelled(&cancel)?;
+        Ok(result)
+    }
+
     pub fn prepare_save(
         &self,
         work: SavePreparationWork,
@@ -163,37 +250,7 @@ impl FileFactsReader {
     ) -> Result<FileSaveCandidate, FileFactsError> {
         cancelled(&cancel)?;
         let ticket = work.ticket();
-        if ticket.key.version != SAVE_COORDINATION_VERSION
-            || ticket.capture_version != HISTORY_CAPTURE_VERSION
-        {
-            return Err(FileFactsError::UnsupportedVersion);
-        }
-        let request = FileFactsRequest {
-            version: FILE_FACTS_PORT_VERSION,
-            key: FileFactsKey {
-                session: ticket.key.session,
-                sequence: ticket.key.sequence,
-            },
-            binding: ticket.target,
-            selection,
-        };
-        validate_request(request)?;
-        let m = work.snapshot().manifest();
-        if ticket.source != m.source
-            || ticket.head != m.head
-            || ticket.history != SaveHistoryScope::from(&m.identity)
-            || ticket.capture.0 == 0
-            || ticket.coverage.0 == 0
-            || m.archive_metadata.last_commit.as_ref().map(|r| r.commit)
-                != ticket.target.expected.commit
-            || m.archive_metadata
-                .last_commit
-                .as_ref()
-                .map(|r| r.generation)
-                != ticket.target.expected.generation
-        {
-            return Err(FileFactsError::TargetConflict);
-        }
+        let request = capture_request(ticket, work.snapshot(), selection)?;
         let lease = self
             .control
             .reserve(extra_bytes())
@@ -206,7 +263,11 @@ impl FileFactsReader {
             .control
             .reserve(ctx::WORK_BYTES)
             .ok_or(FileFactsError::Limit(FileFactsLimit::Control))?;
-        let capture = self.prepare_stream(request, &mut owner.work, originals, cancel.clone())?;
+        let cursor = owner
+            .work
+            .capture_cursor(SAVE_CAPTURE_CURSOR_VERSION)
+            .map_err(|_| FileFactsError::UnsupportedVersion)?;
+        let capture = self.prepare_stream(request, cursor, originals, cancel.clone())?;
         let (summary, metadata) = {
             let mut scratch = [0; 4096];
             let summary = build_intent(&capture, ticket, &mut scratch)?;
@@ -244,8 +305,25 @@ impl InspectedFileFacts {
             return Err(FileFactsError::UnsupportedVersion);
         }
         let q = candidate.summary;
-        let f = self.summary();
-        let original = q.capture.request;
+        self.check_save_context(
+            candidate.capture.reader_instance,
+            q.capture.request,
+            q.ticket,
+            q.capture.root,
+            context,
+        )?;
+        Ok(self.compare_intent(q))
+    }
+
+    fn check_save_context(
+        &self,
+        reader: u128,
+        original: FileFactsRequest,
+        ticket: SaveTicket,
+        root: PersistentNodeId,
+        context: FileSaveCompareContext,
+    ) -> Result<(), FileFactsError> {
+        let f = &self.data.summary;
         let a = original.binding;
         let b = f.request.binding;
         let scope_equal = original.version == f.request.version
@@ -257,16 +335,21 @@ impl InspectedFileFacts {
             && a.project == b.project
             && a.phase == b.phase
             && a.history == b.history;
-        if context.ticket != q.ticket
+        if context.ticket != ticket
             || context.observation != f.observation
             || !scope_equal
-            || candidate.capture.reader_instance != f.observation.instance
+            || reader != f.observation.instance
         {
             return Err(FileFactsError::StalePage);
         }
-        if q.capture.root != self.data.root {
+        if root != self.data.root {
             return Err(FileFactsError::TargetConflict);
         }
+        Ok(())
+    }
+
+    fn compare_intent(&self, q: FileSaveIntentSummary) -> FileSaveComparison {
+        let f = self.summary();
         let baseline_expected_equal = q.ticket.target.expected == f.request.binding.expected;
         let commit = self.data.commits[..f.commits]
             .iter()
@@ -281,7 +364,7 @@ impl InspectedFileFacts {
                     f.files.latest,
                 )
             });
-        Ok(FileSaveComparison {
+        FileSaveComparison {
             version: FILE_SAVE_INTENT_VERSION,
             intent: q,
             observation: f.observation,
@@ -295,6 +378,6 @@ impl InspectedFileFacts {
                 .then_some(q.archive_before == self.data.intent.archive),
             commit,
             conclusion: FileCaptureConclusion::InsufficientForSaveReconciliation,
-        })
+        }
     }
 }

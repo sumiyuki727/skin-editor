@@ -508,18 +508,34 @@ fn work_cancel_partial_entry_and_adapter_cancel_never_publish_saved_results() {
         match mode {
             0 => d.session.cancel_save(ticket).unwrap(),
             1 => {
-                let CapturePoll::Node(n) = work.poll(64).unwrap() else {
+                let initial = work.statistics();
+                assert_eq!(
+                    work.capture_cursor(2).err(),
+                    Some(SaveCoordinationError::UnsupportedVersion)
+                );
+                let mut cursor = work.capture_cursor(SAVE_CAPTURE_CURSOR_VERSION).unwrap();
+                assert_eq!(cursor.ticket(), ticket);
+                assert_eq!(cursor.statistics(), initial);
+                assert_eq!(cursor.snapshot().manifest().source, ticket.source);
+                let CapturePoll::Node(n) = cursor.poll(64).unwrap() else {
                     panic!("node")
                 };
+                assert_eq!(work.statistics().nodes_emitted, 1);
                 node = Some(n);
             }
             _ => cancel.cancel(),
         }
         let baseline = reader.usage().managed_bytes;
-        assert!(
-            reader
-                .prepare_save(work, req.selection, &store, cancel)
-                .is_err()
+        let failure = reader
+            .prepare_save(work, req.selection, &store, cancel)
+            .unwrap_err();
+        assert_eq!(
+            failure,
+            if mode == 1 {
+                FileFactsError::InvalidRequest
+            } else {
+                FileFactsError::Cancelled
+            }
         );
         assert_eq!(reader.usage().managed_bytes, baseline);
         assert!(matches!(

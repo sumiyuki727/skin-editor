@@ -1,5 +1,7 @@
 # P3-2B：真实存储衔接开工契约
 
+2026-11-18 B1-2L 接入版本化借用游标，允许验证器消费既有执行者的原捕获。生产只读资格的签发与安装、真实 Exit、Unknown 及共同预算仍待验证。[接口与验收边界](P3_2B1_2L_CAPTURE_CURSOR.md)
+
 2026-11-18 B1-2K 验证实际 Exit 关闭请求遇到仅有准备资格的恢复会话时，会等待旧工作和外部捕获释放，随后保留工程及既有保存位置。真实 Exit 捕获仍需独立的只读资格和执行端接线。[资格边界与后续次序](HANDOFF_EDITOR_CONTINUATION.md#b1-2k-关闭资格)
 
 2026-11-18 B1-2J 对原基线上的真实 Manual Work 核对 CurrentManual 和 VerifiedOpening，并单列 CurrentProtection 的文件事实与 Exit 判据。生产确认仍需写入或核对协议资格。[契约及回归](P3_2B1_2J_NO_CHANGE.md)

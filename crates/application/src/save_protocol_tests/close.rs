@@ -568,6 +568,108 @@ fn cancelled_close_keeps_unknown_child_and_late_fact_separate_from_new_close() {
 }
 
 #[test]
+fn exit_capture_cursor_reads_the_frozen_tree_without_confirming_close() {
+    let mut d = restored(true, RestoreSelection::Manual, 2);
+    let port = d.install(SaveCandidateLimits::default(), true);
+    let facts = d.status().facts;
+    let close = start_close(&mut d, CloseChoice::Exit);
+    reach(&mut d, close, ClosePhase::Protecting);
+    let ticket = active_close(&d).child.unwrap();
+    assert_eq!(ticket.parent_close, Some(close.key));
+    assert_eq!(ticket.origin, SaveOrigin::Exit);
+
+    let mut work = d.session.take_save_execution(&port, ticket).unwrap();
+    let initial = work.statistics();
+    assert_eq!(
+        work.capture_cursor(0).err(),
+        Some(SaveCoordinationError::UnsupportedVersion)
+    );
+    assert_eq!(work.statistics(), initial);
+    let cursor = work.capture_cursor(SAVE_CAPTURE_CURSOR_VERSION).unwrap();
+    assert_eq!(cursor.ticket(), ticket);
+    let snapshot = cursor.snapshot().clone();
+    let checked = check_capture(cursor, &d.golden(), &d.pool).unwrap();
+    assert_eq!(checked.ticket, ticket);
+    assert!(snapshot.is_complete());
+    assert_eq!(
+        work.statistics().nodes_emitted,
+        snapshot.manifest().nodes.len()
+    );
+
+    d.advance();
+    assert!(!d.active().witness_retained);
+    assert!(!d.active().writer_released);
+    assert_eq!(d.active().outcome, None);
+    assert_eq!(
+        work.begin_write().err(),
+        Some(SaveCoordinationError::NotPrepared)
+    );
+    assert_eq!(
+        d.session.acknowledge_save(ticket),
+        Err(SaveCoordinationError::NotTerminal)
+    );
+    assert_eq!(active_close(&d).phase, ClosePhase::Protecting);
+    assert_eq!(d.status().facts, facts);
+
+    d.session.cancel_close(close).unwrap();
+    drop(work);
+    d.advance();
+    assert!(d.active().writer_released);
+    assert!(!d.active().capture_consumers_released);
+    assert_eq!(
+        d.session.acknowledge_save(ticket),
+        Ok(SaveAcknowledgement::WaitingResources)
+    );
+    drop(snapshot);
+    assert_eq!(
+        d.session.acknowledge_save(ticket),
+        Ok(SaveAcknowledgement::Released)
+    );
+    d.session.acknowledge_close(close).unwrap();
+}
+
+#[test]
+fn cancelling_exit_during_a_cursor_borrow_preserves_the_owner_and_node() {
+    let mut d = Driver::new();
+    d.set("content");
+    let port = d.install(SaveCandidateLimits::default(), false);
+    let close = start_close(&mut d, CloseChoice::Exit);
+    reach(&mut d, close, ClosePhase::Protecting);
+    let child = active_close(&d).child.unwrap();
+    let mut work = d.session.take_save_execution(&port, child).unwrap();
+    let mut cursor = work.capture_cursor(SAVE_CAPTURE_CURSOR_VERSION).unwrap();
+    let node = loop {
+        match cursor.poll(1).unwrap() {
+            CapturePoll::Node(node) => break node,
+            CapturePoll::Pending => (),
+            CapturePoll::Complete => panic!("capture must include the root"),
+        }
+    };
+    d.session.cancel_close(close).unwrap();
+    assert!(matches!(cursor.poll(1), Err(CaptureError::Cancelled)));
+    assert!(work.is_cancelled());
+    assert!(!d.active().writer_released);
+    drop(work);
+    d.advance();
+    assert_eq!(
+        d.active().outcome,
+        Some(SaveProtocolOutcome::NotCommitted(diagnostic(
+            SaveDiagnosticCode::Cancelled
+        )))
+    );
+    assert_eq!(
+        d.session.acknowledge_save(child),
+        Ok(SaveAcknowledgement::WaitingResources)
+    );
+    drop(node);
+    assert_eq!(
+        d.session.acknowledge_save(child),
+        Ok(SaveAcknowledgement::Released)
+    );
+    d.session.acknowledge_close(close).unwrap();
+}
+
+#[test]
 fn cancelled_child_keeps_save_slot_until_the_last_captured_node_is_dropped() {
     let mut d = Driver::new();
     d.set("content");

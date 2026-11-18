@@ -558,6 +558,14 @@ pub(super) mod test_support {
         (save::extra_bytes(), intent_context::WORK_BYTES)
     }
     #[cfg(windows)]
+    pub fn hold_cursor_margin(reader: &FileFactsReader, short_by: usize) -> ByteLease {
+        let required = save::CURSOR_WORK_BYTES + capture::retained_bytes() + capture::work_bytes();
+        reader
+            .control
+            .reserve(reader.limits.control_bytes - reader.control.used() - required + short_by)
+            .unwrap()
+    }
+    #[cfg(windows)]
     pub fn intent_archive(
         m: &ArchiveMetadata,
         delta: Option<&ArchiveReceipt>,

@@ -102,6 +102,13 @@ pub struct SaveExecution {
     pub(super) release: ExecutionRelease,
 }
 impl SaveExecution {
+    /// Lend the capture to a validator while retaining the protocol capabilities.
+    pub fn capture_cursor(
+        &mut self,
+        version: u16,
+    ) -> Result<SaveCaptureCursor<'_>, SaveCoordinationError> {
+        self.work.capture_cursor(version)
+    }
     pub fn ticket(&self) -> SaveTicket {
         self.work.ticket()
     }

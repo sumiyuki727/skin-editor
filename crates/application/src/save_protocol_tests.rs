@@ -317,6 +317,18 @@ fn prepare(
     expected: &Golden,
     pool: &Pool,
 ) -> Result<PreparedWitness, &'static str> {
+    let cursor = work
+        .capture_cursor(SAVE_CAPTURE_CURSOR_VERSION)
+        .map_err(|_| "cursor version")?;
+    let info = check_capture(cursor, expected, pool)?;
+    work.publish_witness(info).map_err(|_| "publication")
+}
+
+fn check_capture(
+    mut work: SaveCaptureCursor<'_>,
+    expected: &Golden,
+    pool: &Pool,
+) -> Result<PreparedWitnessInfo, &'static str> {
     let m = work.snapshot().manifest();
     if m.source != expected.source
         || m.nodes.len() != expected.states.len()
@@ -402,7 +414,7 @@ fn prepare(
     if seen.iter().filter(|s| **s).count() != expected.states.len() {
         return Err("state coverage");
     }
-    work.publish_witness(PreparedWitnessInfo {
+    Ok(PreparedWitnessInfo {
         version: 1,
         ticket: work.ticket(),
         capture_version: 3,
@@ -413,7 +425,6 @@ fn prepare(
         request,
         baseline,
     })
-    .map_err(|_| "publication")
 }
 fn fact(work: &SaveExecution) -> SaveCommitFact {
     SaveCommitFact::from(

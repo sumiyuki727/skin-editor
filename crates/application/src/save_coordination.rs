@@ -22,7 +22,9 @@ pub use protocol_work::{
     SaveCompletionSender, SaveExecution, SaveProtocolPort, SaveReconcileWork, SaveWritePermit,
 };
 pub use values::*;
-pub use work::{SavePreparationPort, SavePreparationWork};
+pub use work::{
+    SAVE_CAPTURE_CURSOR_VERSION, SaveCaptureCursor, SavePreparationPort, SavePreparationWork,
+};
 
 use crate::{
     API_VERSION, ArchiveMetadata, CaptureCancellation, CaptureError, CaptureRequest,

@@ -74,7 +74,70 @@ pub struct SavePreparationWork {
     // Must remain last: ordinary Rust field drop order is part of the protocol.
     pub(super) release: WorkRelease,
 }
+
+/// Version of the borrowed save traversal, independent of admission and storage.
+pub const SAVE_CAPTURE_CURSOR_VERSION: u16 = 1;
+
+/// Exclusive traversal of the owner's existing capture. Ending the borrow leaves
+/// both the traversal position and the owner's release obligations intact.
+///
+/// ```compile_fail
+/// use skin_editor_application::SaveCaptureCursor;
+/// fn write(cursor: SaveCaptureCursor<'_>) { cursor.begin_write(); }
+/// ```
+/// ```compile_fail
+/// use skin_editor_application::SaveCaptureCursor;
+/// fn complete(mut cursor: SaveCaptureCursor<'_>) { cursor.take_completion(); }
+/// ```
+/// ```compile_fail
+/// use skin_editor_application::{PreparedWitnessInfo, SaveCaptureCursor};
+/// fn publish(cursor: SaveCaptureCursor<'_>, info: PreparedWitnessInfo) {
+///     cursor.publish_witness(info);
+/// }
+/// ```
+/// ```compile_fail
+/// use skin_editor_application::{SaveCaptureCursor, SavePreparationWork};
+/// fn escape(work: &mut SavePreparationWork) -> SaveCaptureCursor<'static> {
+///     work.capture_cursor(1).unwrap()
+/// }
+/// ```
+/// ```compile_fail
+/// use skin_editor_application::SaveExecution;
+/// fn overlap(work: &mut SaveExecution) {
+///     let mut cursor = work.capture_cursor(1).unwrap();
+///     let _ = work.take_completion();
+///     let _ = cursor.poll(1);
+/// }
+/// ```
+pub struct SaveCaptureCursor<'work> {
+    work: &'work mut SavePreparationWork,
+}
+
+impl SaveCaptureCursor<'_> {
+    pub fn ticket(&self) -> SaveTicket {
+        self.work.ticket()
+    }
+    pub fn snapshot(&self) -> &CaptureSnapshot {
+        self.work.snapshot()
+    }
+    pub fn statistics(&self) -> CaptureStatistics {
+        self.work.statistics()
+    }
+    pub fn poll(&mut self, max_edges: usize) -> Result<CapturePoll, CaptureError> {
+        self.work.poll(max_edges)
+    }
+}
+
 impl SavePreparationWork {
+    pub fn capture_cursor(
+        &mut self,
+        version: u16,
+    ) -> Result<SaveCaptureCursor<'_>, SaveCoordinationError> {
+        if version != SAVE_CAPTURE_CURSOR_VERSION {
+            return Err(SaveCoordinationError::UnsupportedVersion);
+        }
+        Ok(SaveCaptureCursor { work: self })
+    }
     pub fn ticket(&self) -> SaveTicket {
         self.ticket
     }

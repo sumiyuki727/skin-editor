@@ -2,6 +2,7 @@ use super::*;
 mod append;
 mod close;
 mod coverage;
+mod cursor;
 
 fn models() -> Value {
     serde_json::from_str(

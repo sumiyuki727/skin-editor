@@ -21,9 +21,9 @@ pub(super) struct MetadataView<'a> {
     pub receipt: &'a ArchiveReceipt,
     pub features_root: StateHash,
     pub metadata: &'a ArchiveMetadata,
-    pub tags: &'a [Value],
-    pub extensions: &'a [Value],
-    pub features: &'a [Value],
+    pub tags: &'a blocks::MetadataPages,
+    pub extensions: &'a blocks::MetadataPages,
+    pub features: &'a blocks::MetadataPages,
 }
 pub(super) trait MetadataObserver {
     fn checkpoint(
@@ -716,9 +716,11 @@ fn read_snapshot(
         blocks::mark(&cache, root, &mut reachable)?;
         // These three owners expire at the end of this iteration, including
         // the final checkpoint. Only its comparison result crosses the loop.
-        let tags = blocks::read_paged(&cache, p.roots["tags"], "tags", limits)?;
-        let extensions = blocks::read_paged(&cache, p.roots["extensions"], "extensions", limits)?;
-        let features = blocks::read_paged(&cache, p.roots["features"], "features", limits)?;
+        let tags = blocks::MetadataPages::read(&cache, p.roots["tags"], "tags", limits)?;
+        let extensions =
+            blocks::MetadataPages::read(&cache, p.roots["extensions"], "extensions", limits)?;
+        let features =
+            blocks::MetadataPages::read(&cache, p.roots["features"], "features", limits)?;
         latest_indexes_match = validate_past_metadata(
             &seen_nodes,
             &meta,
@@ -948,7 +950,15 @@ mod metadata_tests {
         extensions: &[Value],
         features: &[Value],
     ) -> Result<bool, StorageError> {
-        validate_past_metadata(nodes, meta, known, tags, extensions, features, false)
+        validate_past_metadata(
+            nodes,
+            meta,
+            known,
+            &blocks::MetadataPages::from_rows(tags),
+            &blocks::MetadataPages::from_rows(extensions),
+            &blocks::MetadataPages::from_rows(features),
+            false,
+        )
     }
     #[test]
     fn historical_metadata_is_validated_even_when_latest_records_are_valid() {

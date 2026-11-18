@@ -201,6 +201,7 @@ pub(super) fn profile_fixture(
             features[0].reverse();
         }
         Some("latest-feature-order") => features[1].reverse(),
+        Some("bad-tag-and-short-feature-page") => tags[0][0]["name"] = json!("invalid"),
         Some("paged-history") | Some("paged-history-duplicate") => {
             let node = tags[0][0]["node"].clone();
             tags[0] = (0..257)
@@ -294,7 +295,37 @@ pub(super) fn profile_fixture(
             ("extensions", ext[i].clone()),
             ("features", features[i].clone()),
         ] {
-            let root = blocks::paged(&a.conn, &mut a.cache, role, items, a.limits).unwrap();
+            let root =
+                if i == 0 && role == "features" && bad == Some("bad-tag-and-short-feature-page") {
+                    // Valid full page followed by a short last page (zero rows instead of one).
+                    let mut pages = Vec::new();
+                    for rows in [vec![Value::Null; 256], vec![]] {
+                        pages.push(
+                            blocks::make(
+                                &a.conn,
+                                &mut a.cache,
+                                "skin-editor.history-page",
+                                json!({"role":role,"items":rows}),
+                                vec![],
+                                vec![],
+                                a.limits,
+                            )
+                            .unwrap(),
+                        );
+                    }
+                    blocks::make(
+                        &a.conn,
+                        &mut a.cache,
+                        "skin-editor.history-index",
+                        json!({"role":role,"len":"257","pages":[pages[0].hex(),pages[1].hex()]}),
+                        pages,
+                        vec![],
+                        a.limits,
+                    )
+                    .unwrap()
+                } else {
+                    blocks::paged(&a.conn, &mut a.cache, role, items, a.limits).unwrap()
+                };
             value[role] = json!(root.hex());
             if role == "features" {
                 roots[i] = root.bytes();
@@ -524,6 +555,7 @@ fn historical_metadata_permutations_and_cross_page_tags_keep_their_generation() 
         "paged-history",
         "paged-history-duplicate",
         "latest-feature-order",
+        "bad-tag-and-short-feature-page",
     ] {
         let (dir, req, _) = profile_fixture(Some(variant), None, true);
         let source = dir.closed_main_bytes();
@@ -531,7 +563,10 @@ fn historical_metadata_permutations_and_cross_page_tags_keep_their_generation() 
         let mut reader = FileFactsReader::open(&scratch.path, FileFactsLimits::default()).unwrap();
         let idle = reader.usage().managed_bytes;
         let result = reader.inspect(&dir.file(), req, CaptureCancellation::default());
-        if matches!(variant, "paged-history-duplicate" | "latest-feature-order") {
+        if matches!(
+            variant,
+            "paged-history-duplicate" | "latest-feature-order" | "bad-tag-and-short-feature-page"
+        ) {
             assert_eq!(result.err(), Some(FileFactsError::ValidationFailed));
             let err = SqliteProjectFile::load(
                 dir.file(),
@@ -543,13 +578,11 @@ fn historical_metadata_permutations_and_cross_page_tags_keep_their_generation() 
             .err();
             assert_eq!(
                 err,
-                Some(StorageError::Invalid(
-                    if variant == "latest-feature-order" {
-                        "metadata indexes"
-                    } else {
-                        "historical tags"
-                    }
-                ))
+                Some(StorageError::Invalid(match variant {
+                    "latest-feature-order" => "metadata indexes",
+                    "bad-tag-and-short-feature-page" => "page count",
+                    _ => "historical tags",
+                }))
             );
         } else {
             let file = result.unwrap();

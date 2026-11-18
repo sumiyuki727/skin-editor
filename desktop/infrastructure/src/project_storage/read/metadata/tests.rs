@@ -38,7 +38,15 @@ fn latest_metadata_requires_exact_order_spelling_and_original_text() {
     let mut features = write::features();
     features.push(json!({"name":"optional","version":"","required":false}));
     let verify = |tags: &[Value], ext: &[Value], f: &[Value]| {
-        validate_past_metadata(&nodes, &meta, &features, tags, ext, f, true)
+        validate_past_metadata(
+            &nodes,
+            &meta,
+            &features,
+            &blocks::MetadataPages::from_rows(tags),
+            &blocks::MetadataPages::from_rows(ext),
+            &blocks::MetadataPages::from_rows(f),
+            true,
+        )
     };
     assert_eq!(verify(&tags, &ext, &features), Ok(true));
     let mut reordered = tags.clone();
@@ -111,7 +119,15 @@ fn duplicate_detection_preserves_source_error_order_across_fixed_and_wide_lists(
         .map(|i| json!({"node":node,"name":format!("user:{i:04}"),"value":""}))
         .collect();
     let verify = |rows: &[Value]| {
-        validate_past_metadata(&nodes, &meta, &features, rows, &[], &features, false)
+        validate_past_metadata(
+            &nodes,
+            &meta,
+            &features,
+            &blocks::MetadataPages::from_rows(rows),
+            &blocks::MetadataPages::from_rows(&[]),
+            &blocks::MetadataPages::from_rows(&features),
+            false,
+        )
     };
     for count in [0, 1, 128, 129, 256, 257, METADATA_ITEMS, METADATA_ITEMS + 1] {
         assert_eq!(verify(&tags[..count]), Ok(false));

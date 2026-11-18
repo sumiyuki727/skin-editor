@@ -85,7 +85,7 @@ impl Role {
 
     // Only sort indices. The first repeated row in *source* order is all
     // the validator needs; malformed rows still get their original errors.
-    fn first_duplicate<const N: usize>(self, rows: &[Value]) -> Option<usize> {
+    fn first_duplicate<const N: usize>(self, rows: &blocks::MetadataPages) -> Option<usize> {
         let mut order: Order<N> = [0; N];
         let order = &mut order[..rows.len()];
         for (i, index) in order.iter_mut().enumerate() {
@@ -104,7 +104,7 @@ impl Role {
 
     fn validate(
         self,
-        rows: &[Value],
+        rows: &blocks::MetadataPages,
         mut visit: impl FnMut(usize, &Value, bool) -> Result<(), StorageError>,
     ) -> Result<(), StorageError> {
         let first_duplicate = match rows.len() {
@@ -132,9 +132,9 @@ pub(super) fn validate_past_metadata(
     nodes: &BTreeSet<PersistentNodeId>,
     meta: &ArchiveMetadata,
     known_features: &[Value],
-    tags: &[Value],
-    extensions: &[Value],
-    features: &[Value],
+    tags: &blocks::MetadataPages,
+    extensions: &blocks::MetadataPages,
+    features: &blocks::MetadataPages,
     compare_latest: bool,
 ) -> Result<bool, StorageError> {
     let mut same = compare_latest

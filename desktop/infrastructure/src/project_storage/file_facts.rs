@@ -135,6 +135,10 @@ const _: () = assert!(
 );
 const INSPECT_WORK_BYTES: usize =
     historical_originals::WORK_BYTES + historical_metadata::WORK_BYTES;
+// Three metadata roles, including construction/destination moves for all
+// directories and a page in transit. The parser's heap buffers are separate.
+const METADATA_PAGE_CONTROL_BYTES: usize =
+    6 * size_of::<blocks::MetadataPages>() + size_of::<Vec<Value>>() + size_of::<[usize; 64]>();
 // Sequential phases of the same inspection. The old Cache, JSON and restore
 // model are not paid for by this lease. Keep the metadata allowance separate
 // even while the decoder borrows the space later used by original-graph work.
@@ -142,7 +146,9 @@ const _: () = assert!(
     crate::project_format::SORTED_INDEX_BLOCKS == 8192
         && read::METADATA_ITEMS == 8192
         && read::METADATA_WORK_BYTES <= 34 * 1024
-        && read::METADATA_WORK_BYTES <= historical_originals::WORK_BYTES
+        && METADATA_PAGE_CONTROL_BYTES <= 6 * 1024
+        && read::METADATA_WORK_BYTES + METADATA_PAGE_CONTROL_BYTES
+            <= historical_originals::WORK_BYTES
         && crate::project_format::SORTED_INDEX_WORK_BYTES <= historical_originals::WORK_BYTES
         && crate::project_format::SORTED_INDEX_WORK_BYTES <= 146 * 1024
         && snapshot::IO_WORK_BYTES <= INSPECT_WORK_BYTES

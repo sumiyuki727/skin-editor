@@ -661,6 +661,64 @@ fn busy_external_modification_and_raw_pool_limit_fail_closed() {
 }
 
 #[test]
+fn metadata_pages_keep_repeated_references_validate_the_last_page_and_allow_wider_archives() {
+    let (_dir, _driver, mut file) = fixture();
+    let mut small = file.limits;
+    small.codec.items = 8192;
+    // The first 32 pages have identical content and therefore share one hash.
+    // The index's ordered occurrences, rather than the reference set, define the rows.
+    let root = blocks::paged(
+        &file.conn,
+        &mut file.cache,
+        "tags",
+        (0..8193).map(|i| Value::from(i % 256)).collect(),
+        file.limits,
+    )
+    .unwrap();
+    let read = |cache: &Cache, limits| blocks::MetadataPages::read(cache, root, "tags", limits);
+    assert_eq!(file.cache.blocks[&root].refs.len(), 2);
+    assert_eq!(
+        read(&file.cache, small).err(),
+        Some(StorageError::Limit("index items"))
+    );
+    let rows = read(&file.cache, file.limits).unwrap();
+    assert_eq!(rows.len(), 8193);
+    assert!(
+        rows.iter()
+            .enumerate()
+            .all(|(i, v)| v.as_u64() == Some((i % 256) as u64))
+    );
+    drop(rows);
+
+    let pages = blocks::value(&file.cache.blocks[&root], file.limits.codec)
+        .unwrap()
+        .take("pages")
+        .unwrap();
+    let last = hash(pages[32].as_str().unwrap()).unwrap();
+    let mut page = file.cache.blocks.remove(&last).unwrap();
+    assert_eq!(
+        read(&file.cache, file.limits).err(),
+        Some(StorageError::Invalid("page"))
+    );
+    page.refs.push(root);
+    file.cache.blocks.insert(last, page);
+    assert_eq!(
+        read(&file.cache, file.limits).err(),
+        Some(StorageError::Invalid("page refs"))
+    );
+    file.cache.blocks.get_mut(&last).unwrap().kind = "unexpected".into();
+    assert_eq!(
+        read(&file.cache, file.limits).err(),
+        Some(StorageError::Invalid("page kind"))
+    );
+    file.cache.blocks.get_mut(&root).unwrap().refs.clear();
+    assert_eq!(
+        read(&file.cache, file.limits).err(),
+        Some(StorageError::Invalid("index refs"))
+    );
+}
+
+#[test]
 fn incremental_commit_reuses_old_records_and_only_indexes_new_nodes() {
     let (_dir, mut d, mut f) = fixture();
     let rows = |c: &Connection| {

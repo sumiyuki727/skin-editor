@@ -89,7 +89,7 @@ fn key(value: &Value, kind: Kind) -> Result<(u128, &str, &str), StorageError> {
     })
 }
 fn order<'a>(
-    values: &[Value],
+    values: &blocks::MetadataPages,
     kind: Kind,
     work: &'a mut Workspace,
     cancel: &CaptureCancellation,
@@ -323,9 +323,9 @@ mod tests {
                     receipt: meta.last_commit.as_ref().unwrap(),
                     features_root: StateHash::from_bytes([0; 32]),
                     metadata: &meta,
-                    tags: &tags,
-                    extensions: &extensions,
-                    features: &features,
+                    tags: &blocks::MetadataPages::from_rows(&tags),
+                    extensions: &blocks::MetadataPages::from_rows(&extensions),
+                    features: &blocks::MetadataPages::from_rows(&features),
                 },
                 &mut [0; ITEMS],
                 &CaptureCancellation::default(),
@@ -344,7 +344,7 @@ mod tests {
         let mut tags: Vec<_> = (0..ITEMS).rev().map(|i|json!({"node":"00000000000000000000000000000001","name":format!("user:{i:04}"),"value":""})).collect();
         let mut work = [0; ITEMS];
         let order = order(
-            &tags,
+            &blocks::MetadataPages::from_rows(&tags),
             Kind::Tags,
             &mut work,
             &CaptureCancellation::default(),
@@ -355,7 +355,7 @@ mod tests {
         tags.push(tags[0].clone());
         assert!(matches!(
             super::order(
-                &tags,
+                &blocks::MetadataPages::from_rows(&tags),
                 Kind::Tags,
                 &mut work,
                 &CaptureCancellation::default()
@@ -365,7 +365,12 @@ mod tests {
         let cancel = CaptureCancellation::default();
         cancel.cancel();
         assert!(matches!(
-            super::order(&tags[..ITEMS], Kind::Tags, &mut work, &cancel),
+            super::order(
+                &blocks::MetadataPages::from_rows(&tags[..ITEMS]),
+                Kind::Tags,
+                &mut work,
+                &cancel
+            ),
             Err(StorageError::Cancelled)
         ));
     }

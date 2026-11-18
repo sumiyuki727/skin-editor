@@ -1,4 +1,7 @@
 use super::*;
+mod metadata_pages;
+pub(super) use metadata_pages::MetadataPages;
+const PAGE_ITEMS: usize = 256;
 pub(super) struct Row {
     pub block: StateBlock,
     pub kind: String,
@@ -134,7 +137,7 @@ pub(super) fn paged(
     limits: FileLimits,
 ) -> Result<StateHash, StorageError> {
     let mut pages = Vec::new();
-    for page in items.chunks(256) {
+    for page in items.chunks(PAGE_ITEMS) {
         let (refs, blobs) = page_refs(role, page)?;
         pages.push(make(
             c,
@@ -186,6 +189,18 @@ pub(super) fn read_paged(
     role: &str,
     limits: FileLimits,
 ) -> Result<Vec<Value>, StorageError> {
+    let mut rows = Vec::new();
+    visit_pages(cache, root, role, limits, |page| rows.extend(page))?;
+    Ok(rows)
+}
+
+fn visit_pages(
+    cache: &Cache,
+    root: StateHash,
+    role: &str,
+    limits: FileLimits,
+    mut accept: impl FnMut(Vec<Value>),
+) -> Result<(), StorageError> {
     let row = cache
         .blocks
         .get(&root)
@@ -206,7 +221,7 @@ pub(super) fn read_paged(
         .map(|v| hash(&text(v)?))
         .collect::<Result<Vec<_>, _>>()?;
     f.finish()?;
-    if pages.len() != len.div_ceil(256)
+    if pages.len() != len.div_ceil(PAGE_ITEMS)
         || pages
             .iter()
             .copied()
@@ -217,7 +232,7 @@ pub(super) fn read_paged(
     {
         return Err(StorageError::Invalid("index refs"));
     }
-    let mut out = Vec::new();
+    let mut remaining = len;
     for h in pages {
         let page = cache.blocks.get(&h).ok_or(StorageError::Invalid("page"))?;
         if page.kind != "skin-editor.history-page" {
@@ -229,7 +244,7 @@ pub(super) fn read_paged(
         }
         let items = array(f.take("items")?)?;
         f.finish()?;
-        if items.len() != 256.min(len - out.len()) {
+        if items.len() != PAGE_ITEMS.min(remaining) {
             return Err(StorageError::Invalid("page count"));
         }
         let (refs, blobs) = page_refs(role, &items)?;
@@ -248,9 +263,10 @@ pub(super) fn read_paged(
         {
             return Err(StorageError::Invalid("page refs"));
         }
-        out.extend(items);
+        remaining -= items.len();
+        accept(items);
     }
-    Ok(out)
+    Ok(())
 }
 pub(super) fn decoded_state_blocks<'a>(
     cache: &'a Cache,

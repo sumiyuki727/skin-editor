@@ -80,7 +80,7 @@ impl FileFactsLimits {
         FileLimits {
             file_bytes: self.file_bytes,
             metadata_bytes: self.metadata_bytes,
-            blocks: 8192,
+            blocks: crate::project_format::SORTED_INDEX_BLOCKS,
             originals: self.originals,
             original_bytes: self.original_bytes,
             decoded_bytes: 8 * 1024 * 1024,
@@ -94,7 +94,7 @@ impl FileFactsLimits {
                 block_bytes: 256 * 1024,
                 total_bytes: 1024 * 1024,
                 decoded_bytes: 2 * 1024 * 1024,
-                blocks: 8192,
+                blocks: crate::project_format::SORTED_INDEX_BLOCKS,
                 items: 8192,
                 json_values: 8192,
                 json_depth: 32,
@@ -135,6 +135,18 @@ const _: () = assert!(
 );
 const INSPECT_WORK_BYTES: usize =
     historical_originals::WORK_BYTES + historical_metadata::WORK_BYTES;
+// Sequential phases of the same inspection. The old Cache, JSON and restore
+// model are not paid for by this lease. Keep the metadata allowance separate
+// even while the decoder borrows the space later used by original-graph work.
+const _: () = assert!(
+    crate::project_format::SORTED_INDEX_BLOCKS == 8192
+        && crate::project_format::SORTED_INDEX_WORK_BYTES <= historical_originals::WORK_BYTES
+        && crate::project_format::SORTED_INDEX_WORK_BYTES <= 146 * 1024
+        && snapshot::IO_WORK_BYTES <= INSPECT_WORK_BYTES
+        && snapshot::IO_WORK_BYTES <= 129 * 1024
+        && preflight::WORK_BYTES <= INSPECT_WORK_BYTES
+        && preflight::WORK_BYTES <= 4 * 1024
+);
 /// No conversion to a writer, restore candidate or application save authority.
 pub struct InspectedFileFacts {
     data: Box<Data>,
@@ -328,23 +340,22 @@ impl FileFactsReader {
             instance: self.instance,
             sequence,
         };
-        let mut source =
-            snapshot::Source::bind(source, self.limits.file_bytes, &self.control, &cancel)?;
-        if source.bytes > self.limits.scratch_bytes {
-            return Err(FileFactsError::Limit(FileFactsLimit::Scratch));
-        }
         // Account producer and retained boxed data simultaneously. Old validator
         // heap/JSON/model allocations explicitly remain outside this new wrapper proof.
         let lease = self
             .control
             .reserve(2 * std::mem::size_of::<Data>())
             .ok_or(FileFactsError::Limit(FileFactsLimit::Control))?;
-        // Covers only the new fixed traversal workspace, before validate's
-        // frame/roots are constructed; the old full validator stays unproven.
+        // The first source hash already needs the fixed I/O buffer.
         let work_lease = self
             .control
             .reserve(INSPECT_WORK_BYTES)
             .ok_or(FileFactsError::Limit(FileFactsLimit::Control))?;
+        let mut source =
+            snapshot::Source::bind(source, self.limits.file_bytes, &self.control, &cancel)?;
+        if source.bytes > self.limits.scratch_bytes {
+            return Err(FileFactsError::Limit(FileFactsLimit::Scratch));
+        }
         let (scratch, mut file) = snapshot::Scratch::create(&self.root.path, source.bytes)?;
         self.pending = Some(scratch);
         let result = (|| {

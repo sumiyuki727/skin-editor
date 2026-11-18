@@ -503,6 +503,10 @@ fn read_snapshot(
         bounded_feature(&v)?;
         cache.features.push(v);
     }
+    // Finish each statement before the next phase opens queries or builds
+    // the restored models. Shadowing the bindings retains their owners.
+    drop(rows);
+    drop(q);
     for required in write::features() {
         if !cache.features.contains(&required) {
             return Err(StorageError::Unsupported("missing required feature"));
@@ -556,6 +560,8 @@ fn read_snapshot(
         cache.originals.insert(reference);
         probe.step(Stage::ReadOriginal, cancel)?;
     }
+    drop(rows);
+    drop(q);
     load_blocks(c, &mut cache, limits, cancel)?;
     let infos = node_info(c, &mut cache, limits, cancel)?;
     let mut reachable = BTreeSet::new();
@@ -584,6 +590,8 @@ fn read_snapshot(
             return Err(StorageError::Invalid("admissions"));
         }
     }
+    drop(rows);
+    drop(q);
     let (tags, extensions) = metadata_rows(c, limits, cancel)?;
     let mut meta = ArchiveMetadata {
         tags,
@@ -754,6 +762,8 @@ fn read_snapshot(
         }
         cache.checkpoints.push(p.checkpoint);
     }
+    drop(rows);
+    drop(q);
     if seen_nodes.len() != cache.nodes.len()
         || seen_admissions != cache.admissions
         || seen_originals != cache.originals
@@ -761,6 +771,7 @@ fn read_snapshot(
     {
         return Err(StorageError::Invalid("complete closure"));
     }
+    drop((seen_nodes, seen_admissions, seen_originals));
     verify_metadata_indexes(&cache, &meta, last_tags, last_ext, last_features)?;
     let mut actual_marks = BTreeMap::new();
     let mut q = c.prepare("SELECT commit_id,node_id FROM manual_marks")?;
@@ -768,9 +779,12 @@ fn read_snapshot(
     while let Some(r) = rows.next()? {
         actual_marks.insert(commitblob(r.get(0)?)?, nodeblob(r.get(1)?)?);
     }
+    drop(rows);
+    drop(q);
     if actual_marks != meta.manual_marks.iter().copied().collect() {
         return Err(StorageError::Invalid("manual marks"));
     }
+    drop(actual_marks);
     let last = cache
         .checkpoints
         .last()
@@ -861,11 +875,7 @@ fn read_snapshot(
             limits,
             &mut remaining_decode_bytes,
         )?;
-        let bundle = StateBundle {
-            root,
-            blocks: admitted.cloned().collect(),
-        };
-        let project = decode_project(&bundle, limits.codec)?;
+        let project = decode_sorted_blocks(root, admitted, limits.codec)?;
         metadata_probe(&project, store)?;
         let canonical = encode_project(&project, limits.codec)?.root;
         cache.nodes.get_mut(&info.id).expect("indexed").canonical = canonical;

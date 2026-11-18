@@ -7,7 +7,7 @@ mod schema;
 mod values;
 mod write;
 use crate::project_format::{
-    CodecError, FormatLimits, StateBlock, StateBundle, StateHash, decode_project, encode_project,
+    CodecError, FormatLimits, StateBlock, StateHash, decode_sorted_blocks, encode_project,
 };
 use crate::{BlobStore, RawBlob};
 pub use file_facts::{

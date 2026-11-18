@@ -3,6 +3,7 @@
 pub(crate) mod json;
 mod read;
 mod write;
+pub(crate) use read::{SORTED_INDEX_BLOCKS, SORTED_INDEX_WORK_BYTES, decode_sorted_blocks};
 
 use sha2::{Digest, Sha256};
 use skin_editor_application::values::{BlobRef, ModelError, SkinProject};
@@ -119,7 +120,7 @@ pub fn decode_project(
     bundle: &StateBundle,
     limits: FormatLimits,
 ) -> Result<SkinProject, CodecError> {
-    read::decode(bundle, limits.validate()?)
+    read::decode(bundle.root, bundle.blocks.iter(), limits.validate()?)
 }
 /// Original bytes are external to the metadata bundle. Includes unused and opaque assets.
 pub fn required_originals(project: &SkinProject) -> Vec<BlobRef> {

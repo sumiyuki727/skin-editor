@@ -20,6 +20,15 @@ struct Plan {
     bytes: u64,
     largest: u64,
 }
+// Includes the plan array and its consuming iterator, the aggregate producer
+// and returned values. SQLite, schema verification and catalog allocations
+// are separate from this fixed Rust workspace.
+pub(super) const WORK_BYTES: usize = size_of::<[Plan; FILE_READ_PREFLIGHT_TABLES]>()
+    + size_of::<std::iter::Enumerate<std::array::IntoIter<Plan, FILE_READ_PREFLIGHT_TABLES>>>()
+    + 2 * size_of::<FileReadPreflight>()
+    + size_of::<[FileReadAggregate; FILE_READ_PREFLIGHT_TABLES]>()
+    + 2 * size_of::<Plan>()
+    + size_of::<[u64; 32]>();
 fn measure(
     c: &Connection,
     plan: Plan,
@@ -78,11 +87,16 @@ fn scan_inner(
     observation: FileObservationId,
     cancel: &CaptureCancellation,
 ) -> Result<FileReadPreflight, FileFactsError> {
-    let encoding: String = c
-        .query_row("PRAGMA encoding", [], |r| r.get(0))
+    let utf8 = c
+        .query_row("PRAGMA encoding", [], |r| {
+            Ok(matches!(
+                r.get_ref(0)?,
+                rusqlite::types::ValueRef::Text(b"UTF-8")
+            ))
+        })
         .map_err(StorageError::from)
         .map_err(storage)?;
-    if encoding != "UTF-8" {
+    if !utf8 {
         return Err(FileFactsError::Unsupported);
     }
     let catalog = measure(

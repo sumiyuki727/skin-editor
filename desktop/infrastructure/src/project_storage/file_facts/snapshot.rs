@@ -191,6 +191,11 @@ pub(super) fn healthy(path: &Path) -> Result<(), FileFactsError> {
     }
     Ok(())
 }
+type IoBuffer = [u8; 65536];
+pub(super) const IO_WORK_BYTES: usize = 2 * size_of::<IoBuffer>()
+    + 2 * (size_of::<Sha256>() + size_of::<[u8; 32]>())
+    + size_of::<[usize; 32]>();
+
 pub(super) fn hash(
     file: &mut File,
     bytes: u64,
@@ -198,7 +203,7 @@ pub(super) fn hash(
 ) -> Result<[u8; 32], FileFactsError> {
     file.seek(SeekFrom::Start(0)).map_err(io_error)?;
     let mut hash = Sha256::new();
-    let mut buffer = [0u8; 65536];
+    let mut buffer: IoBuffer = [0; 65536];
     let mut left = bytes;
     while left > 0 {
         if cancel.is_cancelled() {
@@ -257,7 +262,7 @@ impl Source {
         cancel: &CaptureCancellation,
     ) -> Result<(), FileFactsError> {
         self.file.seek(SeekFrom::Start(0)).map_err(io_error)?;
-        let mut buffer = [0u8; 65536];
+        let mut buffer: IoBuffer = [0; 65536];
         let mut left = self.bytes;
         let mut digest = Sha256::new();
         while left > 0 {

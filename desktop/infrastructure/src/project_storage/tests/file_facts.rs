@@ -456,6 +456,36 @@ fn wrong_versions_binding_and_pre_cancel_do_not_create_scratch_or_a_qualificatio
 }
 #[cfg(windows)]
 #[test]
+fn insufficient_inspect_control_is_rejected_before_source_hash_or_scratch() {
+    let (dir, req) = copy_golden_file();
+    let scratch = Directory::new();
+    let limits = FileFactsLimits {
+        control_bytes: support::inspect_controls(1) - 1,
+        ..FileFactsLimits::default()
+    };
+    let mut reader = FileFactsReader::open(&scratch.path, limits).unwrap();
+    let idle = reader.usage().managed_bytes;
+    // A source held without sharing would return Busy once opened.
+    use std::os::windows::fs::OpenOptionsExt;
+    let guard = std::fs::OpenOptions::new()
+        .read(true)
+        .share_mode(0)
+        .open(dir.file())
+        .unwrap();
+    assert_eq!(
+        reader
+            .inspect(&dir.file(), req, CaptureCancellation::default())
+            .err(),
+        Some(FileFactsError::Limit(FileFactsLimit::Control))
+    );
+    assert_eq!(reader.usage().managed_bytes, idle);
+    assert_eq!(reader.usage().scratch_reserved_bytes, 0);
+    assert!(reader.pending_cleanup().is_none());
+    drop(guard);
+}
+
+#[cfg(windows)]
+#[test]
 fn exact_file_scratch_and_new_wrapper_capacity_boundaries_are_independent() {
     let (dir, req) = copy_golden_file();
     let file_bytes = std::fs::metadata(dir.file()).unwrap().len();

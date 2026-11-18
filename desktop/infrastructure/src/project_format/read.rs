@@ -128,16 +128,19 @@ impl Record {
         Ok(())
     }
 }
-struct Reader<'a> {
-    index: BTreeMap<StateHash, &'a StateBlock>,
-    seen: BTreeSet<StateHash>,
+mod index;
+use index::Index;
+pub(crate) use index::{SORTED_INDEX_BLOCKS, SORTED_INDEX_WORK_BYTES, decode_sorted_blocks};
+
+struct Reader<'s, 'a> {
+    index: Index<'s, 'a>,
     limits: FormatLimits,
     items: usize,
     decoded_bytes: usize,
 }
-impl Reader<'_> {
+impl Reader<'_, '_> {
     fn record(&mut self, hash: StateHash, kind: &str) -> Result<Record, CodecError> {
-        let block = self.index.get(&hash).ok_or(CodecError::MissingBlock)?;
+        let block = self.index.visit(hash).ok_or(CodecError::MissingBlock)?;
         if block.bytes.len() > self.limits.decoded_bytes.saturating_sub(self.decoded_bytes) {
             return Err(CodecError::ResourceLimit("decoded_bytes"));
         }
@@ -152,13 +155,12 @@ impl Reader<'_> {
         let refs = hashes(fields.take("blocks")?)?;
         let blobs = hashes(fields.take("blobs")?)?;
         for reference in &refs {
-            if !self.index.contains_key(reference) {
+            if !self.index.contains(*reference) {
                 return Err(CodecError::MissingBlock);
             }
         }
         let value = Fields::new(fields.take("value")?)?;
         fields.finish()?;
-        self.seen.insert(hash);
         Ok(Record {
             fields: value,
             refs,
@@ -429,37 +431,54 @@ impl Reader<'_> {
     }
 }
 
-pub(super) fn decode(
-    bundle: &StateBundle,
+pub(super) fn decode<'a>(
+    root: StateHash,
+    blocks: impl ExactSizeIterator<Item = &'a StateBlock>,
     limits: FormatLimits,
 ) -> Result<SkinProject, CodecError> {
-    if bundle.blocks.len() > limits.blocks {
+    if blocks.len() > limits.blocks {
         return Err(CodecError::ResourceLimit("blocks"));
     }
     let mut total = 0usize;
     let mut index = BTreeMap::new();
-    for block in &bundle.blocks {
-        total = total
-            .checked_add(block.bytes.len())
-            .ok_or(CodecError::ResourceLimit("bytes"))?;
-        if block.bytes.len() > limits.block_bytes || total > limits.total_bytes {
-            return Err(CodecError::ResourceLimit("bytes"));
-        }
-        if hash(&block.bytes) != block.hash {
-            return Err(CodecError::DigestMismatch);
-        }
-        if index.insert(block.hash, block).is_some() {
+    for block in blocks {
+        validate_block(block, &mut total, limits)?;
+        if index.insert(block.hash, (block, false)).is_some() {
             return Err(CodecError::DuplicateBlock);
         }
     }
+    decode_index(root, Index::Mapped(index), limits)
+}
+
+fn validate_block(
+    block: &StateBlock,
+    total: &mut usize,
+    limits: FormatLimits,
+) -> Result<(), CodecError> {
+    *total = total
+        .checked_add(block.bytes.len())
+        .ok_or(CodecError::ResourceLimit("bytes"))?;
+    if block.bytes.len() > limits.block_bytes || *total > limits.total_bytes {
+        return Err(CodecError::ResourceLimit("bytes"));
+    }
+    if hash(&block.bytes) != block.hash {
+        return Err(CodecError::DigestMismatch);
+    }
+    Ok(())
+}
+
+fn decode_index(
+    root: StateHash,
+    index: Index<'_, '_>,
+    limits: FormatLimits,
+) -> Result<SkinProject, CodecError> {
     let mut reader = Reader {
         index,
-        seen: BTreeSet::new(),
         limits,
         items: 0,
         decoded_bytes: 0,
     };
-    let mut root = reader.record(bundle.root, "skin-editor.project")?;
+    let mut root = reader.record(root, "skin-editor.project")?;
     let project_id = ProjectId::new(root.fields.identity("id")?)
         .ok_or(CodecError::InvalidField("project_id"))?;
     if root.fields.text("semantics")? != STATE_SEMANTICS {
@@ -500,7 +519,7 @@ pub(super) fn decode(
     for reference in reader.refs(outputs, "outputs")? {
         project.outputs.push(reader.output(reference)?);
     }
-    if reader.seen.len() != reader.index.len() {
+    if !reader.index.all_used() {
         return Err(CodecError::UnusedBlock);
     }
     Ok(SkinProject::from_definition(project)?)

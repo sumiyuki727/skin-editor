@@ -638,6 +638,7 @@ fn cancelling_exit_during_a_cursor_borrow_preserves_the_owner_and_node() {
     let child = active_close(&d).child.unwrap();
     let mut work = d.session.take_save_execution(&port, child).unwrap();
     let mut cursor = work.capture_cursor(SAVE_CAPTURE_CURSOR_VERSION).unwrap();
+    assert!(!cursor.is_cancelled());
     let node = loop {
         match cursor.poll(1).unwrap() {
             CapturePoll::Node(node) => break node,
@@ -646,6 +647,9 @@ fn cancelling_exit_during_a_cursor_borrow_preserves_the_owner_and_node() {
         }
     };
     d.session.cancel_close(close).unwrap();
+    let before = cursor.statistics();
+    assert!(cursor.is_cancelled());
+    assert_eq!(cursor.statistics(), before);
     assert!(matches!(cursor.poll(1), Err(CaptureError::Cancelled)));
     assert!(work.is_cancelled());
     assert!(!d.active().writer_released);

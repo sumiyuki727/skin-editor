@@ -11,9 +11,11 @@ mod original_query;
 mod preflight;
 mod profile;
 mod proof;
+mod registration;
 mod save;
 mod snapshot;
 pub use capture::FileCaptureCandidate;
+pub use registration::{FILE_TARGET_REGISTRY_VERSION, FileTargetRegistry, FileTargetStamp};
 pub use save::FileSaveCandidate;
 
 #[derive(Clone, Copy, Debug)]

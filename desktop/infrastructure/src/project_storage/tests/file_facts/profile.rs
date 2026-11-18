@@ -4,6 +4,7 @@ mod close;
 mod coverage;
 mod cursor;
 mod opening;
+mod registration;
 
 fn models() -> Value {
     serde_json::from_str(

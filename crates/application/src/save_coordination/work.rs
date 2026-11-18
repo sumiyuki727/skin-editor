@@ -114,6 +114,10 @@ pub struct SaveCaptureCursor<'work> {
 }
 
 impl SaveCaptureCursor<'_> {
+    /// Observe cancellation of the original admitted work without advancing the capture.
+    pub fn is_cancelled(&self) -> bool {
+        self.work.control.cancellation.is_cancelled()
+    }
     pub fn ticket(&self) -> SaveTicket {
         self.work.ticket()
     }

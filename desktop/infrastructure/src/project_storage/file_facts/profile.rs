@@ -135,10 +135,24 @@ impl FileFactsReader {
         originals: &BlobStore,
         cancel: CaptureCancellation,
     ) -> Result<RestoreCandidate, FileFactsError> {
+        self.read_profile(source, request, originals, cancel, false)
+            .map(|(candidate, _)| candidate)
+    }
+
+    // Both paths attach the very same authenticated origin. Only registration
+    // moves that observation and its original handles out of this read.
+    pub(super) fn read_profile(
+        &mut self,
+        source: &Path,
+        request: FileProfileRestoreRequest,
+        originals: &BlobStore,
+        cancel: CaptureCancellation,
+        retain: bool,
+    ) -> Result<(RestoreCandidate, Option<InspectedFileFacts>), FileFactsError> {
         if request.version != FILE_PROFILE_VERSION {
             return Err(FileFactsError::UnsupportedVersion);
         }
-        let (candidate, source, lease) = {
+        let (candidate, retained, source, lease) = {
             let (data, restoration, source, lease) =
                 self.read_observation(source, request.file, cancel.clone(), Some(originals))?;
             let Restoration {
@@ -171,11 +185,21 @@ impl FileFactsReader {
                 .map_err(|_| FileFactsError::ValidationFailed)?;
             check(&cancel).map_err(storage)?;
             drop(features);
-            (candidate, source, lease)
-        }; // All fixed observation values have left their managed scope.
-        drop(source);
-        drop(lease);
-        Ok(candidate)
+            let retained = if retain { Some(Box::new(data)) } else { None };
+            (candidate, retained, source, lease)
+        };
+        let view = if let Some(data) = retained {
+            Some(InspectedFileFacts {
+                data,
+                _source: source,
+                _lease: lease,
+            })
+        } else {
+            drop(source);
+            drop(lease);
+            None
+        };
+        Ok((candidate, view))
     }
 }
 fn provider(snapshot: &CaptureSnapshot) -> Option<&Provider> {
@@ -201,6 +225,13 @@ fn scoped_provider(
         return None;
     }
     Some(p)
+}
+pub(super) fn captured_origin(
+    snapshot: &CaptureSnapshot,
+    ticket: SaveTicket,
+    reader: u128,
+) -> Option<FileProfileOrigin> {
+    scoped_provider(snapshot, ticket, reader).map(FileProfileSource::origin)
 }
 pub(super) fn captured(
     snapshot: &CaptureSnapshot,

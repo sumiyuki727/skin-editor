@@ -59,7 +59,7 @@ fn append_future(path: &Path, store: &BlobStore, previous: SaveTicket) -> BlobRe
 }
 #[test]
 fn historical_prefixes_match_independent_vectors_and_keep_query_provenance() {
-    let (dir, _d, req) = golden();
+    let (dir, req) = copy_golden_file();
     let before = std::fs::read(dir.file()).unwrap();
     let scratch = Directory::new();
     let mut reader = FileFactsReader::open(&scratch.path, FileFactsLimits::default()).unwrap();
@@ -388,7 +388,7 @@ fn cancellation_after_historical_hash_keeps_old_views_pages_and_actual_owners() 
 }
 #[test]
 fn historical_payload_has_exact_shared_control_admission_and_queries_keep_managed_usage() {
-    let (dir, _d, req) = golden();
+    let (dir, req) = copy_golden_file();
     for less in [false, true] {
         let scratch = Directory::new();
         let required = support::inspect_controls(1);

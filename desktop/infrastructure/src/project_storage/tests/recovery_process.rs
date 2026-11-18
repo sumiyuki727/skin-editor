@@ -808,36 +808,13 @@ fn closed_fixture() -> (Directory, Vec<u8>) {
     let (dir, d, f) = fixture();
     drop(f);
     drop(d);
-    let data = std::fs::read(dir.file()).unwrap();
+    let data = dir.closed_main_bytes();
     (dir, data)
 }
 
-fn closed_matrix_baseline() -> Vec<u8> {
-    use std::os::windows::fs::OpenOptionsExt;
-
-    let (dir, main) = closed_fixture();
-    // Copying only the main file is valid for a closed, self-contained database.
-    let mut entries = std::fs::read_dir(&dir.path).unwrap();
-    assert_eq!(entries.next().unwrap().unwrap().path(), dir.file());
-    assert!(entries.next().is_none());
-    drop(
-        std::fs::OpenOptions::new()
-            .read(true)
-            .write(true)
-            .share_mode(0)
-            .open(dir.file())
-            .unwrap(),
-    );
-    main
-}
-
 fn isolated_journal_case(main: &[u8], journal: &[u8]) -> (Directory, SourceBundle) {
-    let dir = Directory::new();
+    let dir = Directory::from_main_bytes(main);
     let path = dir.file();
-    let mut file = std::fs::File::create_new(&path).unwrap();
-    file.write_all(main).unwrap();
-    file.sync_all().unwrap();
-    drop(file);
     std::fs::write(sidecar(&path, "-journal"), journal).unwrap();
     let before = bundle(&path);
     assert_eq!(before.0, main);
@@ -847,7 +824,7 @@ fn isolated_journal_case(main: &[u8], journal: &[u8]) -> (Directory, SourceBundl
 
 #[test]
 fn malformed_journals_and_super_journals_are_preserved_and_never_salvaged_by_pruning() {
-    let main = closed_matrix_baseline();
+    let (_, main) = closed_fixture();
     for case in 0..8 {
         let mut j = synthetic(&main);
         match case {
@@ -894,7 +871,7 @@ fn malformed_journals_and_super_journals_are_preserved_and_never_salvaged_by_pru
 }
 #[test]
 fn copy_engine_validation_faults_and_cancellation_release_all_resources() {
-    let main = closed_matrix_baseline();
+    let (_, main) = closed_fixture();
     for stage in [
         Stage::CopyMain,
         Stage::CopyJournal,

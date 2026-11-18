@@ -289,7 +289,7 @@ fn same_count_real_optional_changes_never_replace_a_captured_profile() {
 
 #[test]
 fn source_and_metadata_cancellation_cleanup_and_failed_activation_publish_nothing() {
-    let (dir, _d, mut req) = golden();
+    let (dir, mut req) = copy_golden_file();
     req.key.session = HistorySessionId::new(88).unwrap();
     let original = std::fs::read(dir.file()).unwrap();
     let scratch = Directory::new();
@@ -490,7 +490,7 @@ impl FileProfileSource for Fake {
 
 #[test]
 fn absent_forged_and_foreign_profiles_cannot_qualify_or_bypass_missing_guards() {
-    let (dir, _d, mut req) = golden();
+    let (dir, mut req) = copy_golden_file();
     let scratch = Directory::new();
     let mut reader = FileFactsReader::open(&scratch.path, FileFactsLimits::default()).unwrap();
     let store = BlobStore::default();
@@ -640,7 +640,7 @@ fn absent_forged_and_foreign_profiles_cannot_qualify_or_bypass_missing_guards() 
 
 #[test]
 fn real_wrong_target_work_is_unavailable_and_late_file_cannot_rewrite_old_q() {
-    let (dir, _old_d, req) = golden();
+    let (dir, req) = copy_golden_file();
     let scratch = Directory::new();
     let mut reader = FileFactsReader::open(&scratch.path, FileFactsLimits::default()).unwrap();
     let store = BlobStore::default();
@@ -698,7 +698,7 @@ fn real_wrong_target_work_is_unavailable_and_late_file_cannot_rewrite_old_q() {
 
 #[test]
 fn reader_and_session_drop_keep_profile_and_originals_until_the_last_emitted_node() {
-    let (dir, _old_d, req) = golden();
+    let (dir, req) = copy_golden_file();
     let scratch = Directory::new();
     let mut reader = FileFactsReader::open(&scratch.path, FileFactsLimits::default()).unwrap();
     let counter = support::control_observation(&reader);

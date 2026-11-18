@@ -80,6 +80,41 @@ fn independent_framing_and_complete_field_vectors_do_not_use_runtime_generation(
 fn golden() -> (Directory, Driver, FileFactsRequest) {
     golden_variant("Unknown:雪!\r\n")
 }
+
+#[cfg(windows)]
+fn copy_golden_file() -> (Directory, FileFactsRequest) {
+    use std::sync::LazyLock;
+
+    // Only the closed bytes and request values outlive the authoring session.
+    static BASELINE: LazyLock<(Vec<u8>, FileFactsRequest)> = LazyLock::new(|| {
+        let (dir, author, request) = golden();
+        drop(author);
+        (dir.closed_main_bytes(), request)
+    });
+    let (bytes, request) = &*BASELINE;
+    (Directory::from_main_bytes(bytes), *request)
+}
+
+#[cfg(windows)]
+#[test]
+fn closed_golden_copies_match_a_fresh_publication_and_isolate_file_changes() {
+    let (published, _author, expected_request) = golden();
+    let expected = published.closed_main_bytes();
+    let (first, first_request) = copy_golden_file();
+    let (second, second_request) = copy_golden_file();
+    assert_eq!(first_request, expected_request);
+    assert_eq!(second_request, expected_request);
+    assert_eq!(first.closed_main_bytes(), expected);
+    assert_eq!(second.closed_main_bytes(), expected);
+
+    std::fs::write(first.file(), b"changed in one case").unwrap();
+    std::fs::write(first.path.join("test.oskproj-journal"), b"case journal").unwrap();
+    assert_eq!(second.closed_main_bytes(), expected);
+    assert_eq!(published.closed_main_bytes(), expected);
+    let (later, _) = copy_golden_file();
+    assert_eq!(later.closed_main_bytes(), expected);
+}
+
 #[cfg(windows)]
 fn golden_variant(last: &str) -> (Directory, Driver, FileFactsRequest) {
     golden_bytes(last, b"opaque\0original\r\n")
@@ -151,7 +186,7 @@ fn page(summary: FileFactsSummary, offset: usize, limit: usize) -> FileFactsPage
 #[cfg(windows)]
 #[test]
 fn complete_file_proof_matches_independent_model_and_keeps_original_read_only() {
-    let (dir, _d, req) = golden();
+    let (dir, req) = copy_golden_file();
     let scratch = Directory::new();
     let before = std::fs::read(dir.file()).unwrap();
     let mut reader = FileFactsReader::open(&scratch.path, FileFactsLimits::default()).unwrap();
@@ -220,7 +255,7 @@ fn complete_file_proof_matches_independent_model_and_keeps_original_read_only() 
 #[cfg(windows)]
 #[test]
 fn stale_observation_pages_are_rejected_even_when_the_caller_reuses_its_request() {
-    let (dir, _d, req) = golden();
+    let (dir, req) = copy_golden_file();
     let scratch = Directory::new();
     let mut reader = FileFactsReader::open(&scratch.path, FileFactsLimits::default()).unwrap();
     let view = reader
@@ -243,7 +278,7 @@ fn stale_observation_pages_are_rejected_even_when_the_caller_reuses_its_request(
 #[cfg(windows)]
 #[test]
 fn all_sidecars_including_empty_files_are_refused_without_recovery_or_mutation() {
-    let (dir, _d, req) = golden();
+    let (dir, req) = copy_golden_file();
     let scratch = Directory::new();
     let before = std::fs::read(dir.file()).unwrap();
     let mut reader = FileFactsReader::open(&scratch.path, FileFactsLimits::default()).unwrap();
@@ -266,7 +301,7 @@ fn all_sidecars_including_empty_files_are_refused_without_recovery_or_mutation()
 #[test]
 fn source_and_parent_guard_survive_until_the_last_observation_owner_exits() {
     use std::fs::OpenOptions;
-    let (dir, _d, req) = golden();
+    let (dir, req) = copy_golden_file();
     let scratch = Directory::new();
     let mut reader = FileFactsReader::open(&scratch.path, FileFactsLimits::default()).unwrap();
     let view = reader
@@ -285,7 +320,7 @@ fn source_and_parent_guard_survive_until_the_last_observation_owner_exits() {
 #[cfg(windows)]
 #[test]
 fn cleanup_failure_retains_disk_ownership_and_blocks_reuse_until_actual_removal() {
-    let (dir, _d, req) = golden();
+    let (dir, req) = copy_golden_file();
     let scratch = Directory::new();
     let mut reader = FileFactsReader::open(&scratch.path, FileFactsLimits::default()).unwrap();
     support::cleanup(&mut reader, true);
@@ -322,7 +357,7 @@ fn cleanup_failure_retains_disk_ownership_and_blocks_reuse_until_actual_removal(
 #[cfg(windows)]
 #[test]
 fn wrong_versions_binding_and_pre_cancel_do_not_create_scratch_or_a_qualification() {
-    let (dir, _d, req) = golden();
+    let (dir, req) = copy_golden_file();
     let scratch = Directory::new();
     let mut reader = FileFactsReader::open(&scratch.path, FileFactsLimits::default()).unwrap();
     let baseline = reader.usage().managed_bytes;
@@ -360,7 +395,7 @@ fn wrong_versions_binding_and_pre_cancel_do_not_create_scratch_or_a_qualificatio
 #[cfg(windows)]
 #[test]
 fn exact_file_scratch_and_new_wrapper_capacity_boundaries_are_independent() {
-    let (dir, _d, req) = golden();
+    let (dir, req) = copy_golden_file();
     let file_bytes = std::fs::metadata(dir.file()).unwrap().len();
     for less in [false, true] {
         for field in 0..3 {
@@ -387,7 +422,7 @@ fn exact_file_scratch_and_new_wrapper_capacity_boundaries_are_independent() {
 #[cfg(windows)]
 #[test]
 fn cancellation_after_copy_or_inside_full_validation_releases_source_and_owned_scratch() {
-    let (dir, _d, req) = golden();
+    let (dir, req) = copy_golden_file();
     let original = std::fs::read(dir.file()).unwrap();
     for stage in [Stage::CopyMain, Stage::ReadOriginal, Stage::ReadNodes] {
         let scratch = Directory::new();
@@ -466,7 +501,7 @@ fn metadata_encoder_matches_the_independent_none_and_extension_field_case() {
 #[cfg(windows)]
 #[test]
 fn original_byte_limit_accepts_the_actual_total_and_rejects_one_less() {
-    let (dir, _d, req) = golden();
+    let (dir, req) = copy_golden_file();
     let original = std::fs::read(dir.file()).unwrap();
     for limit in [17, 16] {
         let scratch = Directory::new();
@@ -492,7 +527,7 @@ fn original_byte_limit_accepts_the_actual_total_and_rejects_one_less() {
 #[cfg(windows)]
 #[test]
 fn cleanup_retry_and_reader_drop_never_delete_a_replacement_at_the_old_scratch_path() {
-    let (dir, _d, req) = golden();
+    let (dir, req) = copy_golden_file();
     let scratch = Directory::new();
     let mut reader = FileFactsReader::open(&scratch.path, FileFactsLimits::default()).unwrap();
     support::cleanup(&mut reader, true);
@@ -525,7 +560,7 @@ fn cleanup_retry_and_reader_drop_never_delete_a_replacement_at_the_old_scratch_p
 #[cfg(windows)]
 #[test]
 fn multiple_observations_share_one_control_budget_and_survive_reader_drop() {
-    let (first, _d, req) = golden();
+    let (first, req) = copy_golden_file();
     let (second, _e, other) = golden_variant("Unknown:雨!\r\n");
     for less in [false, true] {
         let scratch = Directory::new();
@@ -737,7 +772,7 @@ fn bad_unselected_branch_original_or_commit_chain_never_yields_partial_facts() {
 #[cfg(windows)]
 #[test]
 fn full_page_binding_limits_and_observation_sequence_do_not_silently_wrap() {
-    let (dir, _d, req) = golden();
+    let (dir, req) = copy_golden_file();
     let scratch = Directory::new();
     let mut reader = FileFactsReader::open(&scratch.path, FileFactsLimits::default()).unwrap();
     support::sequence(&mut reader, u64::MAX - 1);
@@ -787,7 +822,7 @@ fn full_page_binding_limits_and_observation_sequence_do_not_silently_wrap() {
 #[test]
 fn parent_junction_is_rejected_without_following_it_or_mutating_the_source() {
     use std::os::windows::process::CommandExt;
-    let (dir, _d, req) = golden();
+    let (dir, req) = copy_golden_file();
     let links = Directory::new();
     let scratch = Directory::new();
     let junction = links.path.join("link");

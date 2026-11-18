@@ -37,7 +37,7 @@ pub(super) fn fixture_on(
     SavePreparationWork,
     FileFactsRequest,
 ) {
-    let (dir, _d, req) = golden();
+    let (dir, req) = copy_golden_file();
     let store = BlobStore::default();
     let mut d = load_driver(&dir.file(), &store, 88);
     if latest {
@@ -320,7 +320,7 @@ fn actual_append_and_later_file_preserve_original_expected_and_per_commit_eviden
 }
 #[test]
 fn actual_work_with_a_new_edit_matches_independently_written_mixed_record_history() {
-    let (dir, _d, req) = golden();
+    let (dir, req) = copy_golden_file();
     let store = BlobStore::default();
     let mut d = load_driver(&dir.file(), &store, 88);
     d.set("fresh work branch 雪\r\n");

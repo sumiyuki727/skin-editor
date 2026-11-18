@@ -72,7 +72,7 @@ fn later_observation_cannot_replace_the_borrowed_tickets_original_expected() {
 
 #[test]
 fn borrowed_manual_capture_checks_scope_and_budget_before_consuming_the_stream() {
-    let (dir, _, req) = golden();
+    let (dir, req) = copy_golden_file();
     let bytes = std::fs::read(dir.file()).unwrap();
     let scratch = Directory::new();
     let other_root = Directory::new();

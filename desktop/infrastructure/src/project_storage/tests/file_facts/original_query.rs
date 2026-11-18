@@ -54,7 +54,7 @@ pub(super) fn future_before_old(path: &Path, store: &BlobStore, previous: SaveTi
 }
 #[test]
 fn historical_original_queries_keep_dense_entries_provenance_and_the_old_full_golden() {
-    let (dir, _d, req) = golden();
+    let (dir, req) = copy_golden_file();
     let before = std::fs::read(dir.file()).unwrap();
     let scratch = Directory::new();
     let mut reader = FileFactsReader::open(&scratch.path, FileFactsLimits::default()).unwrap();
@@ -178,7 +178,7 @@ fn real_q_keeps_its_old_raw_set_when_a_future_sha_moves_before_it() {
 }
 #[test]
 fn real_work_and_valid_file_with_same_counts_and_lengths_but_different_raw_do_not_match() {
-    let (dir, _old, _old_req) = golden();
+    let (dir, _old_req) = copy_golden_file();
     let (other, _e, req) = golden_bytes("Unknown:雪!\r\n", b"opaque\0ORIGINAL\r\n");
     let store = BlobStore::default();
     let loaded = save::load_driver(&other.file(), &store, 88);
@@ -386,7 +386,7 @@ fn cancellation_after_an_actual_original_summary_keeps_old_results_pages_and_rea
 }
 #[test]
 fn new_original_layout_has_exact_inspect_peak_and_queries_keep_retained_usage() {
-    let (dir, _d, req) = golden();
+    let (dir, req) = copy_golden_file();
     for less in [false, true] {
         let scratch = Directory::new();
         let required = support::inspect_controls(1);

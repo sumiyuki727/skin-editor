@@ -565,7 +565,7 @@ fn unsupported_or_unbound_past_and_future_metadata_rejects_the_whole_file() {
 }
 #[test]
 fn metadata_query_checks_complete_version_request_and_observation_without_reusing_old_pages() {
-    let (dir, _d, req) = golden();
+    let (dir, req) = copy_golden_file();
     let copy = Directory::new();
     std::fs::copy(dir.file(), copy.file()).unwrap();
     let scratch = Directory::new();

@@ -432,7 +432,7 @@ fn some_record_semantic_or_checksum_conflict_rejects_the_whole_projection() {
 }
 #[test]
 fn same_counts_different_states_and_later_file_history_only_yield_partial_differences() {
-    let (dir, _d, req) = golden();
+    let (dir, req) = copy_golden_file();
     let (_other_dir, mut other, _) = golden_variant("different captured contents 雪");
     let scratch = Directory::new();
     let mut reader = FileFactsReader::open(&scratch.path, FileFactsLimits::default()).unwrap();
@@ -689,7 +689,7 @@ fn retained_node_consumer_keeps_capture_ownership_after_partial_entry_rejection(
 
 #[test]
 fn equal_counts_with_different_actual_originals_do_not_compare_equal() {
-    let (dir, _d, req) = golden();
+    let (dir, req) = copy_golden_file();
     let store = BlobStore::default();
     let raw = store.stage_bytes(b"opaque\0ORIGINAL\r\n".to_vec()).unwrap();
     let mut d = Driver::new(store.clone());

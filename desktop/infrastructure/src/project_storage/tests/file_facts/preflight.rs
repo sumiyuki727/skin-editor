@@ -217,7 +217,7 @@ fn sqlite_interrupts_at_early_and_later_steps_report_cancellation() {
 #[test]
 fn rejected_real_file_preflight_keeps_source_and_cleans_only_its_owned_scratch() {
     for fail_cleanup in [false, true] {
-        let (dir, _d, req) = golden();
+        let (dir, req) = copy_golden_file();
         let c = Connection::open(dir.file()).unwrap();
         c.execute_batch(&format!(
             "CREATE INDEX \"{}\" ON nodes(id)",

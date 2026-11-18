@@ -3,7 +3,7 @@ use super::*;
 #[test]
 fn restored_read_only_coverage_cannot_authorize_an_exit_child() {
     let version = SAVE_COORDINATION_VERSION;
-    let (dir, _, req) = golden();
+    let (dir, req) = copy_golden_file();
     let bytes = std::fs::read(dir.file()).unwrap();
     let scratch = Directory::new();
     let store = BlobStore::default();

@@ -227,7 +227,7 @@ fn same_ticket_commit_id_and_equal_raw_content_do_not_hide_wrong_head_and_reques
 
 #[test]
 fn same_raw_counts_and_lengths_from_real_work_do_not_make_historical_domains_equal() {
-    let (old, _d, _req) = golden();
+    let (old, _req) = copy_golden_file();
     let (upper, _d, req) = golden_bytes("Unknown:雪!\r\n", b"opaque\0ORIGINAL\r\n");
     let store = BlobStore::default();
     let loaded = save::load_driver(&upper.file(), &store, 88);

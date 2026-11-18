@@ -18,6 +18,40 @@ impl Directory {
     fn file(&self) -> PathBuf {
         self.path.join("test.oskproj")
     }
+
+    #[cfg(windows)]
+    fn closed_main_bytes(&self) -> Vec<u8> {
+        use std::io::Read;
+        use std::os::windows::fs::OpenOptionsExt;
+
+        // A standalone database image requires a closed main file and no sidecars.
+        let path = self.file();
+        let mut entries = std::fs::read_dir(&self.path).unwrap();
+        assert_eq!(entries.next().unwrap().unwrap().path(), path);
+        assert!(entries.next().is_none());
+        let mut file = std::fs::OpenOptions::new()
+            .read(true)
+            .write(true)
+            .share_mode(0)
+            .open(path)
+            .unwrap();
+        let mut bytes = Vec::new();
+        file.read_to_end(&mut bytes).unwrap();
+        bytes
+    }
+
+    #[cfg(windows)]
+    fn from_main_bytes(bytes: &[u8]) -> Self {
+        use std::io::Write;
+
+        let dir = Self::new();
+        let mut file = std::fs::File::create_new(dir.file()).unwrap();
+        file.write_all(bytes).unwrap();
+        file.sync_all().unwrap();
+        drop(file);
+        assert_eq!(dir.closed_main_bytes(), bytes);
+        dir
+    }
 }
 impl Drop for Directory {
     fn drop(&mut self) {

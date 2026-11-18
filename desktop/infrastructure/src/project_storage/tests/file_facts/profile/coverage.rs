@@ -161,7 +161,7 @@ fn manual_opening_uses_derived_redo_and_retains_both_file_positions() {
 #[test]
 fn navigation_round_trip_and_additional_history_at_the_same_manual_head_are_distinct() {
     for new_asset in [false, true] {
-        let (dir, _, req) = golden();
+        let (dir, req) = copy_golden_file();
         let scratch = Directory::new();
         let store = BlobStore::default();
         let mut reader = FileFactsReader::open(&scratch.path, FileFactsLimits::default()).unwrap();

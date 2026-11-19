@@ -27,7 +27,12 @@ impl MetadataPages {
         limits: FileLimits,
     ) -> Result<Self, StorageError> {
         let mut rows = Self::empty();
-        visit_pages(cache, root, role, limits, |page| rows.push(page))?;
+        let read_page = if limits.codec.items <= read::METADATA_ITEMS {
+            compact_page_value
+        } else {
+            value
+        };
+        visit_pages(cache, root, role, limits, read_page, |page| rows.push(page))?;
         Ok(rows)
     }
 

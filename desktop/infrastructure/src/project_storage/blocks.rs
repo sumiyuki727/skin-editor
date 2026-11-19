@@ -1,7 +1,7 @@
 use super::*;
 mod metadata_pages;
 pub(super) use metadata_pages::MetadataPages;
-const PAGE_ITEMS: usize = 256;
+pub(super) const PAGE_ITEMS: usize = 256;
 pub(super) struct Row {
     pub block: StateBlock,
     pub kind: String,
@@ -42,10 +42,19 @@ pub(super) fn parse(block: StateBlock, limits: FormatLimits) -> Result<Row, Stor
     })
 }
 pub(super) fn value(row: &Row, limits: FormatLimits) -> Result<Fields, StorageError> {
-    let mut f = Fields::new(crate::project_format::json::parse(
+    value_fields(crate::project_format::json::parse(
         &row.block.bytes,
         limits,
-    )?)?;
+    )?)
+}
+fn compact_page_value(row: &Row, limits: FormatLimits) -> Result<Fields, StorageError> {
+    value_fields(crate::project_format::json::parse_compact_page(
+        &row.block.bytes,
+        limits,
+    )?)
+}
+fn value_fields(parsed: Value) -> Result<Fields, StorageError> {
+    let mut f = Fields::new(parsed)?;
     Fields::new(f.take("value")?)
 }
 pub(super) fn add(
@@ -190,7 +199,7 @@ pub(super) fn read_paged(
     limits: FileLimits,
 ) -> Result<Vec<Value>, StorageError> {
     let mut rows = Vec::new();
-    visit_pages(cache, root, role, limits, |page| rows.extend(page))?;
+    visit_pages(cache, root, role, limits, value, |page| rows.extend(page))?;
     Ok(rows)
 }
 
@@ -199,6 +208,7 @@ fn visit_pages(
     root: StateHash,
     role: &str,
     limits: FileLimits,
+    read_page: fn(&Row, FormatLimits) -> Result<Fields, StorageError>,
     mut accept: impl FnMut(Vec<Value>),
 ) -> Result<(), StorageError> {
     let row = cache
@@ -238,7 +248,7 @@ fn visit_pages(
         if page.kind != "skin-editor.history-page" {
             return Err(StorageError::Invalid("page kind"));
         }
-        let mut f = value(page, limits.codec)?;
+        let mut f = read_page(page, limits.codec)?;
         if f.text("role")? != role {
             return Err(StorageError::Invalid("page role"));
         }

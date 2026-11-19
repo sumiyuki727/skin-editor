@@ -1,6 +1,8 @@
 //! Experimental healthy-file observations, never save or activation authority.
 use super::*;
 use crate::byte_budget::{ByteBudget, ByteLease};
+const SMALL_BLOCK_BYTES: usize = 256 * 1024;
+const SMALL_JSON_VALUES: usize = 8192;
 mod capture;
 mod historical_content;
 mod historical_metadata;
@@ -91,12 +93,12 @@ impl FileFactsLimits {
                 original_bytes: self.original_bytes,
             },
             codec: FormatLimits {
-                block_bytes: 256 * 1024,
+                block_bytes: SMALL_BLOCK_BYTES,
                 total_bytes: 1024 * 1024,
                 decoded_bytes: 2 * 1024 * 1024,
                 blocks: crate::project_format::SORTED_INDEX_BLOCKS,
                 items: read::METADATA_ITEMS,
-                json_values: 8192,
+                json_values: SMALL_JSON_VALUES,
                 json_depth: 32,
             },
         }
@@ -139,6 +141,12 @@ const INSPECT_WORK_BYTES: usize =
 // directories and a page in transit. The parser's heap buffers are separate.
 const METADATA_PAGE_CONTROL_BYTES: usize =
     6 * size_of::<blocks::MetadataPages>() + size_of::<Vec<Value>>() + size_of::<[usize; 64]>();
+// Each array element is a non-root JSON value. Decoded keys and string values
+// occupy disjoint input spans. Count occurrences, including repeated hashes.
+const RETAINED_METADATA_ARRAY_AND_TEXT_BYTES: usize = 3
+    * read::METADATA_ITEMS.div_ceil(blocks::PAGE_ITEMS)
+    * ((SMALL_JSON_VALUES - 1) * size_of::<Value>() + SMALL_BLOCK_BYTES);
+const _: () = assert!(RETAINED_METADATA_ARRAY_AND_TEXT_BYTES <= 48 * 1024 * 1024);
 // Sequential phases of the same inspection. The old Cache, JSON and restore
 // model are not paid for by this lease. Keep the metadata allowance separate
 // even while the decoder borrows the space later used by original-graph work.

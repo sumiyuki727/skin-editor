@@ -4,8 +4,20 @@ use serde_json::{Map, Number, Value};
 use std::fmt;
 
 use super::{CodecError, FormatLimits};
+#[cfg(test)]
+mod compact_page_tests;
 
 pub(crate) fn parse(raw: &[u8], limits: FormatLimits) -> Result<Value, CodecError> {
+    parse_with::<false>(raw, limits)
+}
+
+/// Small history pages keep their completed arrays and text until the end of
+/// the checkpoint. Discard spare capacity before transferring those buffers.
+pub(crate) fn parse_compact_page(raw: &[u8], limits: FormatLimits) -> Result<Value, CodecError> {
+    parse_with::<true>(raw, limits)
+}
+
+fn parse_with<const COMPACT: bool>(raw: &[u8], limits: FormatLimits) -> Result<Value, CodecError> {
     if raw.len() > limits.block_bytes {
         return Err(CodecError::ResourceLimit("block_bytes"));
     }
@@ -43,7 +55,7 @@ pub(crate) fn parse(raw: &[u8], limits: FormatLimits) -> Result<Value, CodecErro
     let mut remaining = limits.json_values;
     let mut limit_hit = false;
     let mut reader = serde_json::Deserializer::from_slice(raw);
-    let value = Seed {
+    let value = Seed::<COMPACT> {
         depth: 0,
         max_depth: limits.json_depth,
         remaining: &mut remaining,
@@ -61,13 +73,13 @@ pub(crate) fn parse(raw: &[u8], limits: FormatLimits) -> Result<Value, CodecErro
     Ok(value)
 }
 
-struct Seed<'a> {
+struct Seed<'a, const COMPACT: bool> {
     depth: usize,
     max_depth: usize,
     remaining: &'a mut usize,
     limit_hit: &'a mut bool,
 }
-impl<'de> DeserializeSeed<'de> for Seed<'_> {
+impl<'de, const COMPACT: bool> DeserializeSeed<'de> for Seed<'_, COMPACT> {
     type Value = Value;
     fn deserialize<D: serde::Deserializer<'de>>(self, reader: D) -> Result<Value, D::Error> {
         if self.depth > self.max_depth || *self.remaining == 0 {
@@ -78,7 +90,15 @@ impl<'de> DeserializeSeed<'de> for Seed<'_> {
         reader.deserialize_any(self)
     }
 }
-impl<'de> Visitor<'de> for Seed<'_> {
+fn owned_text<const COMPACT: bool>(value: String) -> String {
+    if COMPACT && value.capacity() != value.len() {
+        value.into_boxed_str().into_string()
+    } else {
+        value
+    }
+}
+
+impl<'de, const COMPACT: bool> Visitor<'de> for Seed<'_, COMPACT> {
     type Value = Value;
     fn expecting(&self, f: &mut fmt::Formatter) -> fmt::Result {
         f.write_str("bounded JSON")
@@ -101,20 +121,23 @@ impl<'de> Visitor<'de> for Seed<'_> {
             .ok_or_else(|| E::custom("nonfinite number"))
     }
     fn visit_str<E: Error>(self, value: &str) -> Result<Value, E> {
-        Ok(Value::String(value.to_owned()))
+        self.visit_string(value.to_owned())
     }
     fn visit_string<E: Error>(self, value: String) -> Result<Value, E> {
-        Ok(Value::String(value))
+        Ok(Value::String(owned_text::<COMPACT>(value)))
     }
     fn visit_seq<A: SeqAccess<'de>>(self, mut seq: A) -> Result<Value, A::Error> {
         let mut result = Vec::new();
-        while let Some(value) = seq.next_element_seed(Seed {
+        while let Some(value) = seq.next_element_seed(Seed::<COMPACT> {
             depth: self.depth + 1,
             max_depth: self.max_depth,
             remaining: self.remaining,
             limit_hit: self.limit_hit,
         })? {
             result.push(value);
+        }
+        if COMPACT && result.capacity() != result.len() {
+            result = result.into_boxed_slice().into_vec();
         }
         Ok(Value::Array(result))
     }
@@ -124,13 +147,13 @@ impl<'de> Visitor<'de> for Seed<'_> {
             if result.contains_key(&key) {
                 return Err(A::Error::custom("duplicate JSON key"));
             }
-            let value = map.next_value_seed(Seed {
+            let value = map.next_value_seed(Seed::<COMPACT> {
                 depth: self.depth + 1,
                 max_depth: self.max_depth,
                 remaining: self.remaining,
                 limit_hit: self.limit_hit,
             })?;
-            result.insert(key, value);
+            result.insert(owned_text::<COMPACT>(key), value);
         }
         Ok(Value::Object(result))
     }

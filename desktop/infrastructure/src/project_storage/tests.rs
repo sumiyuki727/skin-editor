@@ -661,6 +661,48 @@ fn busy_external_modification_and_raw_pool_limit_fail_closed() {
 }
 
 #[test]
+fn compact_page_buffers_survive_metadata_handoff_for_repeated_pages_and_a_short_tail() {
+    let (_dir, _driver, mut file) = fixture();
+    let row = json!({"雪": [[], ["one", "\0\r\n", "é"], [1, 2, 3, 4, 5]]});
+    let root = blocks::paged(
+        &file.conn,
+        &mut file.cache,
+        "tags",
+        vec![row.clone(); 513],
+        file.limits,
+    )
+    .unwrap();
+    assert_eq!(file.cache.blocks[&root].refs.len(), 2);
+    let mut small = file.limits;
+    small.codec.items = read::METADATA_ITEMS;
+    let rows = blocks::MetadataPages::read(&file.cache, root, "tags", small).unwrap();
+    assert_eq!(rows.len(), 513);
+    let mut nested_slots = 0;
+    for v in rows.iter() {
+        assert_eq!(v, &row);
+        let (key, cells) = v.as_object().unwrap().iter().next().unwrap();
+        assert_eq!(key.capacity(), key.len());
+        let cells = cells.as_array().unwrap();
+        assert_eq!(cells.capacity(), 3);
+        nested_slots += cells.capacity();
+        for cell in cells {
+            let parts = cell.as_array().unwrap();
+            assert_eq!(parts.capacity(), parts.len());
+            nested_slots += parts.capacity();
+            for part in parts {
+                if let Value::String(s) = part {
+                    assert_eq!(s.capacity(), s.len());
+                }
+            }
+        }
+    }
+    assert_eq!(nested_slots, 513 * (3 + 3 + 5));
+    assert!(!std::ptr::eq(&rows[0]["雪"][1], &rows[256]["雪"][1]));
+    let wide = blocks::MetadataPages::read(&file.cache, root, "tags", file.limits).unwrap();
+    assert!(wide.iter().eq(rows.iter()));
+}
+
+#[test]
 fn metadata_pages_keep_repeated_references_validate_the_last_page_and_allow_wider_archives() {
     let (_dir, _driver, mut file) = fixture();
     let mut small = file.limits;

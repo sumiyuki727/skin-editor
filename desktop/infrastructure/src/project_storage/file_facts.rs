@@ -195,6 +195,17 @@ const _: () = {
     assert!(table_handle == 24);
     let block_cache = table_handle + max_nodes * block_internal + 2 * SMALL_METADATA_BYTES;
     assert!(metadata_dom + block_cache + 2 * directory <= 57 * 1024 * 1024);
+
+    // In the first load pass, the SQL length gate covers earlier raw blocks
+    // and the current Rust BLOB copy together. Earlier derivatives occupy
+    // at most another raw-byte allowance. Checkpoint pages are not live.
+    let first_decode = block_cache + current_nodes + current_buffers;
+    // Deserialization has returned: only exact arrays/text and Map nodes
+    // can coexist with the two one-pass digest output buffers.
+    let digest_bytes = (SMALL_BLOCK_BYTES / blocks::MIN_DIGEST_JSON_BYTES) * size_of::<StateHash>();
+    let first_conversion =
+        block_cache + current_nodes + COMPLETED_PAGE_ARRAY_BYTES + SMALL_BLOCK_BYTES + digest_bytes;
+    assert!(first_conversion <= first_decode && first_decode <= 13 * 1024 * 1024);
 };
 // Only one page is under construction. Open arrays retain at most twice
 // their admitted edges. One growing/shrinking array may also hold its old

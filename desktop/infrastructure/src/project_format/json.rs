@@ -12,8 +12,8 @@ pub(crate) fn parse(raw: &[u8], limits: FormatLimits) -> Result<Value, CodecErro
     parse_with::<false>(raw, limits)
 }
 
-/// Bound the in-flight arrays and text of Small history pages and their
-/// index roots. Discard spare capacity before transferring a completed buffer.
+/// Bound in-flight arrays and text for Small block envelopes, history
+/// pages and index roots. Transfer completed buffers with exact capacity.
 pub(crate) fn parse_compact_page(raw: &[u8], limits: FormatLimits) -> Result<Value, CodecError> {
     parse_with::<true>(raw, limits)
 }

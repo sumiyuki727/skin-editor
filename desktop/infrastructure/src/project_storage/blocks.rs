@@ -2,33 +2,42 @@ use super::*;
 mod metadata_pages;
 pub(super) use metadata_pages::MetadataPages;
 pub(super) const PAGE_ITEMS: usize = 256;
+// Two quotes and 64 hexadecimal characters. JSON escaping can only
+// increase the input span needed for a successfully decoded digest.
+pub(super) const MIN_DIGEST_JSON_BYTES: usize = 2 + 2 * size_of::<[u8; 32]>();
 pub(super) struct Row {
     pub block: StateBlock,
     pub kind: String,
     pub refs: Vec<StateHash>,
     pub blobs: Vec<[u8; 32]>,
 }
-fn digests<T: Ord>(v: Value, convert: impl Fn(StateHash) -> T) -> Result<Vec<T>, StorageError> {
-    let values = array(v)?
-        .into_iter()
-        .map(|v| hash(&text(v)?).map(&convert))
-        .collect::<Result<Vec<_>, _>>()?;
-    if values.windows(2).any(|p| p[0] >= p[1]) {
+fn digests<T: Ord>(
+    v: Value,
+    available: usize,
+    convert: impl Fn(StateHash) -> T,
+) -> Result<Vec<T>, StorageError> {
+    let entries = array(v)?;
+    let mut decoded = Vec::with_capacity(entries.len().min(available));
+    for entry in entries {
+        decoded.push(convert(hash(&text(entry)?)?));
+    }
+    if decoded.windows(2).any(|p| p[0] >= p[1]) {
         return Err(StorageError::Invalid("reference ordering"));
     }
-    Ok(values.into_boxed_slice().into_vec())
+    Ok(decoded)
 }
 pub(super) fn parse(block: StateBlock, limits: FormatLimits) -> Result<Row, StorageError> {
     if sha(&block.bytes) != block.hash.bytes() {
         return Err(StorageError::Invalid("block hash"));
     }
-    let mut f = Fields::new(crate::project_format::json::parse(&block.bytes, limits)?)?;
+    let mut f = Fields::new(parse_block_json(&block.bytes, limits)?)?;
     let kind = f.text("kind")?;
     if f.take("schema")?.as_u64() != Some(1) {
         return Err(StorageError::Unsupported("block schema"));
     }
-    let refs = digests(f.take("blocks")?, std::convert::identity)?;
-    let blobs = digests(f.take("blobs")?, StateHash::bytes)?;
+    let slots = block.bytes.len() / MIN_DIGEST_JSON_BYTES;
+    let refs = digests(f.take("blocks")?, slots, std::convert::identity)?;
+    let blobs = digests(f.take("blobs")?, slots - refs.len(), StateHash::bytes)?;
     let _value = Fields::new(f.take("value")?)?;
     f.finish()?;
     Ok(Row {
@@ -37,6 +46,13 @@ pub(super) fn parse(block: StateBlock, limits: FormatLimits) -> Result<Row, Stor
         refs,
         blobs,
     })
+}
+fn parse_block_json(raw: &[u8], limits: FormatLimits) -> Result<Value, CodecError> {
+    if limits.items <= read::METADATA_ITEMS {
+        crate::project_format::json::parse_compact_page(raw, limits)
+    } else {
+        crate::project_format::json::parse(raw, limits)
+    }
 }
 pub(super) fn value(row: &Row, limits: FormatLimits) -> Result<Fields, StorageError> {
     value_fields(crate::project_format::json::parse(
@@ -237,11 +253,7 @@ fn page_index(
     if row.kind != "skin-editor.history-index" || !row.blobs.is_empty() {
         return Err(StorageError::Invalid("index kind"));
     }
-    let mut f = if limits.codec.items <= read::METADATA_ITEMS {
-        compact_page_value(row, limits.codec)?
-    } else {
-        value(row, limits.codec)?
-    };
+    let mut f = value_fields(parse_block_json(&row.block.bytes, limits.codec)?)?;
     if f.text("role")? != role {
         return Err(StorageError::Invalid("index role"));
     }

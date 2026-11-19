@@ -2,6 +2,7 @@ use super::*;
 use std::io::{Read, Seek, SeekFrom};
 mod block_columns;
 mod metadata;
+mod reference_tables;
 pub(super) use metadata::{METADATA_ITEMS, METADATA_WORK_BYTES, retain_metadata_fields};
 use metadata::{bounded_feature, validate_past_metadata};
 pub(super) struct ParsedCheckpoint {
@@ -212,46 +213,6 @@ fn table_count(c: &Connection, table: &str, max: usize) -> Result<usize, Storage
     }
     Ok(n)
 }
-fn metadata_refs(
-    c: &Connection,
-    cache: &Cache,
-    cancel: &CaptureCancellation,
-) -> Result<(), StorageError> {
-    let mut q = c.prepare("SELECT owner,target FROM block_refs ORDER BY owner,target")?;
-    let mut rows = q.query([])?;
-    for (owner, row) in &cache.blocks {
-        for target in &row.refs {
-            check(cancel)?;
-            let r = rows
-                .next()?
-                .ok_or(StorageError::Invalid("missing block index"))?;
-            if fixed::<32>(r.get(0)?)? != owner.bytes() || fixed::<32>(r.get(1)?)? != target.bytes()
-            {
-                return Err(StorageError::Invalid("block index"));
-            }
-        }
-    }
-    if rows.next()?.is_some() {
-        return Err(StorageError::Invalid("extra block index"));
-    }
-    let mut q = c.prepare("SELECT owner,target FROM blob_refs ORDER BY owner,target")?;
-    let mut rows = q.query([])?;
-    for (owner, row) in &cache.blocks {
-        for target in &row.blobs {
-            check(cancel)?;
-            let r = rows
-                .next()?
-                .ok_or(StorageError::Invalid("missing blob index"))?;
-            if fixed::<32>(r.get(0)?)? != owner.bytes() || fixed::<32>(r.get(1)?)? != *target {
-                return Err(StorageError::Invalid("blob index"));
-            }
-        }
-    }
-    if rows.next()?.is_some() {
-        return Err(StorageError::Invalid("extra blob index"));
-    }
-    Ok(())
-}
 pub(super) fn load_blocks(
     c: &Connection,
     cache: &mut Cache,
@@ -297,7 +258,9 @@ pub(super) fn load_blocks(
         slot.insert(row);
         cache.metadata_bytes += len;
     }
-    metadata_refs(c, cache, cancel)
+    drop(rows);
+    drop(q);
+    reference_tables::verify(c, &cache.blocks, cancel)
 }
 fn node_info(
     c: &Connection,

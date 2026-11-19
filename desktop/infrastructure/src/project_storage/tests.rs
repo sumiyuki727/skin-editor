@@ -1038,5 +1038,6 @@ mod first_block_load;
 mod metadata_pages_index;
 #[cfg(windows)]
 mod recovery_process;
+mod reference_tables;
 
 mod file_facts;

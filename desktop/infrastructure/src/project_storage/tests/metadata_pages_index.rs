@@ -144,7 +144,7 @@ fn escaped_kind_and_non_power_of_two_digest_lists_keep_capacity_and_error_order(
             FormatLimits::default(),
         )
     };
-    let held = parse(&hashes, &hashes[..5]).unwrap();
+    let held = parse(&hashes, &hashes[..5]).unwrap().row;
     assert_eq!(held.kind, "esc\n雪");
     assert_eq!(held.kind.capacity(), held.kind.len());
     assert_eq!((held.refs.len(), held.refs.capacity()), (17, 17));

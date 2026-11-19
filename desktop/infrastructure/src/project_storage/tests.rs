@@ -1032,6 +1032,7 @@ fn unsupported_metadata_edits_are_rejected_instead_of_silently_discarded() {
     }
 }
 
+mod block_columns;
 mod first_block_load;
 mod metadata_pages_index;
 #[cfg(windows)]

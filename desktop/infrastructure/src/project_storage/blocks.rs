@@ -11,6 +11,11 @@ pub(super) struct Row {
     pub refs: Vec<StateHash>,
     pub blobs: Vec<[u8; 32]>,
 }
+pub(super) struct ParsedBlock {
+    pub row: Row,
+    // Consumers inspect this after their earlier SQL or dependency checks.
+    pub project_id: Result<Option<String>, StorageError>,
+}
 fn digests<T: Ord>(
     v: Value,
     available: usize,
@@ -26,7 +31,7 @@ fn digests<T: Ord>(
     }
     Ok(decoded)
 }
-pub(super) fn parse(block: StateBlock, limits: FormatLimits) -> Result<Row, StorageError> {
+pub(super) fn parse(block: StateBlock, limits: FormatLimits) -> Result<ParsedBlock, StorageError> {
     if sha(&block.bytes) != block.hash.bytes() {
         return Err(StorageError::Invalid("block hash"));
     }
@@ -38,13 +43,21 @@ pub(super) fn parse(block: StateBlock, limits: FormatLimits) -> Result<Row, Stor
     let slots = block.bytes.len() / MIN_DIGEST_JSON_BYTES;
     let refs = digests(f.take("blocks")?, slots, std::convert::identity)?;
     let blobs = digests(f.take("blobs")?, slots - refs.len(), StateHash::bytes)?;
-    let _value = Fields::new(f.take("value")?)?;
+    let mut body = Fields::new(f.take("value")?)?;
     f.finish()?;
-    Ok(Row {
-        block,
-        kind: kind.into_boxed_str().into_string(),
-        refs,
-        blobs,
+    let project_id = if kind == "skin-editor.project" {
+        body.text("id").map(Some)
+    } else {
+        Ok(None)
+    };
+    Ok(ParsedBlock {
+        row: Row {
+            block,
+            kind: kind.into_boxed_str().into_string(),
+            refs,
+            blobs,
+        },
+        project_id,
     })
 }
 fn parse_block_json(raw: &[u8], limits: FormatLimits) -> Result<Value, CodecError> {
@@ -85,7 +98,7 @@ pub(super) fn add(
     let sequence = (cache.blocks.len() as u64)
         .checked_add(1)
         .ok_or(StorageError::Limit("blocks"))?;
-    let row = parse(block, limits.codec)?;
+    let ParsedBlock { row, project_id } = parse(block, limits.codec)?;
     if cache.blocks.len() >= limits.blocks
         || row.block.bytes.len() > limits.metadata_bytes.saturating_sub(cache.metadata_bytes)
     {
@@ -101,11 +114,7 @@ pub(super) fn add(
             return Err(StorageError::Invalid("blob reference"));
         }
     }
-    let project = if row.kind == "skin-editor.project" {
-        Some(value(&row, limits.codec)?.text("id")?)
-    } else {
-        None
-    };
+    let project = project_id?;
     c.execute(
         "INSERT INTO blocks VALUES(?1,?2,?3,?4,1,?5)",
         params![

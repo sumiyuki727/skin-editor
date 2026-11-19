@@ -28,7 +28,7 @@ fn full_size_block_moves_its_bytes_and_keeps_both_digest_lists_exact() {
     raw.resize(limits.block_bytes, b' ');
     let source = block(raw);
     let ptr = source.bytes.as_ptr();
-    let parsed = blocks::parse(source, limits).unwrap();
+    let parsed = blocks::parse(source, limits).unwrap().row;
     assert_eq!(parsed.block.bytes.as_ptr(), ptr);
     assert_eq!(parsed.kind, "line\n雪");
     assert_eq!(parsed.kind.capacity(), parsed.kind.len());
@@ -100,7 +100,9 @@ fn escaped_digest_and_structure_boundaries_precede_schema_validation() {
             json_depth: 3,
             ..small_codec()
         };
-        let row = blocks::parse(block(raw.as_bytes().to_vec()), exact).unwrap();
+        let row = blocks::parse(block(raw.as_bytes().to_vec()), exact)
+            .unwrap()
+            .row;
         assert_eq!(row.refs[0].bytes(), [0; 32]);
         assert_eq!(row.refs.capacity(), 1);
         for short in [

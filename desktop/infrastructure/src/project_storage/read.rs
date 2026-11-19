@@ -1,5 +1,6 @@
 use super::*;
 use std::io::{Read, Seek, SeekFrom};
+mod block_columns;
 mod metadata;
 pub(super) use metadata::{METADATA_ITEMS, METADATA_WORK_BYTES, retain_metadata_fields};
 use metadata::{bounded_feature, validate_past_metadata};
@@ -274,24 +275,14 @@ fn load_blocks(
         if sequence != cache.blocks.len() as u64 + 1 {
             return Err(StorageError::Invalid("block sequence"));
         }
-        let row = blocks::parse(
+        let parsed = blocks::parse(
             StateBlock {
                 hash,
                 bytes: r.get(3)?,
             },
             limits.codec,
         )?;
-        if row.kind != r.get::<_, String>(4)? || r.get::<_, i64>(5)? != 1 {
-            return Err(StorageError::Invalid("block derived fields"));
-        }
-        let expected_project = if row.kind == "skin-editor.project" {
-            Some(blocks::value(&row, limits.codec)?.text("id")?)
-        } else {
-            None
-        };
-        if r.get::<_, Option<String>>(6)? != expected_project {
-            return Err(StorageError::Invalid("block project"));
-        }
+        let row = block_columns::verify(r, parsed)?;
         if row.refs.iter().any(|h| !cache.blocks.contains_key(h))
             || row
                 .blobs

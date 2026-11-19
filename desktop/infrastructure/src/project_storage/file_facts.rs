@@ -195,6 +195,10 @@ const _: () = {
     assert!(table_handle == 24);
     let block_cache = table_handle + max_nodes * block_internal + 2 * SMALL_METADATA_BYTES;
     assert!(metadata_dom + block_cache + 2 * directory <= 57 * 1024 * 1024);
+    // During derived-column verification, the current kind, digests and
+    // moved project id occupy disjoint input spans within the derivative
+    // allowance. SQLite text is borrowed and the parse tree has dropped.
+    assert!(block_cache <= 5 * 1024 * 1024);
 
     // In the first load pass, the SQL length gate covers earlier raw blocks
     // and the current Rust BLOB copy together. Earlier derivatives occupy

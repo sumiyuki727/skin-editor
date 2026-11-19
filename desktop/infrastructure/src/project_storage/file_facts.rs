@@ -79,7 +79,7 @@ impl FileFactsLimits {
             ])
             .all(|(n, m)| n > 0 && n <= m)
     }
-    fn file(self) -> FileLimits {
+    pub(super) fn file(self) -> FileLimits {
         FileLimits {
             file_bytes: self.file_bytes,
             metadata_bytes: self.metadata_bytes,
@@ -189,11 +189,20 @@ const _: () = {
     let block_leaf = (link + 2 * size_of::<u16>() + 11 * entry).next_multiple_of(link);
     let block_internal = block_leaf + 12 * link;
     assert!(align_of::<blocks::Row>() == link && size_of::<StateHash>() == 32);
-    assert!(block_internal == 1872);
-    let max_nodes = 1 + (crate::project_format::SORTED_INDEX_BLOCKS - 1) / 5;
+    assert!(block_leaf == 1776 && block_internal == 1872);
+    let keys = crate::project_format::SORTED_INDEX_BLOCKS;
+    let min_nonroot_keys = 5;
+    let max_nodes = 1 + (keys - 1) / min_nonroot_keys;
     let table_handle = size_of::<BTreeMap<StateHash, blocks::Row>>();
     assert!(table_handle == 24);
     let block_cache = table_handle + max_nodes * block_internal + 2 * SMALL_METADATA_BYTES;
+    // Each split sibling and the possible new root stay in the final tree.
+    // Its minimum occupancy applies after insertion, including a root split.
+    // A tree of height h (leaf = 0) has at least 2 * 6^h - 1 keys.
+    let max_height = 4;
+    assert!(2 * (min_nonroot_keys + 1).pow(max_height + 1) - 1 > keys);
+    let split_growth = block_leaf + max_height as usize * block_internal;
+    assert!(split_growth == 9_264 && block_cache == 5_165_384);
     assert!(metadata_dom + block_cache + 2 * directory <= 57 * 1024 * 1024);
     // During derived-column verification, the current kind, digests and
     // moved project id occupy disjoint input spans within the derivative

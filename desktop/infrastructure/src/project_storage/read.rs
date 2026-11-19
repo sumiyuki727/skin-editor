@@ -252,7 +252,7 @@ fn metadata_refs(
     }
     Ok(())
 }
-fn load_blocks(
+pub(super) fn load_blocks(
     c: &Connection,
     cache: &mut Cache,
     limits: FileLimits,
@@ -291,10 +291,11 @@ fn load_blocks(
         {
             return Err(StorageError::Invalid("block dependencies"));
         }
-        cache.metadata_bytes += len;
-        if cache.blocks.insert(hash, row).is_some() {
+        let std::collections::btree_map::Entry::Vacant(slot) = cache.blocks.entry(hash) else {
             return Err(StorageError::Invalid("duplicate block"));
-        }
+        };
+        slot.insert(row);
+        cache.metadata_bytes += len;
     }
     metadata_refs(c, cache, cancel)
 }

@@ -2,6 +2,7 @@
 use super::*;
 use crate::byte_budget::{ByteBudget, ByteLease};
 const SMALL_BLOCK_BYTES: usize = 256 * 1024;
+const SMALL_METADATA_BYTES: usize = 1024 * 1024;
 const SMALL_JSON_VALUES: usize = 8192;
 mod capture;
 mod historical_content;
@@ -47,7 +48,7 @@ impl Default for FileFactsLimits {
             admissions: 256,
             originals: 8,
             original_bytes: 256 * 1024,
-            metadata_bytes: 1024 * 1024,
+            metadata_bytes: SMALL_METADATA_BYTES,
             commits: 128,
         }
     }
@@ -162,7 +163,20 @@ const _: () = {
     // Every completed node has at least one object member. Allocations
     // during an insert only add nodes to its final tree. Even the pending
     // member already consumed a non-root JSON value before insert.
-    assert!((SMALL_JSON_VALUES - 1) * internal <= 6 * 1024 * 1024);
+    let current_nodes = (SMALL_JSON_VALUES - 1) * internal;
+    assert!(current_nodes <= 6 * 1024 * 1024);
+
+    // Distinct retained pages come from one byte-limited FileFacts cache.
+    // Only top-level row maps survive. An object with m members occupies
+    // at least 5m bytes; a nonempty root has >=1 member, other nodes >=5.
+    let rows = 3 * read::METADATA_ITEMS;
+    let members = SMALL_METADATA_BYTES / 5;
+    let retained_nodes = ((members + 4 * rows) / 5) * internal;
+    let retained_buffers = rows * size_of::<Value>() + SMALL_METADATA_BYTES;
+    let current_buffers = PARSING_PAGE_ARRAY_BYTES + SMALL_BLOCK_BYTES + JSON_SCRATCH_GROWTH_BYTES;
+    assert!(
+        retained_nodes + current_nodes + retained_buffers + current_buffers <= 52 * 1024 * 1024
+    );
 };
 // Only one page is under construction. Open arrays retain at most twice
 // their admitted edges. One growing/shrinking array may also hold its old

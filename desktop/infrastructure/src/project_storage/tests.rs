@@ -663,7 +663,7 @@ fn busy_external_modification_and_raw_pool_limit_fail_closed() {
 #[test]
 fn compact_page_buffers_survive_metadata_handoff_for_repeated_pages_and_a_short_tail() {
     let (_dir, _driver, mut file) = fixture();
-    let row = json!({"雪": [[], ["one", "\0\r\n", "é"], [1, 2, 3, 4, 5]]});
+    let row = json!({"name":"user:雪", "雪": [[], ["one", "\0\r\n", "é"], [1, 2, 3, 4, 5]]});
     let root = blocks::paged(
         &file.conn,
         &mut file.cache,
@@ -677,30 +677,42 @@ fn compact_page_buffers_survive_metadata_handoff_for_repeated_pages_and_a_short_
     small.codec.items = read::METADATA_ITEMS;
     let rows = blocks::MetadataPages::read(&file.cache, root, "tags", small).unwrap();
     assert_eq!(rows.len(), 513);
-    let mut nested_slots = 0;
-    for v in rows.iter() {
-        assert_eq!(v, &row);
-        let (key, cells) = v.as_object().unwrap().iter().next().unwrap();
-        assert_eq!(key.capacity(), key.len());
-        let cells = cells.as_array().unwrap();
-        assert_eq!(cells.capacity(), 3);
-        nested_slots += cells.capacity();
-        for cell in cells {
-            let parts = cell.as_array().unwrap();
-            assert_eq!(parts.capacity(), parts.len());
-            nested_slots += parts.capacity();
-            for part in parts {
-                if let Value::String(s) = part {
-                    assert_eq!(s.capacity(), s.len());
+    // The parser still returns compact nested arrays on each source page.
+    // Only the checkpoint view releases them before taking the next page.
+    let mut parsed_rows = 0;
+    for hash in &file.cache.blocks[&root].refs {
+        let raw = &file.cache.blocks[hash].block.bytes;
+        let parsed = crate::project_format::json::parse_compact_page(raw, small.codec).unwrap();
+        let items = parsed["value"]["items"].as_array().unwrap();
+        assert_eq!(items.capacity(), items.len());
+        for v in items {
+            assert_eq!(v, &row);
+            let cells = v["雪"].as_array().unwrap();
+            assert_eq!(cells.capacity(), 3);
+            for cell in cells {
+                let parts = cell.as_array().unwrap();
+                assert_eq!(parts.capacity(), parts.len());
+                for part in parts {
+                    if let Value::String(s) = part {
+                        assert_eq!(s.capacity(), s.len());
+                    }
                 }
             }
         }
+        parsed_rows += items.len();
     }
-    assert_eq!(nested_slots, 513 * (3 + 3 + 5));
-    assert!(std::ptr::eq(&rows[0]["雪"][1], &rows[256]["雪"][1]));
+    assert_eq!(parsed_rows, 257);
+    for v in rows.iter() {
+        let fields = v.as_object().unwrap();
+        assert_eq!(fields.len(), 2);
+        assert!(fields.keys().all(|key| key.capacity() == key.len()));
+        assert_eq!(fields["雪"], Value::Null);
+        assert_eq!(fields["name"], "user:雪");
+    }
+    assert!(std::ptr::eq(&rows[0]["name"], &rows[256]["name"]));
     assert!(!std::ptr::eq(&rows[0], &rows[512]));
     let wide = blocks::MetadataPages::read(&file.cache, root, "tags", file.limits).unwrap();
-    assert!(wide.iter().eq(rows.iter()));
+    assert!(wide.iter().all(|v| v == &row));
     assert!(!std::ptr::eq(&wide[0], &wide[256]));
 }
 
@@ -749,9 +761,12 @@ fn metadata_pages_share_nonadjacent_map_owners_but_check_every_tail_count() {
     assert_eq!(rows.iter().count(), rows.len());
     #[cfg(target_pointer_width = "64")]
     {
-        let singletons = rows
+        let raw = &file.cache.blocks[&first].block.bytes;
+        let parsed = crate::project_format::json::parse_compact_page(raw, small.codec).unwrap();
+        let singletons = parsed["value"]["items"]
+            .as_array()
+            .unwrap()
             .iter()
-            .take(blocks::PAGE_ITEMS)
             .flat_map(|row| row.as_array().unwrap())
             .filter(|v| v.as_object().is_some_and(|map| map.len() == 1))
             .count();
@@ -761,14 +776,53 @@ fn metadata_pages_share_nonadjacent_map_owners_but_check_every_tail_count() {
         let owner = i % (2 * blocks::PAGE_ITEMS);
         assert!(std::ptr::eq(row, &rows[i]));
         assert!(std::ptr::eq(row, &rows[owner]));
-        assert_eq!(row.as_array().unwrap().len(), 15);
-        assert_eq!(
-            row[14][""].as_u64(),
-            Some((owner / blocks::PAGE_ITEMS) as u64)
-        );
+        assert!(row.is_null());
     }
+    assert!(!std::ptr::eq(&rows[0], &rows[blocks::PAGE_ITEMS]));
     assert_eq!(read(short).err(), Some(StorageError::Invalid("page count")));
-    assert_eq!(rows[rows.len() - 1][0][""], 1);
+    assert!(rows[rows.len() - 1].is_null());
+}
+
+#[test]
+fn metadata_pages_release_nested_fields_across_all_distinct_small_pages() {
+    let (_dir, _driver, mut file) = fixture();
+    let count = read::METADATA_ITEMS;
+    let items = (0..count).map(|i| {
+        if i % blocks::PAGE_ITEMS == 0 {
+            json!({"page": i / blocks::PAGE_ITEMS, "array":[{"inside":1}], "object":{"inside":[2]}})
+        } else {
+            Value::from(i)
+        }
+    }).collect();
+    let root = blocks::paged(&file.conn, &mut file.cache, "tags", items, file.limits).unwrap();
+    assert_eq!(file.cache.blocks[&root].refs.len(), 32);
+    let mut small = file.limits;
+    small.codec.items = count;
+    small.codec.json_values = 8192;
+    small.codec.block_bytes = 256 * 1024;
+    let rows = blocks::MetadataPages::read(&file.cache, root, "tags", small).unwrap();
+    assert_eq!(rows.len(), count);
+    for (i, row) in rows.iter().enumerate() {
+        if i % blocks::PAGE_ITEMS == 0 {
+            let fields = row.as_object().unwrap();
+            assert_eq!(fields.len(), 3);
+            assert_eq!(fields["array"], Value::Null);
+            assert_eq!(fields["object"], Value::Null);
+            assert_eq!(fields["page"], Value::from(i / blocks::PAGE_ITEMS));
+        } else {
+            assert_eq!(row.as_u64(), Some(i as u64));
+        }
+    }
+    // The index fits at this depth. A nested field of the first page does
+    // not. Discarding it after parsing must never admit the input early.
+    small.codec.json_depth = 5;
+    assert_eq!(
+        blocks::MetadataPages::read(&file.cache, root, "tags", small).err(),
+        Some(StorageError::Codec(CodecError::ResourceLimit(
+            "json_structure"
+        )))
+    );
+    assert_eq!(rows[count - 1], Value::from(count - 1));
 }
 
 #[test]

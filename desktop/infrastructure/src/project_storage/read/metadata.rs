@@ -13,6 +13,24 @@ pub(in crate::project_storage) const METADATA_WORK_BYTES: usize =
         + size_of::<[usize; 128]>();
 const _: () = assert!(METADATA_ITEMS <= u16::MAX as usize);
 
+// All three checkpoint roles require an object with scalar fields. Keep
+// even unknown keys and wrong scalar values for the ordered validator.
+// A container in a field fails the same scalar checks as null. A root
+// array fails the object check. Neither can reach the digest observer.
+pub(in crate::project_storage) fn retain_metadata_fields(row: &mut Value) {
+    match row {
+        Value::Object(fields) => {
+            for field in fields.values_mut() {
+                if matches!(field, Value::Array(_) | Value::Object(_)) {
+                    *field = Value::Null;
+                }
+            }
+        }
+        Value::Array(_) => *row = Value::Null,
+        _ => {}
+    }
+}
+
 struct Object<'a>(&'a serde_json::Map<String, Value>);
 impl<'a> Object<'a> {
     fn new(v: &'a Value) -> Result<Self, StorageError> {

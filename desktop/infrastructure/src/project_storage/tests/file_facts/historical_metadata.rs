@@ -201,7 +201,10 @@ pub(super) fn profile_fixture(
             features[0].reverse();
         }
         Some("latest-feature-order") => features[1].reverse(),
-        Some("bad-tag-and-short-feature-page") => tags[0][0]["name"] = json!("invalid"),
+        Some("bad-tag-and-short-feature-page") => {
+            tags[0][0]["name"] = json!("invalid");
+            tags[0][0]["value"] = json!([{"ignored":true}]);
+        }
         Some("paged-history") | Some("paged-history-duplicate") => {
             let node = tags[0][0]["node"].clone();
             tags[0] = (0..257)
@@ -584,6 +587,21 @@ fn historical_metadata_permutations_and_cross_page_tags_keep_their_generation() 
                     _ => "historical tags",
                 }))
             );
+            if variant == "bad-tag-and-short-feature-page" {
+                let mut small = FileLimits::default();
+                small.codec.items = read::METADATA_ITEMS;
+                assert_eq!(
+                    SqliteProjectFile::load(
+                        dir.file(),
+                        BlobStore::default(),
+                        small,
+                        RestoreSelection::Manual,
+                        CaptureCancellation::default(),
+                    )
+                    .err(),
+                    Some(StorageError::Invalid("page count"))
+                );
+            }
         } else {
             let file = result.unwrap();
             let old = file

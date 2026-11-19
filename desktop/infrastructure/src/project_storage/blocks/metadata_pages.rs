@@ -5,6 +5,7 @@ const _: () = assert!(INLINE_PAGES <= u8::MAX as usize + 1);
 
 /// A Small index can name the same immutable page at multiple positions.
 /// The first occurrence owns its validated buffer. Later positions refer to it.
+/// Small checkpoint rows retain the scalar fields used by metadata validation.
 pub(in crate::project_storage) struct MetadataPages {
     pages: [Vec<Value>; INLINE_PAGES],
     owners: [u8; INLINE_PAGES],
@@ -43,14 +44,13 @@ impl MetadataPages {
                 rows.owners[i] = first as u8;
                 rows.len += count;
             } else {
-                rows.push(read_page_items(
-                    cache,
-                    hash,
-                    role,
-                    count,
-                    limits.codec,
-                    read_page,
-                )?);
+                let mut page = read_page_items(cache, hash, role, count, limits.codec, read_page)?;
+                if small {
+                    for row in &mut page {
+                        read::retain_metadata_fields(row);
+                    }
+                }
+                rows.push(page);
             }
         }
         Ok(rows)

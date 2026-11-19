@@ -1,7 +1,7 @@
 use super::*;
 use std::io::{Read, Seek, SeekFrom};
 mod metadata;
-pub(super) use metadata::{METADATA_ITEMS, METADATA_WORK_BYTES};
+pub(super) use metadata::{METADATA_ITEMS, METADATA_WORK_BYTES, retain_metadata_fields};
 use metadata::{bounded_feature, validate_past_metadata};
 pub(super) struct ParsedCheckpoint {
     pub checkpoint: Checkpoint,

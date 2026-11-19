@@ -37,7 +37,7 @@ fn latest_metadata_requires_exact_order_spelling_and_original_text() {
         .collect();
     let mut features = write::features();
     features.push(json!({"name":"optional","version":"","required":false}));
-    let verify = |tags: &[Value], ext: &[Value], f: &[Value]| {
+    let validate = |tags: &[Value], ext: &[Value], f: &[Value]| {
         validate_past_metadata(
             &nodes,
             &meta,
@@ -47,6 +47,19 @@ fn latest_metadata_requires_exact_order_spelling_and_original_text() {
             &blocks::MetadataPages::from_rows(f),
             true,
         )
+    };
+    let verify = |tags: &[Value], ext: &[Value], f: &[Value]| {
+        let project = |rows: &[Value]| {
+            let mut rows = rows.to_vec();
+            rows.iter_mut().for_each(retain_metadata_fields);
+            rows
+        };
+        let expected = validate(tags, ext, f);
+        assert_eq!(
+            validate(&project(tags), &project(ext), &project(f)),
+            expected
+        );
+        expected
     };
     assert_eq!(verify(&tags, &ext, &features), Ok(true));
     let mut reordered = tags.clone();
@@ -72,6 +85,7 @@ fn latest_metadata_requires_exact_order_spelling_and_original_text() {
             "historical tags",
         ),
         ("value", json!(false), "text"),
+        ("name", json!([{"nested":"value"}]), "text"),
     ] {
         let mut changed = tags.clone();
         changed[0][field] = value;
@@ -86,6 +100,7 @@ fn latest_metadata_requires_exact_order_spelling_and_original_text() {
         ("bytes", json!("02"), "decimal"),
         ("bytes", json!("18446744073709551616"), "decimal"),
         ("bytes", json!(2), "text"),
+        ("sha", json!({"nested":[]}), "text"),
     ] {
         let mut changed = ext.clone();
         changed[0][field] = value;
@@ -105,6 +120,29 @@ fn latest_metadata_requires_exact_order_spelling_and_original_text() {
     assert_eq!(
         verify(&tags, &ext, &changed),
         Err(StorageError::Unsupported("metadata field"))
+    );
+    let mut bad_features = features.clone();
+    bad_features[0]["required"] = json!([true]);
+    bad_features[0]["extra"] = json!({"unknown": []});
+    assert_eq!(
+        verify(&tags, &ext, &bad_features),
+        Err(StorageError::Invalid("feature required"))
+    );
+    bad_features[0].as_object_mut().unwrap().remove("version");
+    assert_eq!(
+        verify(&tags, &ext, &bad_features),
+        Err(StorageError::Invalid("version"))
+    );
+    let mut bad_tags = tags.clone();
+    bad_tags[0]["extra"] = json!([1, 2]);
+    assert_eq!(
+        verify(&bad_tags, &ext, &bad_features),
+        Err(StorageError::Unsupported("metadata field"))
+    );
+    bad_tags[0] = json!([{"node": ptext(n)}]);
+    assert_eq!(
+        verify(&bad_tags, &ext, &bad_features),
+        Err(StorageError::Invalid("object"))
     );
 }
 

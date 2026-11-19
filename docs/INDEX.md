@@ -1,5 +1,7 @@
 # 文档索引
 
+2026-11-20 B1-2AF 记录原件描述符的取值、累计额度、分块数与失败释放。[原件描述符与分块读取前的准入](P3_2B1_2AF_ORIGINAL_DESCRIPTOR.md)
+
 2026-11-20 B1-2AE 记录 header／control 跨阶段字段的尺寸、首错顺序与失败释放。[打开期间的 header 与 control](P3_2B1_2AE_SNAPSHOT_COLUMNS.md)
 
 2026-11-20 B1-2AD 记录块行 SQL 哈希与序号的定长取值、大端序、首错及失败释放。[块行哈希与序号](P3_2B1_2AD_BLOCK_ROW_HEADER.md)

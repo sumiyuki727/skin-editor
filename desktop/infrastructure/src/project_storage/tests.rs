@@ -1037,6 +1037,7 @@ mod block_row_header;
 mod block_table;
 mod first_block_load;
 mod metadata_pages_index;
+mod original_descriptor;
 #[cfg(windows)]
 mod recovery_process;
 mod reference_tables;

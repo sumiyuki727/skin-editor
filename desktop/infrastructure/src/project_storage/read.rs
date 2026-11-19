@@ -214,6 +214,32 @@ fn table_count(c: &Connection, table: &str, max: usize) -> Result<usize, Storage
     }
     Ok(n)
 }
+// Validate the descriptor and chunk count before reading payloads or
+// acquiring a lease. The returned total includes this row exactly once.
+pub(super) fn original_descriptor(
+    c: &Connection,
+    row: &rusqlite::Row<'_>,
+    prior_bytes: u64,
+    limit: u64,
+) -> Result<(BlobRef, u64), StorageError> {
+    let reference = BlobRef::new(
+        *fixed_blob_column(row, 0)?,
+        u64::try_from(row.get::<_, i64>(1)?).map_err(|_| StorageError::Invalid("blob length"))?,
+    );
+    let total = prior_bytes
+        .checked_add(reference.byte_len())
+        .filter(|&n| n <= limit)
+        .ok_or(StorageError::Limit("original bytes"))?;
+    let count = c.query_row(
+        "SELECT count(*) FROM blob_chunks WHERE sha=?1",
+        params![reference.sha256()],
+        |r| r.get::<_, i64>(0),
+    )?;
+    if count as u64 != reference.byte_len().div_ceil(65536) {
+        return Err(StorageError::Invalid("chunk count"));
+    }
+    Ok((reference, total))
+}
 fn fixed_blob_column<'a, const N: usize>(
     row: &'a rusqlite::Row<'_>,
     index: usize,
@@ -472,24 +498,8 @@ fn read_snapshot(
     let mut raw_pins = Vec::<RawBlob>::new();
     while let Some(r) = rows.next()? {
         check(cancel)?;
-        let reference = BlobRef::new(
-            fixed(r.get(0)?)?,
-            u64::try_from(r.get::<_, i64>(1)?).map_err(|_| StorageError::Invalid("blob length"))?,
-        );
-        total = total
-            .checked_add(reference.byte_len())
-            .ok_or(StorageError::Limit("original bytes"))?;
-        if total > limits.original_bytes {
-            return Err(StorageError::Limit("original bytes"));
-        }
-        let count = c.query_row(
-            "SELECT count(*) FROM blob_chunks WHERE sha=?1",
-            params![reference.sha256()],
-            |r| r.get::<_, i64>(0),
-        )?;
-        if count as u64 != reference.byte_len().div_ceil(65536) {
-            return Err(StorageError::Invalid("chunk count"));
-        }
+        let (reference, next_total) = original_descriptor(c, r, total, limits.original_bytes)?;
+        total = next_total;
         let raw = store
             .stage_reader(
                 BlobReader {

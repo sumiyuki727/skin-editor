@@ -1,5 +1,7 @@
 # 编辑器开发交接：从 P3-1C 继续
 
+2026-11-20 B1-2AF 的 62 项定向回归已通过。下一项从 BlobReader 的换块和末块开始，核对新旧块缓冲的同时占用与失败释放。[原件描述符与分块读取前的准入](P3_2B1_2AF_ORIGINAL_DESCRIPTOR.md)
+
 2026-11-20 B1-2AE 的 57 项定向回归已通过。后续从原件描述符 `blobs(sha, byte_len)` 接续，核对分块读取前的拒绝与租约释放。[打开期间的 header 与 control](P3_2B1_2AE_SNAPSHOT_COLUMNS.md)
 
 2026-11-20 B1-2AD 已完成块行哈希与序号的定长读取。下一项核对 header、control 在块加载及后续验证期间保留的字段，保持延迟校验的首错位置。[块行哈希与序号](P3_2B1_2AD_BLOCK_ROW_HEADER.md)

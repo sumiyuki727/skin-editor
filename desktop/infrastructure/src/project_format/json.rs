@@ -1,6 +1,7 @@
 //! Bounded JSON with duplicate-key and integer-precision rejection.
 use serde::de::{DeserializeSeed, Error, MapAccess, SeqAccess, Visitor};
 use serde_json::{Map, Number, Value};
+use std::borrow::Cow;
 use std::fmt;
 
 use super::{CodecError, FormatLimits};
@@ -98,6 +99,34 @@ fn owned_text<const COMPACT: bool>(value: String) -> String {
     }
 }
 
+// Only an unescaped key may borrow the input across next_value_seed. The
+// other callback borrows the parser's reusable scratch for this call only.
+struct CompactKey;
+
+impl<'de> DeserializeSeed<'de> for CompactKey {
+    type Value = Cow<'de, str>;
+
+    fn deserialize<D: serde::Deserializer<'de>>(self, reader: D) -> Result<Self::Value, D::Error> {
+        reader.deserialize_str(self)
+    }
+}
+
+impl<'de> Visitor<'de> for CompactKey {
+    type Value = Cow<'de, str>;
+
+    fn expecting(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        f.write_str("a JSON object key")
+    }
+
+    fn visit_borrowed_str<E: Error>(self, key: &'de str) -> Result<Self::Value, E> {
+        Ok(Cow::Borrowed(key))
+    }
+
+    fn visit_str<E: Error>(self, key: &str) -> Result<Self::Value, E> {
+        Ok(Cow::Owned(owned_text::<true>(key.to_owned())))
+    }
+}
+
 // The child has already consumed its JSON node. Any future sibling must use
 // at least one of the remaining nodes, even if this array is still open
 // while its descendants are being decoded.
@@ -158,8 +187,14 @@ impl<'de, const COMPACT: bool> Visitor<'de> for Seed<'_, COMPACT> {
     }
     fn visit_map<A: MapAccess<'de>>(self, mut map: A) -> Result<Value, A::Error> {
         let mut result = Map::new();
-        while let Some(key) = map.next_key::<String>()? {
-            if result.contains_key(&key) {
+        loop {
+            let key = if COMPACT {
+                map.next_key_seed(CompactKey)?
+            } else {
+                map.next_key::<String>()?.map(Cow::Owned)
+            };
+            let Some(key) = key else { break };
+            if result.contains_key(key.as_ref()) {
                 return Err(A::Error::custom("duplicate JSON key"));
             }
             let value = map.next_value_seed(Seed::<COMPACT> {
@@ -168,7 +203,7 @@ impl<'de, const COMPACT: bool> Visitor<'de> for Seed<'_, COMPACT> {
                 remaining: self.remaining,
                 limit_hit: self.limit_hit,
             })?;
-            result.insert(owned_text::<COMPACT>(key), value);
+            result.insert(owned_text::<COMPACT>(key.into_owned()), value);
         }
         Ok(Value::Object(result))
     }

@@ -1,4 +1,5 @@
 use super::*;
+mod text;
 
 // Measure only Rust-visible array slots and text buffers in a completed DOM.
 fn count(value: &Value, slots: &mut usize, text_bytes: &mut usize) {

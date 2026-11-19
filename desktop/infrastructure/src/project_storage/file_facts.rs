@@ -158,6 +158,24 @@ const _: () = assert!(
             + PARSING_PAGE_ARRAY_BYTES
             <= 48 * 1024 * 1024 + 512 * 1024
 );
+// serde_json 1.0.154 uses one reusable byte scratch per from_slice reader.
+// Growth and array reallocation happen in separate visitor phases. All
+// owned DOM text, including pending keys, fits the existing raw-byte term.
+const JSON_SCRATCH_CAPACITY_BYTES: usize = 2 * SMALL_BLOCK_BYTES;
+const JSON_SCRATCH_GROWTH_BYTES: usize = SMALL_BLOCK_BYTES + JSON_SCRATCH_CAPACITY_BYTES;
+const OTHER_PAGES_AND_CURRENT_TEXT_BYTES: usize =
+    RETAINED_METADATA_ARRAY_AND_TEXT_BYTES - COMPLETED_PAGE_ARRAY_BYTES;
+const _: () = assert!(
+    SMALL_BLOCK_BYTES >= 8
+        && OTHER_PAGES_AND_CURRENT_TEXT_BYTES
+            + PARSING_PAGE_ARRAY_BYTES
+            + JSON_SCRATCH_CAPACITY_BYTES
+            <= 49 * 1024 * 1024
+        && OTHER_PAGES_AND_CURRENT_TEXT_BYTES
+            + 2 * COMPLETED_PAGE_ARRAY_BYTES
+            + JSON_SCRATCH_GROWTH_BYTES
+            <= 49 * 1024 * 1024
+);
 // Sequential phases of the same inspection. The old Cache, JSON and restore
 // model are not paid for by this lease. Keep the metadata allowance separate
 // even while the decoder borrows the space later used by original-graph work.

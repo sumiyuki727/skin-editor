@@ -98,6 +98,17 @@ fn owned_text<const COMPACT: bool>(value: String) -> String {
     }
 }
 
+// The child has already consumed its JSON node. Any future sibling must use
+// at least one of the remaining nodes, even if this array is still open
+// while its descendants are being decoded.
+fn push_compact_array(values: &mut Vec<Value>, child: Value, remaining: usize) {
+    if values.len() == values.capacity() {
+        let additional = values.len().max(1).min(remaining.saturating_add(1));
+        values.reserve_exact(additional);
+    }
+    values.push(child);
+}
+
 impl<'de, const COMPACT: bool> Visitor<'de> for Seed<'_, COMPACT> {
     type Value = Value;
     fn expecting(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -134,7 +145,11 @@ impl<'de, const COMPACT: bool> Visitor<'de> for Seed<'_, COMPACT> {
             remaining: self.remaining,
             limit_hit: self.limit_hit,
         })? {
-            result.push(value);
+            if COMPACT {
+                push_compact_array(&mut result, value, *self.remaining);
+            } else {
+                result.push(value);
+            }
         }
         if COMPACT && result.capacity() != result.len() {
             result = result.into_boxed_slice().into_vec();

@@ -143,10 +143,21 @@ const METADATA_PAGE_CONTROL_BYTES: usize =
     6 * size_of::<blocks::MetadataPages>() + size_of::<Vec<Value>>() + size_of::<[usize; 64]>();
 // Each array element is a non-root JSON value. Decoded keys and string values
 // occupy disjoint input spans. Count occurrences, including repeated hashes.
-const RETAINED_METADATA_ARRAY_AND_TEXT_BYTES: usize = 3
-    * read::METADATA_ITEMS.div_ceil(blocks::PAGE_ITEMS)
-    * ((SMALL_JSON_VALUES - 1) * size_of::<Value>() + SMALL_BLOCK_BYTES);
+const METADATA_PAGE_OCCURRENCES: usize = 3 * read::METADATA_ITEMS.div_ceil(blocks::PAGE_ITEMS);
+const COMPLETED_PAGE_ARRAY_BYTES: usize = (SMALL_JSON_VALUES - 1) * size_of::<Value>();
+const RETAINED_METADATA_ARRAY_AND_TEXT_BYTES: usize =
+    METADATA_PAGE_OCCURRENCES * (COMPLETED_PAGE_ARRAY_BYTES + SMALL_BLOCK_BYTES);
 const _: () = assert!(RETAINED_METADATA_ARRAY_AND_TEXT_BYTES <= 48 * 1024 * 1024);
+// Only one page is under construction. Open arrays retain at most twice
+// their admitted edges. One growing/shrinking array may also hold its old
+// or destination buffer. Text here counts completed buffers only.
+const PARSING_PAGE_ARRAY_BYTES: usize = 3 * COMPLETED_PAGE_ARRAY_BYTES;
+const _: () = assert!(
+    PARSING_PAGE_ARRAY_BYTES <= 768 * 1024
+        && RETAINED_METADATA_ARRAY_AND_TEXT_BYTES - COMPLETED_PAGE_ARRAY_BYTES
+            + PARSING_PAGE_ARRAY_BYTES
+            <= 48 * 1024 * 1024 + 512 * 1024
+);
 // Sequential phases of the same inspection. The old Cache, JSON and restore
 // model are not paid for by this lease. Keep the metadata allowance separate
 // even while the decoder borrows the space later used by original-graph work.

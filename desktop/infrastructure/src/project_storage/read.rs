@@ -213,6 +213,21 @@ fn table_count(c: &Connection, table: &str, max: usize) -> Result<usize, Storage
     }
     Ok(n)
 }
+fn fixed_blob_column<'a, const N: usize>(
+    row: &'a rusqlite::Row<'_>,
+    index: usize,
+) -> Result<&'a [u8; N], StorageError> {
+    let bytes = row
+        .get_ref(index)?
+        .as_blob()
+        .map_err(|_| StorageError::Sql {
+            code: None,
+            class: "column type",
+        })?;
+    bytes
+        .try_into()
+        .map_err(|_| StorageError::Invalid("fixed bytes"))
+}
 pub(super) fn load_blocks(
     c: &Connection,
     cache: &mut Cache,
@@ -231,8 +246,8 @@ pub(super) fn load_blocks(
         {
             return Err(StorageError::Limit("metadata bytes"));
         }
-        let hash = StateHash::from_bytes(fixed(r.get(0)?)?);
-        let sequence = u64blob(r.get(1)?)?;
+        let hash = StateHash::from_bytes(*fixed_blob_column(r, 0)?);
+        let sequence = u64::from_be_bytes(*fixed_blob_column(r, 1)?);
         if sequence != cache.blocks.len() as u64 + 1 {
             return Err(StorageError::Invalid("block sequence"));
         }

@@ -2,6 +2,41 @@ use super::*;
 use rusqlite::types::Value as SqlValue;
 
 #[test]
+fn block_row_header_sequence_borrows_eight_bytes_and_keeps_big_endian_values() {
+    let c = Connection::open_in_memory().unwrap();
+    let mut statement = c
+        .prepare(
+            "SELECT zeroblob(0),zeroblob(7),x'0102030405060708',zeroblob(9),
+        zeroblob(524288),'12345678',CAST(x'ff' AS TEXT),NULL,1,0.5,x'ffffffffffffffff'",
+        )
+        .unwrap();
+    let mut rows = statement.query([]).unwrap();
+    let row = rows.next().unwrap().unwrap();
+    for i in 0..11 {
+        let old = row
+            .get::<_, Vec<u8>>(i)
+            .map_err(StorageError::from)
+            .and_then(u64blob);
+        let borrowed = fixed_blob_column::<8>(row, i);
+        if let Ok(bytes) = borrowed {
+            assert_eq!(
+                bytes.as_ptr(),
+                row.get_ref(i).unwrap().as_blob().unwrap().as_ptr()
+            );
+        }
+        assert_eq!(borrowed.map(|bytes| u64::from_be_bytes(*bytes)), old);
+    }
+    assert_eq!(
+        u64::from_be_bytes(*fixed_blob_column(row, 2).unwrap()),
+        0x0102_0304_0506_0708
+    );
+    assert_eq!(
+        u64::from_be_bytes(*fixed_blob_column(row, 10).unwrap()),
+        u64::MAX
+    );
+}
+
+#[test]
 fn borrowed_columns_match_native_text_conversion_and_use_sqlite_bytes() {
     let c = Connection::open_in_memory().unwrap();
     let mut q = c

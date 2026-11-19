@@ -1033,6 +1033,7 @@ fn unsupported_metadata_edits_are_rejected_instead_of_silently_discarded() {
 }
 
 mod block_columns;
+mod block_row_header;
 mod block_table;
 mod first_block_load;
 mod metadata_pages_index;

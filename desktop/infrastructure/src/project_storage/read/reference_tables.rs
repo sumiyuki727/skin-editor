@@ -2,22 +2,6 @@ use super::*;
 #[cfg(test)]
 mod tests;
 
-fn digest_column<'a>(
-    row: &'a rusqlite::Row<'_>,
-    index: usize,
-) -> Result<&'a [u8; 32], StorageError> {
-    let bytes = row
-        .get_ref(index)?
-        .as_blob()
-        .map_err(|_| StorageError::Sql {
-            code: None,
-            class: "column type",
-        })?;
-    bytes
-        .try_into()
-        .map_err(|_| StorageError::Invalid("fixed bytes"))
-}
-
 pub(super) fn verify(
     c: &Connection,
     blocks: &BTreeMap<StateHash, blocks::Row>,
@@ -31,7 +15,9 @@ pub(super) fn verify(
             let r = rows
                 .next()?
                 .ok_or(StorageError::Invalid("missing block index"))?;
-            if digest_column(r, 0)? != &owner.bytes() || digest_column(r, 1)? != &target.bytes() {
+            if fixed_blob_column(r, 0)? != &owner.bytes()
+                || fixed_blob_column(r, 1)? != &target.bytes()
+            {
                 return Err(StorageError::Invalid("block index"));
             }
         }
@@ -49,7 +35,7 @@ pub(super) fn verify(
             let r = rows
                 .next()?
                 .ok_or(StorageError::Invalid("missing blob index"))?;
-            if digest_column(r, 0)? != &owner.bytes() || digest_column(r, 1)? != target {
+            if fixed_blob_column(r, 0)? != &owner.bytes() || fixed_blob_column(r, 1)? != target {
                 return Err(StorageError::Invalid("blob index"));
             }
         }

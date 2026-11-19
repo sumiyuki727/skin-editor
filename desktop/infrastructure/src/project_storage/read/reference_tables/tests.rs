@@ -17,7 +17,7 @@ fn borrowed_digest_preserves_native_blob_errors_and_uses_the_current_row() {
             .get::<_, Vec<u8>>(i)
             .map_err(StorageError::from)
             .and_then(fixed::<32>);
-        let borrowed = digest_column(r, i);
+        let borrowed = fixed_blob_column::<32>(r, i);
         assert_eq!(borrowed.as_ref().copied(), old.as_ref());
         if let Ok(bytes) = borrowed {
             assert_eq!(

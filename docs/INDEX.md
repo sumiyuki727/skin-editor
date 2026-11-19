@@ -1,5 +1,7 @@
 # 文档索引
 
+2026-11-20 B1-2AE 记录 header／control 跨阶段字段的尺寸、首错顺序与失败释放。[打开期间的 header 与 control](P3_2B1_2AE_SNAPSHOT_COLUMNS.md)
+
 2026-11-20 B1-2AD 记录块行 SQL 哈希与序号的定长取值、大端序、首错及失败释放。[块行哈希与序号](P3_2B1_2AD_BLOCK_ROW_HEADER.md)
 
 2026-11-20 B1-2AC 记录两张引用表逐列借用摘要、游标生存期及失败释放。[引用表逐项核对](P3_2B1_2AC_REFERENCE_TABLES.md)

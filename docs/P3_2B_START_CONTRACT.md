@@ -1,5 +1,7 @@
 # P3-2B：真实存储衔接开工契约
 
+2026-11-20 B1-2AE 已核对打开期间保留的业务 header 与延迟 control 共 176 B。共享 64 MiB 的准入及同票关闭资格仍待验收。[打开期间的 header 与 control](P3_2B1_2AE_SNAPSHOT_COLUMNS.md)
+
 2026-11-20 B1-2AD 已核算块行 SQL 哈希和序号的读取，Small 最多调用 16,384 次，两列转换的新增 Rust 堆缓冲为零。共同 64 MiB 准入仍待全路径证明。[块行哈希与序号](P3_2B1_2AD_BLOCK_ROW_HEADER.md)
 
 2026-11-20 B1-2AC 已核对两张引用表的逐行读取和失败释放，列副本及全表汇总的新增 Rust 堆申请为零。共同 64 MiB 准入仍待全路径证明。[引用表逐项核对](P3_2B1_2AC_REFERENCE_TABLES.md)

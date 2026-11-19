@@ -1040,5 +1040,6 @@ mod metadata_pages_index;
 #[cfg(windows)]
 mod recovery_process;
 mod reference_tables;
+mod snapshot_columns;
 
 mod file_facts;

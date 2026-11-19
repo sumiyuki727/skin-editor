@@ -3,6 +3,7 @@ use std::io::{Read, Seek, SeekFrom};
 mod block_columns;
 mod metadata;
 mod reference_tables;
+mod snapshot_columns;
 pub(super) use metadata::{METADATA_ITEMS, METADATA_WORK_BYTES, retain_metadata_fields};
 use metadata::{bounded_feature, validate_past_metadata};
 pub(super) struct ParsedCheckpoint {
@@ -228,6 +229,24 @@ fn fixed_blob_column<'a, const N: usize>(
         .try_into()
         .map_err(|_| StorageError::Invalid("fixed bytes"))
 }
+// Preserve Row::get<String>'s type and UTF-8 diagnostics without allocating.
+fn text_column<'a>(
+    r: &'a rusqlite::Row<'_>,
+    index: usize,
+    nullable: bool,
+) -> Result<Option<&'a str>, StorageError> {
+    use rusqlite::types::ValueRef;
+    match r.get_ref(index)? {
+        ValueRef::Text(bytes) => Ok(Some(
+            std::str::from_utf8(bytes).map_err(|e| rusqlite::Error::Utf8Error(index, e))?,
+        )),
+        ValueRef::Null if nullable => Ok(None),
+        _ => Err(StorageError::Sql {
+            code: None,
+            class: "column type",
+        }),
+    }
+}
 pub(super) fn load_blocks(
     c: &Connection,
     cache: &mut Cache,
@@ -407,30 +426,7 @@ fn read_snapshot(
     if table_count(c, "header", 1)? != 1 || table_count(c, "control", 1)? != 1 {
         return Err(StorageError::Invalid("header/control"));
     }
-    let header=c.query_row("SELECT family,profile,container_version,project_schema,history_schema,project_id,history_id,lineage_id,root_id FROM header",[],|r|Ok((r.get::<_,String>(0)?,r.get::<_,String>(1)?,r.get::<_,i64>(2)?,r.get::<_,i64>(3)?,r.get::<_,i64>(4)?,r.get::<_,Vec<u8>>(5)?,r.get::<_,Vec<u8>>(6)?,r.get::<_,Vec<u8>>(7)?,r.get::<_,Vec<u8>>(8)?)))?;
-    if header.0 != "skin-editor-project"
-        || header.1 != FILE_PROFILE
-        || header.2 != 2
-        || header.3 != 1
-        || header.4 != 2
-    {
-        return Err(StorageError::Unsupported("profile/schema"));
-    }
-    let control=c.query_row("SELECT generation,save_id,manual_id,protected_id,node_count,block_count,blob_bytes,metadata_bytes,address_epoch FROM control",[],|r|Ok((r.get::<_,Vec<u8>>(0)?,r.get::<_,Vec<u8>>(1)?,r.get::<_,Option<Vec<u8>>>(2)?,r.get::<_,Vec<u8>>(3)?,r.get::<_,i64>(4)?,r.get::<_,i64>(5)?,r.get::<_,i64>(6)?,r.get::<_,i64>(7)?,r.get::<_,Vec<u8>>(8)?)))?;
-    let identity = PersistentHistoryIdentity {
-        history: PersistentHistoryId::new(u128::from_be_bytes(fixed(header.6)?))
-            .ok_or(StorageError::Invalid("history id"))?,
-        lineage: LineageId::new(u128::from_be_bytes(fixed(header.7)?))
-            .ok_or(StorageError::Invalid("lineage"))?,
-        address_epoch: AddressEpoch::new(u128::from_be_bytes(fixed(control.8)?))
-            .ok_or(StorageError::Invalid("address epoch"))?,
-    };
-    let header = Header {
-        project: ProjectId::new(u128::from_be_bytes(fixed(header.5)?))
-            .ok_or(StorageError::Invalid("project"))?,
-        identity,
-        root: nodeblob(header.8)?,
-    };
+    let (header, control) = snapshot_columns::read(c)?;
     if table_count(c, "state_views", limits.blocks)? != 0 {
         return Err(StorageError::Unsupported("state migrations"));
     }
@@ -751,20 +747,20 @@ fn read_snapshot(
         .checkpoints
         .last()
         .ok_or(StorageError::Invalid("missing commit"))?;
-    if u64blob(control.0)? != last.receipt.generation
-        || commitblob(control.1)? != last.receipt.commit
-        || control.2.map(commitblob).transpose()? != meta.manual.as_ref().map(|r| r.commit)
-        || commitblob(control.3)? != last.receipt.commit
-        || usize::try_from(control.4).ok() != Some(cache.nodes.len())
-        || usize::try_from(control.5).ok() != Some(cache.blocks.len())
-        || u64::try_from(control.6).ok() != Some(total)
+    if !control.matches_commits(
+        last.receipt.generation,
+        last.receipt.commit,
+        meta.manual.as_ref().map(|r| r.commit),
+    )? || usize::try_from(control.node_count).ok() != Some(cache.nodes.len())
+        || usize::try_from(control.block_count).ok() != Some(cache.blocks.len())
+        || u64::try_from(control.blob_bytes).ok() != Some(total)
     {
         return Err(StorageError::Invalid("control"));
     }
     cache.metadata = Arc::new(meta);
     cache.metadata_bytes = write::cost(&cache)?;
     cache.prefix = prefix;
-    if usize::try_from(control.7).ok() != Some(cache.metadata_bytes)
+    if usize::try_from(control.metadata_bytes).ok() != Some(cache.metadata_bytes)
         || cache.metadata_bytes > limits.metadata_bytes
     {
         return Err(StorageError::Invalid("metadata counters"));

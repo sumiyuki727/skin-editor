@@ -1,5 +1,7 @@
 # 开发路线与质量门槛
 
+2026-11-20 B1-2AE 已核对 header 与 control 的跨阶段容量和失败释放。下一项建议审阅原件描述符及租约登记前的拒绝路径。[打开期间的 header 与 control](P3_2B1_2AE_SNAPSHOT_COLUMNS.md)
+
 2026-11-20 B1-2AD 已核对块行哈希、序号及失败释放。下一项跟踪 header 和 control 中跨读取阶段持有的数据。[块行哈希与序号](P3_2B1_2AD_BLOCK_ROW_HEADER.md)
 
 2026-11-20 B1-2AC 已完成块引用表和原件引用表的读取与失败回归。下一项检查块行哈希及序号的取值。[引用表逐项核对](P3_2B1_2AC_REFERENCE_TABLES.md)

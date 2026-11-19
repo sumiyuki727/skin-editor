@@ -8,15 +8,15 @@ pub(super) struct Row {
     pub refs: Vec<StateHash>,
     pub blobs: Vec<[u8; 32]>,
 }
-fn digests(v: Value) -> Result<Vec<StateHash>, StorageError> {
+fn digests<T: Ord>(v: Value, convert: impl Fn(StateHash) -> T) -> Result<Vec<T>, StorageError> {
     let values = array(v)?
         .into_iter()
-        .map(|v| hash(&text(v)?))
+        .map(|v| hash(&text(v)?).map(&convert))
         .collect::<Result<Vec<_>, _>>()?;
     if values.windows(2).any(|p| p[0] >= p[1]) {
         return Err(StorageError::Invalid("reference ordering"));
     }
-    Ok(values)
+    Ok(values.into_boxed_slice().into_vec())
 }
 pub(super) fn parse(block: StateBlock, limits: FormatLimits) -> Result<Row, StorageError> {
     if sha(&block.bytes) != block.hash.bytes() {
@@ -27,16 +27,13 @@ pub(super) fn parse(block: StateBlock, limits: FormatLimits) -> Result<Row, Stor
     if f.take("schema")?.as_u64() != Some(1) {
         return Err(StorageError::Unsupported("block schema"));
     }
-    let refs = digests(f.take("blocks")?)?;
-    let blobs = digests(f.take("blobs")?)?
-        .into_iter()
-        .map(StateHash::bytes)
-        .collect();
+    let refs = digests(f.take("blocks")?, std::convert::identity)?;
+    let blobs = digests(f.take("blobs")?, StateHash::bytes)?;
     let _value = Fields::new(f.take("value")?)?;
     f.finish()?;
     Ok(Row {
         block,
-        kind,
+        kind: kind.into_boxed_str().into_string(),
         refs,
         blobs,
     })
@@ -240,7 +237,11 @@ fn page_index(
     if row.kind != "skin-editor.history-index" || !row.blobs.is_empty() {
         return Err(StorageError::Invalid("index kind"));
     }
-    let mut f = value(row, limits.codec)?;
+    let mut f = if limits.codec.items <= read::METADATA_ITEMS {
+        compact_page_value(row, limits.codec)?
+    } else {
+        value(row, limits.codec)?
+    };
     if f.text("role")? != role {
         return Err(StorageError::Invalid("index role"));
     }
@@ -248,20 +249,26 @@ fn page_index(
     if len > limits.codec.items {
         return Err(StorageError::Limit("index items"));
     }
-    let pages = array(f.take("pages")?)?
-        .into_iter()
-        .map(|v| hash(&text(v)?))
-        .collect::<Result<Vec<_>, _>>()?;
+    let encoded = array(f.take("pages")?)?;
+    let expected = len.div_ceil(PAGE_ITEMS);
+    let count_matches = encoded.len() == expected;
+    let mut pages = Vec::with_capacity(if count_matches { expected } else { 0 });
+    for entry in encoded {
+        // Validate even excess entries before checking unknown fields and
+        // the count, preserving the first error without retaining bad lists.
+        let page = hash(&text(entry)?)?;
+        if count_matches {
+            pages.push(page);
+        }
+    }
     f.finish()?;
-    if pages.len() != len.div_ceil(PAGE_ITEMS)
-        || pages
-            .iter()
-            .copied()
-            .collect::<BTreeSet<_>>()
-            .into_iter()
-            .collect::<Vec<_>>()
-            != row.refs
-    {
+    if !count_matches {
+        return Err(StorageError::Invalid("index refs"));
+    }
+    let mut references = pages.clone();
+    references.sort_unstable();
+    references.dedup();
+    if references != row.refs {
         return Err(StorageError::Invalid("index refs"));
     }
     Ok(PageIndex { pages, len })

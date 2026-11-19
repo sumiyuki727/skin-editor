@@ -174,9 +174,27 @@ const _: () = {
     let retained_nodes = ((members + 4 * rows) / 5) * internal;
     let retained_buffers = rows * size_of::<Value>() + SMALL_METADATA_BYTES;
     let current_buffers = PARSING_PAGE_ARRAY_BYTES + SMALL_BLOCK_BYTES + JSON_SCRATCH_GROWTH_BYTES;
-    assert!(
-        retained_nodes + current_nodes + retained_buffers + current_buffers <= 52 * 1024 * 1024
-    );
+    let metadata_dom = retained_nodes + current_nodes + retained_buffers + current_buffers;
+    assert!(metadata_dom <= 52 * 1024 * 1024);
+
+    // An index root uses the same compact decoder as a page. Only the
+    // ordered directory survives into page parsing.
+    let directory = read::METADATA_ITEMS.div_ceil(blocks::PAGE_ITEMS) * size_of::<StateHash>();
+    assert!(directory == 1024);
+
+    // Resident load_blocks table after validation. Copied SQLite BLOBs
+    // have exact capacity. Kind text and decoded digest slots fit disjoint
+    // spans of those bytes and have exact capacity too.
+    let entry = size_of::<StateHash>() + size_of::<blocks::Row>();
+    let block_leaf = (link + 2 * size_of::<u16>() + 11 * entry).next_multiple_of(link);
+    let block_internal = block_leaf + 12 * link;
+    assert!(align_of::<blocks::Row>() == link && size_of::<StateHash>() == 32);
+    assert!(block_internal == 1872);
+    let max_nodes = 1 + (crate::project_format::SORTED_INDEX_BLOCKS - 1) / 5;
+    let table_handle = size_of::<BTreeMap<StateHash, blocks::Row>>();
+    assert!(table_handle == 24);
+    let block_cache = table_handle + max_nodes * block_internal + 2 * SMALL_METADATA_BYTES;
+    assert!(metadata_dom + block_cache + 2 * directory <= 57 * 1024 * 1024);
 };
 // Only one page is under construction. Open arrays retain at most twice
 // their admitted edges. One growing/shrinking array may also hold its old

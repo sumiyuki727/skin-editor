@@ -12,8 +12,8 @@ pub(crate) fn parse(raw: &[u8], limits: FormatLimits) -> Result<Value, CodecErro
     parse_with::<false>(raw, limits)
 }
 
-/// Small history pages keep their completed arrays and text until the end of
-/// the checkpoint. Discard spare capacity before transferring those buffers.
+/// Bound the in-flight arrays and text of Small history pages and their
+/// index roots. Discard spare capacity before transferring a completed buffer.
 pub(crate) fn parse_compact_page(raw: &[u8], limits: FormatLimits) -> Result<Value, CodecError> {
     parse_with::<true>(raw, limits)
 }

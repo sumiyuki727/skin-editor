@@ -1,6 +1,52 @@
 use super::*;
 mod text;
 
+#[test]
+fn compact_page_map_splits_keep_values_and_first_error_in_each_insertion_order() {
+    let limits = FormatLimits {
+        json_values: 8192,
+        json_depth: 32,
+        ..FormatLimits::default()
+    };
+    for count in [0, 1, 11, 12, 128, 256] {
+        let ascending: Vec<_> = (0..count).collect();
+        let descending: Vec<_> = (0..count).rev().collect();
+        let alternating: Vec<_> = (0..count)
+            .map(|i| if i % 2 == 0 { i / 2 } else { count - 1 - i / 2 })
+            .collect();
+        for order in [ascending, descending, alternating] {
+            let fields = order
+                .iter()
+                .map(|i| format!(r#""{i:03}":{i}"#))
+                .collect::<Vec<_>>()
+                .join(",");
+            let raw = format!("{{{fields}}}");
+            let parsed = parse_compact_page(raw.as_bytes(), limits).unwrap();
+            assert_eq!(parsed.as_object().unwrap().len(), count);
+            for i in 0..count {
+                assert_eq!(parsed[format!("{i:03}")].as_u64(), Some(i as u64));
+            }
+            if count != 0 {
+                let exact = FormatLimits {
+                    json_values: count + 1,
+                    ..limits
+                };
+                for (suffix, error) in [
+                    (r#""000":[[]"#, CodecError::InvalidJson),
+                    (r#""new":[[]"#, CodecError::ResourceLimit("json_structure")),
+                ] {
+                    let bad = format!("{{{fields},{suffix}");
+                    assert_eq!(
+                        parse_compact_page(bad.as_bytes(), exact),
+                        Err(error.clone())
+                    );
+                    assert_eq!(parse(bad.as_bytes(), exact), Err(error));
+                }
+            }
+        }
+    }
+}
+
 // Measure only Rust-visible array slots and text buffers in a completed DOM.
 fn count(value: &Value, slots: &mut usize, text_bytes: &mut usize) {
     match value {

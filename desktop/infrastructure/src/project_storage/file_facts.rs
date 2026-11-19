@@ -148,6 +148,22 @@ const COMPLETED_PAGE_ARRAY_BYTES: usize = (SMALL_JSON_VALUES - 1) * size_of::<Va
 const RETAINED_METADATA_ARRAY_AND_TEXT_BYTES: usize =
     METADATA_PAGE_OCCURRENCES * (COMPLETED_PAGE_ARRAY_BYTES + SMALL_BLOCK_BYTES);
 const _: () = assert!(RETAINED_METADATA_ARRAY_AND_TEXT_BYTES <= 48 * 1024 * 1024);
+// Pinned alloc B-tree: 11 keys and values, one parent link, two u16
+// fields (including padding below), and 12 more links in an internal node.
+// This is the requested layout on the audited 64-bit target, not an RSS cap.
+#[cfg(target_pointer_width = "64")]
+const _: () = {
+    let link = size_of::<usize>();
+    let leaf = (link + 2 * size_of::<u16>() + 11 * (size_of::<String>() + size_of::<Value>()))
+        .next_multiple_of(link);
+    let internal = leaf + 12 * link;
+    assert!(align_of::<String>() == link && align_of::<Value>() == link);
+    assert!(leaf == 632 && internal == 728);
+    // Every completed node has at least one object member. Allocations
+    // during an insert only add nodes to its final tree. Even the pending
+    // member already consumed a non-root JSON value before insert.
+    assert!((SMALL_JSON_VALUES - 1) * internal <= 6 * 1024 * 1024);
+};
 // Only one page is under construction. Open arrays retain at most twice
 // their admitted edges. One growing/shrinking array may also hold its old
 // or destination buffer. Text here counts completed buffers only.

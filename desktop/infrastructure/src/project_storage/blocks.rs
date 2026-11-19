@@ -199,18 +199,40 @@ pub(super) fn read_paged(
     limits: FileLimits,
 ) -> Result<Vec<Value>, StorageError> {
     let mut rows = Vec::new();
-    visit_pages(cache, root, role, limits, value, |page| rows.extend(page))?;
+    let index = page_index(cache, root, role, limits)?;
+    for (hash, count) in index.entries() {
+        rows.extend(read_page_items(
+            cache,
+            hash,
+            role,
+            count,
+            limits.codec,
+            value,
+        )?);
+    }
     Ok(rows)
 }
 
-fn visit_pages(
+struct PageIndex {
+    pages: Vec<StateHash>,
+    len: usize,
+}
+
+impl PageIndex {
+    fn entries(&self) -> impl Iterator<Item = (StateHash, usize)> {
+        self.pages
+            .iter()
+            .enumerate()
+            .map(|(i, &hash)| (hash, PAGE_ITEMS.min(self.len - i * PAGE_ITEMS)))
+    }
+}
+
+fn page_index(
     cache: &Cache,
     root: StateHash,
     role: &str,
     limits: FileLimits,
-    read_page: fn(&Row, FormatLimits) -> Result<Fields, StorageError>,
-    mut accept: impl FnMut(Vec<Value>),
-) -> Result<(), StorageError> {
+) -> Result<PageIndex, StorageError> {
     let row = cache
         .blocks
         .get(&root)
@@ -242,41 +264,50 @@ fn visit_pages(
     {
         return Err(StorageError::Invalid("index refs"));
     }
-    let mut remaining = len;
-    for h in pages {
-        let page = cache.blocks.get(&h).ok_or(StorageError::Invalid("page"))?;
-        if page.kind != "skin-editor.history-page" {
-            return Err(StorageError::Invalid("page kind"));
-        }
-        let mut f = read_page(page, limits.codec)?;
-        if f.text("role")? != role {
-            return Err(StorageError::Invalid("page role"));
-        }
-        let items = array(f.take("items")?)?;
-        f.finish()?;
-        if items.len() != PAGE_ITEMS.min(remaining) {
-            return Err(StorageError::Invalid("page count"));
-        }
-        let (refs, blobs) = page_refs(role, &items)?;
-        if refs
+    Ok(PageIndex { pages, len })
+}
+
+fn read_page_items(
+    cache: &Cache,
+    hash: StateHash,
+    role: &str,
+    count: usize,
+    limits: FormatLimits,
+    read_page: fn(&Row, FormatLimits) -> Result<Fields, StorageError>,
+) -> Result<Vec<Value>, StorageError> {
+    let page = cache
+        .blocks
+        .get(&hash)
+        .ok_or(StorageError::Invalid("page"))?;
+    if page.kind != "skin-editor.history-page" {
+        return Err(StorageError::Invalid("page kind"));
+    }
+    let mut f = read_page(page, limits)?;
+    if f.text("role")? != role {
+        return Err(StorageError::Invalid("page role"));
+    }
+    let items = array(f.take("items")?)?;
+    f.finish()?;
+    if items.len() != count {
+        return Err(StorageError::Invalid("page count"));
+    }
+    let (refs, blobs) = page_refs(role, &items)?;
+    if refs
+        .into_iter()
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect::<Vec<_>>()
+        != page.refs
+        || blobs
             .into_iter()
             .collect::<BTreeSet<_>>()
             .into_iter()
             .collect::<Vec<_>>()
-            != page.refs
-            || blobs
-                .into_iter()
-                .collect::<BTreeSet<_>>()
-                .into_iter()
-                .collect::<Vec<_>>()
-                != page.blobs
-        {
-            return Err(StorageError::Invalid("page refs"));
-        }
-        remaining -= items.len();
-        accept(items);
+            != page.blobs
+    {
+        return Err(StorageError::Invalid("page refs"));
     }
-    Ok(())
+    Ok(items)
 }
 pub(super) fn decoded_state_blocks<'a>(
     cache: &'a Cache,

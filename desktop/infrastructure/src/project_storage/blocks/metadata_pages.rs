@@ -1,11 +1,13 @@
 use super::*;
 
 const INLINE_PAGES: usize = read::METADATA_ITEMS.div_ceil(PAGE_ITEMS);
+const _: () = assert!(INLINE_PAGES <= u8::MAX as usize + 1);
 
-/// Owns the parser's original item buffers in index order. Every page except
-/// the last is full, as checked by visit_pages before handing it over.
+/// A Small index can name the same immutable page at multiple positions.
+/// The first occurrence owns its validated buffer. Later positions refer to it.
 pub(in crate::project_storage) struct MetadataPages {
     pages: [Vec<Value>; INLINE_PAGES],
+    owners: [u8; INLINE_PAGES],
     // Only standalone archives with more rows than Small need additional slots.
     overflow: Vec<Vec<Value>>,
     len: usize,
@@ -15,6 +17,7 @@ impl MetadataPages {
     fn empty() -> Self {
         Self {
             pages: [const { Vec::new() }; INLINE_PAGES],
+            owners: [0; INLINE_PAGES],
             overflow: Vec::new(),
             len: 0,
         }
@@ -27,12 +30,29 @@ impl MetadataPages {
         limits: FileLimits,
     ) -> Result<Self, StorageError> {
         let mut rows = Self::empty();
-        let read_page = if limits.codec.items <= read::METADATA_ITEMS {
-            compact_page_value
-        } else {
-            value
-        };
-        visit_pages(cache, root, role, limits, read_page, |page| rows.push(page))?;
+        let index = page_index(cache, root, role, limits)?;
+        let small = limits.codec.items <= read::METADATA_ITEMS;
+        let read_page = if small { compact_page_value } else { value };
+        for (i, (hash, count)) in index.entries().enumerate() {
+            if small && let Some(first) = index.pages[..i].iter().position(|h| *h == hash) {
+                // All checks except the position-dependent tail length were
+                // made on this very page, role and immutable cache.
+                if rows.pages[first].len() != count {
+                    return Err(StorageError::Invalid("page count"));
+                }
+                rows.owners[i] = first as u8;
+                rows.len += count;
+            } else {
+                rows.push(read_page_items(
+                    cache,
+                    hash,
+                    role,
+                    count,
+                    limits.codec,
+                    read_page,
+                )?);
+            }
+        }
         Ok(rows)
     }
 
@@ -41,6 +61,7 @@ impl MetadataPages {
         self.len += page.len();
         if let Some(slot) = self.pages.get_mut(index) {
             *slot = page;
+            self.owners[index] = index as u8;
         } else {
             self.overflow.push(page);
         }
@@ -51,8 +72,9 @@ impl MetadataPages {
     }
 
     pub(in crate::project_storage) fn iter(&self) -> impl Iterator<Item = &Value> {
-        self.pages[..self.len.div_ceil(PAGE_ITEMS).min(INLINE_PAGES)]
+        self.owners[..self.len.div_ceil(PAGE_ITEMS).min(INLINE_PAGES)]
             .iter()
+            .map(|&slot| &self.pages[usize::from(slot)])
             .chain(&self.overflow)
             .flatten()
     }
@@ -71,10 +93,12 @@ impl std::ops::Index<usize> for MetadataPages {
     type Output = Value;
 
     fn index(&self, index: usize) -> &Value {
+        assert!(index < self.len);
         let page = index / PAGE_ITEMS;
         let rows = self
-            .pages
+            .owners
             .get(page)
+            .map(|&slot| &self.pages[usize::from(slot)])
             .unwrap_or_else(|| &self.overflow[page - INLINE_PAGES]);
         &rows[index % PAGE_ITEMS]
     }
@@ -120,6 +144,7 @@ mod tests {
                 assert!(std::ptr::eq(row, &rows[i]));
             }
             assert_eq!(rows.iter().count(), count);
+            assert!(std::panic::catch_unwind(|| &rows[count]).is_err());
         }
     }
 }

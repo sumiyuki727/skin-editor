@@ -697,9 +697,78 @@ fn compact_page_buffers_survive_metadata_handoff_for_repeated_pages_and_a_short_
         }
     }
     assert_eq!(nested_slots, 513 * (3 + 3 + 5));
-    assert!(!std::ptr::eq(&rows[0]["雪"][1], &rows[256]["雪"][1]));
+    assert!(std::ptr::eq(&rows[0]["雪"][1], &rows[256]["雪"][1]));
+    assert!(!std::ptr::eq(&rows[0], &rows[512]));
     let wide = blocks::MetadataPages::read(&file.cache, root, "tags", file.limits).unwrap();
     assert!(wide.iter().eq(rows.iter()));
+    assert!(!std::ptr::eq(&wide[0], &wide[256]));
+}
+
+#[test]
+fn metadata_pages_share_nonadjacent_map_owners_but_check_every_tail_count() {
+    let (_dir, _driver, mut file) = fixture();
+    let mut small = file.limits;
+    small.codec.items = read::METADATA_ITEMS;
+    small.codec.json_values = 8192;
+    small.codec.json_depth = 32;
+    small.codec.block_bytes = 256 * 1024;
+    let mut make_page = |digit| {
+        let objects = json!(vec![json!({"": digit}); 15]);
+        blocks::make(
+            &file.conn,
+            &mut file.cache,
+            "skin-editor.history-page",
+            json!({"role":"tags", "items":vec![objects; blocks::PAGE_ITEMS]}),
+            vec![],
+            vec![],
+            small,
+        )
+        .unwrap()
+    };
+    let first = make_page(0);
+    let second = make_page(1);
+    // Moving a single one-digit marker between rows yields at least 32
+    // distinct full pages of this exact byte length. Evaluate their cost
+    // arithmetically; the fixture only materializes two different pages.
+    let page_bytes = file.cache.blocks[&first].block.bytes.len();
+    assert_eq!(page_bytes, file.cache.blocks[&second].block.bytes.len());
+    assert!(32 * page_bytes < 1024 * 1024);
+    let hashes: Vec<_> = [first, second].into_iter().cycle().take(32).collect();
+    let mut make_index = |len: usize| {
+        blocks::make(
+        &file.conn, &mut file.cache, "skin-editor.history-index",
+        json!({"role":"tags", "len":len.to_string(), "pages":hashes.iter().map(|h|h.hex()).collect::<Vec<_>>()}),
+        hashes.clone(), vec![], small,
+    ).unwrap()
+    };
+    let full = make_index(8192);
+    let short = make_index(8191);
+    let read = |root| blocks::MetadataPages::read(&file.cache, root, "tags", small);
+    let rows = read(full).unwrap();
+    assert_eq!(rows.len(), 8192);
+    assert_eq!(rows.iter().count(), rows.len());
+    #[cfg(target_pointer_width = "64")]
+    {
+        let singletons = rows
+            .iter()
+            .take(blocks::PAGE_ITEMS)
+            .flat_map(|row| row.as_array().unwrap())
+            .filter(|v| v.as_object().is_some_and(|map| map.len() == 1))
+            .count();
+        assert_eq!(hashes.len() * singletons * 632, 77_660_160);
+    }
+    for (i, row) in rows.iter().enumerate() {
+        let owner = i % (2 * blocks::PAGE_ITEMS);
+        assert!(std::ptr::eq(row, &rows[i]));
+        assert!(std::ptr::eq(row, &rows[owner]));
+        assert_eq!(row.as_array().unwrap().len(), 15);
+        assert_eq!(
+            row[14][""].as_u64(),
+            Some((owner / blocks::PAGE_ITEMS) as u64)
+        );
+    }
+    assert_eq!(read(short).err(), Some(StorageError::Invalid("page count")));
+    assert_eq!(rows[rows.len() - 1][0][""], 1);
 }
 
 #[test]
